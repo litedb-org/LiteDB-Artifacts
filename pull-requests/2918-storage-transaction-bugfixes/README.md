@@ -125,4 +125,22 @@ cross-version files:            24/24 ordered pairs of {dev, fixed #2916, fixed 
 
 With the cursor held the log grows at the write rate (~7 MB/s here): a checkpoint needs zero open transactions, so this
 is inherent; the earlier 8 MB was a side effect of the 55 writes/s throttle, not a bound. Writes are fsync-bound by
-design (#2818); there is no opt-out setting.
+design (#2818).
+
+## 2026-09-19: opt-out for the per-commit durable flush
+
+Head `bd57bc83` adds `EngineSettings.DurableCommits` / connection-string key `durable commits` (default `true`). Probe:
+[`durable-commits-opt-out-2026-09-19/`](durable-commits-opt-out-2026-09-19/), run against a production net8 build
+(NVMe/NTFS, Windows 11):
+
+```
+                                 DurableCommits=true            DurableCommits=false
+200 single inserts               208-219 ms (enc 207-222)       5.5-7.8 ms (enc 6.9-7.5)
+200 single updates               209-224 ms (enc 199-209)       3.2-5.9 ms (enc 2.9-3.7)
+200 inserts in one transaction   ~2-4 ms                        ~1-4 ms
+```
+
+Opted out, a process crash loses nothing (the log is recovered); a power loss or OS crash can lose the latest commits
+and, as before 6.0, can rarely leave the last transaction partially applied (log pages carry no checksum and may reach
+the device out of order). In that mode a checkpoint syncs the log once before overwriting data pages.
+
