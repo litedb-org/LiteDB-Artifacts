@@ -1,0 +1,20 @@
+indexed=True populated=False
+  Score > NaN AND Score < 100: count=0
+  Score > +Infinity AND Score < 100: count=0
+  Score > double.MaxValue AND Score < 100: count=0
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=True populated=True
+  Score > NaN AND Score < 100: count=1
+  Score > +Infinity AND Score < 100: count=0
+  Score > double.MaxValue AND Score < 100: count=0
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=False populated=False
+  Score > NaN AND Score < 100: count=0
+  Score > +Infinity AND Score < 100: count=0
+  Score > double.MaxValue AND Score < 100: count=0
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=False populated=True
+  Score > NaN AND Score < 100: count=1
+  Score > +Infinity AND Score < 100: count=0
+  Score > double.MaxValue AND Score < 100: count=0
+  Score > 1e20 (control) AND Score < 100: count=0

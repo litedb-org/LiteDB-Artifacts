@@ -1,0 +1,330 @@
+[000] x => x.Name
+      src=$.Name | type=Path | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["John vip"]
+[001] x => x.Active
+      src=($.Active=true) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[Active] | params={} | result=[true]
+[002] x => x.Age
+      src=$.Age | type=Path | immutable=True | scalar=True | useSource=False | fields=[Age] | params={} | result=[30]
+[003] x => x.Age > minAge
+      src=($.Age>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[true]
+[004] x => x.Age >= minAge
+      src=($.Age>=@p0) | type=GreaterThanOrEqual | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[true]
+[005] x => x.Age < maxAge
+      src=($.Age<@p0) | type=LessThan | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":65} | result=[true]
+[006] x => x.Age <= maxAge
+      src=($.Age<=@p0) | type=LessThanOrEqual | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":65} | result=[true]
+[007] x => x.Age == minAge
+      src=($.Age=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[false]
+[008] x => x.Age != minAge
+      src=($.Age!=@p0) | type=NotEqual | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[true]
+[009] x => x.Age > 18
+      src=($.Age>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[true]
+[010] x => x.Age > 19
+      src=($.Age>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":19} | result=[true]
+[011] x => x.Name == name
+      src=($.Name=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"John"} | result=[false]
+[012] x => x.Name != name
+      src=($.Name!=@p0) | type=NotEqual | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"John"} | result=[true]
+[013] x => x.Name == null
+      src=($.Name=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":null} | result=[false]
+[014] x => x.NullableAge == nullableBound
+      src=($.NullableAge=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[NullableAge] | params={"p0":30} | result=[true]
+[015] x => x.NullableAge > nullableBound
+      src=($.NullableAge>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[NullableAge] | params={"p0":30} | result=[false]
+[016] x => x.Age > minAge && x.Age < maxAge
+      src=(($.Age>@p0) AND ($.Age<@p1)) | type=And | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18,"p1":65} | result=[true]
+[017] x => x.Age > minAge || x.Name == name
+      src=(($.Age>@p0) OR ($.Name=@p1)) | type=Or | immutable=False | scalar=True | useSource=False | fields=[Age,Name] | params={"p0":18,"p1":"John"} | result=[true]
+[018] x => !x.Active
+      src=($.Active=false) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[Active] | params={} | result=[false]
+[019] x => !(x.Age > minAge && x.Active)
+      src=((($.Age>@p0) AND (($.Active)=true)))=false | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Active,Age] | params={"p0":18} | result=[false]
+[020] x => x.Balance + threshold
+      src=($.Balance+@p0) | type=Add | immutable=False | scalar=True | useSource=False | fields=[Balance] | params={"p0":{"$numberDecimal":"100"}} | result=[{"$numberDecimal":"220.5"}]
+[021] x => x.Balance - threshold
+      src=($.Balance-@p0) | type=Subtract | immutable=False | scalar=True | useSource=False | fields=[Balance] | params={"p0":{"$numberDecimal":"100"}} | result=[{"$numberDecimal":"20.5"}]
+[022] x => x.Balance * factor
+      src=($.Balance*@p0) | type=Multiply | immutable=False | scalar=True | useSource=False | fields=[Balance] | params={"p0":2} | result=[{"$numberDecimal":"241.0"}]
+[023] x => x.Balance / factor
+      src=($.Balance/@p0) | type=Divide | immutable=False | scalar=True | useSource=False | fields=[Balance] | params={"p0":2} | result=[{"$numberDecimal":"60.25"}]
+[024] x => x.Age % count
+      TRANSLATE-THROW NotSupportedException
+[025] x => -x.Balance > 100m
+      src=($.Balance>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Balance] | params={"p0":{"$numberDecimal":"100"}} | result=[true]
+[026] x => x.Age > minAge + 1
+      src=($.Age>(@p0+@p1)) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18,"p1":1} | result=[true]
+[027] x => (int)x.FavoriteType == 1
+      src=($.FavoriteType=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[FavoriteType] | params={"p0":"Landline"} | result=[false]
+[028] x => x.FavoriteType == phoneType
+      src=($.FavoriteType=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[FavoriteType] | params={"p0":"Mobile"} | result=[false]
+[029] x => x.FavoriteType == PhoneType.Landline
+      src=($.FavoriteType=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[FavoriteType] | params={"p0":"Landline"} | result=[false]
+[030] x => x.Name.ToUpper()
+      src=UPPER($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["JOHN VIP"]
+[031] x => x.Name.ToUpperInvariant()
+      src=UPPER($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["JOHN VIP"]
+[032] x => x.Name.ToLower()
+      src=LOWER($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["john vip"]
+[033] x => x.Name.ToLowerInvariant()
+      src=LOWER($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["john vip"]
+[034] x => x.Name.Trim()
+      src=TRIM($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["John vip"]
+[035] x => x.Name.TrimStart()
+      src=LTRIM($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["John vip"]
+[036] x => x.Name.TrimEnd()
+      src=RTRIM($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=["John vip"]
+[037] x => x.Name.Length
+      src=LENGTH($.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=[8]
+[038] x => x.Name.Contains(tag)
+      src=$.Name LIKE ("%"+@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip"} | result=[true]
+[039] x => x.Name.StartsWith(tag)
+      src=$.Name LIKE (@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip"} | result=[false]
+[040] x => x.Name.EndsWith(tag)
+      src=$.Name LIKE ("%"+@p0) | type=Like | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip"} | result=[true]
+[041] x => x.Name.Equals(tag)
+      src=$.Name=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip"} | result=[false]
+[042] x => x.Name.Contains("lit")
+      src=$.Name LIKE ("%"+@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"lit"} | result=[false]
+[043] x => x.Name.Contains("other")
+      src=$.Name LIKE ("%"+@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"other"} | result=[false]
+[044] x => x.Name.Substring(idx)
+      src=SUBSTRING($.Name,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":1} | result=["ohn vip"]
+[045] x => x.Name.Substring(idx, count)
+      src=SUBSTRING($.Name,@p0,@p1) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":1,"p1":3} | result=["ohn"]
+[046] x => x.Name.Substring(1)
+      src=SUBSTRING($.Name,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":1} | result=["ohn vip"]
+[047] x => x.Name.Substring(2)
+      src=SUBSTRING($.Name,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":2} | result=["hn vip"]
+[048] x => x.Name.IndexOf(tag)
+      src=INDEXOF($.Name,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip"} | result=[5]
+[049] x => x.Name.IndexOf(tag, idx)
+      src=INDEXOF($.Name,@p0,@p1) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip","p1":1} | result=[5]
+[050] x => x.Name.PadLeft(count, ' ')
+      src=LPAD($.Name,@p0,@p1) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":3,"p1":" "} | result=["John vip"]
+[051] x => x.Name.Replace(tag, "zz")
+      src=REPLACE($.Name,@p0,@p1) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"vip","p1":"zz"} | result=["John zz"]
+[052] x => string.IsNullOrEmpty(x.Name)
+      src=(LENGTH($.Name)=0) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=[false]
+[053] x => string.IsNullOrWhiteSpace(x.Name)
+      src=(LENGTH(TRIM($.Name))=0) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[Name] | params={} | result=[false]
+[054] x => x.Name + " " + x.Address.City
+      src=(($.Name+@p0)+$.Address.City) | type=Add | immutable=False | scalar=True | useSource=False | fields=[Address,Name] | params={"p0":" "} | result=["John vip John"]
+[055] x => string.Empty
+      src="" | type=String | immutable=True | scalar=True | useSource=False | fields=[] | params={} | result=[""]
+[056] x => x.Created
+      src=$.Created | type=Path | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[{"$date":"2020-01-01T10:30:15.0000000Z"}]
+[057] x => DateTime.Now
+      src=NOW() | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={} | result=(non-deterministic)
+[058] x => DateTime.UtcNow
+      src=NOW_UTC() | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={} | result=(non-deterministic)
+[059] x => DateTime.Today
+      src=TODAY() | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={} | result=(non-deterministic)
+[060] x => x.Created.Year
+      src=YEAR($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[2020]
+[061] x => x.Created.Month
+      src=MONTH($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[1]
+[062] x => x.Created.Day
+      src=DAY($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[1]
+[063] x => x.Created.Hour
+      src=HOUR($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[10]
+[064] x => x.Created.Minute
+      src=MINUTE($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[30]
+[065] x => x.Created.Second
+      src=SECOND($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[15]
+[066] x => x.Created.Date
+      src=DATETIME(YEAR($.Created),MONTH($.Created),DAY($.Created)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[{"$date":"2019-12-31T23:00:00.0000000Z"}]
+[067] x => x.Created.AddYears(years)
+      src=DATEADD("y",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2025-01-01T10:30:15.0000000Z"}]
+[068] x => x.Created.AddMonths(years)
+      src=DATEADD("M",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2020-06-01T10:30:15.0000000Z"}]
+[069] x => x.Created.AddDays(years)
+      src=DATEADD("d",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2020-01-06T10:30:15.0000000Z"}]
+[070] x => x.Created.AddHours(years)
+      src=DATEADD("h",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2020-01-01T15:30:15.0000000Z"}]
+[071] x => x.Created.AddMinutes(years)
+      src=DATEADD("m",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2020-01-01T10:35:15.0000000Z"}]
+[072] x => x.Created.AddSeconds(years)
+      src=DATEADD("s",@p0,$.Created) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":5} | result=[{"$date":"2020-01-01T10:30:20.0000000Z"}]
+[073] x => x.Created.ToUniversalTime()
+      src=TO_UTC($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[{"$date":"2020-01-01T10:30:15.0000000Z"}]
+[074] x => x.Created.ToLocalTime()
+      src=TO_LOCAL($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[{"$date":"2020-01-01T10:30:15.0000000Z"}]
+[075] x => x.Created.ToLocalTime().ToUniversalTime()
+      src=TO_UTC(TO_LOCAL($.Created)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=[{"$date":"2020-01-01T10:30:15.0000000Z"}]
+[076] x => x.Created.ToString()
+      src=STRING($.Created) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Created] | params={} | result=["{\"$date\":\"2020-01-01T10:30:15.0000000Z\"}"]
+[077] x => x.Created.ToString("yyyy-MM-dd")
+      src=FORMAT($.Created,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":"yyyy-MM-dd"} | result=["2020-01-01"]
+[078] x => x.Created.Equals(when)
+      src=$.Created=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":{"$date":"2020-01-01T00:00:00.0000000Z"}} | result=[false]
+[079] x => x.Created > when
+      src=($.Created>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":{"$date":"2020-01-01T00:00:00.0000000Z"}} | result=[true]
+[080] x => x.Updated > when
+      src=($.Updated>@p0) | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Updated] | params={"p0":{"$date":"2020-01-01T00:00:00.0000000Z"}} | result=[false]
+[081] x => new DateTime(2020, 1, 1)
+      src=DATETIME(@p0,@p1,@p2) | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={"p0":2020,"p1":1,"p2":1} | result=[{"$date":"2019-12-31T23:00:00.0000000Z"}]
+[082] x => x.Age.ToString()
+      src=STRING($.Age) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Age] | params={} | result=["30"]
+[083] x => x.Age.ToString("D3")
+      src=FORMAT($.Age,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":"D3"} | result=["030"]
+[084] x => x.Age.Equals(minAge)
+      src=$.Age=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18} | result=[false]
+[085] x => Convert.ToInt32(x.Score)
+      src=INT32($.Score) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Score] | params={} | result=[9]
+[086] x => Convert.ToInt64(x.Score)
+      src=INT64($.Score) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Score] | params={} | result=[{"$numberLong":"9"}]
+[087] x => Convert.ToDouble(x.Age)
+      src=DOUBLE($.Age) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Age] | params={} | result=[30.0]
+[088] x => Convert.ToString(x.Age)
+      src=STRING($.Age) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Age] | params={} | result=["30"]
+[089] x => (int)x.Score
+      src=INT32($.Score) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Score] | params={} | result=[9]
+[090] x => (long)x.Balance
+      src=INT64($.Balance) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Balance] | params={} | result=[{"$numberLong":"120"}]
+[091] x => Math.Abs(x.Score)
+      src=ABS($.Score) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Score] | params={} | result=[9.25]
+[092] x => Math.Pow(x.Score, factor)
+      src=POW($.Score,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Score] | params={"p0":2} | result=[85.5625]
+[093] x => Math.Round(x.Score, count)
+      src=ROUND($.Score,@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Score] | params={"p0":3} | result=[9.25]
+[094] x => x.ExternalId.ToString()
+      TRANSLATE-THROW NotSupportedException
+[095] x => x.ExternalId.Equals(guidValue)
+      src=$.ExternalId=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[ExternalId] | params={"p0":{"$guid":"11111111-1111-1111-1111-111111111111"}} | result=[true]
+[096] x => x.ExternalId == guidValue
+      src=($.ExternalId=@p0) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[ExternalId] | params={"p0":{"$guid":"11111111-1111-1111-1111-111111111111"}} | result=[true]
+[097] x => x.ExternalId == Guid.Empty
+      src=($.ExternalId=GUID("00000000-0000-0000-0000-000000000000")) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[ExternalId] | params={} | result=[false]
+[098] x => Guid.NewGuid()
+      src=GUID() | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={} | result=(non-deterministic)
+[099] x => Guid.Parse(oidHex)
+      src=GUID(@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={"p0":"5f6e7d8c9b0a1f2e3d4c5b6a"} | result=[null]
+[100] x => x.RefId.ToString()
+      TRANSLATE-THROW NotSupportedException
+[101] x => x.RefId.Equals(ObjectId.Empty)
+      src=$.RefId=OBJECTID("000000000000000000000000") | type=Equal | immutable=True | scalar=True | useSource=False | fields=[RefId] | params={} | result=[false]
+[102] x => x.RefId.CreationTime
+      src=OID_CREATIONTIME($.RefId) | type=Call | immutable=True | scalar=True | useSource=False | fields=[RefId] | params={} | result=[{"$date":"2020-09-25T23:30:20.0000000Z"}]
+[103] x => new ObjectId(oidHex)
+      src=OBJECTID(@p0) | type=Call | immutable=False | scalar=True | useSource=False | fields=[] | params={"p0":"5f6e7d8c9b0a1f2e3d4c5b6a"} | result=[{"$oid":"5f6e7d8c9b0a1f2e3d4c5b6a"}]
+[104] x => Regex.IsMatch(x.Name, "^J")
+      src=(IS_MATCH($.Name,@p0)=true) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Name] | params={"p0":"^J"} | result=[true]
+[105] x => Regex.Split(x.Name, " ")
+      src=SPLIT($.Name,@p0,true) | type=Call | immutable=False | scalar=False | useSource=False | fields=[Name] | params={"p0":" "} | result=["John","vip"]
+[106] x => x.NullableAge.HasValue
+      src=(IS_NULL($.NullableAge)=false) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[NullableAge] | params={} | result=[true]
+[107] x => x.NullableAge.Value
+      src=$.NullableAge | type=Path | immutable=True | scalar=True | useSource=False | fields=[NullableAge] | params={} | result=[30]
+[108] x => x.RawValue.IsNull
+      src=(IS_NULL($.RawValue)=true) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[RawValue] | params={} | result=[false]
+[109] x => x.RawValue.IsString
+      src=(IS_STRING($.RawValue)=true) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[RawValue] | params={} | result=[true]
+[110] x => x.RawValue.IsNumber
+      src=(IS_NUMBER($.RawValue)=true) | type=Equal | immutable=True | scalar=True | useSource=False | fields=[RawValue] | params={} | result=[false]
+[111] x => x.Phones.Count
+      src=COUNT($.Phones) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[2]
+[112] x => x.Numbers.Count()
+      src=COUNT($.Numbers) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Numbers] | params={} | result=[4]
+[113] x => x.Tags.Length
+      src=LENGTH($.Tags) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Tags] | params={} | result=[2]
+[114] x => x.Phones.Any()
+      src=COUNT($.Phones)>0 | type=GreaterThan | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[true]
+[115] x => x.Phones.Any(p => p.Prefix == prefix)
+      TRANSLATE-THROW NotSupportedException
+[116] x => x.Phones.Any(p => p.Number > 100)
+      TRANSLATE-THROW NotSupportedException
+[117] x => x.Phones.All(p => p.Prefix == prefix)
+      TRANSLATE-THROW NotSupportedException
+[118] x => x.Numbers.Contains(idx)
+      src=$.Numbers[*] ANY=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Numbers] | params={"p0":1} | result=[true]
+[119] x => ids.Contains(x.Age)
+      src=ITEMS(@p0) ANY=$.Age | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":[1,2,3]} | result=[false]
+[120] x => idSequence.Contains(x.Age)
+      src=ITEMS(@p0) ANY=$.Age | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":[1,2]} | result=[false]
+[121] x => x.Phones.Where(p => p.Prefix == prefix)
+      src=FILTER($.Phones[*]=>(@.Prefix=@p0)) | type=Filter | immutable=False | scalar=False | useSource=False | fields=[Phones] | params={"p0":40} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[122] x => x.Phones.Select(p => p.Number)
+      src=MAP($.Phones[*]=>@.Number) | type=Map | immutable=True | scalar=False | useSource=False | fields=[Phones] | params={} | result=[555,7]
+[123] x => x.Phones.Count(p => p.Type == phoneType)
+      src=COUNT(FILTER($.Phones[*]=>(@.Type=@p0))) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":"Mobile"} | result=[1]
+[124] x => x.Phones.Sum(p => p.Number)
+      src=SUM(MAP($.Phones[*]=>@.Number)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[562]
+[125] x => x.Phones.Average(p => p.Number)
+      src=AVG(MAP($.Phones[*]=>@.Number)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[281.0]
+[126] x => x.Phones.Max(p => p.Number)
+      src=MAX(MAP($.Phones[*]=>@.Number)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[555]
+[127] x => x.Phones.Min(p => p.Number)
+      src=MIN(MAP($.Phones[*]=>@.Number)) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[7]
+[128] x => x.Phones.First()
+      src=$.Phones[0] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[129] x => x.Phones.First(p => p.Prefix == prefix)
+      src=FIRST(FILTER($.Phones[*]=>(@.Prefix=@p0))) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":40} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[130] x => x.Phones.FirstOrDefault()
+      src=$.Phones[0] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[131] x => x.Phones.Last()
+      src=$.Phones[-1] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":43,"Number":7,"Type":"Fax"}]
+[132] x => x.Phones.LastOrDefault()
+      src=$.Phones[-1] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":43,"Number":7,"Type":"Fax"}]
+[133] x => x.Phones.Single()
+      src=$.Phones[0] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[134] x => x.Phones.ElementAt(idx)
+      src=$.Phones[@p0] | type=Path | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":1} | result=[{"Prefix":43,"Number":7,"Type":"Fax"}]
+[135] x => x.Phones[0]
+      src=$.Phones[0] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":40,"Number":555,"Type":"Mobile"}]
+[136] x => x.Phones[1]
+      src=$.Phones[1] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Phones] | params={} | result=[{"Prefix":43,"Number":7,"Type":"Fax"}]
+[137] x => x.Numbers[idx]
+      src=$.Numbers[1] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Numbers] | params={} | result=[1]
+[138] x => x.Tags[idx]
+      src=$.Tags[1] | type=Path | immutable=True | scalar=True | useSource=False | fields=[Tags] | params={} | result=["new"]
+[139] x => x.Attributes["score"]
+      src=$.Attributes.score | type=Path | immutable=True | scalar=True | useSource=False | fields=[Attributes] | params={} | result=[5]
+[140] x => x.Attributes["other"]
+      src=$.Attributes.other | type=Path | immutable=True | scalar=True | useSource=False | fields=[Attributes] | params={} | result=[6]
+[141] x => x.Phones.ToArray()
+      TRANSLATE-THROW NotSupportedException
+[142] x => x.Numbers.ToList()
+      src=ARRAY($.Numbers) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Numbers] | params={} | result=[[0,1,2,3]]
+[143] x => x.Phones.Select(p => p.Number).Any(n => n > 5)
+      src=MAP($.Phones[*]=>@.Number) ANY>@p0 | type=GreaterThan | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":5} | result=[true]
+[144] x => x.Phones.Select(p => p.Number).Any(n => n == count)
+      src=MAP($.Phones[*]=>@.Number) ANY=@p0 | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":3} | result=[false]
+[145] x => x.Tags.Any(t => t.StartsWith(tag))
+      src=$.Tags[*] ANY LIKE (@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Tags] | params={"p0":"vip"} | result=[true]
+[146] x => x.Tags.Any(t => t.Contains(tag))
+      src=$.Tags[*] ANY LIKE ("%"+@p0+"%") | type=Like | immutable=False | scalar=True | useSource=False | fields=[Tags] | params={"p0":"vip"} | result=[true]
+[147] x => x.Tags.Any(t => t.EndsWith(tag))
+      src=$.Tags[*] ANY LIKE ("%"+@p0) | type=Like | immutable=False | scalar=True | useSource=False | fields=[Tags] | params={"p0":"vip"} | result=[true]
+[148] x => x.Age > minAge ? "adult" : "minor"
+      src=IIF(($.Age>@p0),@p1,@p2) | type=Call | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18,"p1":"adult","p2":"minor"} | result=["adult"]
+[149] x => x.Email ?? x.Name
+      src=COALESCE($.Email,$.Name) | type=Call | immutable=True | scalar=True | useSource=False | fields=[Email,Name] | params={} | result=["John vip"]
+[150] x => new { x.Id, x.Name, x.Age }
+      src={Id:$._id,Name:$.Name,Age:$.Age} | type=Document | immutable=True | scalar=True | useSource=False | fields=[Age,Name,_id] | params={} | result=[{"Id":7,"Name":"John vip","Age":30}]
+[151] x => new { Full = x.Name + " " + x.Email, x.Age }
+      src={Full:(($.Name+@p0)+$.Email),Age:$.Age} | type=Document | immutable=False | scalar=True | useSource=False | fields=[Age,Email,Name] | params={"p0":" "} | result=[{"Full":"John vip ","Age":30}]
+[152] x => new Customer { Id = x.Id, Name = x.Name.ToUpper() }
+      src={_id:$._id,Name:UPPER($.Name)} | type=Document | immutable=True | scalar=True | useSource=False | fields=[Name,_id] | params={} | result=[{"_id":7,"Name":"JOHN VIP"}]
+[153] x => new[] { 1, 2, 3 }
+      src=[@p0,@p1,@p2] | type=Array | immutable=False | scalar=True | useSource=False | fields=[] | params={"p0":1,"p1":2,"p2":3} | result=[[1,2,3]]
+[154] x => new[] { x.Age, minAge, maxAge }
+      src=[$.Age,@p0,@p1] | type=Array | immutable=False | scalar=True | useSource=False | fields=[Age] | params={"p0":18,"p1":65} | result=[[30,18,65]]
+[155] x => new object[] { x.Phones.Where(p => p.Prefix == prefix) }
+      src=[ARRAY(FILTER($.Phones[*]=>(@.Prefix=@p0)))] | type=Array | immutable=False | scalar=True | useSource=False | fields=[Phones] | params={"p0":40} | result=[[[{"Prefix":40,"Number":555,"Type":"Mobile"}]]]
+[156] x => new { City = x.Address.City, Count = x.Phones.Count(p => p.Type == phoneType), List = x.Phones.Where(p => p.Number > x.Age).Select(p => p.Number).ToArray() }
+      src={City:$.Address.City,Count:COUNT(FILTER($.Phones[*]=>(@.Type=@p0))),List:ARRAY(MAP(FILTER($.Phones[*]=>(@.Number>$.Age))=>@.Number))} | type=Document | immutable=False | scalar=True | useSource=False | fields=[Address,Age,Phones] | params={"p0":"Mobile"} | result=[{"City":"John","Count":1,"List":[555]}]
+[157] x => isActivePredicate(x)
+      TRANSLATE-THROW NotSupportedException
+[158] x => x.RawValue is BsonArray
+      TRANSLATE-THROW NotSupportedException
+[159] x => x.Phones.Count + x.Numbers.Count()
+      src=(COUNT($.Phones)+COUNT($.Numbers)) | type=Add | immutable=True | scalar=True | useSource=False | fields=[Numbers,Phones] | params={} | result=[6]
+[160] x => x.Age > minAge && (x.Active || x.Balance > threshold)
+      src=(($.Age>@p0) AND ((($.Active)=true) OR ($.Balance>@p1))) | type=And | immutable=False | scalar=True | useSource=False | fields=[Active,Age,Balance] | params={"p0":18,"p1":{"$numberDecimal":"100"}} | result=[true]
+[161] x => x.Created.ToLocalTime().ToUniversalTime() == when.ToUniversalTime()
+      src=(TO_UTC(TO_LOCAL($.Created))=TO_UTC(@p0)) | type=Equal | immutable=False | scalar=True | useSource=False | fields=[Created] | params={"p0":{"$date":"2020-01-01T00:00:00.0000000Z"}} | result=[false]
+[162] x => x.Address.City
+      src=$.Address.City | type=Path | immutable=True | scalar=True | useSource=False | fields=[Address] | params={} | result=["John"]
+[163] x => x.FavoriteProduct.Name
+      src=$.FavoriteProduct.Name | type=Path | immutable=True | scalar=True | useSource=False | fields=[FavoriteProduct] | params={} | result=["Thing"]
+[164] x => x.Address.City == name && x.Address.Street != tag
+      src=(($.Address.City=@p0) AND ($.Address.Street!=@p1)) | type=And | immutable=False | scalar=True | useSource=False | fields=[Address] | params={"p0":"John","p1":"vip"} | result=[true]

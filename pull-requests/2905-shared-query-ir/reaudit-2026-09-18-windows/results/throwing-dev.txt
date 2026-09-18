@@ -1,0 +1,70 @@
+Score > (1 % 0) AND Score < 3
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score < 3 AND Score > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score >= 1 AND Score <= (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score BETWEEN (1 % 0) AND 3
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score BETWEEN 1 AND 3 AND Score > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score IN [1, 2] AND Score > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score = 1 AND Score > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> rows=[]
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score != 1 AND Score > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score > SUBSTRING('abc', 10) AND Score < 'z'
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW ArgumentOutOfRangeException
+    indexed=True  populated=False -> THROW ArgumentOutOfRangeException
+    indexed=True  populated=True  -> THROW ArgumentOutOfRangeException
+(Score > (1 % 0) AND Score < 3) OR Score = 50
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> rows=[]
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score = 50 OR (Score > (1 % 0) AND Score < 3)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> rows=[]
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score > 1 AND Score < 3 AND Name > (1 % 0)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW DivideByZeroException
+    indexed=True  populated=False -> THROW DivideByZeroException
+    indexed=True  populated=True  -> THROW DivideByZeroException
+Score > 7 AND Score < 3 AND Name = SUBSTRING('abc', 10)
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> rows=[]
+    indexed=True  populated=False -> THROW ArgumentOutOfRangeException
+    indexed=True  populated=True  -> THROW ArgumentOutOfRangeException
+Name = SUBSTRING('abc', 10) AND Score > 7 AND Score < 3
+    indexed=False populated=False -> rows=[]
+    indexed=False populated=True  -> THROW ArgumentOutOfRangeException
+    indexed=True  populated=False -> THROW ArgumentOutOfRangeException
+    indexed=True  populated=True  -> THROW ArgumentOutOfRangeException

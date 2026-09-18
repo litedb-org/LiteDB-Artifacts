@@ -1,0 +1,101 @@
+indexed=True populated=False
+  Score > NaN AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > +Infinity AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > double.MaxValue AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=True populated=True
+  Score > NaN AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > +Infinity AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > double.MaxValue AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.BsonValue.CompareTo(BsonValue other, Collation collation)
+        at LiteDB.Engine.ScalarBounds.IsEmpty(Collation collation)
+        at LiteDB.Engine.ScalarIndexConstraint.CreateIndex(String name)
+        at LiteDB.Engine.QueryOptimization.ChooseConstraintIndex(CollectionIndex[] indexes, HashSet`1& covered)
+        at LiteDB.Engine.QueryOptimization.ChooseIndex(HashSet`1 fields)
+        at LiteDB.Engine.QueryOptimization.DefineIndex()
+        at LiteDB.Engine.QueryOptimization.ProcessQuery()
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=False populated=False
+  Score > NaN AND Score < 100: count=0
+  Score > +Infinity AND Score < 100: count=0
+  Score > double.MaxValue AND Score < 100: count=0
+  Score > 1e20 (control) AND Score < 100: count=0
+indexed=False populated=True
+  Score > NaN AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.BsonDataReader..ctor(IEnumerable`1 values, String collection, EngineState state)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery(Boolean executionPlan)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery()
+        at LiteDB.Engine.LiteEngine.Query(String collection, Query query)
+        at LiteDB.LiteQueryable`1.ExecuteReader()
+        at LiteDB.LiteQueryable`1.ToDocuments()+MoveNext()
+  Score > +Infinity AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.BsonDataReader..ctor(IEnumerable`1 values, String collection, EngineState state)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery(Boolean executionPlan)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery()
+        at LiteDB.Engine.LiteEngine.Query(String collection, Query query)
+        at LiteDB.LiteQueryable`1.ExecuteReader()
+        at LiteDB.LiteQueryable`1.ToDocuments()+MoveNext()
+  Score > double.MaxValue AND Score < 100: THROW OverflowException: Value was either too large or too small for a Decimal.
+        at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext()
+        at LiteDB.BsonDataReader..ctor(IEnumerable`1 values, String collection, EngineState state)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery(Boolean executionPlan)
+        at LiteDB.Engine.QueryExecutor.ExecuteQuery()
+        at LiteDB.Engine.LiteEngine.Query(String collection, Query query)
+        at LiteDB.LiteQueryable`1.ExecuteReader()
+        at LiteDB.LiteQueryable`1.ToDocuments()+MoveNext()
+  Score > 1e20 (control) AND Score < 100: count=0
