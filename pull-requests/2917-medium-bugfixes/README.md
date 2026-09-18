@@ -123,3 +123,27 @@ Any field name with a non-ASCII letter; under tr-TR also ASCII names with a capi
 
 `0a7278c7` (parameterized helpers), `b2b8507f` (ordering aliases), `dbdfb4b7` (`CtorOnly`) were not probed;
 `67f5c34d`, `c2d20520`, `bf8e5117`, `ff48dc20`, `53808ded`, `36ea6c74` were read only. netstandard2.0 on .NET Framework.
+
+## fixes-2026-09-18 (same machine, same probes)
+
+All findings above were fixed in the PR itself: head `f81ec16923751bb1a708f97ea4898f9261bc7427` (history rewritten: the 47
+commits re-stacked on the fixed #2916, #2357 replaced by an opt-in version, 7 fix commits; previous head `2508490c`).
+Full suite net10.0 / net8.0: 1,775 passed, 7 skipped, 0 failed.
+
+Same probes against a production build of the fixed head (`LiteDB.dll` 716800 bytes, default collation de-DE/IgnoreCase):
+
+```
+StartsWith plan: INDEX SEEK (+RANGE SCAN)(Name LIKE "name00001%")     0.09 ms/query   (was FULL INDEX SCAN, 58 ms)
+SQL LIKE 'name00001%':                                                 0.34 ms/query   (was 68 ms)
+Opt.Equals(v, OrdinalIgnoreCase) => 1            Opt.StartsWith(v, Ordinal) => 74076   (were NullReferenceException)
+abstract base: Find(x => x.Id == 1).Count => 1   DeleteMany(x => x.Id == 99) => 0      (were NotSupportedException)
+insert DST-gap Unspecified 2026-03-29 02:30 => 2026-03-29 01:30:00Z ; commit => True ; rows 200/201/202 present   (switch off = base)
+ctor(id,name) not assigning name: Name => 'alice'                                       (was null)
+UpdateMany k+1 WHERE k BETWEEN 10 AND 20: returned 550, docs updated more than once: 0, SUM(k)=248050
+UpdateMany k+1000 WHERE k>=0: returned 5000                                             (was a hang)
+index names, created by the ORIGINAL #2916 build then ensured by the fixed build:
+  EnsureIndex($.Größe) => False, EnsureIndex($.naïve) => False ; indexes: _id, Gre, nave    (were duplicated)
+```
+
+Still by design: `Name.Equals(v, OrdinalIgnoreCase)` plans as FULL INDEX SCAN (results correct; only `Ordinal` equality
+can be narrowed soundly without knowing the collation).

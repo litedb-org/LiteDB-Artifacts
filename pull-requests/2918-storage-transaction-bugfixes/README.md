@@ -106,3 +106,23 @@ The failed insert already rolled B's transaction back, so B legitimately has non
 HDD / network / cloud-disk fsync cost; power loss (process kill is not power loss); multi-process `Shared` mode under
 the new checkpoint wait; real I/O faults during `Commit`/`Rollback` on a file; v4/v7 upgrade paths; AES databases in
 the concurrency stress probes; netstandard2.0 on .NET Framework.
+
+## fixes-2026-09-18 (same machine, same probes)
+
+All three findings above were fixed in the PR itself: head `eca59a9ce0a2d8ac8bd51fb3819dc07288427891` (history rewritten:
+14 commits re-stacked on the fixed #2917 + 3 fix commits; previous head `8c7999b6`). Full suite net10.0 / net8.0:
+1,996 passed, 7 skipped, 0 failed.
+
+Same probes against a production build of the fixed head (`LiteDB.dll` 728576 bytes):
+
+```
+reader-stall (nohold), s6-s8:   writes/s ~940-990    reads/s ~130,000-146,000    log 3-4 MB     (was ~190 / ~450)
+slow cursor  (hold),   s6-s8:   writes/s ~915-945    reads/s ~130,000-141,000    log 41-55 MB   (was ~55 / ~250, log 8 MB)
+rollback masking:               caller sees: LiteException: Cannot insert duplicate key in unique index '_id'. ...
+commit latency:                 200 single inserts ~200 ms (1.0 ms/commit) | 200 in one tx 2-4 ms | InsertBulk 100k ~310 ms
+cross-version files:            24/24 ordered pairs of {dev, fixed #2916, fixed #2917, fixed #2918}, plain + AES: OK
+```
+
+With the cursor held the log grows at the write rate (~7 MB/s here): a checkpoint needs zero open transactions, so this
+is inherent; the earlier 8 MB was a side effect of the 55 writes/s throttle, not a bound. Writes are fsync-bound by
+design (#2818); there is no opt-out setting.

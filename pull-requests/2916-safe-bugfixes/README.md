@@ -103,3 +103,21 @@ clear the marker on documents handed to the caller as raw `BsonDocument`.
 
 netstandard2.0 on .NET Framework; Linux lock-contention retry (`a7c697ca`); the four `LiteDB.Shell` commits were read,
 not executed, in this review.
+
+## fixes-2026-09-18 (same machine, same probes)
+
+All findings above were fixed in the PR itself: head `0834688f65c8fdf71624d7e22d8f08370aa870c9` = `e0d0d67e` + 6 commits
+(fast-forward). Full suite net10.0 / net8.0: 1,222 passed, 7 skipped, 0 failed. CI: 48/48.
+
+Same probes against a production build of the fixed head (`LiteDB.dll` 630272 bytes):
+
+```
+json-text:       0.1 -> 0.1 | 0.3 -> 0.3 | 19.99 -> 19.99 | 2.675 -> 2.675 | 1e-7 -> 1E-07 | 1e21 -> 1E+21 | 1/3 -> 0.3333333333333333
+readonly:        [log=False] EnsureIndex existing => False, count after => 1
+                 [log=True]  EnsureIndex existing => False, count after => 1
+projection:      ToObject<NameDto> => Name=n1
+```
+
+Also fixed (agent-reproduced items): decoder recursion guard (#1903), OverflowException for enum integers outside the
+backing type (#2769), integer literals beyond Int64 parse as Decimal/Double (#2205). A second reviewer's finding on the
+read-only fix (vector index type/dimension validation skipped) is fixed and tested as well.
