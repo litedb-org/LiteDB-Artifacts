@@ -147,3 +147,18 @@ index names, created by the ORIGINAL #2916 build then ensured by the fixed build
 
 Still by design: `Name.Equals(v, OrdinalIgnoreCase)` plans as FULL INDEX SCAN (results correct; only `Ordinal` equality
 can be narrowed soundly without knowing the collation).
+
+### NLS follow-up (same day) — final head `9a8734432913bb43533debf84152f22f8382ecaf`
+
+The first push of the LIKE range seek (`f81ec169`) failed one CI job through #2918, `Test (Windows net481)`:
+`'Bae' order -1: expected 1 rows, got 0` under `en-US/None`. Reproduced 8/8 locally on net481. NLS, the .NET Framework
+collation engine, keeps some matching keys outside the probed range; the probes had only been validated against ICU.
+The range seek is now enabled only when the runtime collation is ICU (the `SortVersion` check from the .NET
+globalization docs); under NLS it full-scans, as the PR did before this review.
+
+Running the .NET Framework targets locally: `dotnet test` discovers nothing for them. Build with
+`dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net481 -p:TestingEnabled=true`, then run
+`xunit.console.exe LiteDB.Tests/bin/Release/net481/LiteDB.Tests.dll -nologo` from the `xunit.runner.console` 2.9.2
+NuGet package folder (`tools/net481`), optionally with `-class <full class name>`. That is what CI does.
+
+Full suites afterwards on all three PR heads: net10.0, net8.0, net481 and net462 — 0 failed. CI: 48/48 on each PR.
