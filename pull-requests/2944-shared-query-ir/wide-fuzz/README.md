@@ -3,7 +3,7 @@
 This directory records the expanded differential campaign run after
 [LiteDB #2944](https://github.com/litedb-org/LiteDB/pull/2944) merged. The source
 and the narrowly scoped fix found by the campaign are in LiteDB commit
-[`47f8e6e45`](https://github.com/litedb-org/LiteDB/commit/47f8e6e45).
+[`4988644ff`](https://github.com/litedb-org/LiteDB/commit/4988644ff).
 
 ## Method
 
@@ -35,6 +35,7 @@ LITEDB_FUZZ_SEED=0 \
 LITEDB_FUZZ_SHAPES=200000 \
 LITEDB_FUZZ_CONFIG=0 \
 LITEDB_FUZZ_THREADS=8 \
+LITEDB_FUZZ_MAX_TRANSLATOR_DIFFS=2909 \
 LITEDB_FUZZ_OUTPUT=config-0.jsonl \
 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 \
   -p:GitVersionEnabled=false --no-build \
