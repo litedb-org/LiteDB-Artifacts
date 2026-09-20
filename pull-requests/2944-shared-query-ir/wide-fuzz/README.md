@@ -3,7 +3,7 @@
 This directory records the expanded differential campaign run after
 [LiteDB #2944](https://github.com/litedb-org/LiteDB/pull/2944) merged. The source
 and the narrowly scoped fix found by the campaign are in LiteDB commit
-[`66e76fbcc`](https://github.com/litedb-org/LiteDB/commit/66e76fbcc).
+[`88b4addfa`](https://github.com/litedb-org/LiteDB/commit/88b4addfa).
 
 ## Method
 
