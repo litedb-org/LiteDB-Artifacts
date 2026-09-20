@@ -35,9 +35,9 @@ Mutation checks at `7c4d5e396`, net10.0, default range:
 | child counts removed from the shape key (reverts part of `b1e027307`) | all 4 configurations fail, e.g. shape seed 278: `[[],@p0]` and `[[@p0]]` reuse each other's template |
 | `string.Equals` comparison-mode marker removed (reverts `0d60eb953`) | all 4 configurations fail: `x.Name.Equals("ready", Ordinal)` gets the non-ordinal template and loses the `$.Name=@p0` term |
 
-Exploratory run at `7c4d5e396`: `LITEDB_FUZZ_SHAPES=20000`, `LITEDB_FUZZ_SEED=10000`, net10.0. 240,000 translations across the four configurations, 11 m 38 s, no mismatch.
+The last row matters because the hand-written guard test for that case could not be made to fail by mutation.
 
-The second row matters because the hand-written guard test for that case could not be made to fail by mutation.
+Exploratory run at `7c4d5e396`: `LITEDB_FUZZ_SHAPES=20000`, `LITEDB_FUZZ_SEED=10000`, net10.0. 240,000 translations across the four configurations, 11 m 38 s, no mismatch.
 
 Full local suites at `56fdfc274`, Release, system zone W. Europe Standard Time:
 
