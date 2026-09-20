@@ -1,0 +1,39 @@
+System.NotImplementedException: The method or operation is not implemented.
+   at LiteDB.BufferSliceExtensions.ReadIndexKey(BufferSlice buffer, Int32 offset) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Utils/Extensions/BufferSliceExtensions.cs:line 221
+   at LiteDB.Engine.IndexNode..ctor(IndexPage page, Byte index, BufferSlice segment) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Structures/IndexNode.cs:line 126
+   at LiteDB.Engine.IndexPage.GetIndexNode(Byte index) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Pages/IndexPage.cs:line 42
+   at LiteDB.Engine.IndexService.GetNode(PageAddress address) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Services/IndexService.cs:line 200
+   at LiteDB.Engine.IndexService.FindAll(CollectionIndex index, Int32 order)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Services/IndexService.cs:line 373
+   at LiteDB.Engine.BasePipe.LoadDocument(IEnumerable`1 nodes)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/Pipeline/BasePipe.cs:line 36
+   at System.Linq.Enumerable.SelectEnumerableIterator`2.MoveNext()
+   at LiteDB.Engine.SortService.YieldValues(IEnumerator`1 source, Done done)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Sort/SortService.cs:line 184
+   at System.Collections.Generic.EnumerableHelpers.ToArray[T](IEnumerable`1 source, Int32& length)
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.OrderedEnumerable`1.GetEnumerator()+MoveNext()
+   at LiteDB.Engine.SortContainer.Insert(IEnumerable`1 items, Int32 order, BufferSlice buffer) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Sort/SortContainer.cs:line 68
+   at LiteDB.Engine.SortService.Insert(IEnumerable`1 items) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Sort/SortService.cs:line 104
+   at LiteDB.Engine.BasePipe.OrderBy(IEnumerable`1 source, OrderBy orderBy, Int32 offset, Int32 limit)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/Pipeline/BasePipe.cs:line 214
+   at LiteDB.Engine.QueryPipe.Select(IEnumerable`1 source, BsonExpression select)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/Pipeline/QueryPipe.cs:line 116
+   at LiteDB.Engine.QueryExecutor.<>c__DisplayClass12_0.<<ExecuteQuery>g__RunQuery|2>d.MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/QueryExecutor.cs:line 133
+   at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Utils/Extensions/EnumerableExtensions.cs:line 13
+   at LiteDB.Utils.Extensions.EnumerableExtensions.OnDispose[T](IEnumerable`1 source, Action onDispose)+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Utils/Extensions/EnumerableExtensions.cs:line 13
+   at LiteDB.BsonDataReader..ctor(IEnumerable`1 values, String collection, EngineState state) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Document/DataReader/BsonDataReader.cs:line 56
+   at LiteDB.Engine.QueryExecutor.ExecuteQuery(Boolean executionPlan) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/QueryExecutor.cs:line 87
+   at LiteDB.Engine.QueryExecutor.ExecuteQuery() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Query/QueryExecutor.cs:line 59
+   at LiteDB.Engine.LiteEngine.Query(String collection, Query query) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Engine/Engine/Query.cs:line 46
+   at LiteDB.LiteQueryable`1.ExecuteReader() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Client/Database/LiteQueryable.cs:line 287
+   at LiteDB.LiteQueryable`1.ReadDocuments()+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Client/Database/LiteQueryable.cs:line 307
+   at LiteDB.LiteQueryable`1.ToDocuments()+MoveNext() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Client/Database/LiteQueryable.cs:line 297
+   at System.Linq.Enumerable.SelectEnumerableIterator`2.ToArray()
+   at LiteDB.LiteQueryable`1.ToArray() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB/Client/Database/LiteQueryable.cs:line 353
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.Verify(FuzzContext context, LiteDatabase db, SortedDictionary`2 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 123
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.ProbeCorruption(FuzzContext context, String file, String password, SortedDictionary`2 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 147
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.RunAsync(FuzzContext context) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 48
+   at LiteDB.Fuzz.Program.<>c__DisplayClass2_0.<RunAsync>b__0() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66
