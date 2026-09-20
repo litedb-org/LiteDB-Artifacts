@@ -1,0 +1,12 @@
+System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.Verify(FuzzContext context, LiteDatabase db, SortedDictionary`2 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 118
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.ProbeCorruption(FuzzContext context, String file, String password, SortedDictionary`2 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 147
+   at LiteDB.Fuzz.Targets.RebuildFuzzer.RunAsync(FuzzContext context) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 48
+   at LiteDB.Fuzz.Program.<>c__DisplayClass2_0.<RunAsync>b__0() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66

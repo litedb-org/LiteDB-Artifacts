@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "status": "failed",
+  "target": "rebuild",
+  "seed": 2951000,
+  "count": 63,
+  "steps": 63,
+  "startedUtc": "2026-09-20T21:07:49.4546729+00:00",
+  "finishedUtc": "2026-09-20T21:08:42.5271872+00:00",
+  "durationSeconds": 53.0725143,
+  "gitSha": "2f36856b46745e69bf39208299ad1ee4aaa3a979",
+  "workingTreeDirty": true,
+  "os": "Ubuntu 24.04.3 LTS",
+  "runtime": ".NET 8.0.30",
+  "architecture": "X64",
+  "culture": "",
+  "timezone": "Etc/UTC",
+  "globalizationInvariant": false,
+  "metrics": {
+    "integrityPages": 12
+  },
+  "error": "System.IndexOutOfRangeException: Index was outside the bounds of the array.\n   at LiteDB.Fuzz.Targets.RebuildFuzzer.Verify(FuzzContext context, LiteDatabase db, SortedDictionary\u00602 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 118\n   at LiteDB.Fuzz.Targets.RebuildFuzzer.ProbeCorruption(FuzzContext context, String file, String password, SortedDictionary\u00602 expected) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 147\n   at LiteDB.Fuzz.Targets.RebuildFuzzer.RunAsync(FuzzContext context) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/RebuildFuzzer.cs:line 48\n   at LiteDB.Fuzz.Program.\u003C\u003Ec__DisplayClass2_0.\u003CRunAsync\u003Eb__0() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66\n   at System.Threading.Tasks.Task\u00601.InnerInvoke()\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n--- End of stack trace from previous location ---\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task\u0026 currentTaskSlot, Thread threadPoolThread)\n--- End of stack trace from previous location ---\n   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 66"
+}
