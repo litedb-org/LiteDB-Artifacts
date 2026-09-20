@@ -19,28 +19,34 @@ One caveat on the report's "Final local verification": it names `TZ=Europe/Berli
 
 Three manual reviews each found a cache-reuse bug (`0d60eb953`, `4a3bf9724`, `b1e027307`), so [`7b5df926c`](https://github.com/litedb-org/LiteDB/commit/7b5df926c) adds a seeded differential test instead of a fourth reading: `LiteDB.Tests/Mapper/LinqCacheFuzz_Tests.cs` with its generator `LinqCacheFuzzGenerator.cs`.
 
-- One `BsonMapper` translates 1,500 generated lambdas, each with three sets of captured values, so unrelated shapes share buckets, evict each other and are hit again with new values.
+- One `BsonMapper` translates 400 generated lambdas by default (`LITEDB_FUZZ_SHAPES` and `LITEDB_FUZZ_SEED` select other ranges), each with three sets of captured values, so unrelated shapes share buckets, evict each other and are hit again with new values.
 - The shape seed alone decides the tree; the value seed only changes captures (integers, strings, enum values, `StringComparison` modes, dictionary keys, list contents, and the runtime type behind an `object` capture).
 - The grammar covers predicates, integer scalars, nested `object[]` projections and nested member initializers, including `Math.Min`/`Math.Max`, closed helper calls over nested arrays, `string.Equals` in both forms, enum `==` and `Equals`, and dictionary indexers.
 - Each translation must equal an uncached translation of the same tree (`DisableCompilationCache`, fresh mapper) in `Source`, expression metadata, parameters and the scalar result on one document. If one side throws, the other must throw the same exception type.
 - It runs in both seed orders and both `EnumAsInteger` settings, and fails if fewer than half the generated lambdas translate.
 
-Mutation checks, net10.0:
+The first version (`7b5df926c`) ran 1,500 seeds in 50 s locally and timed out two Windows .NET 10 CI jobs, whose test step is limited to five minutes. [`7c4d5e396`](https://github.com/litedb-org/LiteDB/commit/7c4d5e396) defaults to 400 seeds (12 s) and biases array elements toward nested containers and plain captures, because the smaller range otherwise missed the shape-key mutation.
+
+Mutation checks at `7c4d5e396`, net10.0, default range:
 
 | Product change | Result |
 |---|---|
-| none (`7b5df926c`) | 4 of 4 pass, 50 s |
-| child counts removed from the shape key (reverts part of `b1e027307`) | fails; first at shape seeds 98 and 838: `[[],@p0]` and `[[@p0]]` reuse each other's template |
-| `string.Equals` comparison-mode marker removed (reverts `0d60eb953`) | fails at shape seed 1496, value seed 1: `x.Name.Equals("ready", Ordinal)` gets the non-ordinal template and loses the `$.Name=@p0` term |
+| none | 4 of 4 pass, 12 s |
+| child counts removed from the shape key (reverts part of `b1e027307`) | all 4 configurations fail, e.g. shape seed 278: `[[],@p0]` and `[[@p0]]` reuse each other's template |
+| `string.Equals` comparison-mode marker removed (reverts `0d60eb953`) | all 4 configurations fail: `x.Name.Equals("ready", Ordinal)` gets the non-ordinal template and loses the `$.Name=@p0` term |
+
+Exploratory run at `7c4d5e396`: `LITEDB_FUZZ_SHAPES=20000`, `LITEDB_FUZZ_SEED=10000`, net10.0. 240,000 translations across the four configurations, 11 m 38 s, no mismatch.
 
 The second row matters because the hand-written guard test for that case could not be made to fail by mutation.
 
-Full local suites at `7b5df926c`, Release, system zone W. Europe Standard Time:
+Full local suites at `56fdfc274`, Release, system zone W. Europe Standard Time:
 
 | Target | Passed | Skipped | Failed |
 |---|---:|---:|---:|
-| net10.0 | 2,994 | 7 | 0 |
-| net8.0 | 2,994 | 7 | 0 |
+| net10.0 | 3,000 | 7 | 0 |
+| net8.0 | 3,000 | 7 | 0 |
+
+CI at `7c4d5e396`: all 48 checks passed.
 
 net481 and net462 test projects compile; their suites were not run locally.
 
@@ -49,6 +55,12 @@ To reproduce:
 ```bash
 dotnet test LiteDB.Tests -c Release -f net10.0 -p:GitVersionEnabled=false --filter "FullyQualifiedName~LinqCacheFuzz_Tests"
 ```
+
+## Rebinding bug found by a second review
+
+A source-level review of `b1e027307` (nothing executed by that reviewer) reported that `BsonExpression.BindCore` dropped `GroupKeyAliases`. Reproduced before fixing: `Query.And("@key = 1", "COUNT(*) > 0")` as a `Having` filter returns group 1, the same expression after `Bind` returned none. Fixed in [`56fdfc274`](https://github.com/litedb-org/LiteDB/commit/56fdfc274); five cases fail before and pass after. The randomized test could not have found this: it covers LINQ translation, not rebinding. `SelectAliases`, `SelectContext` and `_selectAliasCompiled` are also not copied by `BindCore`, on purpose, because they are only read while SQL is parsed.
+
+The remaining gaps are tracked in [LiteDB#2946](https://github.com/litedb-org/LiteDB/issues/2946).
 
 ## Limits
 
