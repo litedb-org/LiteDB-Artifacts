@@ -65,3 +65,12 @@ The remaining gaps are tracked in [LiteDB#2946](https://github.com/litedb-org/Li
 ## Limits
 
 The generator only produces trees the grammar describes. It has no `DateTime` members, DbRefs, quantifiers (`Any`/`All`), `Select`/`Where` over row arrays, interface-typed rows or custom resolvers, and it uses one fixed document. A clean run says the cache agrees with the direct translator for these shapes; it does not say the direct translator is right.
+
+## Post-merge wide campaign
+
+The [wide fuzz campaign](wide-fuzz/README.md) closes the listed generator gaps,
+adds a compiled-CLR reference, null and missing documents, index-expression
+translation, and concurrent callers. Across 2.4 million generated cases it
+found no cache difference. It did expose a closed `DateTime.Date` translator
+bug, records the focused fix, and classifies the remaining pre-existing
+row-dependent time-zone differences.
