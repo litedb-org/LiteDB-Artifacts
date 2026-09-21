@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "failed",
+  "target": "vector",
+  "seed": 900000,
+  "count": 100,
+  "steps": 101,
+  "startedUtc": "2026-09-21T11:03:03.9635189+00:00",
+  "finishedUtc": "2026-09-21T11:03:06.688118+00:00",
+  "durationSeconds": 2.7245991,
+  "gitSha": "0f244643f2fcf1ca8b318b0137ee64527cd18722",
+  "workingTreeDirty": true,
+  "os": "Ubuntu 24.04.3 LTS",
+  "runtime": ".NET 8.0.30",
+  "architecture": "X64",
+  "culture": "",
+  "timezone": "Etc/UTC",
+  "globalizationInvariant": false,
+  "durationBound": true,
+  "requestedDurationSeconds": 40,
+  "inputHash": "F2250316ED3066AEAAEC6281E3BF851C8B9794F3EDF22A0A7A09780DA06528D7",
+  "traceHash": "2E66C28919A75EC0FB098BCBA1EFBE171B13FD71362045DCEB585231106D5C39",
+  "failureId": "VECTOR_DATABASEVECTORINTEGRITYVERIFIER_L43",
+  "metrics": {
+    "novelStates": 41,
+    "explicitVectorPairs": 18
+  },
+  "error": "LiteDB.Fuzz.FuzzFailureException: Collection 1 has orphaned vector nodes: 0004:24 -\u003E 0003:24\n   at LiteDB.Fuzz.FuzzContext.Check(Boolean condition, String message, String file, Int32 line) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/FuzzContext.cs:line 103\n   at LiteDB.Fuzz.DatabaseVectorIntegrityVerifier.Verify(FuzzContext context, CollectionPage collection, Dictionary\u00602 pages, Dictionary\u00602 dataBlocks, HashSet\u00601 pkData) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/DatabaseVectorIntegrityVerifier.cs:line 43\n   at LiteDB.Fuzz.DatabaseIntegrityVerifier.ValidateCollection(FuzzContext context, CollectionPage collection, Dictionary\u00602 pages, Collation collation) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/DatabaseIntegrityVerifier.cs:line 150\n   at LiteDB.Fuzz.DatabaseIntegrityVerifier.Verify(FuzzContext context, String filename, String password) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/DatabaseIntegrityVerifier.cs:line 40\n   at LiteDB.Fuzz.Targets.VectorFuzzer.Run(FuzzContext context) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/VectorFuzzer.cs:line 72\n   at LiteDB.Fuzz.Targets.VectorFuzzer.RunAsync(FuzzContext context) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Targets/VectorFuzzer.cs:line 16\n   at LiteDB.Fuzz.Program.\u003C\u003Ec__DisplayClass2_0.\u003CRunAsync\u003Eb__0() in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 119\n   at System.Threading.Tasks.Task\u00601.InnerInvoke()\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n--- End of stack trace from previous location ---\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task\u0026 currentTaskSlot, Thread threadPoolThread)\n--- End of stack trace from previous location ---\n   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in /home/jonas/.codex/worktrees/3c13/LiteDB/LiteDB.Fuzz/Program.cs:line 119"
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "campaign": "PR 2951 final review campaign",
+  "totalBudget": "00:08:00",
+  "targets": [
+    "query",
+    "index",
+    "bson",
+    "parser",
+    "mapper",
+    "storage",
+    "rebuild",
+    "vector",
+    "sort",
+    "value",
+    "sql-dml",
+    "malformed-file"
+  ],
+  "runs": 44,
+  "passed": 41,
+  "failed": 3,
+  "steps": 2762200,
+  "failures": [
+    {
+      "target": "bson",
+      "seed": 900000,
+      "steps": 5,
+      "failureId": "BSON_INTERNAL_MALFORMED_FAILURE"
+    },
+    {
+      "target": "rebuild",
+      "seed": 900000,
+      "steps": 14,
+      "failureId": "System.NotImplementedException"
+    },
+    {
+      "target": "vector",
+      "seed": 900000,
+      "steps": 101,
+      "failureId": "VECTOR_DATABASEVECTORINTEGRITYVERIFIER_L43"
+    }
+  ],
+  "notes": [
+    "The BSON failure was newly discovered and fixed in PR commit 39c31304a.",
+    "The vector and rebuild failures reproduce existing issues #2952 and #2953.",
+    "Successful duration epochs use the documented retention policy; all failure inputs and state are retained."
+  ]
+}
