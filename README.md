@@ -34,4 +34,5 @@ Add other top-level folders when a different origin needs one, for example `rele
 | Folder | What it holds |
 |---|---|
 | [`pull-requests/2905-shared-query-ir`](pull-requests/2905-shared-query-ir) | Benchmarks, merge-confidence audit and an independent re-audit for [LiteDB#2905](https://github.com/litedb-org/LiteDB/pull/2905), *Build shared query IR and optimize LINQ and SQL execution* |
+| [`pull-requests/2937-compact-document-storage`](pull-requests/2937-compact-document-storage) | Raw benchmark trials, pilot runs, generated measurement report, and assembly provenance for [LiteDB#2937](https://github.com/litedb-org/LiteDB/pull/2937), *Implement compact document storage* |
 | [`pull-requests/2944-shared-query-ir`](pull-requests/2944-shared-query-ir) | Cache review report and the randomized cached-versus-direct translation check for [LiteDB#2944](https://github.com/litedb-org/LiteDB/pull/2944), the successor of #2905 |
