@@ -1,0 +1,9 @@
+# Recorded fuzz tapes
+
+These 91 records contain 89 retained duration epochs and two final pinned checksum-crash inputs (seeds 4058733 and 3163459, .NET 10 copies). They are a selected replay subset, not all 168 successful child runs. Raw input.bin/replay.json/run.json bytes are unchanged; original archive member names and SHA-256 are in raw-file-manifest.json. The byte tapes are random words, not executable binaries or serialized production data. Every word was independently verified against the public seeded xorshift32 generator and every tape hash matched both descriptors.
+
+Source: [b8c4a336e823154e7ed7a4f1dce0de591cf5f8c4](https://github.com/litedb-org/LiteDB/commit/b8c4a336e823154e7ed7a4f1dce0de591cf5f8c4), Release TestingEnabled=true; Linux x64, .NET 8.0.30/.NET 10.0.11, processor count 2. Included duration and pin tapes were produced/replayed under .NET 10.0.11. Raw run metadata records the corpus-only 8de268019 commit and a dirty working tree; copied assembly provenance is separately retained, so the metadata is not misrepresented as a clean build of that tree.
+
+Reproduce using the original source's LiteDB.Fuzz README at that exact commit. Build Release with TestingEnabled=true and net10.0, then run the harness with --replay <record-directory>/replay.json --artifact-dir <RAM-backed output directory>, setting DOTNET_PROCESSOR_COUNT=2. InputFile is relative input.bin in each record directory. Compiled executables are intentionally not included; rebuilt hashes may differ from the archived assembly hashes. Input bytes and trace hashes remain available for comparison. Failed or changed replay output must be retained separately, not overwritten here.
+
+Original source: [FuzzInputRandom.cs](https://github.com/litedb-org/LiteDB/blob/b8c4a336e823154e7ed7a4f1dce0de591cf5f8c4/LiteDB.Fuzz/FuzzInputRandom.cs), [replay documentation](https://github.com/litedb-org/LiteDB/blob/b8c4a336e823154e7ed7a4f1dce0de591cf5f8c4/LiteDB.Fuzz/README.md).
