@@ -52,4 +52,3 @@ All figures are medians of individual run statistics; p99 is not a pooled percen
 | .NET 8.0.30 | direct | scan | candidate | 3 | 1.4961 (1.4422–1.5691) | 2.4794 | 3,141,415 | 1.5000 | 0.0900 |
 
 All figures are medians of individual run statistics; p99 is not a pooled percentile.
-

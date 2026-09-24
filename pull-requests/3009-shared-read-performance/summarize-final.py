@@ -13,5 +13,5 @@ for filename, expected in [('final-shared-startup.jsonl',36),('final-shared-stea
   means=[x['meanMs'] for x in runs]
   out.append('| '+' | '.join(key)+f' | {len(runs)} | {median("meanMs"):.4f} ({min(means):.4f}–{max(means):.4f}) | {median("p99Ms"):.4f} | {median("bytesPerOperation"):,.0f} | {median("cpuMsPerOperation"):.4f} | {median("closeMs"):.4f} |')
  out += ['', 'All figures are medians of individual run statistics; p99 is not a pooled percentile.', '']
-(root/'final-summary.md').write_text('\n'.join(out)+'\n')
+(root/'final-summary.md').write_text('\n'.join(out).rstrip()+'\n')
 print('\n'.join(out))
