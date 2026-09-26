@@ -75,5 +75,53 @@ throughput. Working set/managed retention in the timing runners includes their
 latency samples and is not isolated library cache memory. No arbitrary power-loss
 or device-fault guarantee follows from finite process-death testing.
 
-Final-source evidence will be added separately after the active qualification runs
-finish. No completion claim is made by this initial archive.
+The initial archive does not claim completion. Current library-source evidence
+is provided separately below, preserving the initial archive unchanged.
+
+## Current library-source validation
+
+`final-source-evidence.tar.gz` and `final-source-files.json` preserve the complete
+`2f7a2350c8476e6807e5c2e3e5f09ea5b46d542b` qualification evidence. The documentation-only
+PR head is `130b339523cbe61efcef52b5d67252aee5a6cb53`; its library diff against that
+source is empty. The preceding investigation archive is unchanged.
+
+Included groups:
+
+- `hosted-2f7-final-core`, `hosted-2f7-final-traffic`, `hosted-2f7-final-readers`:
+  final-source production comparisons against the parent, including all 12
+  idle/writer/checkpoint reader jobs and eight core/traffic jobs.
+- `hosted-equal-load`: eight fixed-offered-load jobs with intended-arrival latency;
+  measurement head `21b548bf4` has identical library source.
+- `hosted-resource-reference`: four 64-live-connection resource comparisons and
+  Direct reference pairs; measurement head `3754d5268` has identical library source.
+- `hosted-2f7-mixed-long`: ten pairs of 20,000 mixed calls on four hosts;
+  measurement head `667bfe3d4` has identical library source.
+- `fuzz-2f7a235-final`: clean immutable checkout, complete 12-invocation smoke and
+  64-invocation extended campaigns. All 4,096 primary extended steps and 32 built-in
+  replay runs pass. No timeout; longest invocation 126.44 seconds. Commands,
+  DLL hashes, actual transitions and environment are retained.
+- `ci-2f7-results`, `ci-2f7-framework`: all 21 modern platform reports, all 12
+  native Windows cross-process reports, actual Framework console logs, precise
+  skip reasons, host identity audits and intentional dump-contract diagnostics.
+  Large CI build archives and the successfully validated intentional dump are
+  omitted. Counts include repeated host/hook assertions across partitions.
+- `hosted-cache-stability*`, `cache-stability-conclusions.md`: two excluded
+  eligibility refinements, compared directly against `2f7a2350c`. Full storage
+  eligibility has a discriminating checkpoint/reset retention control (one
+  expected mutant failure, then 101 focused passes). It sacrifices most contended
+  read throughput without establishing a regression-free replacement.
+- `*-summary.json`, `final-qualification.json`, `results.md`: paired measurements,
+  explicit source provenance, finite-evidence limits and acceptance status.
+
+**Performance acceptance is not complete.** Point means improve 79–84%, but
+saturated-reader workloads have repeatable writer-throughput and tail losses.
+Equal offered load reduces these costs without eliminating all of them. Both
+cache-eligibility follow-ups remain excluded. The PR is a draft pending the
+tradeoff decision required by the task's strict no-regression requirement.
+This is not a mixed-legacy-version compatibility blocker.
+
+The current library-source CI/fuzz/migration and benchmark correctness checks are
+green. Documentation-head checks run separately; their final status is recorded
+in the PR, not inferred from these earlier runs. All data is synthetic, original
+failure images remain unchanged, and text-only local path sanitization follows
+the same manifest procedure as the investigation archive.
