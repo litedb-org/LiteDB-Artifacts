@@ -31,3 +31,17 @@ CI run pages are authoritative for current job state; run-metadata records downl
 | `hosted-spin35` | `d02270da5818643d4fb0a3d7221f4692dc098081` | `9d85a870280a8c028590b4a4bef780f9f2556b8d` | [36311998025](https://github.com/litedb-org/LiteDB/actions/runs/36311998025) |
 | `hosted-standard` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `b2010e8bd9164c76549e7e1ba8c48e25490daf97` | [36309272156](https://github.com/litedb-org/LiteDB/actions/runs/36309272156) |
 | `hosted-stream-yield` | `eea594b79edf6b52342b32fb1840616e6cf948ae` | `478ecfc1e91ce1221cb1cbc36f557f49eb7a54f0` | [36318133551](https://github.com/litedb-org/LiteDB/actions/runs/36318133551) |
+| `hosted-final-saturated` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `c6053fdd9611fbe50592ae6ef65258096753f8c7` | [36321687725](https://github.com/litedb-org/LiteDB/actions/runs/36321687725) |
+| `hosted-final-standard` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `c6053fdd9611fbe50592ae6ef65258096753f8c7` | [36321272677](https://github.com/litedb-org/LiteDB/actions/runs/36321272677) |
+| `hosted-pr-standard` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `a9483fd3afa00eaae83cc9a0ba59dbadd38dce1c` | [36322551372](https://github.com/litedb-org/LiteDB/actions/runs/36322551372) |
+| `hosted-writer-repeat` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `a9483fd3afa00eaae83cc9a0ba59dbadd38dce1c` | [36323868272](https://github.com/litedb-org/LiteDB/actions/runs/36323868272) |
+| `hosted-checkpoint-repeat` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `a9483fd3afa00eaae83cc9a0ba59dbadd38dce1c` | [36324132720](https://github.com/litedb-org/LiteDB/actions/runs/36324132720) |
+| `hosted-checkpoint-drain` | `a9483fd3afa00eaae83cc9a0ba59dbadd38dce1c` | `1abb51e9dae89eb8ddbb2a3e989d25cdeca269ec` | [36323206436](https://github.com/litedb-org/LiteDB/actions/runs/36323206436) |
+| `hosted-writer-tail-diagnostics` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `c97e56fa6eafbbbd6d2fae39d3683cf94290a757` | [36325118477](https://github.com/litedb-org/LiteDB/actions/runs/36325118477) |
+| `hosted-atomic-standard` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `31bbd70f40afbab905087bccf08c30ac4d436633` | [36324919541](https://github.com/litedb-org/LiteDB/actions/runs/36324919541) |
+| `hosted-atomic-saturated` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `31bbd70f40afbab905087bccf08c30ac4d436633` | [36324968780](https://github.com/litedb-org/LiteDB/actions/runs/36324968780) |
+| `hosted-final-head-standard` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `186cdeec6bbc76d949b77c726c54a492dbc6d3cf` | [36326327445](https://github.com/litedb-org/LiteDB/actions/runs/36326327445) |
+| `hosted-writer-tail-extended` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `45364c9f15df567915346caf12b72fb813bf92d4` | [36326725129](https://github.com/litedb-org/LiteDB/actions/runs/36326725129) |
+| `hosted-hint-500` | `3e7b8d9b5ce787a828b2b3ca1b760cc6e22b82f2` | `7c383b5b4c61e6499d59ac3daad69ca265c97e62` | [36325857226](https://github.com/litedb-org/LiteDB/actions/runs/36325857226) |
+| `hosted-linux-write-diagnostic` | `c12b6a72149ad2166d62769d07efe961198b7a38` | `b554ad5c5b53e868f06b02ddd2f47aa80196fa38` | [36328609589](https://github.com/litedb-org/LiteDB/actions/runs/36328609589) |
+| `hosted-final-archived` | `16131953114971557b44e9deaa78bd8ce9d45ab1` | `186cdeec6bbc76d949b77c726c54a492dbc6d3cf` | [36327591678](https://github.com/litedb-org/LiteDB/actions/runs/36327591678) |
