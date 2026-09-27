@@ -2,7 +2,9 @@
 
 Source PR: https://github.com/litedb-org/LiteDB/pull/3014, stacked on #3013.
 The measured parent is `d2fb099acebb58dbbb07acbeea49c05bb025defd`.
-Selected library/test source: `2f7a2350c8476e6807e5c2e3e5f09ea5b46d542b`.
+Final selected library/test source: `50ea4366801a3c8fac8f8903065077275258873a`.
+Final documentation head: `984c1c6bf3b457ead0486fcacbbfe12d990c119c`.
+The historical mapped candidate used library source `2f7a2350c8476e6807e5c2e3e5f09ea5b46d542b`.
 All concurrent Shared participants in a database use exactly the same LiteDB version.
 
 This directory preserves successful and unsuccessful investigations. Inclusion in
@@ -113,15 +115,60 @@ Included groups:
 - `*-summary.json`, `final-qualification.json`, `results.md`: paired measurements,
   explicit source provenance, finite-evidence limits and acceptance status.
 
-**Performance acceptance is not complete.** Point means improve 79–84%, but
+**Historical mapped-candidate performance acceptance failed.** Point means improved 79–84%, but
 saturated-reader workloads have repeatable writer-throughput and tail losses.
 Equal offered load reduces these costs without eliminating all of them. Both
-cache-eligibility follow-ups remain excluded. The PR is a draft pending the
-tradeoff decision required by the task's strict no-regression requirement.
+cache-eligibility follow-ups remain excluded. The mapped candidate was subsequently excluded under the task's strict
+no-regression requirement; no tradeoff exception was accepted.
 This is not a mixed-legacy-version compatibility blocker.
 
-The current library-source CI/fuzz/migration and benchmark correctness checks are
-green. Documentation-head checks run separately; their final status is recorded
-in the PR, not inferred from these earlier runs. All data is synthetic, original
+The historical mapped library-source CI/fuzz/migration and benchmark correctness
+checks passed. These earlier passes do not validate the selected free-list source;
+its separate final-head checks are recorded below. All data is synthetic, original
 failure images remain unchanged, and text-only local path sanitization follows
 the same manifest procedure as the investigation archive.
+
+## Selection update: mapped candidate excluded
+
+The final review confirmed the strict performance gate. Source
+`50ea4366801a3c8fac8f8903065077275258873a` removes mapped admission and its writer
+publications together, retaining only the qualified reader-slot free list. Its
+entire library is identical to the earlier free-list-only source `6d71e39bb`;
+only `SharedReaderSlots.cs` differs from parent `d2fb099ac`. The complete mapped
+candidate remains on `codex/shared-mapped-admission-candidate` at `130b33952`.
+
+Accordingly, the immutable `final-source-evidence.tar.gz` above is now **excluded
+mapped-candidate evidence**, not evidence for the final selected library. Its
+filename reflects its status when packaged; neither its bytes nor its manifest
+has been rewritten. The performance costs are not accepted as a silent tradeoff.
+Same-version concurrency remains the assumption; mixed legacy compatibility did
+not cause the exclusion. Final selected-source qualification is recorded separately.
+
+## Final selected free-list evidence
+
+`selected-slots-evidence.tar.gz` and `selected-slots-files.json` qualify source
+`50ea4366801a3c8fac8f8903065077275258873a` and documentation head
+`984c1c6bf3b457ead0486fcacbbfe12d990c119c`. The production library differs from
+parent `d2fb099acebb58dbbb07acbeea49c05bb025defd` in **SharedReaderSlots.cs only**.
+The measurement-only branches record their own heads; their complete `LiteDB/`
+source matches the selected library.
+
+Start with `evidence/slots-selected/acceptance.md`, `measurements.md`,
+`safety-invariants.json`, `ci-acceptance.json`, `framework-final.json`, and
+`evidence/fuzz-slots-final/reconciliation.json` inside the archive. Raw paired
+measurements, commands, binary hashes, per-run fuzz records and hosted TRX/logs
+are included. The same original/published SHA-256 manifest procedure applies.
+
+The capacity helper improves 21–40% in the final-head comparisons; allocation
+remains 32 bytes and maximum additional slot-table payload is 192 KiB. Ordinary
+application performance is mostly inconclusive. Original CPU/tail/reader signals
+and independent follow-ups are preserved, including small residual uncertainty;
+intervals crossing zero are not evidence of equivalence. Mapped admission and
+incremental writer reopen remain excluded rather than shipped with writer costs.
+
+Final-head CI passed all 47 jobs; fuzz, migration and production correctness
+workflows passed. All 21 modern platform reports reconcile with expected discovery,
+and both Framework hosts passed 4,481 tests with nine existing skips each. The
+selected-source campaign passed all 76 invocations, with 4,144 primary steps and
+38 built-in replay runs. See the report for fault-model limits and native coverage.
+All 32 original synthetic failure images were rehashed unchanged before publication.
