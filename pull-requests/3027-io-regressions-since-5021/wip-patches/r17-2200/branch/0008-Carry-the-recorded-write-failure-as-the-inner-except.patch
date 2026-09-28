@@ -1,0 +1,55 @@
+From ed48e99ea51fbb47a42e49760fb6eb90389305ea Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 20:34:47 +0000
+Subject: [PATCH 08/24] Carry the recorded write failure as the inner exception
+ of later write errors
+
+Decision 6: a refused write's error carries the earlier failure's details;
+the failure itself is its inner exception, as the closed-engine error
+carried it before (Issue2848).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB/Engine/Engine/Transaction.cs | 2 +-
+ LiteDB/Engine/WriteFailure.cs       | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/LiteDB/Engine/Engine/Transaction.cs b/LiteDB/Engine/Engine/Transaction.cs
+index 073b3ed07..96d368fb6 100644
+--- a/LiteDB/Engine/Engine/Transaction.cs
++++ b/LiteDB/Engine/Engine/Transaction.cs
+@@ -104,7 +104,7 @@ namespace LiteDB.Engine
+ 
+         /// <summary>A write to a read-only engine; one that opened read-only on its own says why.</summary>
+         private IOException ReadOnlyWrite() =>
+-            _settings.WriteFailure != null ? new IOException(WriteFailedPrefix + _settings.WriteFailure) :
++            _settings.WriteFailure != null ? new IOException(WriteFailedPrefix + _settings.WriteFailure, _settings.WriteFailure.Cause) :
+             new IOException(_settings.ReadOnlyCause == null
+                 ? "Cannot modify a read-only database."
+                 : "Cannot modify this database: it opened read-only because the writable open was refused. " + _settings.ReadOnlyCause);
+diff --git a/LiteDB/Engine/WriteFailure.cs b/LiteDB/Engine/WriteFailure.cs
+index 8dcf23ea3..0d11d92fb 100644
+--- a/LiteDB/Engine/WriteFailure.cs
++++ b/LiteDB/Engine/WriteFailure.cs
+@@ -15,6 +15,7 @@ namespace LiteDB.Engine
+         internal WriteFailure(string operation, Exception error, bool walKept)
+         {
+             this.File = error.Data[FileDataKey] as string;
++            this.Cause = error;
+             this.Operation = operation;
+             this.Error = error.Message;
+             this.Time = DateTime.UtcNow;
+@@ -26,6 +27,9 @@ namespace LiteDB.Engine
+ 
+         internal string Operation { get; }
+ 
++        /// <summary>The failure itself: every later write's error carries it as its inner exception.</summary>
++        internal Exception Cause { get; }
++
+         internal string Error { get; }
+ 
+         internal DateTime Time { get; }
+-- 
+2.43.0
+

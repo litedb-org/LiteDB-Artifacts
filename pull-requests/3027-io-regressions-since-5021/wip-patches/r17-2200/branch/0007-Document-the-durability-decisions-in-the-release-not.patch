@@ -1,0 +1,392 @@
+From b5b5982a13c4476645258390e285e506a74e0157 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 20:33:45 +0000
+Subject: [PATCH 07/24] Document the durability decisions in the release notes
+ and design docs
+
+Release notes, header publication, compatibility rules, shared mode and
+the connection string guide describe the new rules: a commit that cannot
+be made durable throws before it writes, commits stay durable in the WAL
+while only the data file cannot sync (with the header rule and the WAL
+limit), failures are sticky with the engine read-only until reopened,
+and durable commits=false is the way to use storage that cannot sync.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB/Client/Structures/ConnectionString.cs |   2 +-
+ LiteDB/Engine/EngineSettings.cs              |   4 +-
+ docs/connection-string-parsing.md            |  34 +++--
+ docs/header-publication.md                   |  63 +++++----
+ docs/release-notes.md                        | 139 +++++++++++--------
+ docs/rules/compatibility.md                  |  13 +-
+ docs/shared-mode-safety.md                   |   9 +-
+ 7 files changed, 157 insertions(+), 107 deletions(-)
+
+diff --git a/LiteDB/Client/Structures/ConnectionString.cs b/LiteDB/Client/Structures/ConnectionString.cs
+index f0a5d52d9..7a666cd1a 100644
+--- a/LiteDB/Client/Structures/ConnectionString.cs
++++ b/LiteDB/Client/Structures/ConnectionString.cs
+@@ -104,7 +104,7 @@ namespace LiteDB
+         /// survives power loss and operating system crashes, at about one device sync per commit. Set to false for
+         /// the behaviour before 6.0: commits are handed to the operating system only, which is much faster for many
+         /// small transactions and still survives a process crash, but a power loss or operating system crash can lose
+-        /// the most recent commits. Checksums prevent partial WAL transactions from being recovered. Not stored in the data file (default: true)
++        /// the most recent commits; storage that rejects the sync (#2242) needs it, a durable commit throws there. Not stored in the data file (default: true)
+         /// </summary>
+         public bool DurableCommits { get; set; } = true;
+ 
+diff --git a/LiteDB/Engine/EngineSettings.cs b/LiteDB/Engine/EngineSettings.cs
+index a67aa77ee..3018024ec 100644
+--- a/LiteDB/Engine/EngineSettings.cs
++++ b/LiteDB/Engine/EngineSettings.cs
+@@ -184,7 +184,9 @@ namespace LiteDB.Engine
+         /// InsertBulk pay it once. When false (the behaviour before 6.0), committed data is handed to the operating
+         /// system only: it survives a crash of the process, but a power loss or operating system crash can lose the
+         /// most recent commits. Checksummed WAL recovery discards incomplete transactions and their dependent tail.
+-        /// Checkpoints and file creation are synced either way.
++        /// Checkpoints and file creation are synced either way. When true, a commit that cannot be made durable
++        /// (storage that rejects the sync, #2242) throws an <see cref="System.IO.IOException"/> before it writes,
++        /// and the engine then continues read-only; set false to use such storage.
+         /// Not stored in the data file: the same file can be opened with either value. Has no effect on
+         /// <c>:memory:</c>, <c>:temp:</c> and non-file streams, which cannot be synced. (default: true)
+         /// </summary>
+diff --git a/docs/connection-string-parsing.md b/docs/connection-string-parsing.md
+index a299049c6..97e21cc70 100644
+--- a/docs/connection-string-parsing.md
++++ b/docs/connection-string-parsing.md
+@@ -15,7 +15,7 @@ The string constructors of `ConnectionString` and `LiteDatabase` use these rules
+   built-in name, ignoring case: `filename`, `connection`, `password`,
+   `index migration limit size`, `legacy index scan`,
+   `initial size`, `readonly`, `upgrade`, `auto-rebuild`,
+-  `reject invalid local time`, `durable commits`, `collation`, `memory profile`,
++  `reject invalid local time`, `durable commits`, `wal limit`, `collation`, `memory profile`,
+   `cache size`, or `transaction pages`.
+ - A single unknown `key=value`, including `tenant=acme` or the typo
+   `filenam=production.db`, is now a filename. This changes the previous
+@@ -91,18 +91,36 @@ loads, caches, test suites and other data that can be rebuilt:
+   reports the discarded tail. Do not opt out for data that must survive power loss.
+ - Checkpoints stay synced: the WAL and header journal must be durable before
+   pages are copied into the data file, and the data file is synced afterwards.
+-  A failed checkpoint sync closes the engine before data is overwritten, even
+-  when commits previously fell back to OS-cache flushes. Reopen after resolving
+-  the storage failure. Log storage that rejects sync as unsupported (#2242)
+-  instead checkpoints without the log sync, as before, with no power-loss
+-  guarantee. File creation is synced as before.
++  A checkpoint whose sync fails with an I/O error writes no further, and the
++  engine continues read-only until it is reopened ([decisions](decisions/durability-policy.md),
++  decision 6); an automatic checkpoint or `Dispose` does not throw for it,
++  `$database.writeFailure` reports it. Log storage that rejects sync as
++  unsupported (#2242) instead checkpoints without the log sync, as before, with
++  no power-loss guarantee: that answer is the reason to opt out, not a failure.
++  The WAL is still removed only after a data sync that covers the checkpoint's
++  writes, so where the data file cannot sync the WAL keeps growing up to
++  `wal limit`. File creation is synced as before.
+ 
+ The setting applies per open and is not stored in the data file: the file format
+ is the same for either value. Both settings work with `Direct` and
+ `Shared` connections, encrypted or not. `:memory:`, `:temp:` and non-file
+ streams cannot be synced and ignore it. `$database.durableLogFlush` reports
+-`false` while commits are not synced, either because of this setting or because
+-the storage rejected the sync request (some network shares).
++`false` while commits are not synced because of this setting. With durable
++commits, storage that rejects the sync request (some network shares, #2242)
++makes a commit throw before it writes: open such a database with
++`durable commits=false`.
++
++## The WAL limit
++
++While the data file cannot sync to the device, checkpoints cannot move the WAL
++into it: the WAL keeps every commit (durably, with durable commits) and grows.
++`wal limit` (`ConnectionString.WalLimit`, `EngineSettings.WalLimit`; sizes in
++bytes or with `KB`, `MB`, `GB`; default 1 GB) is how large it may grow: past
++it, a write that starts throws an `IOException` and reads keep working. Each
++refused write first retries the data sync, so writes resume on their own once
++the data file syncs, and the next checkpoint drains the WAL. `$database.walKept`,
++`logFileSize` and `walLimit` show how close a kept WAL is to the limit. The
++limit is not stored in the data file.
+ 
+ ## Reading files that await index migration read-only
+ 
+diff --git a/docs/header-publication.md b/docs/header-publication.md
+index 67635d878..4ccee39f7 100644
+--- a/docs/header-publication.md
++++ b/docs/header-publication.md
+@@ -154,37 +154,40 @@ preserving data and recovery frames. Semantic-error marker writes require the
+ same durable journal before changing the header; a failed sync leaves that header
+ intact during shutdown.
+ 
+-Log storage that rejects sync as unsupported (some network shares and virtual
+-file systems, #2242) is different: it can never make recovery information durable.
+-Conversion, checkpoint and marker writes then proceed in the same write order
+-without the device sync, as before #2818, reported by
+-`$database.durableLogFlush=false`. The ordered writes reach the operating system,
+-so a killed process still recovers; power loss can lose recent commits or leave a
+-checkpoint partially applied, the same risk as before #2818. Every barrier still
+-attempts a real sync first, and an engine whose data is a file proves the data file
+-before its first log sync (so no log sync makes an earlier engine's unsynced WAL change
+-durable ahead of its backfill), so commits acknowledged after the storage syncs again
+-regain the full guarantee. A data file that answers the same degrades its barriers the same way.
+-A log sync then waits for the data file: it would make durable a WAL change (a full
+-checkpoint's emptied WAL, a converted WAL) whose backfill or header is in the data file's
+-OS cache only. After a data sync answered "cannot sync", every log sync first retries it and
+-only flushes the log to the OS cache while the data file still cannot sync, so the WAL that
+-last synced stays the durable one, with every commit acknowledged durable before, also if
+-the WAL alone syncs again, and a stream opened to read never syncs. The OS can still write
+-an emptied WAL back ahead of the backfill, and no engine knows whether an earlier one (of any
+-connection or process) synced the WAL's frames. So the WAL and its header journal are removed
+-only after a data sync that covers what they protect succeeded. Every checkpoint that writes
+-first syncs the data file and writes nothing while that sync fails, whichever engine runs
+-it: the WAL grows until the data file syncs again (`$database.walKept`), also on storage that
+-never syncs. A data sync that fails later in the same checkpoint (after the backfill, the
+-salt rotation or a retirement root) stops the engine before anything is removed, leaving
+-the state of a crash at that point; the next open repairs a torn header from the journal,
+-and a writable open that would have to retire a journal while the data file cannot sync opens
++Storage that rejects sync as unsupported (some network shares and virtual file systems,
++#2242) is different: it can never make recovery information durable. The rules follow the
++maintainer's decisions ([decisions/durability-policy.md](decisions/durability-policy.md)).
++With durable commits (the default) a log that answers "cannot sync" is a failure: a commit
++throws before it writes a frame (an engine proves, before its first commit, that the log and
++its directory sync), a checkpoint stops before it writes on, and an open that must sync the
++log first opens read-only. With `durable commits=false` that answer is not a failure:
++conversion, checkpoint and marker writes proceed in the same write order without the device
++sync, as before #2818. The ordered writes reach the operating system, so a killed process
++still recovers; power loss can lose recent commits, the risk the caller accepted.
++
++A data file that answers "cannot sync" never loses what the WAL holds. Commits stay durable
++in the WAL, whose syncs continue, as long as the data header the WAL depends on (its salt,
++version and creation time) is on the device: an engine whose data is a file proves it before
++its first log sync (skipped while the header is one a successful data sync in this process
++left); where it cannot (a database created there, or a new process), a durable commit throws
++before it writes. The OS can write an emptied WAL back ahead of the backfill, and no engine
++knows whether an earlier one (of any connection or process) synced the WAL's frames, so the
++WAL, its header journal and a legacy header backup are removed only after a data sync that
++covers every data write of the engine succeeded; every log shrink goes through that check.
++Every checkpoint that writes first syncs the data file and writes nothing while that sync
++fails, whichever engine runs it: the WAL grows until the data file syncs again
++(`$database.walKept`, `walLimit`), also on storage that never syncs, and past `wal limit` a
++write throws while reads keep working. A data sync that fails later in the same checkpoint
++(after the backfill, the salt rotation or a retirement root) records a write failure before
++anything is removed, leaving the state of a crash at that point; the engine continues
++read-only until reopened. The next open repairs a torn header from the journal, and a
++writable open that would have to retire a journal while the data file cannot sync opens
+ read-only instead (writes throw, `$database.readOnlyReason` says why). A conversion, which
+-empties a log, likewise opens read-only there, and a rebuild is refused, both files unchanged. Only a WAL the engine keeps in memory, which survives no
+-power loss, is emptied. A format promotion keeps its journal the same way: it writes only
+-right after a data sync that succeeded, is refused otherwise, and stops the engine with the
+-journal kept when the data file stops syncing after its header write. A legacy header
++empties a log, likewise opens read-only there, and a rebuild is refused, both files
++unchanged. Only a WAL the engine keeps in memory, which survives no power loss, is emptied.
++A format promotion keeps its journal the same way: it writes only right after a data sync
++that succeeded, is refused otherwise, and records a failure with the journal kept when the
++data file stops syncing after its header write. A legacy header
+ found beside checksummed frames (neither file synced and the OS wrote the log back first,
+ or a data file restored without its log) fails the open without changing either file, since
+ legacy rules would replay the frames as pages at positions read from their trailers.
+diff --git a/docs/release-notes.md b/docs/release-notes.md
+index 44dd98943..c2c269468 100644
+--- a/docs/release-notes.md
++++ b/docs/release-notes.md
+@@ -36,59 +36,73 @@ Retired frames keep durable witnesses (56 bytes each, up to 145 per WAL frame) s
+ recovery and rebuild still verify complete transactions after slot reuse.
+ Reclamation reuses WAL capacity but does not shrink the file; long-lived readers
+ can grow witness metadata and recovery work until a full checkpoint. On storage
+-that rejects device sync (#2242) no frame is retired and no slot reused: the WAL appends as
+-before v13 until a full checkpoint whose data file synced truncates it (see below: while the
+-data file cannot sync, checkpoints write nothing). Every retiring checkpoint first syncs the data file and the WAL (and
+-once the WAL's directory), so such storage is found before any witness depends on it;
+-storage that stops syncing during the checkpoint keeps the retired frames and publishes
+-no root once it found out. An engine whose data is a file (opened by it or passed as a
+-`FileStream`) proves the data file syncs before its first log sync, once per data header
+-in the process, and syncs the WAL once before it first reuses a slot. On storage that
+-syncs, a retiring checkpoint costs one extra data and log sync and an engine's first slot
+-reuse one log sync; the data file proof costs nothing while its header is unchanged. The
+-process remembers, per path, the header its latest data sync left: a file replaced at that
+-path with a byte-identical header (a copy of the same checkpoint restored over it) is taken
+-as that synced file, so whoever replaces a database file must sync it (`File.Copy` does
+-not); a replacement with any other header is proven again. A
+-data sync that fails with an I/O error during that proof fails the operation and stops
+-the engine, as it does in a checkpoint. After a data sync answered "cannot sync", a log
+-sync waits for the data file (each one retries its sync first and otherwise flushes the log
+-to the OS cache only), so no log sync makes an emptied or converted WAL durable ahead of
+-its unsynced backfill or header: commits acknowledged durable before the storage stopped
+-syncing survive a power loss, also when the WAL alone syncs again. The WAL and its header
+-journal (the log's recovery copy of the data header) are removed only after a data sync
+-that covers what they protect succeeded (the OS could write an emptied WAL back ahead of the
+-backfill, and no engine can know whether an earlier one, maybe of another process, synced
+-its frames). Every checkpoint that writes first syncs the data file (one more data sync per
+-such checkpoint on storage that syncs; a retiring checkpoint's proof already is that sync)
+-and writes nothing while that sync fails, in every
+-engine, including a restart or a shared-mode operation: the WAL is kept and grows until the
+-data file syncs again, and `$database.walKept` reports it: a writable engine that has not
+-seen a data sync succeed tries one first, and a read-only engine reports what its
+-connection's engines found. A shared connection reads `$database` from its own operation
+-engine, not from a read-only snapshot (which also reported `readOnly` on a writable
+-connection). `logFileSize` and `dataFileSize` are now 64-bit. Once an engine, or an engine of the same shared connection, found that the data file
+-cannot sync, its checkpoints retry the data sync before they scan the WAL. A data sync that fails later in the same
+-checkpoint stops the engine with the WAL and the journal intact. On storage that never syncs
+-the WAL therefore never shrinks (before, it was emptied as before #2818). A writable open that
+-would first have to convert a 5.x file, migrate its indexes, or repair or retire a header
+-journal while the data file cannot sync opens read-only instead (a refusal found before the
+-open wrote anything changes neither file; one found later leaves what it wrote, which the
+-read-only open and the next writable open recover): reads
+-work (indexes in the old order are scanned, as with `legacy index scan=true`), explicit
+-transactions are accepted, and every write throws an `IOException` naming the cause without
+-stopping the engine, so the application can catch it and keep reading. `$database.readOnly`
+-and `$database.readOnlyReason` report it without a write. Once the data file syncs, the next
+-open converts or repairs the file. A rebuild there is refused with an `IOException` and leaves
+-the database open and unchanged (5.0.21 rebuilt there without a power-loss guarantee; it had
+-no format conversion). A WAL the engine keeps in memory
+-(`:memory:`, `:temp:`, `LiteDatabase(Stream)` without a log stream) survives no power loss
+-and is still emptied, also by a conversion. A format promotion (a compact or vector write,
+-an index migration, or the first retiring checkpoint, that raises the file version) keeps its
+-header journal the same way: it first syncs the data file (one more data sync per promotion)
+-and stops the engine with the journal kept when the data file stops syncing after its header
+-write. While the data file cannot sync, a compact write stays BSON and an index migration
+-opens read-only (above). Encrypted streams
++that rejects device sync (#2242) no frame is retired and no slot reused. Every retiring
++checkpoint first syncs the data file and the WAL (and once the WAL's directory), so such
++storage is found before any witness depends on it; storage that stops syncing during the
++checkpoint keeps the retired frames and publishes no root once it found out. An engine
++syncs the WAL once before it first reuses a slot. On storage that syncs, a retiring
++checkpoint costs one extra data and log sync and an engine's first slot reuse one log sync.
++
++The durability rules follow the maintainer's decisions in
++[decisions/durability-policy.md](decisions/durability-policy.md):
++
++- **The WAL is removed only behind a data sync.** The WAL, its header journal (the log's
++  recovery copy of the data header) and a legacy header backup are removed only after a data
++  sync that covers every write the engine made to the data file succeeded: the OS could write
++  an emptied WAL back ahead of the backfill, and no engine can know whether an earlier one,
++  maybe of another process, synced its frames. Every checkpoint that writes first syncs the
++  data file (one more data sync per such checkpoint on storage that syncs; a retiring
++  checkpoint's proof already is that sync) and writes nothing while that sync fails, in every
++  engine, including a restart or a shared-mode operation. A WAL the engine keeps in memory
++  (`:memory:`, `:temp:`, `LiteDatabase(Stream)` without a log stream) survives no power loss
++  and is still emptied.
++- **A commit that cannot be made durable fails loudly** (with durable commits, the default;
++  see "Durable commits" below). It throws before it writes a frame and is never acknowledged
++  as non-durable.
++- **Commits stay durable in the WAL while only the data file cannot sync.** Log syncs no
++  longer wait for the data file; checkpoints write nothing, so the WAL keeps every commit and
++  grows. `$database.walKept` reports it (a writable engine that has not seen a data sync
++  succeed tries one first; a read-only engine reports what its connection's engines found),
++  with `logFileSize` (now 64-bit, like `dataFileSize`) and `walLimit`. Past the WAL limit
++  (`wal limit`, `EngineSettings.WalLimit`, 1 GiB by default) a write that starts throws an
++  `IOException` while reads keep working; each refused write retries the data sync, and writes
++  resume once it succeeds (the next checkpoint drains the WAL). This requires the data header
++  the WAL depends on (its WAL salt, version and creation time) to be on the device: the engine
++  synced it, or it is the header a successful sync in this process left. The process
++  remembers that header per path: a file replaced at that path with a byte-identical header
++  (a copy of the same checkpoint restored over it) is taken as that synced file, so whoever
++  replaces a database file must sync it (`File.Copy` does not). Where the header is not known
++  to be on the device (a database created there, or a new process) and the data file cannot
++  sync, a commit with durable commits throws before it writes. On storage where neither file
++  syncs, opted-out commits keep the WAL the same way (before, it was emptied as before #2818).
++- **Failures are sticky.** A write or sync that failed (a torn WAL write, a failed flush, a
++  checkpoint or promotion whose data sync fails after it wrote, disk full) is recorded: file,
++  operation, error, time, and whether the WAL was kept. The operation that hit it throws when
++  it was the caller's own (a commit, an explicit `Checkpoint()`); an automatic checkpoint after
++  a successful commit and `Dispose` do not throw. The engine then continues read-only until
++  the database is reopened: reads keep working, every write throws an `IOException` with the
++  recorded failure before it changes anything, an explicit transaction the failure ended
++  throws at `Commit`, and `$database.writeFailure` reports the record without a write. A
++  shared connection keeps it for its later operations until it is reopened. Before, the
++  engine closed and every later call, reads included, threw.
++- **Opens that would need a data sync open read-only.** A writable open that would first
++  have to convert a 5.x file, migrate its indexes, or repair or retire a header journal while
++  the data file cannot sync opens read-only instead (a refusal found before the open wrote
++  anything changes neither file; one found later leaves what it wrote, which the read-only
++  open and the next writable open recover): reads work (indexes in the old order are scanned,
++  as with `legacy index scan=true`), explicit transactions are accepted, and every write
++  throws an `IOException` naming the cause. `$database.readOnly` and
++  `$database.readOnlyReason` report it without a write; a shared connection reads
++  `$database` from its own operation engine, not from a read-only snapshot (which also
++  reported `readOnly` on a writable connection). Once the data file syncs, the next open
++  converts or repairs the file. A rebuild there is refused with an `IOException` and leaves
++  the database open and unchanged (5.0.21 rebuilt there without a power-loss guarantee; it had
++  no format conversion). A format promotion (a compact or vector write, an index migration,
++  or the first retiring checkpoint, that raises the file version) keeps its header journal the
++  same way: it first syncs the data file (one more data sync per promotion). While the data
++  file cannot sync, a compact write stays BSON and an index migration opens read-only.
++
++A data sync that fails with an I/O error fails the operation, in both modes. Encrypted streams
+ opened to read no longer sync their file. A 5.x data file found beside its conversion's WAL (whose
+ converted header never reached the device) fails to open instead of being replayed. Larger
+ shared-mode query results stream from a private snapshot protected by a lease
+@@ -305,12 +319,19 @@ collection does not release abandoned thread-affine locks in a live engine.
+ ## Durable commits (#2818)
+ 
+ Every committed transaction is now synced to the storage device before the
+-commit returns, so acknowledged commits survive power loss on storage that can
+-sync. On storage that rejects the sync (some network shares and virtual file
+-systems, #2242) commits fall back to the earlier behaviour (the OS cache only), while the WAL
+-is kept until the data file syncs and conversions open read-only (see above);
+-`$database.durableLogFlush` reports which one is in effect. A
+-sync that fails with an I/O error still stops the engine before data is overwritten.
++commit returns, so acknowledged commits survive power loss. A commit that cannot be made
++durable fails loudly instead of being acknowledged: on storage that rejects the sync (some
++network shares and virtual file systems, #2242), a commit throws an `IOException` ("This
++commit was not written: the log file cannot sync ...") before it writes a frame, and the
++engine then continues read-only (see "Failures are sticky" above). So does a commit whose
++WAL directory cannot be synced, or opened to be synced. Before an engine's first commit it
++proves, once per log file per process, that the log and its directory sync; storage that
++syncs pays that once. A log that stops syncing later fails the commit that finds out, whose
++outcome is then unknown (its frames reached the operating system). Set
++`durable commits=false` to use such storage: commits then reach the OS cache only and a
++"cannot sync" answer is not a failure. `$database.durableLogFlush` reports whether commits are
++made durable. A sync that fails with an I/O error fails the operation in both modes, before
++data is overwritten.
+ On Linux and macOS this requires LiteDB's own device sync: released .NET runtimes
+ lose every `fsync` error in `FileStream.Flush(true)` (dotnet/runtime#124725), which
+ had hidden EIO and unsupported-sync answers alike. File handles are now synced with
+diff --git a/docs/rules/compatibility.md b/docs/rules/compatibility.md
+index a7ec8ca12..611e788af 100644
+--- a/docs/rules/compatibility.md
++++ b/docs/rules/compatibility.md
+@@ -147,12 +147,15 @@ the frames it retired and publishes no root once it found out. Before its first
+ every engine (of any connection) syncs the WAL, and before its first log sync an engine
+ whose data is a file proves the data file (once per data header in the process). Remove a
+ file WAL or a header journal only after a data sync that covers what it protects succeeded;
+-never infer that no earlier engine or process synced its frames. A checkpoint or format
++never infer that no earlier engine or process synced its frames; every log shrink goes
++through the one check that a data sync covered every data write. A checkpoint or format
+ promotion syncs the data file before it writes and writes nothing while that fails; a failure
+-later in either stops the engine before any removal; an open that would retire a journal, convert or
+-migrate without a data sync opens read-only instead (writes throw, reads work); a rebuild is
+-refused unchanged; and after "cannot sync"
+-a log sync waits for a data sync that succeeds.
++later in either is recorded before any removal and the engine continues read-only; an open that
++would retire a journal, convert or migrate without a data sync opens read-only instead (writes
++throw, reads work); a rebuild is refused unchanged. With durable commits a commit that cannot be
++made durable (a log or WAL directory that cannot sync, or a data header not known to be on the
++device while the data file cannot sync) throws before it writes; log syncs never wait for the data
++file. Follow [the durability decisions](../decisions/durability-policy.md).
+ Remove/sync the WAL-bound header journal before clearing or reusing payloads.
+ Keep per-transaction page positions increasing across safepoints even when a
+ checkpoint introduces earlier holes. Only full checkpoint can clear the root and
+diff --git a/docs/shared-mode-safety.md b/docs/shared-mode-safety.md
+index 29e9ec213..be41ddf50 100644
+--- a/docs/shared-mode-safety.md
++++ b/docs/shared-mode-safety.md
+@@ -114,11 +114,14 @@ makes durable a data header (salt, witness root, format version) or a backfill t
+ an earlier engine left in the OS cache only; it skips this while the data header is
+ one a successful data sync in this process left, so healthy storage pays it once per
+ header change, not per operation. Before its first slot reuse an engine also syncs
+-the raw log once. A "cannot sync" answer makes it report reduced durability and
+-append instead.
++the raw log once. A "cannot sync" answer makes it append instead; with durable
++commits a log that cannot sync fails the commit before it writes. A write or sync
++failure of one operation is kept connection-wide: the connection's later operations
++open read-only and report it in `$database.writeFailure` until it is reopened.
+ 
+ `$database.durableLogFlush` is false when the connection opts out of device sync
+-or has acknowledged a commit after that fallback. Shared connections retain this
++or its log fell back to OS-cache flushes (only possible after opting out; with
++durable commits such a commit throws instead). Shared connections retain this
+ diagnostic across internal engine reopenings, including diagnostic queries. A
+ later engine still attempts device sync; retaining the diagnostic does not disable
+ sync. A new independent connection starts with its own diagnostic state. The
+-- 
+2.43.0
+

@@ -1,0 +1,988 @@
+From 2b4f1ac0fcca77e700ce5a0ed5c3e78f9d13a028 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:43:53 +0000
+Subject: [PATCH 1/5] Start every WAL with a copy of the data header (decisions
+ 11 and 14)
+
+The first batch that extends an empty WAL writes a header frame at frame
+0 in both modes: the data header its frames depend on, with a marker
+recovery skips. An open restores a data header a power loss dropped
+(empty, short, never written back or torn) from it, writable or read-only,
+and never initializes a new database over the WAL of one whose data file
+lost its header: it restores it or refuses, changing neither file. Before,
+such a WAL was silently discarded (durable commits=false on storage that
+cannot sync, then a power loss).
+
+Commits no longer depend on the data header being on the device, so the
+"header not proven" refusal goes and log syncs no longer wait for it. A
+best-effort data barrier stays before an engine's first durable commit
+(once per process and header; once per shared connection), so a file
+someone copied into place is on the device before commits build on it.
+
+Also: a batch without pages runs no proof (a no-op update on a log that
+cannot sync neither throws nor records a failure); only a log the engine
+opens is remembered as proven; the proven-log cache forgets its oldest
+path, never all of them; the rebuild reader restores a lost header too.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB.Tests/Regressions/HeaderFrame_Tests.cs | 321 ++++++++++++++++++
+ .../Disk/DiskService.CommitDurability.cs      |  55 +--
+ .../Engine/Disk/DiskService.DurableFlush.cs   |  44 +--
+ LiteDB/Engine/Disk/DiskService.HeaderFrame.cs | 110 ++++++
+ .../Engine/Disk/DiskService.HeaderJournal.cs  |   2 +-
+ LiteDB/Engine/Disk/DiskService.Validation.cs  |   1 +
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs    |  16 +-
+ LiteDB/Engine/Disk/DiskService.cs             |   5 +-
+ LiteDB/Engine/Disk/DurableLogs.cs             |  21 +-
+ LiteDB/Engine/Disk/HeaderFrame.cs             |  61 ++++
+ LiteDB/Engine/Disk/SharedDurabilityState.cs   |   6 +
+ LiteDB/Engine/Disk/WalChecksum.cs             |  55 ++-
+ LiteDB/Engine/Disk/WalRetirementReader.cs     |   3 +-
+ .../FileReader/FileReaderV8.Checksums.cs      |   7 +
+ 14 files changed, 636 insertions(+), 71 deletions(-)
+ create mode 100644 LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+ create mode 100644 LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+ create mode 100644 LiteDB/Engine/Disk/HeaderFrame.cs
+
+diff --git a/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs b/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+new file mode 100644
+index 000000000..12bac4dcf
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+@@ -0,0 +1,321 @@
++#if DEBUG || TESTING
++using System;
++using System.IO;
++using System.Linq;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Tests.Issues;
++using Xunit;
++using static LiteDB.Constants;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>
++    /// Decision 11 of docs/decisions/durability-policy.md: every WAL generation starts with a header
++    /// frame, a copy of the data header its frames depend on, in both modes. Recovery restores a data
++    /// header a power loss dropped from it, and an open never initializes a new database over the WAL
++    /// of one whose data file lost its header: it restores the header or refuses, changing neither
++    /// file. Before, an empty data file beside such a WAL became a new, empty database and recovery
++    /// silently discarded every frame (for example after <c>durable commits=false</c> on storage that
++    /// cannot sync, #2242, and a power loss).
++    /// </summary>
++    [Trait("Category", "IoSafety")]
++    [Collection(NativeFileSyncCollection.Name)]
++    public class HeaderFrame_Tests
++    {
++        private const int Marker = 52; // trailer offset of the frame marker
++        private const uint HeaderFrameMagic = 0x31524448;
++
++        [Theory]
++        [InlineData(true)]
++        [InlineData(false)]
++        public void Every_wal_generation_starts_with_a_copy_of_the_data_header(bool durable)
++        {
++            using var file = new TempFile();
++            var connection = $"Filename={file.Filename};Durable Commits={durable}";
++            using (var db = new LiteDatabase(connection))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Row(1));
++                AssertHeaderFrame(file.Filename);
++                db.GetCollection("rows").Insert(Row(2));
++                AssertHeaderFrame(file.Filename);
++                Frames(file.Filename).Should().BeGreaterThan(2, "one header frame, then the commits' frames");
++
++                db.Checkpoint();
++                LogLength(file.Filename).Should().Be(0, "a checkpoint whose data sync succeeded empties the WAL");
++                var drained = SyncPowerLossModel.ReadShared(file.Filename).Take(PAGE_SIZE).ToArray();
++                db.GetCollection("rows").Insert(Row(3));
++                AssertHeaderFrame(file.Filename);
++                HeaderPage(file.Filename).Should().Equal(drained, "the next generation copies the header its checkpoint rotated");
++            }
++            using (var reopened = new LiteDatabase(connection))
++                reopened.GetCollection("rows").Count().Should().Be(3);
++        }
++
++        /// <summary>
++        /// The owner's second opinion, finding 1: storage where neither file syncs, commits opted out
++        /// of durability, then a power loss after the OS wrote the log back but not the data file's
++        /// header (a new data file left empty). The open restores the header and every commit.
++        /// </summary>
++        [Theory]
++        [InlineData(0)] // the data file left empty
++        [InlineData(1)] // its header page never written back (zeros)
++        [InlineData(2)] // its header page torn half-way
++        public void Opted_out_commits_survive_a_data_file_that_lost_its_header(int damage)
++        {
++            using var file = new TempFile();
++            var connection = $"Filename={file.Filename};Durable Commits=false";
++            NativeFileSync.SimulateErrno = _ => 22; // neither file syncs (#2242)
++            try
++            {
++                using var db = new LiteDatabase(connection);
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 50).Select(Row));
++                db.GetCollection("rows").EnsureIndex("value");
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++
++            var data = File.ReadAllBytes(file.Filename);
++            if (damage == 0) data = new byte[0];
++            else Array.Clear(data, damage == 1 ? 0 : PAGE_SIZE / 2, damage == 1 ? PAGE_SIZE : PAGE_SIZE / 2);
++            File.WriteAllBytes(file.Filename, data);
++
++            using (var db = new LiteDatabase(connection))
++            {
++                db.GetCollection("rows").Count().Should().Be(50);
++                db.GetCollection("rows").Count(Query.EQ("value", 3)).Should().Be(7);
++                db.GetCollection("rows").Insert(Row(51));
++            }
++            using var reopened = new LiteDatabase(connection);
++            reopened.GetCollection("rows").Count().Should().Be(51);
++        }
++
++        [Fact]
++        public void Read_only_open_reads_a_lost_header_from_the_log_without_writing()
++        {
++            using var file = new TempFile();
++            WriteUncheckpointed(file.Filename, 20);
++            var data = File.ReadAllBytes(file.Filename);
++            Array.Clear(data, 0, PAGE_SIZE);
++            File.WriteAllBytes(file.Filename, data);
++            var log = File.ReadAllBytes(FileHelper.GetLogFile(file.Filename));
++
++            using (var db = new LiteDatabase($"Filename={file.Filename};ReadOnly=true"))
++                db.GetCollection("rows").Count().Should().Be(20);
++
++            File.ReadAllBytes(file.Filename).Should().Equal(data, "a read-only open writes nothing");
++            File.ReadAllBytes(FileHelper.GetLogFile(file.Filename)).Should().Equal(log);
++        }
++
++        [Fact]
++        public void Read_only_open_of_an_empty_data_file_explains_the_restore_and_writes_nothing()
++        {
++            using var file = new TempFile();
++            WriteUncheckpointed(file.Filename, 5);
++            File.WriteAllBytes(file.Filename, new byte[0]);
++            var log = File.ReadAllBytes(FileHelper.GetLogFile(file.Filename));
++
++            Action open = () => new LiteDatabase($"Filename={file.Filename};ReadOnly=true").Dispose();
++            open.Should().Throw<LiteException>().WithMessage("*data file is empty*Open it once without read-only*");
++
++            new FileInfo(file.Filename).Length.Should().Be(0);
++            File.ReadAllBytes(FileHelper.GetLogFile(file.Filename)).Should().Equal(log);
++            using var writable = new LiteDatabase(file.Filename);
++            writable.GetCollection("rows").Count().Should().Be(5);
++        }
++
++        /// <summary>
++        /// The header frame names pages the data file held when the WAL started (here after a
++        /// checkpoint): an empty or missing data file lost them, so no restore can be complete. The
++        /// open refuses, changing neither file, instead of starting a new database over the WAL.
++        /// </summary>
++        [Theory]
++        [InlineData(false)]
++        [InlineData(true)]
++        public void Log_of_a_database_whose_data_file_is_gone_is_never_initialized_over(bool missing)
++        {
++            using var file = new TempFile();
++            using (var db = new LiteDatabase(file.Filename))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 30).Select(Row));
++                db.Checkpoint();
++                db.GetCollection("rows").Insert(Row(31));
++            }
++            var logName = FileHelper.GetLogFile(file.Filename);
++            var log = File.ReadAllBytes(logName);
++            if (missing) File.Delete(file.Filename);
++            else File.WriteAllBytes(file.Filename, new byte[0]);
++
++            Action open = () => new LiteDatabase(file.Filename).Dispose();
++            open.Should().Throw<LiteException>().WithMessage($"*data file is {(missing ? "missing" : "empty")}*move the log file aside*");
++
++            File.Exists(file.Filename).Should().Be(!missing, "the refused open creates no data file");
++            if (!missing) new FileInfo(file.Filename).Length.Should().Be(0);
++            File.ReadAllBytes(logName).Should().Equal(log);
++        }
++
++        [Fact]
++        public void Encrypted_data_file_left_empty_is_restored_from_its_log()
++        {
++            using var file = new TempFile();
++            var connection = $"Filename={file.Filename};Password=secret;Durable Commits=false";
++            using (var db = new LiteDatabase(connection))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 12).Select(Row));
++            }
++            File.WriteAllBytes(file.Filename, new byte[0]);
++
++            using (var db = new LiteDatabase(connection))
++                db.GetCollection("rows").Count().Should().Be(12);
++            Action wrongPassword = () => new LiteDatabase($"Filename={file.Filename};Password=other").Dispose();
++            wrongPassword.Should().Throw<LiteException>();
++        }
++
++        /// <summary>
++        /// An intact data header of another salt always wins: the WAL beside it is a stale generation
++        /// (its frames were checkpointed before the salt rotated), discarded as before.
++        /// </summary>
++        [Fact]
++        public void Stale_wal_generation_beside_an_intact_header_is_discarded()
++        {
++            using var file = new TempFile();
++            var logName = FileHelper.GetLogFile(file.Filename);
++            byte[] stale;
++            using (var db = new LiteDatabase(file.Filename))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 10).Select(Row));
++                stale = SyncPowerLossModel.ReadShared(logName);
++                db.Checkpoint();
++                db.GetCollection("rows").Insert(Row(11));
++                db.Checkpoint();
++            }
++            File.WriteAllBytes(logName, stale);
++
++            using var reopened = new LiteDatabase(file.Filename);
++            reopened.GetCollection("rows").Count().Should().Be(11);
++            var info = reopened.Execute("SELECT $ FROM $database").Single();
++            info["recoveryInvalidWalTail"].AsBoolean.Should().BeTrue("the stale header frame fails the salt check");
++            info["recoveryDiscardedWalBytes"].AsInt64.Should().BeGreaterThan(0);
++        }
++
++        /// <summary>
++        /// A write that changes nothing (an update that matched no document) writes no frame, so it
++        /// needs no durability proof: on a log that cannot sync it neither throws nor records a failure.
++        /// </summary>
++        [Fact]
++        public void Write_that_changes_nothing_needs_no_log_proof()
++        {
++            using var file = new TempFile();
++            using (var setup = new LiteDatabase(file.Filename)) setup.GetCollection("rows").Insert(Row(1));
++            DurableLogs.Forget(Path.GetFullPath(FileHelper.GetLogFile(file.Filename)));
++            NativeFileSync.SimulateErrno = path => path.EndsWith("-log.db", StringComparison.OrdinalIgnoreCase) ? 22 : 0;
++            try
++            {
++                using var db = new LiteDatabase(file.Filename);
++                db.GetCollection("rows").Update(Row(99)).Should().BeFalse();
++                db.GetCollection("rows").DeleteMany(x => x["_id"] == 99).Should().Be(0);
++                var info = db.Execute("SELECT $ FROM $database").Single();
++                info["writeFailure"].IsNull.Should().BeTrue();
++                info["readOnly"].AsBoolean.Should().BeFalse();
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++        }
++
++        /// <summary>
++        /// Only a log the engine opens has its directory synced by the proof, so only its path is
++        /// remembered as proven: a caller's log stream would otherwise let a later engine that opens the
++        /// same path skip the directory sync.
++        /// </summary>
++        [Fact]
++        public void Caller_log_stream_is_not_remembered_as_proven()
++        {
++            using var file = new TempFile();
++            var logName = Path.GetFullPath(FileHelper.GetLogFile(file.Filename));
++            DurableLogs.Forget(logName);
++            using (var data = new FileStream(file.Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
++            using (var log = new FileStream(logName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
++            using (var db = new LiteDatabase(data, logStream: log))
++            {
++                db.GetCollection("rows").Insert(Row(1));
++            }
++            DurableLogs.Contains(logName).Should().BeFalse();
++
++            using (var db = new LiteDatabase(file.Filename)) db.GetCollection("rows").Insert(Row(2));
++            DurableLogs.Contains(logName).Should().BeTrue();
++        }
++
++        /// <summary>
++        /// Decision 14: the data barrier before a first commit runs once per shared connection, and a
++        /// connection that found the data file cannot sync does not retry it per operation: its
++        /// operations pay nothing for it. Its commits stay durable in the WAL (decision 4).
++        /// </summary>
++        [Theory]
++        [InlineData(false)]
++        [InlineData(true)]
++        public void Shared_connection_runs_the_data_barrier_once(bool dataSyncs)
++        {
++            using var file = new TempFile();
++            var dataName = Path.GetFullPath(file.Filename);
++            var runs = 0;
++            DiskService.DataBarrierRan = path => { if (string.Equals(path, dataName, StringComparison.OrdinalIgnoreCase)) runs++; };
++            NativeFileSync.SimulateErrno = path => !dataSyncs && Path.GetFullPath(path) == dataName ? 22 : 0;
++            try
++            {
++                using var db = new LiteDatabase($"Filename={file.Filename};Connection=shared");
++                db.CheckpointSize = 0;
++                for (var id = 1; id <= 5; id++) db.GetCollection("rows").Insert(Row(id));
++                runs.Should().Be(dataSyncs ? 1 : 0, dataSyncs ? "once for the connection" : "creating the database found that its data file cannot sync");
++                db.GetCollection("rows").Count().Should().Be(5);
++                db.Execute("SELECT $ FROM $database").Single()["durableLogFlush"].AsBoolean.Should().BeTrue();
++            }
++            finally
++            {
++                DiskService.DataBarrierRan = null;
++                NativeFileSync.SimulateErrno = null;
++            }
++        }
++
++        private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id, ["value"] = id % 7 };
++
++        /// <summary>Leave the files a process crash leaves after <paramref name="rows"/> commits: the WAL not checkpointed.</summary>
++        private static void WriteUncheckpointed(string filename, int rows)
++        {
++            using var scratch = new TempFile();
++            byte[] data, log;
++            using (var db = new LiteDatabase($"Filename={scratch.Filename};Durable Commits=false"))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, rows).Select(Row));
++                data = SyncPowerLossModel.ReadShared(scratch.Filename);
++                log = SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(scratch.Filename));
++            }
++            File.Delete(FileHelper.GetLogFile(scratch.Filename));
++            File.WriteAllBytes(filename, data);
++            File.WriteAllBytes(FileHelper.GetLogFile(filename), log);
++        }
++
++        private static void AssertHeaderFrame(string filename)
++        {
++            var log = SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(filename));
++            log.Length.Should().BeGreaterOrEqualTo(WalChecksum.FrameSize);
++            BitConverter.ToUInt32(log, PAGE_SIZE + Marker).Should().Be(HeaderFrameMagic, "frame 0 is the header frame");
++            var data = SyncPowerLossModel.ReadShared(filename);
++            log.Take(PAGE_SIZE).Should().Equal(data.Take(PAGE_SIZE), "it holds the data header byte for byte");
++        }
++
++        private static byte[] HeaderPage(string filename) => SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(filename)).Take(PAGE_SIZE).ToArray();
++
++        private static long LogLength(string filename)
++        {
++            var log = FileHelper.GetLogFile(filename);
++            return File.Exists(log) ? new FileInfo(log).Length : 0;
++        }
++
++        private static long Frames(string filename) => LogLength(filename) / WalChecksum.FrameSize;
++    }
++}
++#endif
+diff --git a/LiteDB/Engine/Disk/DiskService.CommitDurability.cs b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+index 59830726d..dedb28d7b 100644
+--- a/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
++++ b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+@@ -12,9 +12,9 @@ namespace LiteDB.Engine
+         /// <summary>
+         /// Decision 3 of docs/decisions/durability-policy.md: with durable commits a commit that cannot
+         /// be made durable throws, before it writes a frame. Before this engine's first WAL batch, prove
+-        /// that the data header the WAL's frames depend on is on the device (<see cref="DataHeaderDurable"/>)
+-        /// and that the log file and its directory sync: the log once per path per process
+-        /// (<see cref="DurableLogs"/>), so storage that syncs pays it once. A failure is recorded (decision
++        /// that the log file and its directory sync: once per path per process (<see cref="DurableLogs"/>),
++        /// so storage that syncs pays it once. The data file need not sync: the WAL starts with a copy
++        /// of the data header (decision 11, <see cref="HeaderFrame"/>). A failure is recorded (decision
+         /// 6): the engine reopens read-only and refuses writes until the database is reopened.
+         /// Caller holds the log writer lock, before the batch writes anything.
+         /// </summary>
+@@ -23,12 +23,7 @@ namespace LiteDB.Engine
+             if (!_durableCommits || _volatileLog || _readOnly || _commitsProven) return;
+             try
+             {
+-                if (!this.DataHeaderDurable())
+-                {
+-                    throw UnsyncedStorage(WriteFailure.InFile(new IOException(NotWritten +
+-                        "the data file cannot sync to the device (#2242) and its header is not known to be on the device, " +
+-                        "so the log file cannot make a commit durable." + OptOut), FileOrigin.Data));
+-                }
++                this.DataBarrierBeforeFirstCommit();
+                 if (_logPath == null || !DurableLogs.Contains(_logPath))
+                 {
+                     var raw = stream is ChecksummedWalStream wal ? wal.RawStream : stream;
+@@ -60,6 +55,33 @@ namespace LiteDB.Engine
+             }
+         }
+ 
++        /// <summary>
++        /// Decision 14: the header frame covers what the WAL depends on, not what it builds on. A WAL
++        /// holds changed pages only, so before an engine's first durable commit sync the data file
++        /// once: a database file someone copied into place (a restore, a deployment) is then on the
++        /// device before commits build on it. Best effort, never a refusal: a data file that answers
++        /// "cannot sync" proceeds, and a real I/O error propagates as the commit's recorded failure.
++        /// Once per process and data header (<see cref="ProveDataFile"/>); a shared connection runs it
++        /// once, and not at all once it found that the data file cannot sync, so its operations pay
++        /// nothing for it.
++        /// </summary>
++        private void DataBarrierBeforeFirstCommit()
++        {
++            if (!_dataIsFile || _dataSyncProven) return;
++            var shared = _sharedDurability;
++            if (shared != null && (shared.DataBarrierDone || shared.FileSyncUnsupported)) return;
++#if DEBUG || TESTING
++            DataBarrierRan?.Invoke(_dataPath);
++#endif
++            this.ProveDataFile();
++            if (shared != null) shared.DataBarrierDone = true;
++        }
++
++#if DEBUG || TESTING
++        /// <summary>Test hook: the data barrier before a first commit ran for this data file.</summary>
++        internal static Action<string> DataBarrierRan;
++#endif
++
+         private const string NotWritten = "This commit was not written: ";
+         private const string OutcomeUnknown = "This commit's outcome is unknown: its frames reached the operating system, but ";
+         private const string OptOut = " Open the database with \"durable commits=false\" to accept commits that a power loss may lose.";
+@@ -76,21 +98,6 @@ namespace LiteDB.Engine
+                 (context == null ? "no commit can be made durable there." : $"{part} cannot sync to the device (#2242), so no commit can be made durable there.") +
+                 OptOut, cause), FileOrigin.Log));
+ 
+-        /// <summary>
+-        /// The data header the WAL's frames depend on (its salt, version and creation time) is on the
+-        /// device: this engine synced it, or it is the header a successful sync in this process left
+-        /// (<see cref="ProveDataFile"/>). Only then can a log sync make a commit durable, also while the
+-        /// data file cannot sync (decision 4): every data write after the header's sync is covered by
+-        /// the WAL, which shrinks only behind a covering data sync (<see cref="ShrinkLog"/>). A data
+-        /// stream that is not a file cannot answer "cannot sync" and needs no proof.
+-        /// </summary>
+-        private bool DataHeaderDurable()
+-        {
+-            if (_readOnly || !_dataIsFile) return true;
+-            if (!_dataSyncProven) this.ProveDataFile();
+-            return _dataSyncProven;
+-        }
+-
+         private static string LogDurablePath(EngineSettings settings)
+         {
+             if (settings.LogStream != null) return (settings.LogStream as FileStream)?.Name is string name && Path.IsPathRooted(name) ? Path.GetFullPath(name) : null;
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index 685072c26..2ede172a0 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -249,17 +249,6 @@ namespace LiteDB.Engine
+         /// propagates, so the caller stops before overwriting data.
+         /// </summary>
+         private void SyncLogBarrier(Stream log)
+-        {
+-            if (this.DataHeaderDurable()) this.SyncLogBarrierUnproven(log);
+-            else this.SkipLogSync(log);
+-        }
+-
+-        /// <summary>
+-        /// <see cref="SyncLogBarrier"/> without the data proof: only for a log sync that must precede
+-        /// every data sync, the recovery copy of a torn header (the proof would make the torn header
+-        /// durable before its only repair).
+-        /// </summary>
+-        private void SyncLogBarrierUnproven(Stream log)
+         {
+             try
+             {
+@@ -309,15 +298,14 @@ namespace LiteDB.Engine
+         }
+ 
+         /// <summary>
+-        /// A commit also depends on the data file, where an earlier engine, maybe of another
+-        /// connection or process, may have left a header in the OS cache only: a data file that
+-        /// answered "cannot sync" (#2242) for a salt rotation, a retirement root or a format
+-        /// conversion. Make it durable before this engine's first log sync (see
+-        /// <see cref="DataHeaderDurable"/>); while it answers "cannot sync" no log sync can make a
+-        /// commit durable. Only a header change can make earlier WAL content obsolete (a checkpoint that
+-        /// does not change it keeps every frame), so the sync is skipped while the header is one a
+-        /// successful sync in this process left (<see cref="DurableHeaders"/>).
+-        /// Caller holds the log writer lock, or opens the engine.
++        /// Reusing a WAL slot depends on the data file, where an earlier engine, maybe of another
++        /// connection or process, may have left the witness root in the OS cache only (see
++        /// <see cref="ProveSlotReuse"/>). Only a header change can make earlier WAL content obsolete
++        /// (a checkpoint that does not change it keeps every frame), so the sync is skipped while the
++        /// header is one a successful sync in this process left (<see cref="DurableHeaders"/>).
++        /// Before a first commit it is a best-effort barrier only (<see cref="DataBarrierBeforeFirstCommit"/>):
++        /// commits do not depend on it, the WAL starts with a copy of the header (decision 11).
++        /// Caller holds the log writer lock.
+         /// </summary>
+         private void ProveDataFile()
+         {
+@@ -328,17 +316,6 @@ namespace LiteDB.Engine
+             });
+         }
+ 
+-        /// <summary>
+-        /// A log sync while the data header the WAL depends on is not known to be on the device
+-        /// (<see cref="DataHeaderDurable"/>): the writes reach the OS cache only, and a durable commit
+-        /// is refused before it writes (<see cref="RequireDurableCommit"/>).
+-        /// </summary>
+-        private void SkipLogSync(Stream log)
+-        {
+-            _logBarrierSynced = false;
+-            log.Flush();
+-        }
+-
+         private static string DurablePath(EngineSettings settings)
+         {
+             var path = settings.DataStream == null ? settings.Filename : (settings.DataStream as FileStream)?.Name;
+@@ -375,11 +352,6 @@ namespace LiteDB.Engine
+         {
+             var stream = _writer.Value;
+             var raw = stream is ChecksummedWalStream wal ? wal.RawStream : stream;
+-            if (!this.DataHeaderDurable())
+-            {
+-                this.SkipLogSync(raw);
+-                return;
+-            }
+             try
+             {
+                 raw.FlushToDisk();
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+new file mode 100644
+index 000000000..60949e7bd
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+@@ -0,0 +1,110 @@
++using System;
++using System.IO;
++using System.Threading;
++using static LiteDB.Constants;
++
++namespace LiteDB.Engine
++{
++    internal partial class DiskService
++    {
++        /// <summary>
++        /// Decision 11: before the first frame of an empty WAL, write the header frame (see
++        /// <see cref="HeaderFrame"/>): a copy of the data header the frames after it depend on. The
++        /// batch's own log sync makes it durable with its commit. A write that fails may leave a torn
++        /// frame 0, so it sets <paramref name="uncertain"/> while it runs and the caller stops the engine.
++        /// Caller holds the log writer lock and is about to append a frame.
++        /// </summary>
++        private void WriteHeaderFrame(Stream stream, ref bool uncertain)
++        {
++            if (!ChecksumsEnabled || _volatileLog || _checksums.JournalBytes != 0 || Interlocked.Read(ref _logLength) != -PAGE_SIZE) return;
++            var raw = ((ChecksummedWalStream)stream).RawStream;
++            var frame = new byte[WalChecksum.FrameSize];
++            var header = this.UseDataWriter(ReadDataHeader);
++            // Only the header these frames depend on: intact, with the salt they carry.
++            if (!HeaderFrame.IsIntact(header) || header[HeaderPage.P_FILE_VERSION] < HeaderPage.CHECKSUM_FILE_VERSION)
++                throw new PageChecksumException(FileOrigin.Data, 0);
++            for (var i = 0; i < _checksums.Salt.Length; i++)
++                if (header[WalChecksum.SaltPosition + i] != _checksums.Salt[i]) throw new PageChecksumException(FileOrigin.Data, 0);
++            Buffer.BlockCopy(header, 0, frame, 0, PAGE_SIZE);
++            WalChecksum.PrepareHeaderFrame(frame, _checksums.Salt);
++            uncertain = true;
++            Interlocked.Exchange(ref _logLength, 0);
++            this.CrashPoint("header-frame-before-write");
++            raw.Position = 0;
++            raw.Write(frame, 0, frame.Length);
++            this.CrashPoint("header-frame-after-write");
++            uncertain = false;
++        }
++
++        /// <summary>
++        /// Open, decision 11: the data file is empty or shorter than its header page, beside a WAL
++        /// that starts with a header frame. Such a database is never initialized over (that would
++        /// discard every frame): restore its header from the header frame, when the data file held
++        /// nothing else when the WAL started, or refuse the open, changing neither file. A WAL without
++        /// a header frame holds no commit of this version, and the database is new as before.
++        /// </summary>
++        private bool RestoreDataFileFromLog(long dataLength)
++        {
++            if (!_logFactory.Exists()) return false;
++            var exists = _dataFactory.Exists();
++            // A read-only open of a missing file reports the path error as before.
++            if (_readOnly && !exists) return false;
++            var header = this.ReadLogHeaderFrame();
++            if (header == null) return false;
++            var state = !exists ? "missing" : dataLength == 0 ? "empty" : "shorter than its header page";
++            if (!exists || !HeaderFrame.Fits(header, 0))
++                throw new LiteException(LiteException.INVALID_DATABASE, $"Cannot open this database: its data file is {state}, " +
++                    "while its log file holds the WAL of a database whose pages were in that data file. Restore the data " +
++                    "file, or move the log file aside to create a new database.");
++            if (_readOnly)
++                throw new LiteException(LiteException.INVALID_DATABASE, $"Cannot open this database read-only: its data file " +
++                    $"is {state} (a power loss before the data file synced), and its log file holds the data header and " +
++                    "every commit. Open it once without read-only to restore the data file's header from the log file.");
++            this.RestoreDataHeader(header);
++            return true;
++        }
++
++        /// <summary>
++        /// Open, decision 11: the data header is neither an intact checksummed nor a legacy header
++        /// (see <see cref="HeaderFrame.IsIntact"/>), no header journal restored it, and the WAL's
++        /// header frame holds one whose pages the data file still has. Use it: a writable open writes
++        /// it back, a read-only one reads it in place of the data file's.
++        /// </summary>
++        private void RestoreHeaderFromLog(ref byte[] header, long dataLength)
++        {
++            if (_recoveredHeader != null || HeaderFrame.IsIntact(header)) return;
++            var frame = this.ReadLogHeaderFrame();
++            if (frame == null || !HeaderFrame.Fits(frame, dataLength)) return;
++            header = frame;
++            if (_readOnly)
++            {
++                _recoveredHeader = frame;
++                LOG("reading the database header from the log file's header frame", "RECOVERY");
++            }
++            else this.RestoreDataHeader(frame);
++        }
++
++        private void RestoreDataHeader(byte[] header)
++        {
++            this.RequireWritableStorage();
++            using var structural = new StructuralScope(_signals);
++            LOG("restoring the database header from the log file's header frame", "RECOVERY");
++            // The header frame stays: the WAL is emptied only after a data sync covered this write (ShrinkLog).
++            this.UseDataWriter(data =>
++            {
++                data.Position = 0;
++                this.CountDataWrite();
++                data.Write(header, 0, PAGE_SIZE);
++                this.SyncDataBarrier(data);
++            });
++        }
++
++        private byte[] ReadLogHeaderFrame()
++        {
++            if (!_logFactory.Exists()) return null;
++            var reader = (ChecksummedWalStream)_logPool.Rent();
++            try { return HeaderFrame.Read(reader.RawStream); }
++            finally { _logPool.Return(reader); }
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index 7ad373f8a..d0203b60a 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -95,7 +95,7 @@ namespace LiteDB.Engine
+                     // Make an OS-cached recovery copy durable before repairing its primary. The primary
+                     // is torn: no data sync may come first (the data barrier below proves the file),
+                     // and an encrypted data writer syncs its file when it is created, so it comes after.
+-                    SyncLogBarrierUnproven(((ChecksummedWalStream)_writer.Value).RawStream);
++                    SyncLogBarrier(((ChecksummedWalStream)_writer.Value).RawStream);
+                     SyncLogDirectory();
+                 }
+                 var repaired = header;
+diff --git a/LiteDB/Engine/Disk/DiskService.Validation.cs b/LiteDB/Engine/Disk/DiskService.Validation.cs
+index 20ee5ddac..1b19010de 100644
+--- a/LiteDB/Engine/Disk/DiskService.Validation.cs
++++ b/LiteDB/Engine/Disk/DiskService.Validation.cs
+@@ -38,6 +38,7 @@ namespace LiteDB.Engine
+                 this.RecoverHeaderJournal(ref bytes);
+                 if (bytes[0] == 1)
+                     throw new LiteException(LiteException.INVALID_PASSWORD, "This data file is encrypted and needs a password to open");
++                this.RestoreHeaderFromLog(ref bytes, _dataFactory.GetLength());
+ 
+                 // Validate identity and the complete header before permitting any repair.
+                 this.LoadChecksums(new BufferSlice(bytes, 0, PAGE_SIZE));
+diff --git a/LiteDB/Engine/Disk/DiskService.WalWrite.cs b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+index 2e3e48aff..fa1fd1a5f 100644
+--- a/LiteDB/Engine/Disk/DiskService.WalWrite.cs
++++ b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+@@ -42,8 +42,6 @@ namespace LiteDB.Engine
+             lock (stream)
+             {
+                 _state.Validate();
+-                // Before any frame: a commit that cannot be made durable fails here (decision 3).
+-                this.RequireDurableCommit(stream);
+                 var uncertain = false;
+                 try
+                 {
+@@ -51,6 +49,20 @@ namespace LiteDB.Engine
+                     {
+                         if (!iterator.MoveNext()) return 0;
+ 
++                        // Before any frame: a commit that cannot be made durable fails here (decision 3).
++                        // A batch without pages writes nothing and needs no proof.
++                        try
++                        {
++                            this.RequireDurableCommit(stream);
++                            this.WriteHeaderFrame(stream, ref uncertain);
++                        }
++                        catch
++                        {
++                            // The producer transferred the first page when it yielded it.
++                            if (iterator.Current.State == FrameState.Writable) _cache.DiscardPage(iterator.Current);
++                            throw;
++                        }
++
+                         var transactionAnchored = transactionPages != null && transactionPages.Count > 0;
+                         var rebase = !ChecksumsEnabled && transactionState != null &&
+                             transactionState.TransactionID < _lastWalTransactionID;
+diff --git a/LiteDB/Engine/Disk/DiskService.cs b/LiteDB/Engine/Disk/DiskService.cs
+index 86cb7ceb1..ff78f2a00 100644
+--- a/LiteDB/Engine/Disk/DiskService.cs
++++ b/LiteDB/Engine/Disk/DiskService.cs
+@@ -61,14 +61,17 @@ namespace LiteDB.Engine
+                 // caller streams (memory, devices) are the caller's to share.
+                 _dataIsFile = _dataFactory is FileStreamFactory || settings.DataStream is FileStream;
+                 _dataPath = DurablePath(settings);
+-                _logPath = LogDurablePath(settings);
+                 _logFactory = new ChecksummedWalFactory(settings.CreateLogFactory(), _checksums);
++                // Only a log the engine opens has its directory synced; a caller's stream is proven per engine.
++                _logPath = ((ChecksummedWalFactory)_logFactory).IsFile ? LogDurablePath(settings) : null;
+ 
+                 _dataPool = new StreamPool(_dataFactory, false);
+                 _logPool = new StreamPool(_logFactory, true);
+                 _writer = _logPool.Writer;
+ 
+                 var dataLength = _dataFactory.GetLength();
++                // Decision 11: never initialize over the WAL of a database whose data file lost its header.
++                if (dataLength < PAGE_SIZE && this.RestoreDataFileFromLog(dataLength)) dataLength = _dataFactory.GetLength();
+                 var isNew = dataLength == 0L;
+ 
+                 if (isNew)
+diff --git a/LiteDB/Engine/Disk/DurableLogs.cs b/LiteDB/Engine/Disk/DurableLogs.cs
+index 27e9de654..71b77b87b 100644
+--- a/LiteDB/Engine/Disk/DurableLogs.cs
++++ b/LiteDB/Engine/Disk/DurableLogs.cs
+@@ -17,15 +17,32 @@ namespace LiteDB.Engine
+         private static readonly HashSet<string> _paths = new HashSet<string>(
+             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+ 
++        // Recording order: past the capacity the oldest path is forgotten, never one just proven.
++        private static readonly Queue<string> _order = new Queue<string>();
++
+         internal static void Record(string path)
+         {
+             lock (_paths)
+             {
+-                if (_paths.Count >= Capacity) _paths.Clear();
+-                _paths.Add(path);
++                if (!_paths.Add(path)) return;
++                _order.Enqueue(path);
++                // Forgotten paths stay queued until they reach the front; skip them there.
++                while (_paths.Count > Capacity || (_order.Count > 0 && !_paths.Contains(_order.Peek())))
++                    _paths.Remove(_order.Dequeue());
++                if (_order.Count > 4 * Capacity) Compact();
+             }
+         }
+ 
++        // Forget and re-record can leave stale queue entries behind the front: drop them.
++        private static void Compact()
++        {
++            var live = new List<string>(_order);
++            _order.Clear();
++            var seen = new HashSet<string>(_paths.Comparer);
++            foreach (var path in live)
++                if (_paths.Contains(path) && seen.Add(path)) _order.Enqueue(path);
++        }
++
+         internal static bool Contains(string path)
+         {
+             lock (_paths) return _paths.Contains(path);
+diff --git a/LiteDB/Engine/Disk/HeaderFrame.cs b/LiteDB/Engine/Disk/HeaderFrame.cs
+new file mode 100644
+index 000000000..072936b8f
+--- /dev/null
++++ b/LiteDB/Engine/Disk/HeaderFrame.cs
+@@ -0,0 +1,61 @@
++using System.IO;
++using static LiteDB.Constants;
++
++namespace LiteDB.Engine
++{
++    /// <summary>
++    /// The header frame (decisions 10 and 11 of docs/decisions/durability-policy.md): frame 0 of every
++    /// WAL generation, from empty until it is emptied again, holds a copy of the data header as the
++    /// data file held it when the generation started, with the salt that validates the frames after
++    /// it. The WAL so describes itself: a commit does not depend on the data header being on the
++    /// device, and recovery restores a data header that a power loss dropped (a data file created
++    /// on storage that cannot sync, #2242, is left empty or with a page never written back) from it.
++    /// Recovery skips it as a frame (<see cref="WalRetirementReader"/>). Volatile logs have none.
++    /// </summary>
++    internal static class HeaderFrame
++    {
++        /// <summary>The data header frame 0 of this raw WAL holds, or null when frame 0 is not a header frame.</summary>
++        internal static byte[] Read(Stream raw)
++        {
++            if (raw == null || raw.Length < WalChecksum.FrameSize) return null;
++            var frame = new byte[WalChecksum.FrameSize];
++            raw.Position = 0;
++            raw.ReadRequired(frame, 0, frame.Length);
++            return WalChecksum.ReadHeaderFrame(frame);
++        }
++
++        /// <summary>
++        /// Whether a data file's header page is one recovery reads as it is: a checksummed header whose
++        /// checksum holds, or a legacy (v5) header, which has none. Only a header that is neither (an
++        /// empty, torn or never-written page) is restored from a header frame. An intact header always
++        /// wins, also one of another salt (a stale WAL generation, whose frames it then rejects): every
++        /// header write after a database's creation goes through a synced header journal or waits
++        /// for a data sync, so a header a power loss damaged is one that never synced.
++        /// </summary>
++        internal static bool IsIntact(byte[] header)
++        {
++            var page = new BufferSlice(header, 0, PAGE_SIZE);
++            if (page.ReadUInt32(WalChecksum.MarkerPosition) == WalChecksum.HeaderMarker)
++            {
++                try
++                {
++                    PageChecksum.Validate(page, 0);
++                    return true;
++                }
++                catch (PageChecksumException)
++                {
++                    return false;
++                }
++            }
++            return page[HeaderPage.P_FILE_VERSION] < HeaderPage.CHECKSUM_FILE_VERSION &&
++                string.CompareOrdinal(page.ReadString(HeaderPage.P_HEADER_INFO, HeaderPage.HEADER_INFO.Length), HeaderPage.HEADER_INFO) == 0;
++        }
++
++        /// <summary>
++        /// The data file must still hold every page this header names, the pages that were in it
++        /// when the WAL generation started: the WAL holds only what changed since.
++        /// </summary>
++        internal static bool Fits(byte[] header, long dataLength) =>
++            (new BufferSlice(header, 0, PAGE_SIZE).ReadUInt32(HeaderPage.P_LAST_PAGE_ID) + 1L) * PAGE_SIZE <= System.Math.Max(dataLength, PAGE_SIZE);
++    }
++}
+diff --git a/LiteDB/Engine/Disk/SharedDurabilityState.cs b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+index 9ef5c73a3..e700323f0 100644
+--- a/LiteDB/Engine/Disk/SharedDurabilityState.cs
++++ b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+@@ -21,6 +21,12 @@ namespace LiteDB.Engine
+         /// </summary>
+         internal volatile bool DataUnsynced;
+ 
++        /// <summary>
++        /// An engine of this connection ran the data barrier before its first commit (decision 14):
++        /// later engines skip it, so the connection's operations pay nothing for it.
++        /// </summary>
++        internal volatile bool DataBarrierDone;
++
+         private WriteFailure _writeFailure;
+ 
+         /// <summary>
+diff --git a/LiteDB/Engine/Disk/WalChecksum.cs b/LiteDB/Engine/Disk/WalChecksum.cs
+index bc8eb36e7..f9d9bfce2 100644
+--- a/LiteDB/Engine/Disk/WalChecksum.cs
++++ b/LiteDB/Engine/Disk/WalChecksum.cs
+@@ -13,6 +13,7 @@ namespace LiteDB.Engine
+         internal const int SaltPosition = 109; // Reserved database-header bytes 109..124.
+         internal const int MarkerPosition = 125;
+         internal const uint HeaderMarker = 0x31435243; // CRC1, independent of the version byte.
++        internal const uint HeaderFrameMagic = 0x31524448; // HDR1: frame 0 holds a copy of the data header (HeaderFrame).
+         internal byte[] Salt { get; private set; }
+         internal WalRetirement Retirement { get; set; } = new WalRetirement();
+         internal bool Enabled => Salt != null;
+@@ -31,7 +32,7 @@ namespace LiteDB.Engine
+ 
+         internal struct Frame
+         {
+-            internal bool RetirementRecord, Retired;
++            internal bool RetirementRecord, Retired, HeaderFrame;
+             internal ulong Contribution;
+             internal uint Count;
+             internal ulong Digest;
+@@ -112,16 +113,20 @@ namespace LiteDB.Engine
+             var actual = ~Crc32C.Update(pageCrc, metadata.Array, metadata.Offset, MetadataSize);
+             metadata.Write(expected, 4);
+             if (expected != actual) throw new PageChecksumException(FileOrigin.Log, position);
+-            if (metadata.ReadUInt32(52) != 0 && metadata.ReadUInt32(52) != WalRetirement.Magic)
++            var marker = metadata.ReadUInt32(52);
++            if (marker != 0 && marker != WalRetirement.Magic && marker != HeaderFrameMagic)
+                 throw new PageChecksumException(FileOrigin.Log, position);
+-            if (metadata.ReadUInt32(52) == WalRetirement.Magic &&
++            if (marker == WalRetirement.Magic &&
+                 (metadata.ReadUInt32(32) != 0 || metadata.ReadInt64(36) != 0 || metadata.ReadInt64(44) != 0 ||
+                  page.ReadUInt32(BasePage.P_PAGE_ID) != 0 || page.ReadUInt32(BasePage.P_TRANSACTION_ID) != 0 ||
+                  page[BasePage.P_PAGE_TYPE] != 0 || page[BasePage.P_IS_CONFIRMED] != 0))
+                 throw new PageChecksumException(FileOrigin.Log, position);
++            if (marker == HeaderFrameMagic && !IsHeaderFrameShape(page, metadata, position))
++                throw new PageChecksumException(FileOrigin.Log, position);
+             return new Frame
+             {
+-                RetirementRecord = metadata.ReadUInt32(52) == WalRetirement.Magic,
++                RetirementRecord = marker == WalRetirement.Magic,
++                HeaderFrame = marker == HeaderFrameMagic,
+                 Contribution = Contribution(pageCrc, metadata, position),
+                 Count = metadata.ReadUInt32(32), Digest = unchecked((ulong)metadata.ReadInt64(36)), Sequence = metadata.ReadInt64(44)
+             };
+@@ -143,6 +148,48 @@ namespace LiteDB.Engine
+             return expected == actual;
+         }
+ 
++        /// <summary>
++        /// Build the header frame (see <see cref="HeaderFrame"/>) in <paramref name="frame"/>, whose
++        /// first page holds the data header: its trailer carries the salt and the header frame marker.
++        /// </summary>
++        internal static void PrepareHeaderFrame(byte[] frame, byte[] salt)
++        {
++            var metadata = new BufferSlice(frame, PAGE_SIZE, MetadataSize);
++            metadata.Clear();
++            metadata.Write(Magic, 0);
++            Buffer.BlockCopy(salt, 0, frame, PAGE_SIZE + 8, salt.Length);
++            metadata.Write(0L, 24);
++            metadata.Write(HeaderFrameMagic, 52);
++            metadata.Write(~Crc32C.Update(Crc32C.Update(uint.MaxValue, frame, 0, PAGE_SIZE), frame, PAGE_SIZE, MetadataSize), 4);
++        }
++
++        /// <summary>
++        /// The data header a header frame holds, checked without a database header: by the frame's own
++        /// trailer (<see cref="IsFrame"/>), its shape, and the header's own checksum; null otherwise.
++        /// </summary>
++        internal static byte[] ReadHeaderFrame(byte[] frame)
++        {
++            var page = new BufferSlice(frame, 0, PAGE_SIZE);
++            var metadata = new BufferSlice(frame, PAGE_SIZE, MetadataSize);
++            if (!IsFrame(frame, 0) || metadata.ReadUInt32(52) != HeaderFrameMagic || !IsHeaderFrameShape(page, metadata, 0)) return null;
++            try { PageChecksum.Validate(page, 0); }
++            catch (PageChecksumException) { return null; }
++            var header = new byte[PAGE_SIZE];
++            Buffer.BlockCopy(frame, 0, header, 0, PAGE_SIZE);
++            return header;
++        }
++
++        // A header frame is frame 0, holds a checksummed data header with the salt its trailer carries,
++        // and takes no part in a transaction.
++        private static bool IsHeaderFrameShape(BufferSlice page, BufferSlice metadata, long position)
++        {
++            if (position != 0 || metadata.ReadUInt32(32) != 0 || metadata.ReadInt64(36) != 0 || metadata.ReadInt64(44) != 0 ||
++                page.ReadUInt32(BasePage.P_PAGE_ID) != 0 || page.ReadUInt32(WalChecksum.MarkerPosition) != HeaderMarker) return false;
++            for (var i = 0; i < 16; i++)
++                if (page[SaltPosition + i] != metadata[8 + i]) return false;
++            return true;
++        }
++
+         private static ulong Contribution(uint pageCrc, BufferSlice metadata, long position)
+         {
+             // A nonlinear, position-dependent mix prevents identical changes in
+diff --git a/LiteDB/Engine/Disk/WalRetirementReader.cs b/LiteDB/Engine/Disk/WalRetirementReader.cs
+index 33ec6192c..5afd80fda 100644
+--- a/LiteDB/Engine/Disk/WalRetirementReader.cs
++++ b/LiteDB/Engine/Disk/WalRetirementReader.cs
+@@ -31,7 +31,8 @@ namespace LiteDB.Engine
+                 try { page.WalFrame = checksum.Validate(page, new BufferSlice(bytes, PAGE_SIZE, WalChecksum.MetadataSize), position); }
+                 catch (PageChecksumException) when (witnesses != null) { valid = false; }
+                 if (!valid) continue;
+-                if (page.WalFrame.RetirementRecord) continue;
++                // Neither a retirement record nor the header frame is a page of a transaction.
++                if (page.WalFrame.RetirementRecord || page.WalFrame.HeaderFrame) continue;
+                 var retired = false;
+                 if (witnesses != null)
+                     foreach (var witness in witnesses) retired |= witness.Matches(page);
+diff --git a/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs b/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
+index 4c6397e63..c321ee1bf 100644
+--- a/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
++++ b/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
+@@ -26,6 +26,13 @@ namespace LiteDB.Engine
+                 if (journal.ConfirmsLegacyBackup && !published && journal.FooterBytes != 0)
+                     _checksums.LegacyConfirmationPosition = journal.Position - PAGE_SIZE;
+             }
++            // A data header a power loss dropped: the WAL's header frame holds it (decision 11).
++            if (_recoveredHeader == null && _logStream != null && !HeaderFrame.IsIntact(bytes) &&
++                HeaderFrame.Read(((ChecksummedWalStream)_logStream).RawStream) is byte[] frame &&
++                HeaderFrame.Fits(frame, _dataStream.Length))
++            {
++                bytes = _recoveredHeader = frame;
++            }
+             if (bytes[HeaderPage.P_FILE_VERSION] < HeaderPage.CHECKSUM_FILE_VERSION &&
+                 new BufferSlice(bytes, 0, PAGE_SIZE).ReadUInt32(WalChecksum.MarkerPosition) != WalChecksum.HeaderMarker) return;
+             // Mixed-page permissions must only come from a verified header.
+-- 
+2.43.0
+

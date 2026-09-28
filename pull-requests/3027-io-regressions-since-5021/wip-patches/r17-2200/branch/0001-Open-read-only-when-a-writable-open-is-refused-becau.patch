@@ -1,0 +1,1464 @@
+From da0ec2805910ca8eea097d61c6258321ab3103d6 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 19:27:47 +0000
+Subject: [PATCH 01/24] Open read-only when a writable open is refused because
+ the data file cannot sync
+
+Where the data file cannot sync (#2242), an open that would convert,
+migrate, promote or repair the file (and so shrink its log) was refused
+and the database could not be opened at all. The refusal is now marked,
+and LiteEngine reopens with ReadOnly (and the legacy index scan, which
+needs no migration): reads work, every write throws an IOException that
+names the cause and leaves the engine readable, and $database reports
+readOnlyReason without a write.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Regressions/DataFileStopsSyncing_Tests.cs |  31 +-
+ .../FreshEngineDurability_Tests.cs            |  66 ++--
+ .../KeptWalStop_Tests.Conversion.cs           | 120 ++++++++
+ LiteDB.Tests/Regressions/KeptWalStop_Tests.cs | 110 +------
+ .../Regressions/RetiredSlotPowerLoss_Tests.cs |  39 ++-
+ .../Regressions/UnsyncableDataFile_Tests.cs   |  28 +-
+ .../Regressions/UnsyncableRetirement_Tests.cs |  13 +-
+ .../UnsyncedBackfillPowerLoss_Tests.cs        |  13 +-
+ .../Regressions/UnsyncedPromotion_Tests.cs    |  88 +++++-
+ .../Regressions/UnsyncedReadOnlyOpen_Tests.cs | 283 ++++++++++++++++++
+ LiteDB/Engine/Disk/DiskService.Checksums.cs   |  13 +-
+ .../Engine/Disk/DiskService.DurableFlush.cs   |  19 +-
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs |   2 +-
+ LiteDB/Engine/Engine/Transaction.cs           |  14 +-
+ LiteDB/Engine/EngineSettings.cs               |   9 +
+ LiteDB/Engine/LiteEngine.cs                   |  11 +
+ .../Engine/SystemCollections/SysDatabase.cs   |   2 +
+ docs/header-publication.md                    |   6 +-
+ docs/release-notes.md                         |  37 +--
+ docs/rules/compatibility.md                   |   5 +-
+ docs/storage-stack-safety.md                  |   8 +-
+ 21 files changed, 700 insertions(+), 217 deletions(-)
+ create mode 100644 LiteDB.Tests/Regressions/KeptWalStop_Tests.Conversion.cs
+ create mode 100644 LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
+
+diff --git a/LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs b/LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs
+index 6b628d8f5..b3351f3a4 100644
+--- a/LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs
++++ b/LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs
+@@ -147,12 +147,15 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// A 5.0.21 file with WAL commits (WalCrash_5_0_21.zip) whose data file stops syncing while
+         /// the conversion drains its synced WAL (after the drain's data sync before its first page):
+-        /// the drain's checkpoint stops before it removes any of the legacy WAL, and the open is
+-        /// refused with a diagnostic naming the storage (not as a blocked drain). Every commit stays,
+-        /// in the power-loss image and once the storage syncs.
++        /// the drain's checkpoint stops before it removes any of the legacy WAL. The open was then
++        /// refused ("stopped syncing", not as a blocked drain) and nothing could be read; it now
++        /// opens read-only with that refusal as $database.readOnlyReason: every commit reads, a write
++        /// throws naming the refusal and the instance keeps reading, and the read-only engine writes
++        /// nothing. Every commit stays, in the power-loss image and once the storage syncs, when a
++        /// writable open converts the file.
+         /// </summary>
+         [Fact]
+-        public void Conversion_whose_data_file_stops_syncing_during_the_drain_is_refused()
++        public void Conversion_whose_data_file_stops_syncing_during_the_drain_opens_read_only()
+         {
+             using var file = new TempFile();
+             var logName = FileHelper.GetLogFile(file.Filename);
+@@ -165,14 +168,22 @@ namespace LiteDB.Tests.Regressions
+                 {
+                     var settings = power.Settings();
+                     settings.CheckpointStage = stage => { if (stage == "data-page") power.DataFails = true; };
+-                    Action open = () => new LiteEngine(settings).Dispose();
+-                    open.Should().Throw<IOException>().WithMessage("The data file stopped syncing*");
+-                    power.DataFails.Should().BeTrue("the drain wrote a page");
+-                    SyncPowerLossModel.ReadShared(logName).Take(legacyLog.Length).Should().Equal(legacyLog, "the legacy WAL is kept");
++                    byte[] data, log;
++                    using (var db = new LiteDatabase(new LiteEngine(settings)))
++                    {
++                        power.DataFails.Should().BeTrue("the drain wrote a page");
++                        (data, log) = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++                        UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.StoppedSyncing,
++                            x => AssertLegacyCommits(x), "docs");
++                    }
++                    SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only engine wrote nothing");
++                    SyncPowerLossModel.ReadShared(logName).Should().Equal(log);
++                    log.Take(legacyLog.Length).Should().Equal(legacyLog, "the legacy WAL is kept");
+                     FilePowerLossModel.Open(power.Capture(), AssertLegacyCommits);
+                 }
+-                using var db = new LiteDatabase(file.Filename);
+-                AssertLegacyCommits(db);
++                using var converted = new LiteDatabase(file.Filename);
++                AssertLegacyCommits(converted);
++                converted.GetCollection("$database").FindAll().Single()["readOnly"].AsBoolean.Should().BeFalse();
+             }
+             finally { File.Delete(logName); }
+         }
+diff --git a/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs b/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
+index 65afdd58c..8dffcfafd 100644
+--- a/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
++++ b/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
+@@ -31,9 +31,11 @@ namespace LiteDB.Tests.Regressions
+         /// durable that depended on the rotated header in the OS cache only. The checkpoint now stops
+         /// ("stopped syncing", the engine closes) before it removes the WAL or its header journal, so
+         /// the data file as last synced with the WAL, as last synced or as written back, holds every
+-        /// commit. A fresh engine over the kept journal is refused while the data file still cannot
+-        /// sync, acknowledging nothing and leaving the journal; once the data file syncs, it recovers
+-        /// every commit, and a commit it reports durable survives the power loss.
++        /// commit. A fresh engine over the kept journal cannot recover while the data file still
++        /// cannot sync: it opens read-only ($database.readOnlyReason "Cannot recover this database
++        /// now") and reads every commit, its write throws before any change, and it writes nothing,
++        /// leaving the journal; once the data file syncs, it recovers every commit, and a commit it
++        /// reports durable survives the power loss.
+         /// </summary>
+         [Theory]
+         [InlineData(false)]
+@@ -68,8 +70,10 @@ namespace LiteDB.Tests.Regressions
+                 power.DataFails = !dataSyncsAgain;
+                 if (!dataSyncsAgain)
+                 {
+-                    Action open = () => new LiteDatabase(file.Filename).Dispose();
+-                    open.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                    var data = SyncPowerLossModel.ReadShared(file.Filename);
++                    using (var readOnly = new LiteDatabase(file.Filename))
++                        UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(readOnly, UnsyncedReadOnlyOpen_Tests.RecoveryRefused, db => AssertRows(db, 5));
++                    SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only open wrote nothing");
+                     SyncPowerLossModel.ReadShared(logName).Should().Equal(kept, "the header journal stays until the repaired header synced");
+                     power.AfterPowerLoss(db => AssertRows(db, 5));
+                     power.DataFails = false; // the storage syncs again
+@@ -90,11 +94,12 @@ namespace LiteDB.Tests.Regressions
+         /// sync while its WAL can. The converted header reached the OS cache only while the
+         /// checksummed frames written after it became durable, so a power loss left them beside the
+         /// legacy header. The conversion empties the log only after a data sync that succeeds, so it
+-        /// is now refused, the legacy file unchanged; once the data file syncs, it converts and
+-        /// commits are durable.
++        /// is not run: the open falls back to read-only ("Cannot convert this legacy database now"),
++        /// reads every row, refuses writes, and leaves the legacy file unchanged; once the data file
++        /// syncs, it converts and commits are durable.
+         /// </summary>
+         [Fact]
+-        public void Conversion_is_refused_where_only_the_data_file_cannot_sync()
++        public void Conversion_opens_read_only_where_only_the_data_file_cannot_sync()
+         {
+             using var file = new TempFile();
+             var original = Fixture("plain.db");
+@@ -103,19 +108,16 @@ namespace LiteDB.Tests.Regressions
+             using var power = new FilePowerLossModel(file.Filename) { DataFails = true };
+             try
+             {
+-                Action open = () => new LiteDatabase(file.Filename).Dispose();
+-                open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*cannot sync*");
++                using (var legacy = new LiteDatabase(file.Filename))
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(legacy, UnsyncedReadOnlyOpen_Tests.ConversionRefused,
++                        db => UnsyncedReadOnlyOpen_Tests.AssertPlainRows(db)).Should().Contain("cannot sync");
+                 File.ReadAllBytes(file.Filename).Should().Equal(original);
+                 (File.Exists(logName) ? new FileInfo(logName).Length : 0).Should().Be(0);
+-                int rows;
+-                using (var legacy = new LiteDatabase($"Filename={file.Filename};ReadOnly=true;Legacy Index Scan=true"))
+-                    rows = legacy.GetCollection("rows").Count();
+-                rows.Should().BeGreaterThan(0);
+ 
+                 power.DataFails = false;
+                 using (var converted = new LiteDatabase(file.Filename))
+                 {
+-                    converted.GetCollection("rows").Count().Should().Be(rows);
++                    UnsyncedReadOnlyOpen_Tests.AssertPlainRows(converted);
+                     converted.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 900002, ["value"] = 1 });
+                     DurableLogFlush(converted).Should().BeTrue();
+                 }
+@@ -189,8 +191,9 @@ namespace LiteDB.Tests.Regressions
+         /// Another connection's checkpoint stops at its salt rotation, the rotated header in the OS
+         /// cache only and the header journal kept. The next operation of a shared connection whose
+         /// engines saw the old header durable must not report a commit durable on that header: while
+-        /// the data file cannot sync, its open is refused (the journal cannot be retired) and it
+-        /// acknowledges nothing, and the connection reports its later commits non-durable. Once the
++        /// the data file cannot sync, its engine cannot recover (the journal cannot be retired) and
++        /// opens read-only, so the write throws before any change, acknowledging nothing, and the
++        /// connection keeps reading every commit; it reports its later commits non-durable. Once the
+         /// data file syncs, it recovers, and a commit it reports durable survives the power loss.
+         /// </summary>
+         [Theory]
+@@ -228,8 +231,10 @@ namespace LiteDB.Tests.Regressions
+                 power.DataFails = !dataSyncsAgain;
+                 if (!dataSyncsAgain)
+                 {
+-                    Action update = () => Update(db, 3);
+-                    update.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                    var data = SyncPowerLossModel.ReadShared(file.Filename);
++                    UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(db, 3), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                    AssertRows(db, 2); // the connection keeps reading
++                    SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the refused write changed nothing");
+                     SyncPowerLossModel.ReadShared(logName).Should().Equal(kept, "the header journal stays");
+                     power.AfterPowerLoss(image => AssertRows(image, 2));
+                     power.DataFails = false; // the storage syncs again
+@@ -246,9 +251,10 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// The salt rotation case with the files passed as caller FileStreams: a fresh engine over
+         /// them reported its commit durable without proving the data file. The checkpoint now stops
+-        /// with the WAL and its header journal kept, a fresh engine over the streams is refused
+-        /// while the data file cannot sync, and every durable commit survives the power loss; once
+-        /// the data file syncs, a fresh engine recovers and its durable commit survives too.
++        /// with the WAL and its header journal kept, a fresh engine over the streams cannot recover
++        /// while the data file cannot sync and opens read-only (reads every commit, refuses writes,
++        /// writes nothing), and every durable commit survives the power loss; once the data file
++        /// syncs, a fresh engine recovers and its durable commit survives too.
+         /// </summary>
+         [Fact]
+         public void Fresh_engine_over_caller_file_streams_after_a_salt_rotation_whose_data_sync_failed()
+@@ -268,9 +274,11 @@ namespace LiteDB.Tests.Regressions
+                 checkpoint.Should().Throw<IOException>().WithMessage("The data file stopped syncing*");
+             }
+             var kept = SyncPowerLossModel.ReadShared(logName);
++            var data = SyncPowerLossModel.ReadShared(file.Filename);
+ 
+-            Action open = () => new LiteDatabase(new LiteEngine(power.Settings())).Dispose();
+-            open.Should().Throw<IOException>().WithMessage("Cannot recover this database now*", "the data file still cannot sync the rotated header");
++            using (var readOnly = new LiteDatabase(new LiteEngine(power.Settings()))) // the data file still cannot sync the rotated header
++                UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(readOnly, UnsyncedReadOnlyOpen_Tests.RecoveryRefused, db => AssertRows(db, 5));
++            SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only open wrote nothing");
+             SyncPowerLossModel.ReadShared(logName).Should().Equal(kept);
+             power.AssertAfterPowerLoss(Rows, 5);
+             FilePowerLossModel.Open((power.Capture().Data, kept), db => AssertRows(db, 5));
+@@ -325,10 +333,11 @@ namespace LiteDB.Tests.Regressions
+ 
+         /// <summary>
+         /// The data file syncs for the conversion's check at open, then stops before the conversion's
+-        /// own first sync: the conversion is still refused before it writes anything.
++        /// own first sync: the conversion is still refused before it writes anything, and the open
++        /// falls back to read-only, which reads every row, refuses writes, and syncs and writes nothing.
+         /// </summary>
+         [Fact]
+-        public void Conversion_whose_data_file_stops_syncing_after_its_check_is_refused_unchanged()
++        public void Conversion_whose_data_file_stops_syncing_after_its_check_opens_read_only_unchanged()
+         {
+             using var file = new TempFile();
+             var original = Fixture("plain.db");
+@@ -340,8 +349,9 @@ namespace LiteDB.Tests.Regressions
+                 string.Equals(Path.GetFullPath(path), dataName, StringComparison.OrdinalIgnoreCase) && ++dataSyncs > 1 ? 22 : 0;
+             try
+             {
+-                Action open = () => new LiteDatabase(file.Filename).Dispose();
+-                open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*cannot sync*");
++                using (var db = new LiteDatabase(file.Filename))
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.ConversionRefused,
++                        x => UnsyncedReadOnlyOpen_Tests.AssertPlainRows(x)).Should().Contain("cannot sync");
+                 dataSyncs.Should().Be(2, "the check at open synced, the conversion's own first sync did not");
+             }
+             finally { NativeFileSync.SimulateErrno = null; }
+diff --git a/LiteDB.Tests/Regressions/KeptWalStop_Tests.Conversion.cs b/LiteDB.Tests/Regressions/KeptWalStop_Tests.Conversion.cs
+new file mode 100644
+index 000000000..e1b2e2c92
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/KeptWalStop_Tests.Conversion.cs
+@@ -0,0 +1,120 @@
++#if DEBUG || TESTING
++using System.Collections.Generic;
++using System.IO;
++using System.IO.Compression;
++using System.Linq;
++using FluentAssertions;
++using LiteDB.Engine;
++using Xunit;
++using static LiteDB.Constants;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>The legacy conversion keeps the legacy header's backup and its journal until the converted header synced.</summary>
++    public partial class KeptWalStop_Tests
++    {
++        /// <summary>
++        /// A 5.0.21 file whose data file syncs for the conversion's first two syncs, not for the sync
++        /// of its converted header: the conversion emptied the log (the legacy header's backup and
++        /// its journal) anyway. It now stops with both kept, and the open falls back to read-only
++        /// ("Cannot convert this legacy database now"): it reads every document, refuses writes and
++        /// writes nothing more. The power-loss image and, once the data file syncs, the database
++        /// itself open converted with every document.
++        /// </summary>
++        [Fact]
++        public void Conversion_whose_header_sync_fails_opens_read_only_until_the_data_file_syncs()
++        {
++            using var file = new TempFile();
++            var original = Fixture("plain.db");
++            File.WriteAllBytes(file.Filename, original);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            var expected = LegacyContents(file.Filename);
++            try
++            {
++                (byte[] Data, byte[] Log) image;
++                using (var power = new FilePowerLossModel(file.Filename) { DataFailsFromSync = 3 })
++                {
++                    byte[] data, log;
++                    using (var db = new LiteDatabase(file.Filename))
++                    {
++                        power.DataSyncs.Should().BeGreaterOrEqualTo(3, "the header's sync was reached");
++                        (data, log) = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++                        log.Length.Should().BeGreaterThan(0, "the legacy header backup and the journal are kept");
++                        UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.ConversionRefused,
++                            x =>
++                            {
++                                Contents(x).Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
++                                UnsyncedReadOnlyOpen_Tests.AssertPlainRows(x);
++                            }).Should().Contain("cannot sync");
++                    }
++                    SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only engine wrote nothing");
++                    SyncPowerLossModel.ReadShared(logName).Should().Equal(log);
++                    image = power.Capture();
++                }
++                image.Data.Should().Equal(original, "the converted header never synced");
++                FilePowerLossModel.Open(image, db => AssertConverted(db, expected));
++                using var converted = new LiteDatabase(file.Filename);
++                AssertConverted(converted, expected);
++            }
++            finally { File.Delete(logName); }
++        }
++
++        /// <summary>
++        /// A WAL in memory (LiteDatabase(Stream) over a caller FileStream) survives no power loss,
++        /// so nothing waits for a data sync on its behalf: a 5.0.21 file converts on a data file
++        /// that cannot sync, and the WAL is still emptied by checkpoints.
++        /// </summary>
++        [Fact]
++        public void Legacy_file_stream_with_an_in_memory_wal_converts_on_a_data_file_that_cannot_sync()
++        {
++            using var file = new TempFile();
++            File.WriteAllBytes(file.Filename, Fixture("plain.db"));
++            var expected = LegacyContents(file.Filename);
++            var rejected = 0;
++            NativeFileSync.SimulateErrno = _ => { rejected++; return 22; };
++            try
++            {
++                using var stream = new FileStream(file.Filename, FileMode.Open, FileAccess.ReadWrite);
++                using var db = new LiteDatabase(stream);
++                AssertConverted(db, expected);
++                rejected.Should().BeGreaterThan(0, "the data file answered \"cannot sync\"");
++                db.CheckpointSize = 10;
++                for (var id = 1; id <= 200; id++) db.GetCollection("log").Insert(new BsonDocument { ["_id"] = id, ["text"] = new string('t', 3000) });
++                Info(db)["walKept"].AsBoolean.Should().BeFalse();
++                Info(db)["logFileSize"].AsInt64.Should().BeLessThan(40 * PAGE_SIZE, "the in-memory WAL is still emptied");
++                db.GetCollection("log").Count().Should().Be(200);
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++        }
++
++        private static Dictionary<string, string[]> LegacyContents(string filename)
++        {
++            using var legacy = new LiteDatabase($"Filename={filename};ReadOnly=true;Legacy Index Scan=true");
++            var contents = Contents(legacy);
++            contents.Values.Sum(x => x.Length).Should().BeGreaterThan(0);
++            return contents;
++        }
++
++        private static Dictionary<string, string[]> Contents(LiteDatabase db) => db.GetCollectionNames().ToDictionary(name => name,
++            name => db.GetCollection(name).FindAll().OrderBy(x => x["_id"]).Select(x => JsonSerializer.Serialize(x)).ToArray());
++
++        /// <summary>The database is converted and holds exactly <paramref name="expected"/>.</summary>
++        private static int AssertConverted(LiteDatabase db, Dictionary<string, string[]> expected)
++        {
++            Info(db)["checksums"].AsBoolean.Should().BeTrue();
++            Contents(db).Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
++            return expected.Count;
++        }
++
++        private static byte[] Fixture(string name)
++        {
++            using var resource = typeof(KeptWalStop_Tests).Assembly.GetManifestResourceStream("LiteDB.Tests.Resources.IndexMigration_5_0_21.zip");
++            using var zip = new ZipArchive(resource, ZipArchiveMode.Read);
++            using var entry = zip.GetEntry(name).Open();
++            using var bytes = new MemoryStream();
++            entry.CopyTo(bytes);
++            return bytes.ToArray();
++        }
++    }
++}
++#endif
+diff --git a/LiteDB.Tests/Regressions/KeptWalStop_Tests.cs b/LiteDB.Tests/Regressions/KeptWalStop_Tests.cs
+index 39c50dd7d..d033ea1b2 100644
+--- a/LiteDB.Tests/Regressions/KeptWalStop_Tests.cs
++++ b/LiteDB.Tests/Regressions/KeptWalStop_Tests.cs
+@@ -1,6 +1,5 @@
+ #if DEBUG || TESTING
+ using System;
+-using System.Collections.Generic;
+ using System.IO;
+ using System.IO.Compression;
+ using System.Linq;
+@@ -23,7 +22,7 @@ namespace LiteDB.Tests.Regressions
+     /// </summary>
+     [Trait("Category", "IoSafety")]
+     [Collection(NativeFileSyncCollection.Name)]
+-    public class KeptWalStop_Tests
++    public partial class KeptWalStop_Tests
+     {
+         /// <summary>
+         /// The data file stops syncing at a full checkpoint's salt rotation ("before-reclaim"), after
+@@ -85,8 +84,10 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// Open-time recovery of a torn header on a data file that cannot sync: it rewrote the
+         /// header in the OS cache and retired the journal although that header never synced. The
+-        /// open is now refused and the journal kept: another power loss still recovers, a read-only
+-        /// open reads everything, and once the data file syncs the open recovers.
++        /// recovery now stops before it retires the journal, and the open falls back to read-only
++        /// ("Cannot recover this database now"): it reads everything, refuses writes and writes
++        /// nothing more, and the journal is kept, so another power loss still recovers, an explicit
++        /// read-only open reads everything, and once the data file syncs the open recovers.
+         /// </summary>
+         [Fact]
+         public void Open_recovery_keeps_the_header_journal_while_the_data_file_cannot_sync()
+@@ -103,8 +104,13 @@ namespace LiteDB.Tests.Regressions
+             try
+             {
+                 using var power = new FilePowerLossModel(image.Filename) { DataFails = true };
+-                Action open = () => new LiteDatabase(image.Filename).Dispose();
+-                open.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                byte[] opened;
++                using (var db = new LiteDatabase(image.Filename))
++                {
++                    opened = SyncPowerLossModel.ReadShared(image.Filename);
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.RecoveryRefused, x => AssertCollections(x), Name(1));
++                }
++                SyncPowerLossModel.ReadShared(image.Filename).Should().Equal(opened, "the read-only engine wrote nothing");
+                 SyncPowerLossModel.ReadShared(imageLog).Should().Equal(log, "the journal stays until the repaired header synced");
+                 power.Capture().Data.Should().Equal(torn, "the repaired header did not sync");
+                 FilePowerLossModel.Open(power.Capture(), AssertCollections); // a second power loss
+@@ -174,7 +180,7 @@ namespace LiteDB.Tests.Regressions
+         /// the engine retry the data sync before they take a lock or scan, and stop there.
+         /// </summary>
+         [Fact]
+-        public void Restart_over_a_kept_wal_reports_it_and_checkpoints_without_scanning()
++        public void Restart_over_a_kept_wal_reports_it_and_stops_scanning_once_it_knows()
+         {
+             using var file = new TempFile();
+             SetupRows(file.Filename);
+@@ -303,67 +309,6 @@ namespace LiteDB.Tests.Regressions
+             SyncPowerLossModel.AssertRows(db, Rows, 1);
+         }
+ 
+-        /// <summary>
+-        /// A 5.0.21 file whose data file syncs for the conversion's first two syncs, not for the sync
+-        /// of its converted header: the conversion emptied the log (the legacy header's backup and
+-        /// its journal) anyway. It is now refused with both kept; the power-loss image and, once the
+-        /// data file syncs, the database itself open converted with every document.
+-        /// </summary>
+-        [Fact]
+-        public void Conversion_whose_header_sync_fails_is_refused_until_the_data_file_syncs()
+-        {
+-            using var file = new TempFile();
+-            var original = Fixture("plain.db");
+-            File.WriteAllBytes(file.Filename, original);
+-            var logName = FileHelper.GetLogFile(file.Filename);
+-            var expected = LegacyContents(file.Filename);
+-            try
+-            {
+-                (byte[] Data, byte[] Log) image;
+-                using (var power = new FilePowerLossModel(file.Filename) { DataFailsFromSync = 3 })
+-                {
+-                    Action open = () => new LiteDatabase(file.Filename).Dispose();
+-                    open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*cannot sync*");
+-                    power.DataSyncs.Should().BeGreaterOrEqualTo(3, "the header's sync was reached");
+-                    SyncPowerLossModel.ReadShared(logName).Length.Should().BeGreaterThan(0, "the legacy header backup and the journal are kept");
+-                    image = power.Capture();
+-                }
+-                image.Data.Should().Equal(original, "the converted header never synced");
+-                FilePowerLossModel.Open(image, db => AssertConverted(db, expected));
+-                using var converted = new LiteDatabase(file.Filename);
+-                AssertConverted(converted, expected);
+-            }
+-            finally { File.Delete(logName); }
+-        }
+-
+-        /// <summary>
+-        /// A WAL in memory (LiteDatabase(Stream) over a caller FileStream) survives no power loss,
+-        /// so nothing waits for a data sync on its behalf: a 5.0.21 file converts on a data file
+-        /// that cannot sync, and the WAL is still emptied by checkpoints.
+-        /// </summary>
+-        [Fact]
+-        public void Legacy_file_stream_with_an_in_memory_wal_converts_on_a_data_file_that_cannot_sync()
+-        {
+-            using var file = new TempFile();
+-            File.WriteAllBytes(file.Filename, Fixture("plain.db"));
+-            var expected = LegacyContents(file.Filename);
+-            var rejected = 0;
+-            NativeFileSync.SimulateErrno = _ => { rejected++; return 22; };
+-            try
+-            {
+-                using var stream = new FileStream(file.Filename, FileMode.Open, FileAccess.ReadWrite);
+-                using var db = new LiteDatabase(stream);
+-                AssertConverted(db, expected);
+-                rejected.Should().BeGreaterThan(0, "the data file answered \"cannot sync\"");
+-                db.CheckpointSize = 10;
+-                for (var id = 1; id <= 200; id++) db.GetCollection("log").Insert(new BsonDocument { ["_id"] = id, ["text"] = new string('t', 3000) });
+-                Info(db)["walKept"].AsBoolean.Should().BeFalse();
+-                Info(db)["logFileSize"].AsInt64.Should().BeLessThan(40 * PAGE_SIZE, "the in-memory WAL is still emptied");
+-                db.GetCollection("log").Count().Should().Be(200);
+-            }
+-            finally { NativeFileSync.SimulateErrno = null; }
+-        }
+-
+         [Fact]
+         public void Database_file_sizes_are_int64()
+         {
+@@ -453,25 +398,6 @@ namespace LiteDB.Tests.Regressions
+ 
+         private static BsonDocument Info(LiteDatabase db) => db.GetCollection("$database").FindAll().Single();
+ 
+-        private static Dictionary<string, string[]> LegacyContents(string filename)
+-        {
+-            using var legacy = new LiteDatabase($"Filename={filename};ReadOnly=true;Legacy Index Scan=true");
+-            var contents = Contents(legacy);
+-            contents.Values.Sum(x => x.Length).Should().BeGreaterThan(0);
+-            return contents;
+-        }
+-
+-        private static Dictionary<string, string[]> Contents(LiteDatabase db) => db.GetCollectionNames().ToDictionary(name => name,
+-            name => db.GetCollection(name).FindAll().OrderBy(x => x["_id"]).Select(x => JsonSerializer.Serialize(x)).ToArray());
+-
+-        /// <summary>The database is converted and holds exactly <paramref name="expected"/>.</summary>
+-        private static int AssertConverted(LiteDatabase db, Dictionary<string, string[]> expected)
+-        {
+-            Info(db)["checksums"].AsBoolean.Should().BeTrue();
+-            Contents(db).Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
+-            return expected.Count;
+-        }
+-
+         private static byte[] WalCrash(string name)
+         {
+             using var resource = typeof(KeptWalStop_Tests).Assembly.GetManifestResourceStream("LiteDB.Tests.Resources.WalCrash_5_0_21.zip");
+@@ -481,16 +407,6 @@ namespace LiteDB.Tests.Regressions
+             entry.CopyTo(bytes);
+             return bytes.ToArray();
+         }
+-
+-        private static byte[] Fixture(string name)
+-        {
+-            using var resource = typeof(KeptWalStop_Tests).Assembly.GetManifestResourceStream("LiteDB.Tests.Resources.IndexMigration_5_0_21.zip");
+-            using var zip = new ZipArchive(resource, ZipArchiveMode.Read);
+-            using var entry = zip.GetEntry(name).Open();
+-            using var bytes = new MemoryStream();
+-            entry.CopyTo(bytes);
+-            return bytes.ToArray();
+-        }
+     }
+ }
+ #endif
+diff --git a/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs b/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs
+index 356edc221..1068c6bc1 100644
+--- a/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs
++++ b/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs
+@@ -17,8 +17,9 @@ namespace LiteDB.Tests.Regressions
+     /// needs the root: a power loss (modelled by keeping each file as of its last successful
+     /// sync) must keep every commit acknowledged while durableLogFlush was true. Such a checkpoint
+     /// now stops ("stopped syncing", its engine closes) before it retires a frame or removes its
+-    /// header journal, and an engine that opens over that journal is refused until the data file
+-    /// syncs, so no connection reuses a slot or acknowledges a commit meanwhile.
++    /// header journal, and an engine that opens over that journal cannot recover until the data
++    /// file syncs: it opens read-only and refuses every write, so no connection reuses a slot or
++    /// acknowledges a commit meanwhile, while every connection still reads every commit.
+     /// </summary>
+     [Trait("Category", "RegressionSince5021")]
+     [Collection(NativeFileSyncCollection.Name)]
+@@ -26,8 +27,10 @@ namespace LiteDB.Tests.Regressions
+     {
+         /// <summary>
+         /// Every commit acknowledged durable survives, with the WAL as last synced or as written
+-        /// back; the connection's next write is refused while the data file cannot sync, and once
+-        /// it syncs the connection recovers every commit and writes again.
++        /// back; while the data file cannot sync, the connection's next write is refused (its
++        /// engine opens read-only: "Cannot modify this database", naming the refused recovery)
++        /// without changing either file, and the connection keeps reading every commit; once the
++        /// data file syncs, the connection recovers every commit and writes again.
+         /// </summary>
+         [Theory]
+         [InlineData(BeforeBackfill)] // found before the root is published: none is
+@@ -47,9 +50,11 @@ namespace LiteDB.Tests.Regressions
+                 power.AssertAfterPowerLoss(64, durable); // commits acknowledged as durable survive the power loss
+                 FilePowerLossModel.Open((power.Capture().Data, kept), image => SyncPowerLossModel.AssertRows(image, 64, durable));
+ 
+-                Action update = () => Update(db, 10);
+-                update.Should().Throw<IOException>().WithMessage("Cannot recover this database now*", "the header journal stays until a data sync");
+-                SyncPowerLossModel.ReadShared(logName).Should().Equal(kept);
++                var data = SyncPowerLossModel.ReadShared(file.Filename);
++                UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(db, 10), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                SyncPowerLossModel.AssertRows(db, 64, durable); // the connection keeps reading
++                SyncPowerLossModel.ReadShared(logName).Should().Equal(kept, "the header journal stays until a data sync");
++                SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data);
+                 power.AssertAfterPowerLoss(64, durable);
+ 
+                 power.DataFails = false;
+@@ -64,7 +69,8 @@ namespace LiteDB.Tests.Regressions
+         /// An independent connection opens a fresh engine that knows nothing of the failed sync.
+         /// While the data file still cannot sync, it must not reuse a slot (the slot's witness is
+         /// not durable) nor report a commit durable: its open finds the header journal the stopped
+-        /// checkpoint kept and is refused, the WAL unchanged.
++        /// checkpoint kept and cannot recover, so it opens read-only and the write is refused, the
++        /// WAL unchanged; the connection still reads every commit.
+         /// </summary>
+         [Fact]
+         public void Independent_connection_does_not_reuse_retired_slots_while_the_data_file_cannot_sync()
+@@ -82,10 +88,12 @@ namespace LiteDB.Tests.Regressions
+                 var before = SyncPowerLossModel.ReadShared(logName);
+                 using var second = new SharedEngine(power.Settings());
+                 using var secondDb = new LiteDatabase(second, disposeOnClose: false);
+-                Action update = () => Update(secondDb, 10);
+-                update.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                var data = SyncPowerLossModel.ReadShared(file.Filename);
++                UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(secondDb, 10), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                SyncPowerLossModel.AssertRows(secondDb, 64, 9);
+ 
+                 SyncPowerLossModel.ReadShared(logName).Should().Equal(before, "no retired slot is reused before the data file syncs");
++                SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data);
+                 power.AssertAfterPowerLoss(64, 9); // commit 10 was not acknowledged
+             }
+             finally { EngineState.SimulateProcessCrash = null; }
+@@ -125,8 +133,9 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// The same two independent connections in the default configuration: files the engines
+         /// open themselves through shared file handles, no caller streams. The first connection's
+-        /// checkpoint stops with its root in the OS cache; the second is refused while the data
+-        /// file cannot sync, and reuses slots and acknowledges a durable commit only once it syncs.
++        /// checkpoint stops with its root in the OS cache; while the data file cannot sync, the
++        /// second's engine opens read-only, so it reads every commit and its write is refused; it
++        /// reuses slots and acknowledges a durable commit only once the data file syncs.
+         /// </summary>
+         [Theory]
+         [InlineData(false)]
+@@ -175,9 +184,11 @@ namespace LiteDB.Tests.Regressions
+             }
+             else
+             {
+-                Action update = () => Update(secondDb, 10);
+-                update.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                var data = SyncPowerLossModel.ReadShared(file.Filename);
++                UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(secondDb, 10), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                SyncPowerLossModel.AssertRows(secondDb, 64, 9);
+                 SyncPowerLossModel.ReadShared(logName).Should().Equal(before, "no retired slot is reused before the data file syncs");
++                SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data);
+             }
+             // Every commit reported durable is in the durable WAL; a log sync waits for the data file.
+             power.AfterPowerLoss(image => SyncPowerLossModel.AssertRows(image, 64, dataSyncsAgain ? 10 : 9));
+diff --git a/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs b/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs
+index 1fb0bc30c..e6597b155 100644
+--- a/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs
+@@ -21,7 +21,8 @@ namespace LiteDB.Tests.Regressions
+     /// database worked. Data barriers now degrade like log barriers, for commits and checkpoints.
+     /// Emptying a log still needs a data sync that succeeds (DiskService.KeepsWal): there a full
+     /// checkpoint keeps the WAL, and a conversion or rebuild, which would empty one, is refused
+-    /// with both files unchanged (5.0.21 converted, unaware of what the log last synced).
++    /// with both files unchanged (5.0.21 converted, unaware of what the log last synced); an open
++    /// whose conversion is refused opens the file read-only instead.
+     /// </summary>
+     [Trait("Category", "RegressionSince5021")]
+     [Collection(NativeFileSyncCollection.Name)]
+@@ -79,6 +80,15 @@ namespace LiteDB.Tests.Regressions
+             finally { NativeFileSync.SimulateErrno = null; }
+         }
+ 
++        /// <summary>
++        /// A 5.0.21 file with WAL commits (WalCrash_5_0_21.zip) where nothing syncs: its conversion
++        /// empties the legacy WAL, which needs a data sync, so a plain open threw "Cannot convert
++        /// this legacy database now" and only an explicit "readonly=true;legacy index scan=true"
++        /// open could read it. The plain open now falls back to that read-only open on its own:
++        /// $database says why, every commit reads, a write throws naming the refusal and the
++        /// instance keeps reading, and both files stay byte for byte. Once the storage syncs, a
++        /// plain open converts.
++        /// </summary>
+         [Fact]
+         public void Real_5_0_21_file_with_a_wal_opens_read_only_on_storage_that_cannot_sync()
+         {
+@@ -97,14 +107,13 @@ namespace LiteDB.Tests.Regressions
+             NativeFileSync.SimulateErrno = _ => 22;
+             try
+             {
+-                Action open = () => new LiteDatabase(file.Filename).Dispose();
+-                open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*cannot sync*");
++                using (var db = new LiteDatabase(file.Filename))
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.ConversionRefused, AssertLegacyCommits, "docs")
++                        .Should().Contain("cannot sync");
+                 File.ReadAllBytes(file.Filename).Should().Equal(data);
+                 File.ReadAllBytes(logName).Should().Equal(log);
+                 using var legacy = new LiteDatabase($"Filename={file.Filename};ReadOnly=true;Legacy Index Scan=true");
+-                var docs = legacy.GetCollection("docs").FindAll().ToList();
+-                docs.Should().HaveCount(101);
+-                docs.Count(x => x["value"].AsInt32 == 7).Should().Be(21);
++                AssertLegacyCommits(legacy);
+             }
+             finally { NativeFileSync.SimulateErrno = null; }
+ 
+@@ -177,6 +186,13 @@ namespace LiteDB.Tests.Regressions
+             finally { NativeFileSync.SimulateErrno = null; }
+         }
+ 
++        private static void AssertLegacyCommits(LiteDatabase db)
++        {
++            var docs = db.GetCollection("docs").FindAll().ToList();
++            docs.Should().HaveCount(101);
++            docs.Count(x => x["value"].AsInt32 == 7).Should().Be(21);
++        }
++
+         private static bool DurableLogFlush(LiteDatabase db) =>
+             db.GetCollection("$database").FindAll().Single()["durableLogFlush"].AsBoolean;
+     }
+diff --git a/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs b/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
+index 7532128ec..56fe31064 100644
+--- a/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
+@@ -157,9 +157,10 @@ namespace LiteDB.Tests.Regressions
+         /// operations of the connection, fresh engines whose own log syncs succeed, must not reuse
+         /// those slots. The checkpoint now stops ("stopped syncing") with its header journal kept,
+         /// and the connection's next operation, whose open cannot retire that journal while the
+-        /// data file cannot sync, is refused with the WAL unchanged; once the data file syncs, the
+-        /// connection recovers and writes again. RetiredSlotPowerLoss_Tests covers other
+-        /// connections and power loss.
++        /// data file cannot sync, opens read-only: its write is refused with the WAL unchanged and
++        /// the connection keeps reading every commit; once the data file syncs, the connection
++        /// recovers and writes again. RetiredSlotPowerLoss_Tests covers other connections and
++        /// power loss.
+         /// </summary>
+         [Theory]
+         [InlineData("checkpoint-before-page-write")]   // found before the root is published: none is
+@@ -207,9 +208,11 @@ namespace LiteDB.Tests.Regressions
+                 BlankFrames(retired).Should().Be(0, "no slot is cleared while the witness root may not be durable");
+                 frames.Should().BeGreaterThan(0);
+ 
+-                Action update = () => Update64(db, 10);
+-                update.Should().Throw<IOException>().WithMessage("Cannot recover this database now*");
++                var data = ReadShared(file.Filename);
++                UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update64(db, 10), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                SyncPowerLossModel.AssertRows(db, 64, 9); // the connection keeps reading
+                 ReadShared(logName).Should().Equal(retired, "slots retired by a checkpoint whose data sync failed must not be reused");
++                ReadShared(file.Filename).Should().Equal(data);
+ 
+                 dataFails = false; // the storage syncs again: the next operation recovers
+                 Update64(db, 10);
+diff --git a/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs
+index 5ac626713..79b746883 100644
+--- a/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs
+@@ -263,11 +263,13 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// A 5.0.21 file with WAL commits (WalCrash_5_0_21.zip, see LegacyWalSharedMigration_Tests) on
+         /// storage whose data file cannot sync while its WAL can. The conversion empties the legacy
+-        /// WAL once drained, which needs a data sync that succeeds: it is refused, both files byte
+-        /// for byte, and a power loss leaves the legacy pair, which opens with every commit.
++        /// WAL once drained, which needs a data sync that succeeds: it is not run, and the open
++        /// falls back to read-only ("Cannot convert this legacy database now"), which reads every
++        /// commit and refuses writes; both files stay byte for byte, and a power loss leaves the
++        /// legacy pair, which opens with every commit.
+         /// </summary>
+         [Fact]
+-        public void Legacy_conversion_is_refused_where_only_the_wal_syncs()
++        public void Legacy_conversion_opens_read_only_where_only_the_wal_syncs()
+         {
+             using var file = new TempFile();
+             var logName = FileHelper.GetLogFile(file.Filename);
+@@ -280,8 +282,9 @@ namespace LiteDB.Tests.Regressions
+                 (byte[] Data, byte[] Log) image;
+                 using (var power = new SyncPowerLossModel(file.Filename) { DataFails = true })
+                 {
+-                    Action open = () => new LiteDatabase(new LiteEngine(power.Settings())).Dispose();
+-                    open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*cannot sync*");
++                    using (var db = new LiteDatabase(new LiteEngine(power.Settings())))
++                        UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.ConversionRefused, AssertLegacyCommits, "docs")
++                            .Should().Contain("cannot sync");
+                     image = power.Capture();
+                 }
+                 image.Data.Should().Equal(data);
+diff --git a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+index 26d108c68..8aa512838 100644
+--- a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+@@ -114,6 +114,7 @@ namespace LiteDB.Tests.Regressions
+             {
+                 power.DataFails = true;
+                 db.GetCollection("compact").Insert(Enumerable.Range(1, 4).Select(Compact));
++                HasJournal(SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename))).Should().BeFalse("the refused promotion wrote no header journal");
+                 SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the promotion wrote nothing");
+                 db.GetCollection("compact").FindAll().Should().BeEquivalentTo(Enumerable.Range(1, 4).Select(Compact), o => o.WithStrictOrdering());
+                 SyncPowerLossModel.AssertRows(db, Rows, 0);
+@@ -214,28 +215,23 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// A file whose checksums an earlier engine enabled but whose indexes still need the migration
+         /// (v10): the migration's promotion needs a data sync, so while the data file cannot sync the
+-        /// writable open is refused up front, both files unchanged, with the read-only remedy named;
+-        /// that read-only open works, and once the data file syncs the file migrates.
++        /// writable migration is refused up front, and the open falls back to the read-only remedy
++        /// the refusal names: it reads every row, refuses writes, and leaves both files unchanged;
++        /// an explicit read-only open works too, and once the data file syncs the file migrates.
+         /// </summary>
+         [Fact]
+-        public void Index_migration_of_a_checksummed_file_is_refused_while_the_data_file_cannot_sync()
++        public void Index_migration_of_a_checksummed_file_opens_read_only_while_the_data_file_cannot_sync()
+         {
+             using var file = new TempFile();
+-            using (var db = LiteDB.Tests.Engine.IndexMigration_Tests.Open(file.Filename, null))
+-                db.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
+-            LiteDB.Tests.Engine.IndexMigration_Tests.RewriteHeaders(file.Filename, null, header =>
+-            {
+-                header[HeaderPage.P_FILE_VERSION] = HeaderPage.CHECKSUM_FILE_VERSION;
+-                header[EnginePragmas.P_INDEX_ORDER_VERSION] = 0;
+-                Array.Clear(header, EnginePragmas.P_COLLATION_STAMP, 4);
+-            });
++            SetupIndexMigration(file.Filename);
+             var logName = FileHelper.GetLogFile(file.Filename);
+             var data = File.ReadAllBytes(file.Filename);
+             using (var power = new FilePowerLossModel(file.Filename))
+             {
+                 power.DataFails = true;
+-                Action open = () => LiteDB.Tests.Engine.IndexMigration_Tests.Open(file.Filename, null).Dispose();
+-                open.Should().Throw<IOException>().WithMessage("Cannot convert this legacy database now*readonly=true;legacy index scan=true*");
++                using (var db = LiteDB.Tests.Engine.IndexMigration_Tests.Open(file.Filename, null))
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, UnsyncedReadOnlyOpen_Tests.ConversionRefused, x => SyncPowerLossModel.AssertRows(x, Rows, 0))
++                        .Should().Contain("readonly=true;legacy index scan=true");
+                 File.ReadAllBytes(file.Filename).Should().Equal(data);
+                 (File.Exists(logName) ? File.ReadAllBytes(logName).Length : 0).Should().Be(0);
+                 using (var db = new LiteDatabase(new LiteEngine(new EngineSettings { Filename = file.Filename, ReadOnly = true, LegacyIndexScan = true })))
+@@ -247,6 +243,72 @@ namespace LiteDB.Tests.Regressions
+             LiteDB.Tests.Engine.IndexMigration_Tests.ReadHeader(file.Filename, null)[HeaderPage.P_FILE_VERSION].Should().Be(HeaderPage.INDEX_FILE_VERSION);
+         }
+ 
++        /// <summary>
++        /// The same migration where the data file syncs for the migration's check at open, then not
++        /// for the promotion's own sync (refused before it writes anything: "Cannot upgrade this
++        /// database's file format now"), or only up to the promotion's header write (it stops with
++        /// its header journal kept: "stopped syncing"). Either failed the open; it now opens
++        /// read-only with that refusal as its reason, reads every row, refuses writes, and writes
++        /// nothing itself. The files as last synced are the original ones and open with every row;
++        /// once the data file syncs, the file migrates.
++        /// </summary>
++        [Theory]
++        [InlineData(2, "Cannot upgrade this database's file format now")]
++        [InlineData(3, "The data file stopped syncing to the device during a file format promotion")]
++        public void Index_migration_whose_promotion_cannot_sync_opens_read_only(int failsFromSync, string cause)
++        {
++            using var file = new TempFile();
++            SetupIndexMigration(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            var original = File.ReadAllBytes(file.Filename);
++            try
++            {
++                using var power = new FilePowerLossModel(file.Filename) { DataFailsFromSync = failsFromSync };
++                byte[] data, log;
++                using (var db = LiteDB.Tests.Engine.IndexMigration_Tests.Open(file.Filename, null))
++                {
++                    power.DataSyncs.Should().Be(failsFromSync, "the migration's check synced, the promotion's last sync did not");
++                    (data, log) = (File.ReadAllBytes(file.Filename), File.Exists(logName) ? File.ReadAllBytes(logName) : null);
++                    UnsyncedReadOnlyOpen_Tests.AssertReadOnlyFallback(db, cause, x => SyncPowerLossModel.AssertRows(x, Rows, 0));
++                }
++                File.ReadAllBytes(file.Filename).Should().Equal(data, "the read-only engine wrote nothing");
++                if (failsFromSync == 2)
++                {
++                    data.Should().Equal(original, "the refused promotion wrote nothing");
++                    File.Exists(logName).Should().BeFalse();
++                }
++                else
++                {
++                    File.ReadAllBytes(logName).Should().Equal(log);
++                    HasJournal(log).Should().BeTrue("the stopped promotion keeps its header journal");
++                }
++                power.Capture().Data.Should().Equal(original, "no promoted header synced");
++                power.AfterPowerLoss(x => SyncPowerLossModel.AssertRows(x, Rows, 0));
++
++                power.DataFailsFromSync = 0;
++                using (var db = LiteDB.Tests.Engine.IndexMigration_Tests.Open(file.Filename, null))
++                {
++                    Info(db)["readOnly"].AsBoolean.Should().BeFalse();
++                    SyncPowerLossModel.AssertRows(db, Rows, 0);
++                }
++            }
++            finally { File.Delete(logName); }
++            LiteDB.Tests.Engine.IndexMigration_Tests.ReadHeader(file.Filename, null)[HeaderPage.P_FILE_VERSION].Should().Be(HeaderPage.INDEX_FILE_VERSION);
++        }
++
++        /// <summary>A file whose checksums an earlier engine enabled, whose indexes still need the migration (v10).</summary>
++        private static void SetupIndexMigration(string filename)
++        {
++            using (var db = LiteDB.Tests.Engine.IndexMigration_Tests.Open(filename, null))
++                db.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
++            LiteDB.Tests.Engine.IndexMigration_Tests.RewriteHeaders(filename, null, header =>
++            {
++                header[HeaderPage.P_FILE_VERSION] = HeaderPage.CHECKSUM_FILE_VERSION;
++                header[EnginePragmas.P_INDEX_ORDER_VERSION] = 0;
++                Array.Clear(header, EnginePragmas.P_COLLATION_STAMP, 4);
++            });
++        }
++
+         private static void SetupLegacyStorage(string filename)
+         {
+             using var setup = new LiteDatabase(new LiteEngine(new EngineSettings { Filename = filename, CompactStorage = CompactStorageMode.Legacy }));
+diff --git a/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
+new file mode 100644
+index 000000000..de77fc7f2
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
+@@ -0,0 +1,283 @@
++#if DEBUG || TESTING
++using System;
++using System.IO;
++using System.IO.Compression;
++using System.Linq;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Tests.Issues;
++using Xunit;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>
++    /// An open that must first convert, migrate or repair the file needs a data sync before it
++    /// removes a log or its header's recovery copy (#2242). Where the data file cannot sync, that
++    /// writable open was refused, and the application could not even read its data without
++    /// knowing to reopen with "readonly=true". The engine now opens read-only on its own instead:
++    /// $database reports readOnly and readOnlyReason (the refusal), reads and explicit
++    /// transactions that only read work, and every write throws an IOException naming the refusal
++    /// before it changes anything, after which the same instance keeps reading. The read-only open
++    /// writes nothing; once the data file syncs, a writable open converts or repairs the file.
++    /// </summary>
++    [Trait("Category", "IoSafety")]
++    [Collection(NativeFileSyncCollection.Name)]
++    public class UnsyncedReadOnlyOpen_Tests
++    {
++        /// <summary>Refusals a writable open falls back from (their messages start so).</summary>
++        internal const string ConversionRefused = "Cannot convert this legacy database now";
++        internal const string RecoveryRefused = "Cannot recover this database now";
++        internal const string StoppedSyncing = "The data file stopped syncing";
++
++        /// <summary>A write's error on an engine that opened read-only on its own; the refusal follows.</summary>
++        internal const string WriteRefused = "Cannot modify this database: it opened read-only because the writable open was refused. ";
++
++        private const int PlainRows = 48;
++
++        /// <summary>
++        /// A 5.0.21 file (IndexMigration_5_0_21.zip, its WAL empty) on storage whose data file cannot
++        /// sync, opened the plain way. Its conversion needs a data sync, so the open threw "Cannot
++        /// convert this legacy database now" and nothing could be read. It now opens read-only:
++        /// every row reads, a query on an indexed field finds the right rows (it scans documents,
++        /// as the legacy index keeps the old order), an explicit transaction reads and rolls back,
++        /// and a write throws before any change, also inside that transaction. The file is
++        /// unchanged, no log is created and nothing is synced. Once the data file syncs, a plain
++        /// open converts, and a commit it reports durable survives a power loss.
++        /// </summary>
++        [Fact]
++        public void Legacy_file_opens_read_only_while_its_data_file_cannot_sync()
++        {
++            using var file = new TempFile();
++            var original = Fixture("plain.db");
++            File.WriteAllBytes(file.Filename, original);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new FilePowerLossModel(file.Filename) { DataFails = true };
++            try
++            {
++                using (var db = new LiteDatabase(file.Filename))
++                {
++                    var syncs = power.DataSyncs;
++                    var reason = AssertReadOnlyFallback(db, ConversionRefused, x => AssertPlainRows(x));
++                    reason.Should().Contain("cannot sync");
++                    PlanIndex(db).Should().Be("_id", "the legacy index keeps the old order: the query scans documents");
++
++                    db.BeginTrans().Should().BeTrue("an explicit transaction that only reads is accepted");
++                    AssertPlainRows(db);
++                    AssertWriteRefused(db, reason);
++                    AssertPlainRows(db);
++                    db.Rollback().Should().BeTrue();
++                    AssertPlainRows(db);
++                    power.DataSyncs.Should().Be(syncs, "the read-only engine syncs nothing");
++                }
++                File.ReadAllBytes(file.Filename).Should().Equal(original, "the read-only open wrote nothing");
++                File.Exists(logName).Should().BeFalse("nor created a log");
++
++                power.DataFails = false;
++                using (var db = new LiteDatabase(file.Filename))
++                {
++                    var info = Info(db);
++                    info["readOnly"].AsBoolean.Should().BeFalse();
++                    info["readOnlyReason"].IsNull.Should().BeTrue();
++                    info["checksums"].AsBoolean.Should().BeTrue("the writable open converted the file");
++                    PlanIndex(db).Should().Be("oid");
++                    db.GetCollection("rows").Insert(PlainRow(PlainRows + 1));
++                    Info(db)["durableLogFlush"].AsBoolean.Should().BeTrue();
++                }
++                power.AfterPowerLoss(db => AssertPlainRows(db, PlainRows + 1));
++            }
++            finally { File.Delete(logName); }
++        }
++
++        /// <summary>
++        /// The same file through a shared connection, whose every operation opens an engine of its
++        /// own: each falls back to read-only, so reads work and a write throws the same catchable
++        /// IOException, also inside an explicit transaction, after which the connection keeps
++        /// reading; nothing is written. Once the data file syncs, the connection's next write
++        /// converts the file.
++        /// </summary>
++        [Fact]
++        public void Shared_connection_to_a_legacy_file_reads_while_its_data_file_cannot_sync()
++        {
++            using var file = new TempFile();
++            var original = Fixture("plain.db");
++            File.WriteAllBytes(file.Filename, original);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new FilePowerLossModel(file.Filename) { DataFails = true };
++            try
++            {
++                using (var db = new LiteDatabase($"Filename={file.Filename};Connection=shared"))
++                {
++                    var reason = AssertReadOnlyFallback(db, ConversionRefused, x => AssertPlainRows(x));
++                    db.BeginTrans().Should().BeTrue();
++                    AssertPlainRows(db);
++                    AssertWriteRefused(db, reason);
++                    db.Rollback().Should().BeTrue();
++                    AssertPlainRows(db);
++                    File.ReadAllBytes(file.Filename).Should().Equal(original, "the read-only opens wrote nothing");
++                    File.Exists(logName).Should().BeFalse();
++
++                    power.DataFails = false;
++                    db.GetCollection("rows").Insert(PlainRow(PlainRows + 1));
++                    AssertPlainRows(db, PlainRows + 1);
++                    Info(db)["readOnlyReason"].IsNull.Should().BeTrue("the write's writable open converted the file");
++                }
++                using var converted = new LiteDatabase(file.Filename);
++                Info(converted)["checksums"].AsBoolean.Should().BeTrue();
++                AssertPlainRows(converted, PlainRows + 1);
++            }
++            finally { File.Delete(logName); }
++        }
++
++        /// <summary>
++        /// Control: a writable open that succeeds reports no reason, and an explicit read-only
++        /// open reports readOnly without one; its write and transaction errors stay as they were.
++        /// </summary>
++        [Fact]
++        public void Healthy_and_explicitly_read_only_opens_report_no_read_only_reason()
++        {
++            using var file = new TempFile();
++            using (var db = new LiteDatabase(file.Filename))
++            {
++                db.GetCollection("rows").Insert(PlainRow(1));
++                var info = Info(db);
++                info["readOnly"].AsBoolean.Should().BeFalse();
++                info["readOnlyReason"].IsNull.Should().BeTrue();
++            }
++            var data = File.ReadAllBytes(file.Filename);
++            using (var db = new LiteDatabase($"Filename={file.Filename};ReadOnly=true"))
++            {
++                var info = Info(db);
++                info["readOnly"].AsBoolean.Should().BeTrue();
++                info["readOnlyReason"].IsNull.Should().BeTrue();
++                Action write = () => db.GetCollection("rows").Insert(PlainRow(2));
++                write.Should().Throw<IOException>().Which.Message.Should().Be("Cannot modify a read-only database.");
++                Action begin = () => db.BeginTrans();
++                begin.Should().Throw<IOException>().Which.Message.Should().Be("Cannot start a transaction in a read-only database.");
++                db.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32).Should().Equal(1);
++            }
++            File.ReadAllBytes(file.Filename).Should().Equal(data);
++        }
++
++        /// <summary>
++        /// The engine falls back on its own copy of the settings: the caller's EngineSettings stay
++        /// writable (were they changed, every later open with them would be read-only), so the
++        /// same settings open writable once the data file syncs.
++        /// </summary>
++        [Fact]
++        public void Fallback_leaves_the_callers_settings_unchanged()
++        {
++            using var file = new TempFile();
++            File.WriteAllBytes(file.Filename, Fixture("plain.db"));
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new FilePowerLossModel(file.Filename) { DataFails = true };
++            try
++            {
++                var settings = new EngineSettings { Filename = file.Filename };
++                using (var engine = new LiteEngine(settings))
++                using (var db = new LiteDatabase(engine, disposeOnClose: false))
++                    AssertReadOnlyFallback(db, ConversionRefused, x => AssertPlainRows(x));
++                settings.ReadOnly.Should().BeFalse();
++                settings.LegacyIndexScan.Should().BeFalse();
++                settings.ReadOnlyCause.Should().BeNull();
++
++                power.DataFails = false;
++                using (var engine = new LiteEngine(settings))
++                using (var db = new LiteDatabase(engine, disposeOnClose: false))
++                {
++                    Info(db)["readOnly"].AsBoolean.Should().BeFalse();
++                    db.GetCollection("rows").Insert(PlainRow(PlainRows + 1));
++                    AssertPlainRows(db, PlainRows + 1);
++                }
++            }
++            finally { File.Delete(logName); }
++        }
++
++        /// <summary>
++        /// <paramref name="db"/> opened read-only because its writable open was refused for a data
++        /// file that cannot sync: $database reports readOnly and the refusal (starting with
++        /// <paramref name="cause"/>), <paramref name="read"/> finds the exact state, a write throws
++        /// before any change naming the refusal, and the same instance then reads that state
++        /// again. Returns the refusal.
++        /// </summary>
++        internal static string AssertReadOnlyFallback(LiteDatabase db, string cause, Action<LiteDatabase> read, string collection = "rows")
++        {
++            var reason = ReadOnlyReason(db);
++            reason.Should().StartWith(cause);
++            read(db);
++            AssertWriteRefused(db, reason, collection);
++            read(db);
++            ReadOnlyReason(db).Should().Be(reason);
++            return reason;
++        }
++
++        /// <summary>$database of an engine that opened read-only on its own: the refusal it fell back from.</summary>
++        internal static string ReadOnlyReason(LiteDatabase db)
++        {
++            var info = Info(db);
++            info["readOnly"].AsBoolean.Should().BeTrue("the writable open was refused");
++            info["readOnlyReason"].IsString.Should().BeTrue("$database says why the open is read-only");
++            return info["readOnlyReason"].AsString;
++        }
++
++        /// <summary>A write to <paramref name="collection"/> throws the read-only error that names <paramref name="reason"/>.</summary>
++        internal static void AssertWriteRefused(LiteDatabase db, string reason, string collection = "rows")
++        {
++            Action write = () => db.GetCollection(collection).Insert(new BsonDocument { ["_id"] = 900001 });
++            write.Should().Throw<IOException>().Which.Message.Should().Be(WriteRefused + reason);
++        }
++
++        /// <summary>
++        /// <paramref name="write"/> throws the read-only error of an engine that opened read-only
++        /// because its writable open was refused with a message starting with <paramref name="cause"/>.
++        /// </summary>
++        internal static void AssertWriteRefused(Action write, string cause) =>
++            write.Should().Throw<IOException>().Which.Message.Should().StartWith(WriteRefused + cause);
++
++        /// <summary>
++        /// The rows of IndexMigration_5_0_21.zip's files (see IndexMigrationPowerLoss_Tests), and
++        /// those <see cref="PlainRow"/> added up to <paramref name="count"/>: each byte for byte, and
++        /// found by queries on the indexed oid and values fields.
++        /// </summary>
++        internal static int AssertPlainRows(LiteDatabase db, int count = PlainRows)
++        {
++            var rows = db.GetCollection("rows");
++            var expected = Enumerable.Range(1, count).Select(PlainRow).ToArray();
++            var actual = rows.FindAll().OrderBy(x => x["_id"].AsInt32).ToArray();
++            actual.Select(x => x["_id"].AsInt32).Should().Equal(Enumerable.Range(1, count));
++            for (var i = 0; i < count; i++)
++                BsonSerializer.Serialize(actual[i]).Should().Equal(BsonSerializer.Serialize(expected[i]));
++            foreach (var row in expected)
++                rows.Find(Query.EQ("oid", row["oid"])).Select(x => x["_id"].AsInt32).Should().Equal(row["_id"].AsInt32);
++            rows.Find(BsonExpression.Create("$.values ANY = @0", 0.1m)).Select(x => x["_id"].AsInt32).OrderBy(x => x)
++                .Should().Equal(Enumerable.Range(1, count));
++            return count;
++        }
++
++        /// <summary>Row <paramref name="id"/> of IndexMigration_5_0_21.zip's files (ids 1..48), or one shaped like them.</summary>
++        internal static BsonDocument PlainRow(int id) => new BsonDocument
++        {
++            ["_id"] = id,
++            ["oid"] = new ObjectId((id % 2 == 0 ? "80000000" : "7fffffff") + "1122334455" + id.ToString("x6")),
++            ["values"] = new BsonArray { 0.1m, 0.1d },
++            ["number"] = 0.1m,
++            ["payload"] = new string((char)('a' + id % 26), 240) + id
++        };
++
++        private static string PlanIndex(LiteDatabase db) => db.GetCollection("rows").Query()
++            .Where(BsonExpression.Create("$.oid = @0", PlainRow(3)["oid"])).GetPlan()["index"]["name"].AsString;
++
++        private static BsonDocument Info(LiteDatabase db) => db.GetCollection("$database").FindAll().Single();
++
++        internal static byte[] Fixture(string name)
++        {
++            using var resource = typeof(UnsyncedReadOnlyOpen_Tests).Assembly.GetManifestResourceStream(
++                "LiteDB.Tests.Resources.IndexMigration_5_0_21.zip");
++            using var zip = new ZipArchive(resource, ZipArchiveMode.Read);
++            using var entry = zip.GetEntry(name).Open();
++            using var bytes = new MemoryStream();
++            entry.CopyTo(bytes);
++            return bytes.ToArray();
++        }
++    }
++}
++#endif
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index f3946b33b..d567a5213 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -99,13 +99,14 @@ namespace LiteDB.Engine
+             _cache.Clear();
+         }
+ 
+-        internal static IOException UnsyncedHeaderRecovery() => new IOException("Cannot recover this database now: " +
+-            "its data file cannot sync to the device, and the header's recovery copy in the log file stays until the " +
+-            "repaired header synced. Reopen it once the storage syncs, or open it with \"readonly=true\".");
++        internal static IOException UnsyncedHeaderRecovery() => UnsyncedStorage(new IOException("Cannot recover this " +
++            "database now: its data file cannot sync to the device, and the header's recovery copy in the log file " +
++            "stays until the repaired header synced. Reopen it once the storage syncs, or open it with \"readonly=true\"."));
+ 
+-        internal static IOException UnsyncedDataConversion() => new IOException("Cannot convert this legacy database now: " +
+-            "its data file cannot sync to the device, and the conversion empties the log file only after the data file " +
+-            "synced. Reopen it once the storage syncs, or open it with \"readonly=true;legacy index scan=true\".");
++        internal static IOException UnsyncedDataConversion() => UnsyncedStorage(new IOException("Cannot convert this " +
++            "legacy database now: its data file cannot sync to the device, and the conversion empties the log file only " +
++            "after the data file synced. Reopen it once the storage syncs, or open it with " +
++            "\"readonly=true;legacy index scan=true\"."));
+ 
+         /// <summary>Called only after checkpoint synced all data, before recycling the WAL.</summary>
+         internal void RotateWalSalt()
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index 302c5f0fb..e595c6e34 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -117,9 +117,24 @@ namespace LiteDB.Engine
+         /// the data file stopped syncing since the sync that let it start. What the WAL and its header
+         /// journal hold is the only durable copy, so the caller stops before removing any of it.
+         /// </summary>
+-        internal static IOException DataStoppedSyncing(string operation) => new IOException(
++        internal static IOException DataStoppedSyncing(string operation) => UnsyncedStorage(new IOException(
+             $"The data file stopped syncing to the device during {operation}: the log file and its header recovery " +
+-            "copy are kept, and the database must be reopened once the storage syncs.");
++            "copy are kept, and the database must be reopened once the storage syncs."));
++
++        /// <summary>Exception.Data key: refused or stopped because the data file cannot sync (#2242).</summary>
++        internal const string UnsyncedStorageDataKey = "LiteDB.UnsyncedStorage";
++
++        internal static IOException UnsyncedStorage(IOException error)
++        {
++            error.Data[UnsyncedStorageDataKey] = true;
++            return error;
++        }
++
++        /// <summary>
++        /// The operation was refused or stopped because the data file cannot sync (#2242), before it
++        /// removed the log or its header's recovery copy: an open that failed so can read instead.
++        /// </summary>
++        internal static bool IsUnsyncedStorage(Exception error) => error.Data.Contains(UnsyncedStorageDataKey);
+ 
+         /// <summary>
+         /// For <c>$database.walKept</c>: the WAL holds frames kept until a data sync succeeds. An engine
+diff --git a/LiteDB/Engine/Disk/DiskService.FileVersion.cs b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+index 6ec8defe9..50e5469bf 100644
+--- a/LiteDB/Engine/Disk/DiskService.FileVersion.cs
++++ b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+@@ -48,7 +48,7 @@ namespace LiteDB.Engine
+                 "to the device, and the upgrade keeps its header's recovery copy in the log file until the new header " +
+                 "synced. Retry once the storage syncs.");
+             error.Data[UnsyncedPromotionDataKey] = true;
+-            return error;
++            return UnsyncedStorage(error);
+         }
+ 
+         /// <summary>Exception.Data key of <see cref="UnsyncedPromotion"/>: refused before anything was written.</summary>
+diff --git a/LiteDB/Engine/Engine/Transaction.cs b/LiteDB/Engine/Engine/Transaction.cs
+index a3e6dda44..022ec5008 100644
+--- a/LiteDB/Engine/Engine/Transaction.cs
++++ b/LiteDB/Engine/Engine/Transaction.cs
+@@ -17,9 +17,10 @@ namespace LiteDB.Engine
+         {
+             _state.Validate();
+ 
+-            // Storage opened read-only because it cannot be written accepts explicit transactions,
+-            // as released versions did; writes are still rejected.
+-            if (_settings.ReadOnly && !_settings.ReadOnlyStorage) throw new IOException("Cannot start a transaction in a read-only database.");
++            // Storage opened read-only because it cannot be written, or because its data file cannot
++            // sync, accepts explicit transactions, as released versions did; writes are still rejected.
++            if (_settings.ReadOnly && !_settings.ReadOnlyStorage && _settings.ReadOnlyCause == null)
++                throw new IOException("Cannot start a transaction in a read-only database.");
+ 
+             var transacion = _monitor.GetTransaction(true, false, out var isNew);
+ 
+@@ -92,11 +93,16 @@ namespace LiteDB.Engine
+ 
+         private T AutoReadTransaction<T>(Func<TransactionService, T> fn) => this.ExecuteAutoTransaction(fn, false);
+ 
++        /// <summary>A write to a read-only engine; one that opened read-only on its own says why.</summary>
++        private IOException ReadOnlyWrite() => new IOException(_settings.ReadOnlyCause == null
++            ? "Cannot modify a read-only database."
++            : "Cannot modify this database: it opened read-only because the writable open was refused. " + _settings.ReadOnlyCause);
++
+         private T ExecuteAutoTransaction<T>(Func<TransactionService, T> fn, bool write)
+         {
+             _state.Validate();
+ 
+-            if (write && _settings.ReadOnly) throw new IOException("Cannot modify a read-only database.");
++            if (write && _settings.ReadOnly) throw ReadOnlyWrite();
+ 
+             var transaction = _monitor.GetTransaction(true, false, out var isNew);
+ 
+diff --git a/LiteDB/Engine/EngineSettings.cs b/LiteDB/Engine/EngineSettings.cs
+index e66597c76..428545b50 100644
+--- a/LiteDB/Engine/EngineSettings.cs
++++ b/LiteDB/Engine/EngineSettings.cs
+@@ -53,6 +53,15 @@ namespace LiteDB.Engine
+         /// </summary>
+         internal bool ReadOnlyStorage { get; set; }
+ 
++        /// <summary>
++        /// Why a writable open opened read-only instead (set by the engine on its own copy of the
++        /// settings): the data file cannot sync to the device (#2242), and the open had to convert,
++        /// migrate or repair the file first, which removes a log or its header's recovery copy only
++        /// after a data sync. Reads work, explicit transactions that only read are accepted, writes
++        /// throw; <c>$database.readOnlyReason</c> reports it. Null otherwise.
++        /// </summary>
++        internal string ReadOnlyCause { get; set; }
++
+         // Experimental coordinator: set only on the coordinator's own engine.
+         internal ICoordinationSignals CoordinationSignals { get; set; }
+         internal EngineSettings Clone() => (EngineSettings)this.MemberwiseClone();
+diff --git a/LiteDB/Engine/LiteEngine.cs b/LiteDB/Engine/LiteEngine.cs
+index d747cec36..60af6e2fe 100644
+--- a/LiteDB/Engine/LiteEngine.cs
++++ b/LiteDB/Engine/LiteEngine.cs
+@@ -97,6 +97,17 @@ namespace LiteDB.Engine
+                 _settings.LegacyIndexScan = true;
+                 this.Open();
+             }
++            catch (IOException ex) when (!_settings.ReadOnly && DiskService.IsUnsyncedStorage(ex))
++            {
++                // The data file cannot sync (#2242) and this open had to convert, migrate or repair the
++                // file first: it removed neither the log nor its header's recovery copy. Read the files
++                // as they are instead of failing; writes throw and $database.readOnlyReason says why.
++                _settings = _settings.Clone();
++                _settings.ReadOnly = true;
++                _settings.LegacyIndexScan = true;
++                _settings.ReadOnlyCause = ex.Message;
++                this.Open();
++            }
+             catch (LiteException ex) when (this.RebuildAfterFailedOpen(ex))
+             {
+                 // Damage found while opening (e.g. by the index migration of a legacy file) marked
+diff --git a/LiteDB/Engine/SystemCollections/SysDatabase.cs b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+index 2b1834c40..d878451dd 100644
+--- a/LiteDB/Engine/SystemCollections/SysDatabase.cs
++++ b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+@@ -24,6 +24,8 @@ namespace LiteDB.Engine
+                 ["name"] = _disk.GetName(FileOrigin.Data),
+                 ["encrypted"] = _settings.Password != null,
+                 ["readOnly"] = _settings.ReadOnly,
++                // Why a writable open opened read-only instead (the data file cannot sync); null otherwise.
++                ["readOnlyReason"] = _settings.ReadOnlyCause,
+ 
+                 ["lastPageID"] = (int)_header.LastPageID,
+                 ["freeEmptyPageID"] = (int)_header.FreeEmptyPageList,
+diff --git a/docs/header-publication.md b/docs/header-publication.md
+index 67261aaa9..67635d878 100644
+--- a/docs/header-publication.md
++++ b/docs/header-publication.md
+@@ -179,9 +179,9 @@ it: the WAL grows until the data file syncs again (`$database.walKept`), also on
+ never syncs. A data sync that fails later in the same checkpoint (after the backfill, the
+ salt rotation or a retirement root) stops the engine before anything is removed, leaving
+ the state of a crash at that point; the next open repairs a torn header from the journal,
+-and an open that would have to retire a journal while the data file cannot sync is refused
+-(`readonly=true` still opens). A conversion and a rebuild, which empty a log, are refused
+-there with both files unchanged. Only a WAL the engine keeps in memory, which survives no
++and a writable open that would have to retire a journal while the data file cannot sync opens
++read-only instead (writes throw, `$database.readOnlyReason` says why). A conversion, which
++empties a log, likewise opens read-only there, and a rebuild is refused, both files unchanged. Only a WAL the engine keeps in memory, which survives no
+ power loss, is emptied. A format promotion keeps its journal the same way: it writes only
+ right after a data sync that succeeded, is refused otherwise, and stops the engine with the
+ journal kept when the data file stops syncing after its header write. A legacy header
+diff --git a/docs/release-notes.md b/docs/release-notes.md
+index da9e1af66..11eb3b255 100644
+--- a/docs/release-notes.md
++++ b/docs/release-notes.md
+@@ -36,9 +36,9 @@ Retired frames keep durable witnesses (56 bytes each, up to 145 per WAL frame) s
+ recovery and rebuild still verify complete transactions after slot reuse.
+ Reclamation reuses WAL capacity but does not shrink the file; long-lived readers
+ can grow witness metadata and recovery work until a full checkpoint. On storage
+-that rejects device sync (#2242), snapshot checkpoints still run, but no frame is
+-retired and no slot reused: the WAL appends as before v13 until a full checkpoint
+-truncates it. Every retiring checkpoint first syncs the data file and the WAL (and
++that rejects device sync (#2242) no frame is retired and no slot reused: the WAL appends as
++before v13 until a full checkpoint whose data file synced truncates it (see below: while the
++data file cannot sync, checkpoints write nothing). Every retiring checkpoint first syncs the data file and the WAL (and
+ once the WAL's directory), so such storage is found before any witness depends on it;
+ storage that stops syncing during the checkpoint keeps the retired frames and publishes
+ no root once it found out. An engine whose data is a file (opened by it or passed as a
+@@ -69,22 +69,24 @@ reports what its connection's engines found, so a new shared connection may repo
+ until one of its checkpoints tried the data file (`logFileSize` and `dataFileSize` are now
+ 64-bit). Once an engine, or an engine of the same shared connection, found that the data file
+ cannot sync, its checkpoints retry the data sync before they scan the WAL. A data sync that fails later in the same
+-checkpoint stops the engine with the WAL and the journal intact, and an open that must
+-repair or retire a header journal while the data file cannot sync is refused
+-(`readonly=true` still opens). On storage that never syncs the WAL therefore never shrinks
+-(before, it was emptied as before #2818). For the same reason a 5.x conversion is refused
+-with an `IOException` while the data file cannot sync (open such a file with
+-`readonly=true;legacy index scan=true`), and so is a rebuild, which leaves the database open
+-and unchanged; 5.0.21 converted and rebuilt there. A WAL the engine keeps in memory
++checkpoint stops the engine with the WAL and the journal intact. On storage that never syncs
++the WAL therefore never shrinks (before, it was emptied as before #2818). A writable open that
++would first have to convert a 5.x file, migrate its indexes, or repair or retire a header
++journal while the data file cannot sync opens read-only instead, changing neither file: reads
++work (indexes in the old order are scanned, as with `legacy index scan=true`), explicit
++transactions are accepted, and every write throws an `IOException` naming the cause without
++stopping the engine, so the application can catch it and keep reading. `$database.readOnly`
++and `$database.readOnlyReason` report it without a write. Once the data file syncs, the next
++open converts or repairs the file. A rebuild there is refused with an `IOException` and leaves
++the database open and unchanged (5.0.21 rebuilt there without a power-loss guarantee; it had
++no format conversion). A WAL the engine keeps in memory
+ (`:memory:`, `:temp:`, `LiteDatabase(Stream)` without a log stream) survives no power loss
+ and is still emptied, also by a conversion. A format promotion (a compact or vector write,
+ an index migration, or the first retiring checkpoint, that raises the file version) keeps its
+ header journal the same way: it first syncs the data file (one more data sync per promotion)
+ and stops the engine with the journal kept when the data file stops syncing after its header
+-write. While the data file cannot sync, a compact write stays BSON, an index migration refuses
+-the open (`readonly=true;legacy index scan=true` opens), and a vector write to a file older
+-than the vector format is refused with an `IOException`, which, as every I/O failure in a
+-transaction, closes the engine with both files unchanged. Encrypted streams
++write. While the data file cannot sync, a compact write stays BSON and an index migration
++opens read-only (above). Encrypted streams
+ opened to read no longer sync their file. A 5.x data file found beside its conversion's WAL (whose
+ converted header never reached the device) fails to open instead of being replayed. Larger
+ shared-mode query results stream from a private snapshot protected by a lease
+@@ -302,9 +304,10 @@ collection does not release abandoned thread-affine locks in a live engine.
+ 
+ Every committed transaction is now synced to the storage device before the
+ commit returns, so acknowledged commits survive power loss on storage that can
+-sync. Storage that rejects the sync (some network shares and virtual file
+-systems, #2242) falls back to the earlier behaviour for commits, checkpoints and
+-format conversion; `$database.durableLogFlush` reports which one is in effect. A
++sync. On storage that rejects the sync (some network shares and virtual file
++systems, #2242) commits fall back to the earlier behaviour (the OS cache only), while the WAL
++is kept until the data file syncs and conversions open read-only (see above);
++`$database.durableLogFlush` reports which one is in effect. A
+ sync that fails with an I/O error still stops the engine before data is overwritten.
+ On Linux and macOS this requires LiteDB's own device sync: released .NET runtimes
+ lose every `fsync` error in `FileStream.Flush(true)` (dotnet/runtime#124725), which
+diff --git a/docs/rules/compatibility.md b/docs/rules/compatibility.md
+index 986ec01de..a7ec8ca12 100644
+--- a/docs/rules/compatibility.md
++++ b/docs/rules/compatibility.md
+@@ -149,8 +149,9 @@ whose data is a file proves the data file (once per data header in the process).
+ file WAL or a header journal only after a data sync that covers what it protects succeeded;
+ never infer that no earlier engine or process synced its frames. A checkpoint or format
+ promotion syncs the data file before it writes and writes nothing while that fails; a failure
+-later in either stops the engine before any removal; recovery that would retire a journal without a data
+-sync refuses the open; a conversion or rebuild is refused unchanged; and after "cannot sync"
++later in either stops the engine before any removal; an open that would retire a journal, convert or
++migrate without a data sync opens read-only instead (writes throw, reads work); a rebuild is
++refused unchanged; and after "cannot sync"
+ a log sync waits for a data sync that succeeds.
+ Remove/sync the WAL-bound header journal before clearing or reusing payloads.
+ Keep per-transaction page positions increasing across safepoints even when a
+diff --git a/docs/storage-stack-safety.md b/docs/storage-stack-safety.md
+index 4001f7092..aa9db83f1 100644
+--- a/docs/storage-stack-safety.md
++++ b/docs/storage-stack-safety.md
+@@ -39,7 +39,7 @@ Design: [page and WAL checksums](page-and-wal-checksums.md),
+ | A valid frame CRC does not make an incomplete transaction committed. Frame identity, generation, count/digest and confirmation sequence must agree. | [WalChecksum_Tests](../LiteDB.Tests/Internals/WalChecksum_Tests.cs), [WalPowerLoss_Tests](../LiteDB.Tests/Internals/WalPowerLoss_Tests.cs), [WalTransactionBoundary_Tests](../LiteDB.Tests/Internals/WalTransactionBoundary_Tests.cs); `checksum-wal`, `wal`, `power-loss`. |
+ | No commit is written behind a torn frame. A failed write that may leave one (an overwrite of a slot, an append whose truncation failed or had to keep a header journal, a checkpoint's own WAL writes) stops the engine before the WAL writer is released, whatever the exception type; a failed append that was truncated releases its position, so the next append rewrites the slot. A caller stream other than a `MemoryStream` is flushed after each write under the lock its readers take, so a buffering one (a `BufferedStream`) holds no frame for a later write or a reader's seek to tear. A transaction whose safepoint write failed only rolls back (reads included), and a format promotion that fails with its header journal outstanding stops the engine. A committed legacy WAL page that is not a page of its type, or names a page beyond both files and every page a committed header of this database counts, fails the open, as does a committed header of another database. | [TornSlotRewrite_Tests](../LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs) (a commit forced into the window after the writer's release); [TornWalAppend_Tests](../LiteDB.Tests/Regressions/TornWalAppend_Tests.cs) (half-written frames, complete frames whose write reported failure, a BufferedStream and a stream that tears a held frame at the next write or the flush); [SharedBufferedLogStream_Tests](../LiteDB.Tests/Regressions/SharedBufferedLogStream_Tests.cs) (a reader in the window after a frame write); [CheckpointFailureWindow_Tests](../LiteDB.Tests/Regressions/CheckpointFailureWindow_Tests.cs) (failed retirement records; the journal guard behind the stop; the engine is closed); [FailedSafepointWrite_Tests](../LiteDB.Tests/Regressions/FailedSafepointWrite_Tests.cs); [FailedPromotionJournal_Tests](../LiteDB.Tests/Regressions/FailedPromotionJournal_Tests.cs); [LegacyWalPageBound_Tests](../LiteDB.Tests/Regressions/LegacyWalPageBound_Tests.cs). |
+ | Legacy checksum cutover is bounded and repeatable; mixed page coverage cannot become permission to ignore damaged checked pages. | [LazyChecksumCutover_Tests](../LiteDB.Tests/Internals/LazyChecksumCutover_Tests.cs), [LazyChecksumMigration_Tests](../LiteDB.Tests/Internals/LazyChecksumMigration_Tests.cs), [LazyChecksumMarker_Tests](../LiteDB.Tests/Internals/LazyChecksumMarker_Tests.cs); `checksum-page`, `checksum-migration`. |
+-| An in-place checkpoint or invalid-state header marker requires durable WAL and journal bytes even when ordinary commit sync has degraded. A failed sync must stop before data overwrites, preventing mixed old/new documents and stale indexes. Storage that answers "cannot sync" (#2242) proceeds in write order without a power-loss claim, as before #2818, and neither retires nor reuses WAL frames: every retiring checkpoint first syncs the data file and the log (the log's directory once per engine), and an engine syncs the raw log once before it first reuses a slot; an engine whose data is a file proves the data file before its first log sync (once per data header in the process; a file replaced at the same path with a byte-identical header is taken as the synced one, so whoever replaces it must sync it). A checkpoint that finds out during its own barriers keeps the frames it retired and publishes no root. After a data sync answered "cannot sync", every log sync (and a new WAL's directory entry) waits for a data sync that succeeds, so no log sync makes an emptied or converted WAL durable ahead of its unsynced backfill or header, also when the WAL alone syncs again; a checkpoint or format promotion writes only right after a data sync that succeeded, and one whose data file stops syncing after it wrote stops the engine with the WAL and header journal intact (the OS could write an emptied WAL back ahead of the backfill), so the WAL is kept and grows until the data file syncs; recovery that would retire a journal without a data sync refuses a writable open, a conversion or rebuild is refused unchanged, and a stream opened to read never syncs. A legacy header beside checksummed WAL frames fails the open, changing neither file. | [CheckpointDurability_Tests](../LiteDB.Tests/Internals/CheckpointDurability_Tests.cs) rejects the padding and journal barriers on an I/O error, tests already-degraded and opted-out commits, checks zero data writes and stopped subsequent writes, and recovers both cached and durable images; [Issue2242_UnsyncableLog_Tests](../LiteDB.Tests/Issues/Issue2242_UnsyncableLog_Tests.cs) and [MvccUnsyncableLog_Tests](../LiteDB.Tests/Internals/MvccUnsyncableLog_Tests.cs) cover conversion, promotion, checkpoint and slot reuse on a log that never syncs or stops syncing during a checkpoint; [UnsyncableRetirement_Tests](../LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs) checks that no witness is published and no slot cleared or reused when the data file, the log or its directory cannot sync; [RetiredSlotPowerLoss_Tests](../LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs) and [UnsyncedBackfillPowerLoss_Tests](../LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs) recover each file as of its last successful sync after the data file stops syncing, with a second independent connection, also after neither file synced a full checkpoint and the WAL alone syncs again (documents and index compared); [DataFileStopsSyncing_Tests](../LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs) writes the WAL back ahead of the backfill, defers automatic checkpoints of a kept WAL, refuses a conversion whose drain keeps it, and checks that encrypted readers and a rebuild's installed file sync nothing unproven; [FreshEngineDurability_Tests](../LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs) covers a fresh engine (also over caller FileStreams) after a salt rotation whose data sync failed, a conversion and a rebuild where only the data file cannot sync, a single proof per data header, a file replaced at its path; [FreshEngineLogSync_Tests](../LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs) keeps commits acknowledged durable when a fresh engine's first log sync repairs a torn tail or journals a checkpoint header after a truncation that never synced; [ConvertedWalBesideLegacyHeader_Tests](../LiteDB.Tests/Regressions/ConvertedWalBesideLegacyHeader_Tests.cs) pairs a 5.0.21 file with its conversion's WAL, plain and encrypted, writable and read-only; [KeptWalStop_Tests](../LiteDB.Tests/Regressions/KeptWalStop_Tests.cs) stops a checkpoint whose data file stops syncing at its backfill or salt rotation and tears the header, refuses the open that would retire the journal and the conversion whose header cannot sync, and checks a restart over a kept WAL (no scan, `walKept`); [UnsyncedPromotion_Tests](../LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs) refuses a promotion whose data file cannot sync and stops one, also inside a retiring checkpoint, whose header does not sync. |
++| An in-place checkpoint or invalid-state header marker requires durable WAL and journal bytes even when ordinary commit sync has degraded. A failed sync must stop before data overwrites, preventing mixed old/new documents and stale indexes. Storage that answers "cannot sync" (#2242) proceeds in write order without a power-loss claim, as before #2818, and neither retires nor reuses WAL frames: every retiring checkpoint first syncs the data file and the log (the log's directory once per engine), and an engine syncs the raw log once before it first reuses a slot; an engine whose data is a file proves the data file before its first log sync (once per data header in the process; a file replaced at the same path with a byte-identical header is taken as the synced one, so whoever replaces it must sync it). A checkpoint that finds out during its own barriers keeps the frames it retired and publishes no root. After a data sync answered "cannot sync", every log sync (and a new WAL's directory entry) waits for a data sync that succeeds, so no log sync makes an emptied or converted WAL durable ahead of its unsynced backfill or header, also when the WAL alone syncs again; a checkpoint or format promotion writes only right after a data sync that succeeded, and one whose data file stops syncing after it wrote stops the engine with the WAL and header journal intact (the OS could write an emptied WAL back ahead of the backfill), so the WAL is kept and grows until the data file syncs; a writable open that would retire a journal, convert or migrate without a data sync opens read-only instead, a rebuild is refused unchanged, and a stream opened to read never syncs. A legacy header beside checksummed WAL frames fails the open, changing neither file. | [CheckpointDurability_Tests](../LiteDB.Tests/Internals/CheckpointDurability_Tests.cs) rejects the padding and journal barriers on an I/O error, tests already-degraded and opted-out commits, checks zero data writes and stopped subsequent writes, and recovers both cached and durable images; [Issue2242_UnsyncableLog_Tests](../LiteDB.Tests/Issues/Issue2242_UnsyncableLog_Tests.cs) and [MvccUnsyncableLog_Tests](../LiteDB.Tests/Internals/MvccUnsyncableLog_Tests.cs) cover conversion, promotion, checkpoint and slot reuse on a log that never syncs or stops syncing during a checkpoint; [UnsyncableRetirement_Tests](../LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs) checks that no witness is published and no slot cleared or reused when the data file, the log or its directory cannot sync; [RetiredSlotPowerLoss_Tests](../LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs) and [UnsyncedBackfillPowerLoss_Tests](../LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs) recover each file as of its last successful sync after the data file stops syncing, with a second independent connection, also after neither file synced a full checkpoint and the WAL alone syncs again (documents and index compared); [DataFileStopsSyncing_Tests](../LiteDB.Tests/Regressions/DataFileStopsSyncing_Tests.cs) writes the WAL back ahead of the backfill, defers automatic checkpoints of a kept WAL, refuses a conversion whose drain keeps it, and checks that encrypted readers and a rebuild's installed file sync nothing unproven; [FreshEngineDurability_Tests](../LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs) covers a fresh engine (also over caller FileStreams) after a salt rotation whose data sync failed, a conversion and a rebuild where only the data file cannot sync, a single proof per data header, a file replaced at its path; [FreshEngineLogSync_Tests](../LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs) keeps commits acknowledged durable when a fresh engine's first log sync repairs a torn tail or journals a checkpoint header after a truncation that never synced; [ConvertedWalBesideLegacyHeader_Tests](../LiteDB.Tests/Regressions/ConvertedWalBesideLegacyHeader_Tests.cs) pairs a 5.0.21 file with its conversion's WAL, plain and encrypted, writable and read-only; [KeptWalStop_Tests](../LiteDB.Tests/Regressions/KeptWalStop_Tests.cs) stops a checkpoint whose data file stops syncing at its backfill or salt rotation and tears the header, opens read-only where the open would retire the journal or the conversion's header cannot sync, and checks a restart over a kept WAL (`walKept`; one WAL scan, then each checkpoint stops at its data sync); [UnsyncedPromotion_Tests](../LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs) refuses a promotion whose data file cannot sync and stops one, also inside a retiring checkpoint, whose header does not sync. |
+ | Torn header publication and interrupted repair retain usable recovery evidence. A second interruption must not destroy an unsealed intent or the selected repair journal. | [ChecksumCheckpointCrash_Tests](../LiteDB.Tests/Internals/ChecksumCheckpointCrash_Tests.cs), [HeaderJournalFailure_Tests](../LiteDB.Tests/Internals/HeaderJournalFailure_Tests.cs), [ConversionJournalCrash_Tests](../LiteDB.Tests/Internals/ConversionJournalCrash_Tests.cs), [ConversionIntentRecovery_Tests](../LiteDB.Tests/Internals/ConversionIntentRecovery_Tests.cs); `checksum-crash`, `recovery`. |
+ | Interrupted encrypted WAL creation may complete only a validated empty preamble. Salt/check-prefix bytes survive repeated interruption; wrong passwords, foreign bytes and existing payloads must not be reinitialized. | [EncryptedWalCreation_Tests](../LiteDB.Tests/Internals/EncryptedWalCreation_Tests.cs) exercises physical write cuts, repeated completion, real files, read-only/rebuild inspection and rejection preservation. [EncryptedWalCreationFailure_Tests](../LiteDB.Tests/Internals/EncryptedWalCreationFailure_Tests.cs) rejects each preamble sync with I/O and unsupported-sync errors. |
+ 
+@@ -124,9 +124,9 @@ to ordered OS-cache flushes that survive a process crash, not power loss, as bef
+ #2818; encrypted preambles still require a successful sync. A file WAL is emptied only after
+ a data sync that covers its backfill succeeded, so there it is kept and grows
+ (`$database.walKept`), a checkpoint or format promotion writes only right after a data sync
+-that succeeded (a later failure in it stops the engine with the WAL and journal intact), recovery that would
+-retire a header journal without a data sync refuses the open, and a conversion or rebuild
+-is refused unchanged. A WAL directory the process
++that succeeded (a later failure in it stops the engine with the WAL and journal intact), an open
++that would retire a header journal, convert or migrate without a data sync opens read-only
++instead (writes throw, `$database.readOnlyReason` says why), and a rebuild is refused unchanged. A WAL directory the process
+ cannot open for reading (EACCES/EPERM) counts as a directory that cannot sync. On Unix, released .NET
+ runtimes report every fsync failure as success (dotnet/runtime#124725), so file
+ handles are synced natively (`fsync`; `F_FULLFSYNC` with `fsync` fallback on macOS)
+-- 
+2.43.0
+

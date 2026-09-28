@@ -1,0 +1,199 @@
+From 5a16cbea4920c1b33717f31bf5772ad3fd43b00e Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:20:17 +0000
+Subject: [PATCH 18/24] Test sticky promotion failures; leave failing repros of
+ three suspected defects
+
+A promotion or retiring checkpoint whose data file stops syncing after it
+wrote leaves the engine read-only (decision 6): reads return the last
+acknowledged rows, writes are refused with the record (the original failure
+as inner exception) without changing a file, and the journal stays.
+
+Left failing (suspected engine defects):
+- a retiring checkpoint's promotion refused before it writes is recorded as
+  a sticky write failure (implementation note 6 says it is not a failure);
+- a promotion stopped with its header journal kept records walKept false,
+  "The log file was empty.";
+- a failed promotion header write records no file.
+
+ReadOnlyAfterWriteFailure.AssertReported takes walKept as bool? (null: not
+checked); existing callers are unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../FailedPromotionJournal_Tests.cs           | 11 ++--
+ .../Regressions/ReadOnlyAfterWriteFailure.cs  |  9 +--
+ .../Regressions/UnsyncedPromotion_Tests.cs    | 57 +++++++++++++++----
+ 3 files changed, 57 insertions(+), 20 deletions(-)
+
+diff --git a/LiteDB.Tests/Regressions/FailedPromotionJournal_Tests.cs b/LiteDB.Tests/Regressions/FailedPromotionJournal_Tests.cs
+index 84361a775..48608cb77 100644
+--- a/LiteDB.Tests/Regressions/FailedPromotionJournal_Tests.cs
++++ b/LiteDB.Tests/Regressions/FailedPromotionJournal_Tests.cs
+@@ -40,8 +40,9 @@ namespace LiteDB.Tests.Regressions
+                 db.CheckpointSize = 0;
+                 data.Armed = true;
+                 Action compact = () => db.GetCollection("compact").Insert(Compact());
+-                compact.Should().Throw<IOException>("the promotion stops the engine with the header journal outstanding")
+-                    .WithMessage("File format promotion failed*").WithInnerException<UnauthorizedAccessException>();
++                var thrown = compact.Should().Throw<IOException>("the promotion stops the engine with the header journal outstanding")
++                    .WithMessage("File format promotion failed*").Which;
++                thrown.InnerException.Should().BeOfType<UnauthorizedAccessException>();
+                 data.Torn.Should().BeTrue();
+ 
+                 // The engine continues read-only (decision 6): it reads the rows through the torn header's
+@@ -53,11 +54,13 @@ namespace LiteDB.Tests.Regressions
+                 info["readOnly"].AsBoolean.Should().BeTrue();
+                 info["writeFailure"]["operation"].AsString.Should().Be("A file format promotion");
+                 info["writeFailure"]["error"].AsString.Should().Be("File format promotion failed.");
+-                info["writeFailure"]["walKept"].AsBoolean.Should().BeTrue("the header journal is kept");
++                info["writeFailure"]["walKept"].AsBoolean.Should().BeTrue("the log file holds the WAL and the header journal");
++                info["readOnlyReason"].AsString.Should().StartWith("A file format promotion failed at ").And.EndWith(
++                    ": File format promotion failed. The log file was kept.");
+                 Action later = () => db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 6 });
+                 var refused = later.Should().Throw<IOException>().Which;
+                 refused.Message.Should().Be(LiteEngine.WriteFailedPrefix + info["readOnlyReason"].AsString);
+-                refused.GetBaseException().Should().BeOfType<UnauthorizedAccessException>("the refusal carries the recorded failure");
++                refused.InnerException.Should().BeSameAs(thrown, "the refusal carries the recorded failure");
+                 db.GetCollection("rows").Count().Should().Be(5);
+                 data.ToArray().Should().Equal(files.Data, "the read-only engine writes nothing");
+                 log.ToArray().Should().Equal(files.Log, "the journal stays");
+diff --git a/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs b/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
+index 40dd187d6..e3b63114d 100644
+--- a/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
++++ b/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
+@@ -18,9 +18,10 @@ namespace LiteDB.Tests.Regressions
+         /// <c>$database</c> of <paramref name="db"/> reports readOnly and a writeFailure of
+         /// <paramref name="operation"/> on <paramref name="file"/> ("data", "log", or null when the
+         /// failure named none) whose error starts with <paramref name="error"/>, with the log file
+-        /// kept (<paramref name="walKept"/>) or empty; readOnlyReason is that record. Returns the record.
++        /// kept (<paramref name="walKept"/>) or empty (null: not checked here); readOnlyReason is that
++        /// record. Returns the record.
+         /// </summary>
+-        internal static string AssertReported(LiteDatabase db, string operation, string file, string error, bool walKept = true)
++        internal static string AssertReported(LiteDatabase db, string operation, string file, string error, bool? walKept = true)
+         {
+             var info = db.GetCollection("$database").FindAll().Single();
+             info["readOnly"].AsBoolean.Should().BeTrue("the engine continues read-only after a write failure");
+@@ -29,10 +30,10 @@ namespace LiteDB.Tests.Regressions
+             failure["operation"].AsString.Should().Be(operation);
+             (failure["file"].IsNull ? null : failure["file"].AsString).Should().Be(file);
+             failure["error"].AsString.Should().StartWith(error);
+-            failure["walKept"].AsBoolean.Should().Be(walKept);
++            if (walKept.HasValue) failure["walKept"].AsBoolean.Should().Be(walKept.Value);
+             var time = failure["time"].AsDateTime.ToUniversalTime();
+             var record = $"{operation} failed at {time:yyyy-MM-dd HH:mm:ss} UTC" + (file == null ? "" : $" on the {file} file") +
+-                $": {failure["error"].AsString} " + (walKept ? "The log file was kept." : "The log file was empty.");
++                $": {failure["error"].AsString} " + (failure["walKept"].AsBoolean ? "The log file was kept." : "The log file was empty.");
+             info["readOnlyReason"].AsString.Should().Be(record);
+             return record;
+         }
+diff --git a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+index 4084c51b8..3e31d362f 100644
+--- a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+@@ -19,8 +19,10 @@ namespace LiteDB.Tests.Regressions
+     /// "cannot sync" (#2242), and a retiring checkpoint that promoted the file went on to write its
+     /// backfill to that data file. Like a checkpoint, a promotion now writes only to a data file
+     /// that just synced (it is refused unchanged otherwise), and stops the engine with its journal
+-    /// kept when the data file stops syncing after its header write. Power-loss images keep each
+-    /// file as of its last successful sync, take both as written, or tear the data header.
++    /// kept when the data file stops syncing after its header write; the failure is recorded, and the
++    /// engine continues read-only (decision 6 of docs/decisions/durability-policy.md). Power-loss
++    /// images keep each file as of its last successful sync, take both as written, or tear the data
++    /// header.
+     /// </summary>
+     [Trait("Category", "IoSafety")]
+     [Collection(NativeFileSyncCollection.Name)]
+@@ -80,7 +82,7 @@ namespace LiteDB.Tests.Regressions
+             var synced = power.Capture();
+             var data = SyncPowerLossModel.ReadShared(file.Filename);
+             var log = SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename));
+-            AssertReadOnly(db, "A checkpoint", "The data file stopped syncing to the device during a file format promotion", 9, 5);
++            AssertReadOnly(db, thrown, "A checkpoint", "The data file stopped syncing to the device during a file format promotion", 9, 5);
+             SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only engine writes nothing");
+             SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename)).Should().Equal(log);
+             HasJournal(synced.Log).Should().BeTrue("the promotion's journal synced and is kept");
+@@ -245,13 +247,14 @@ namespace LiteDB.Tests.Regressions
+             engine.SimulateCrashPoint = phase => { if (phase == "promotion-after-header-write") power.DataFails = true; };
+             using var db = new LiteDatabase(engine, disposeOnClose: false);
+             Action insert = () => db.GetCollection("compact").Insert(Enumerable.Range(1, 4).Select(Compact));
+-            insert.Should().Throw<IOException>().WithMessage(
+-                "The data file stopped syncing to the device during a file format promotion*");
++            var thrown = insert.Should().Throw<IOException>().WithMessage(
++                "The data file stopped syncing to the device during a file format promotion*").Which;
+ 
+             var synced = power.Capture();
+             var data = SyncPowerLossModel.ReadShared(file.Filename);
+             var log = SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename));
+-            AssertReadOnly(db, "A file format promotion", "The data file stopped syncing to the device during a file format promotion", 0, 0);
++            // walKept: see Promotion_failure_record_reports_its_kept_header_journal.
++            AssertReadOnly(db, thrown, "A file format promotion", "The data file stopped syncing to the device during a file format promotion", 0, 0, walKept: null);
+             db.GetCollectionNames().Should().NotContain("compact");
+             SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the read-only engine writes nothing");
+             SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename)).Should().Equal(log);
+@@ -268,6 +271,34 @@ namespace LiteDB.Tests.Regressions
+             }
+         }
+ 
++        /// <summary>
++        /// Suspected engine defect, left failing: the promotion above stops with its header journal kept
++        /// in the log file (the torn header's only durable recovery copy; decision 1 of
++        /// docs/decisions/durability-policy.md keeps the WAL and its header journal alike), but its
++        /// recorded failure says walKept false and "The log file was empty.", which invites deleting that
++        /// log: DiskService.RecordWriteFailure counts only the WAL's frames (GetFileLength excludes the
++        /// journal). Expected: walKept true and "The log file was kept."
++        /// </summary>
++        [Fact]
++        public void Promotion_failure_record_reports_its_kept_header_journal()
++        {
++            using var file = new TempFile();
++            SetupLegacyStorage(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            var settings = power.Settings();
++            settings.CompactStorage = CompactStorageMode.Auto;
++            using var engine = new LiteEngine(settings);
++            engine.SimulateCrashPoint = phase => { if (phase == "promotion-after-header-write") power.DataFails = true; };
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            Action insert = () => db.GetCollection("compact").Insert(Enumerable.Range(1, 4).Select(Compact));
++            insert.Should().Throw<IOException>().WithMessage("The data file stopped syncing to the device during a file format promotion*");
++            HasJournal(SyncPowerLossModel.ReadShared(FileHelper.GetLogFile(file.Filename))).Should().BeTrue("the log file keeps the header journal");
++
++            var info = Info(db);
++            info["writeFailure"]["walKept"].AsBoolean.Should().BeTrue("the log file holds the kept header journal");
++            info["readOnlyReason"].AsString.Should().EndWith("The log file was kept.");
++        }
++
+         /// <summary>
+         /// A file whose checksums an earlier engine enabled but whose indexes still need the migration
+         /// (v10): the migration's promotion needs a data sync, so while the data file cannot sync the
+@@ -389,17 +420,19 @@ namespace LiteDB.Tests.Regressions
+         private static BsonDocument Info(LiteDatabase db) => db.GetCollection("$database").FindAll().Single();
+ 
+         /// <summary>
+-        /// After a recorded failure of <paramref name="operation"/> on the data file (decision 6) the
+-        /// engine continues read-only: it reads commit <paramref name="value"/> and the extra rows of
+-        /// commits 1 to <paramref name="extras"/>, reports the failure, and refuses a write.
++        /// After a recorded failure (<paramref name="thrown"/>) of <paramref name="operation"/> on the
++        /// data file (decision 6) the engine continues read-only: it reads commit <paramref name="value"/>
++        /// and the extra rows of commits 1 to <paramref name="extras"/>, reports the failure (with the
++        /// log file kept, <paramref name="walKept"/>; null: not checked), and refuses a write with it.
+         /// </summary>
+-        private static void AssertReadOnly(LiteDatabase db, string operation, string error, int value, int extras)
++        private static void AssertReadOnly(LiteDatabase db, Exception thrown, string operation, string error, int value, int extras, bool? walKept = true)
+         {
+             SyncPowerLossModel.AssertRows(db, Rows, value);
+             db.GetCollection("extra").FindAll().Select(d => d["_id"].AsInt32).Should().BeEquivalentTo(
+                 Enumerable.Range(1, extras).SelectMany(v => Enumerable.Range(v * 100 + 1, 10)));
+-            var record = ReadOnlyAfterWriteFailure.AssertReported(db, operation, "data", error);
+-            ReadOnlyAfterWriteFailure.AssertWriteRefused(() => Update(db, value + 1), record);
++            var record = ReadOnlyAfterWriteFailure.AssertReported(db, operation, "data", error, walKept);
++            ReadOnlyAfterWriteFailure.AssertWriteRefused(() => Update(db, value + 1), record)
++                .InnerException.Should().BeSameAs(thrown, "the refusal carries the recorded failure");
+             SyncPowerLossModel.AssertRows(db, Rows, value);
+         }
+ 
+-- 
+2.43.0
+

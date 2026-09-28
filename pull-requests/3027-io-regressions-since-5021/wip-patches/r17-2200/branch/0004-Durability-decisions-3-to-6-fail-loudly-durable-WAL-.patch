@@ -1,0 +1,1155 @@
+From 7f53e45393c4e0a610f0a052413dab7f4f74f9a7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 20:26:59 +0000
+Subject: [PATCH 04/24] Durability decisions 3 to 6: fail loudly, durable WAL,
+ WAL limit, sticky failures
+
+Implements docs/decisions/durability-policy.md (tests follow):
+- 3: with durable commits, a commit that cannot be made durable throws
+  before it writes a frame: before an engine's first WAL batch, the data
+  header the WAL depends on must be on the device and the log file and
+  its directory must sync (once per log path per process). A log sync
+  that answers "cannot sync" later is a failure; opted-out commits
+  degrade as before.
+- 4: log syncs no longer wait for the data file: while only the data
+  file cannot sync, commits stay durable in the WAL (its header proven),
+  the WAL grows and $database reports walKept and walLimit. Past the
+  WAL limit (1 GiB, "wal limit" / EngineSettings.WalLimit) a write
+  throws before it changes anything until a data sync succeeds.
+- 6: a write or sync failure is recorded (file, operation, error, time,
+  WAL kept) and stops the engine as before, but the next call reopens it
+  read-only: reads keep working, every write throws with the record,
+  $database.writeFailure reports it, an explicit transaction the failure
+  ended throws at Commit, and a shared connection's later operations open
+  read-only. A checkpoint's failure after a successful commit no longer
+  throws from that commit (5).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB/Client/Structures/ConnectionString.cs  |  10 +-
+ LiteDB/Engine/Disk/DiskService.Checksums.cs   |   7 +-
+ .../Disk/DiskService.CommitDurability.cs      | 102 ++++++++++++++++++
+ LiteDB/Engine/Disk/DiskService.DataWrites.cs  |  20 ++++
+ .../Engine/Disk/DiskService.DurableFlush.cs   |  78 ++++++++------
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs |   1 +
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs    |   4 +
+ LiteDB/Engine/Disk/DiskService.cs             |   5 +-
+ LiteDB/Engine/Disk/DurableLogs.cs             |  40 +++++++
+ LiteDB/Engine/Disk/SharedDurabilityState.cs   |  12 +++
+ LiteDB/Engine/Engine/Collection.cs            |   4 +-
+ LiteDB/Engine/Engine/Index.cs                 |   4 +-
+ LiteDB/Engine/Engine/Pragma.cs                |   2 +-
+ LiteDB/Engine/Engine/Query.cs                 |   2 +-
+ LiteDB/Engine/Engine/Rebuild.cs               |   2 +
+ LiteDB/Engine/Engine/Transaction.cs           |  36 +++++--
+ LiteDB/Engine/EngineSettings.cs               |  20 ++++
+ LiteDB/Engine/EngineState.cs                  |  35 +++++-
+ LiteDB/Engine/LiteEngine.WalLimit.cs          |  24 +++++
+ LiteDB/Engine/LiteEngine.WriteFailure.cs      |  98 +++++++++++++++++
+ LiteDB/Engine/LiteEngine.cs                   |  19 +++-
+ .../Engine/SystemCollections/SysDatabase.cs   |   4 +
+ LiteDB/Engine/WriteFailure.cs                 |  57 ++++++++++
+ 23 files changed, 534 insertions(+), 52 deletions(-)
+ create mode 100644 LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+ create mode 100644 LiteDB/Engine/Disk/DurableLogs.cs
+ create mode 100644 LiteDB/Engine/LiteEngine.WalLimit.cs
+ create mode 100644 LiteDB/Engine/LiteEngine.WriteFailure.cs
+ create mode 100644 LiteDB/Engine/WriteFailure.cs
+
+diff --git a/LiteDB/Client/Structures/ConnectionString.cs b/LiteDB/Client/Structures/ConnectionString.cs
+index 31bbe8f4f..f0a5d52d9 100644
+--- a/LiteDB/Client/Structures/ConnectionString.cs
++++ b/LiteDB/Client/Structures/ConnectionString.cs
+@@ -108,6 +108,10 @@ namespace LiteDB
+         /// </summary>
+         public bool DurableCommits { get; set; } = true;
+ 
++        /// <summary>"wal limit": while the data file cannot sync, how large the kept log file may grow before writes
++        /// throw (reads keep working) - support KB, MB, GB (default: 1GB). See <see cref="EngineSettings.WalLimit"/>.</summary>
++        public long WalLimit { get; set; } = EngineSettings.DEFAULT_WAL_LIMIT;
++
+         /// <summary>
+         /// "collation": Set default collaction when database creation (default: "[CurrentCulture]/IgnoreCase")
+         /// </summary>
+@@ -184,6 +188,7 @@ namespace LiteDB
+             this.AutoRebuild = _values.GetValue("auto-rebuild", this.AutoRebuild);
+             this.RejectInvalidLocalTime = _values.GetValue("reject invalid local time", this.RejectInvalidLocalTime);
+             this.DurableCommits = _values.GetValue("durable commits", this.DurableCommits);
++            this.WalLimit = _values.GetFileSize("wal limit", this.WalLimit);
+         }
+ 
+         private static bool LooksLikeKeyValueConnectionString(string connectionString)
+@@ -209,7 +214,7 @@ namespace LiteDB
+                 firstKey.Equals("upgrade", StringComparison.OrdinalIgnoreCase) ||
+                 firstKey.Equals("auto-rebuild", StringComparison.OrdinalIgnoreCase) ||
+                 firstKey.Equals("reject invalid local time", StringComparison.OrdinalIgnoreCase) ||
+-                firstKey.Equals("durable commits", StringComparison.OrdinalIgnoreCase) ||
++                firstKey.Equals("durable commits", StringComparison.OrdinalIgnoreCase) || firstKey.Equals("wal limit", StringComparison.OrdinalIgnoreCase) ||
+                 firstKey.Equals("collation", StringComparison.OrdinalIgnoreCase) ||
+                 firstKey.Equals("memory profile", StringComparison.OrdinalIgnoreCase) ||
+                 firstKey.Equals("cache size", StringComparison.OrdinalIgnoreCase) ||
+@@ -289,6 +294,7 @@ namespace LiteDB
+                 AutoRebuild = this.AutoRebuild,
+                 RejectInvalidLocalTime = this.RejectInvalidLocalTime,
+                 DurableCommits = this.DurableCommits,
++                WalLimit = this.WalLimit,
+             };
+ 
+             engineSettingsAction?.Invoke(settings);
+@@ -421,6 +427,8 @@ namespace LiteDB
+                     .Append(';');
+             }
+ 
++            if (WalLimit != EngineSettings.DEFAULT_WAL_LIMIT) bld.Append("wal limit=").AppendFormat(CultureInfo.InvariantCulture, "{0:D}", WalLimit).Append(';');
++
+             if (DurableCommits == false)
+             {
+                 bld.Append("Durable Commits=")
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index 218d83ebb..41ba8513a 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -171,6 +171,7 @@ namespace LiteDB.Engine
+         internal bool BeginCheckpointStop(Exception exception, out bool owned)
+         {
+             owned = false;
++            if (exception is IOException) this.RecordWriteFailure("A checkpoint", exception);
+ #if DEBUG || TESTING
+             if (_state.DeferCheckpointStop) return false;
+ #endif
+@@ -181,7 +182,11 @@ namespace LiteDB.Engine
+         internal void StopAfterCheckpointFailure(Exception exception, bool begun, bool owned)
+         {
+             if (begun) _state.CompleteStop(exception, owned);
+-            else _state.Stop(exception);
++            else
++            {
++                if (exception is IOException) this.RecordWriteFailure("A checkpoint", exception);
++                _state.Stop(exception);
++            }
+         }
+     }
+ }
+diff --git a/LiteDB/Engine/Disk/DiskService.CommitDurability.cs b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+new file mode 100644
+index 000000000..59830726d
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+@@ -0,0 +1,102 @@
++using System;
++using System.IO;
++
++namespace LiteDB.Engine
++{
++    internal partial class DiskService
++    {
++        // Set once this engine proved what a durable commit needs (RequireDurableCommit); cleared when
++        // the log or its directory answers "cannot sync" later.
++        private volatile bool _commitsProven;
++
++        /// <summary>
++        /// Decision 3 of docs/decisions/durability-policy.md: with durable commits a commit that cannot
++        /// be made durable throws, before it writes a frame. Before this engine's first WAL batch, prove
++        /// that the data header the WAL's frames depend on is on the device (<see cref="DataHeaderDurable"/>)
++        /// and that the log file and its directory sync: the log once per path per process
++        /// (<see cref="DurableLogs"/>), so storage that syncs pays it once. A failure is recorded (decision
++        /// 6): the engine reopens read-only and refuses writes until the database is reopened.
++        /// Caller holds the log writer lock, before the batch writes anything.
++        /// </summary>
++        private void RequireDurableCommit(Stream stream)
++        {
++            if (!_durableCommits || _volatileLog || _readOnly || _commitsProven) return;
++            try
++            {
++                if (!this.DataHeaderDurable())
++                {
++                    throw UnsyncedStorage(WriteFailure.InFile(new IOException(NotWritten +
++                        "the data file cannot sync to the device (#2242) and its header is not known to be on the device, " +
++                        "so the log file cannot make a commit durable." + OptOut), FileOrigin.Data));
++                }
++                if (_logPath == null || !DurableLogs.Contains(_logPath))
++                {
++                    var raw = stream is ChecksummedWalStream wal ? wal.RawStream : stream;
++                    try
++                    {
++                        raw.FlushToDisk();
++                        _logBarrierSynced = true;
++                    }
++                    catch (Exception ex) when (IsDurableFlushUnsupported(ex))
++                    {
++                        _logBarrierSynced = false;
++                        this.MarkLogFlushDegraded(ex);
++                        throw LogCannotSync(ex, "the log file", NotWritten);
++                    }
++                    catch (Exception ex) when (FailedIn(ex, FileOrigin.Log))
++                    {
++                    }
++                    this.SyncLogDirectory();
++                    // Without a C library no sync can report failure (LogSyncUnverified): attempted, not a failure.
++                    if (_logDirectoryUnsyncable && !this.LogSyncUnverified) throw LogCannotSync(null, "the log file's directory", NotWritten);
++                    if (_logPath != null) DurableLogs.Record(_logPath);
++                }
++                _commitsProven = true;
++            }
++            catch (IOException error)
++            {
++                this.RecordWriteFailure("A commit", error);
++                throw;
++            }
++        }
++
++        private const string NotWritten = "This commit was not written: ";
++        private const string OutcomeUnknown = "This commit's outcome is unknown: its frames reached the operating system, but ";
++        private const string OptOut = " Open the database with \"durable commits=false\" to accept commits that a power loss may lose.";
++
++        /// <summary>
++        /// The log (or its directory) answered "cannot sync" (#2242) while commits must be durable: no
++        /// commit is acknowledged there (decision 3). <paramref name="context"/> says what became of the
++        /// commit that found out: <see cref="NotWritten"/>, <see cref="OutcomeUnknown"/>, or nothing for a
++        /// recovery barrier (a checkpoint's journal, a conversion, a repair), which stops before it writes on.
++        /// </summary>
++        private static IOException LogCannotSync(Exception cause, string part, string context = null) =>
++            UnsyncedStorage(WriteFailure.InFile(new IOException(
++                (context ?? $"The {part.Substring(4)} cannot sync to the device (#2242): ") +
++                (context == null ? "no commit can be made durable there." : $"{part} cannot sync to the device (#2242), so no commit can be made durable there.") +
++                OptOut, cause), FileOrigin.Log));
++
++        /// <summary>
++        /// The data header the WAL's frames depend on (its salt, version and creation time) is on the
++        /// device: this engine synced it, or it is the header a successful sync in this process left
++        /// (<see cref="ProveDataFile"/>). Only then can a log sync make a commit durable, also while the
++        /// data file cannot sync (decision 4): every data write after the header's sync is covered by
++        /// the WAL, which shrinks only behind a covering data sync (<see cref="ShrinkLog"/>). A data
++        /// stream that is not a file cannot answer "cannot sync" and needs no proof.
++        /// </summary>
++        private bool DataHeaderDurable()
++        {
++            if (_readOnly || !_dataIsFile) return true;
++            if (!_dataSyncProven) this.ProveDataFile();
++            return _dataSyncProven;
++        }
++
++        private static string LogDurablePath(EngineSettings settings)
++        {
++            if (settings.LogStream != null) return (settings.LogStream as FileStream)?.Name is string name && Path.IsPathRooted(name) ? Path.GetFullPath(name) : null;
++            if (settings.DataStream != null || string.IsNullOrEmpty(settings.Filename) || settings.Filename == ":memory:" || settings.Filename == ":temp:") return null;
++            try { return Path.GetFullPath(FileHelper.GetLogFile(settings.Filename)); }
++            catch (Exception ex) when (ex is ArgumentException || ex is NotSupportedException || ex is PathTooLongException) { return null; }
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Disk/DiskService.DataWrites.cs b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+index 1976bf56a..654a8877d 100644
+--- a/LiteDB/Engine/Disk/DiskService.DataWrites.cs
++++ b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+@@ -82,5 +82,25 @@ namespace LiteDB.Engine
+             if (_volatileLog) return;
+             if (Interlocked.Read(ref _dataWritesSynced) < Interlocked.Read(ref _dataWrites)) throw DataStoppedSyncing(operation);
+         }
++
++        /// <summary>
++        /// Record a write or sync failure before the stop it causes (decision 6 of
++        /// docs/decisions/durability-policy.md): the engine then reopens read-only on its next call and
++        /// refuses writes until the database is reopened.
++        /// </summary>
++        internal void RecordWriteFailure(string operation, Exception error)
++        {
++            bool walKept;
++            try { walKept = this.GetFileLength(FileOrigin.Log) > 0; }
++            catch (Exception) { walKept = true; }
++            _state.RecordWriteFailure(new WriteFailure(operation, error, walKept));
++        }
++
++        /// <summary>For an exception filter: name the file of a failed write or sync, and let it pass.</summary>
++        private static bool FailedIn(Exception error, FileOrigin origin)
++        {
++            WriteFailure.InFile(error, origin);
++            return false;
++        }
+     }
+ }
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index 5771e83a8..685072c26 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -25,6 +25,9 @@ namespace LiteDB.Engine
+ 
+         // The data file's full path, for DurableHeaders; null when it has none.
+         private readonly string _dataPath;
++
++        // The log file's full path, for DurableLogs; null when it is not a file with a path.
++        private readonly string _logPath;
+         private volatile bool _logFlushDegraded;
+ 
+         // The data file answered "cannot sync" (#2242): its barriers are ordered OS-cache flushes.
+@@ -52,12 +55,14 @@ namespace LiteDB.Engine
+         private volatile bool _logDirectoryUnsyncable;
+ 
+         /// <summary>
+-        /// False when commits reach the OS cache only: the caller opted out
+-        /// (<see cref="EngineSettings.DurableCommits"/>), the log storage rejected a durable
+-        /// flush or its directory sync, or the log's syncs cannot report failures.
++        /// False when commits are not made durable: the caller opted out
++        /// (<see cref="EngineSettings.DurableCommits"/>), the log storage rejected a durable flush or its
++        /// directory sync (a durable commit then throws, decision 3), or the log's syncs cannot report
++        /// failures. A data file that cannot sync does not change it: commits stay durable in the WAL
++        /// (decision 4), which <c>$database.walKept</c> reports.
+         /// </summary>
+         internal bool IsLogFlushDurable => _durableCommits && !_logFlushDegraded && !_logDirectoryUnsyncable &&
+-            !_dataFlushDegraded && !this.LogSyncUnverified && !(_sharedDurability?.Degraded ?? false);
++            !this.LogSyncUnverified && !(_sharedDurability?.Degraded ?? false);
+ 
+         /// <summary>
+         /// A file WAL synced through the runtime's Flush(true) (no C library bound on Unix): the
+@@ -118,9 +123,9 @@ namespace LiteDB.Engine
+         /// the data file stopped syncing since the sync that let it start. What the WAL and its header
+         /// journal hold is the only durable copy, so the caller stops before removing any of it.
+         /// </summary>
+-        internal static IOException DataStoppedSyncing(string operation) => UnsyncedStorage(new IOException(
++        internal static IOException DataStoppedSyncing(string operation) => UnsyncedStorage(WriteFailure.InFile(new IOException(
+             $"The data file stopped syncing to the device during {operation}: the log file and its header recovery " +
+-            "copy are kept, and the database must be reopened once the storage syncs."));
++            "copy are kept, and the database must be reopened once the storage syncs."), FileOrigin.Data));
+ 
+         /// <summary>Exception.Data key: refused or stopped because the data file cannot sync (#2242).</summary>
+         internal const string UnsyncedStorageDataKey = "LiteDB.UnsyncedStorage";
+@@ -215,15 +220,23 @@ namespace LiteDB.Engine
+         {
+             if (_logFlushDegraded)
+             {
++                // Durable commits never get here: the commit's proof throws before it writes (decision 3).
++                if (_durableCommits && !_volatileLog) throw LogCannotSync(null, "the log file", OutcomeUnknown);
+                 stream.Flush();
+                 return;
+             }
+ 
+-            this.SyncLogBarrier(stream);
++            try { this.SyncLogBarrier(stream); }
++            catch (IOException ex) when (_durableCommits && IsUnsyncedStorage(ex))
++            {
++                throw LogCannotSync(ex.InnerException ?? ex, "the log file", OutcomeUnknown);
++            }
+             // The WAL may have been created (or recreated after a checkpoint deleted it) by
+             // this or a crashed engine: make its name durable before a commit depends on it.
+             // A WAL is deleted only once empty, after a data sync covered its backfill (KeepsWal).
+             if (!_logDirectorySynced) this.SyncLogDirectory();
++            if (_logDirectoryUnsyncable && _durableCommits && !_volatileLog && !this.LogSyncUnverified)
++                throw LogCannotSync(null, "the log file's directory", OutcomeUnknown);
+         }
+ 
+         /// <summary>
+@@ -237,7 +250,7 @@ namespace LiteDB.Engine
+         /// </summary>
+         private void SyncLogBarrier(Stream log)
+         {
+-            if (this.ProveDataBeforeLog()) this.SyncLogBarrierUnproven(log);
++            if (this.DataHeaderDurable()) this.SyncLogBarrierUnproven(log);
+             else this.SkipLogSync(log);
+         }
+ 
+@@ -255,10 +268,15 @@ namespace LiteDB.Engine
+             }
+             catch (Exception ex) when (IsDurableFlushUnsupported(ex))
+             {
+-                // The pages were written successfully; only the sync request was refused.
++                // The pages were written successfully; only the sync request was refused. That is the
++                // reason to opt out of durable commits (proposed default A); with them it is a failure.
+                 _logBarrierSynced = false;
+                 log.Flush();
+                 this.MarkLogFlushDegraded(ex);
++                if (_durableCommits && !_volatileLog) throw LogCannotSync(ex, "the log file");
++            }
++            catch (Exception ex) when (FailedIn(ex, FileOrigin.Log))
++            {
+             }
+         }
+ 
+@@ -295,8 +313,8 @@ namespace LiteDB.Engine
+         /// connection or process, may have left a header in the OS cache only: a data file that
+         /// answered "cannot sync" (#2242) for a salt rotation, a retirement root or a format
+         /// conversion. Make it durable before this engine's first log sync (see
+-        /// <see cref="ProveDataBeforeLog"/>); a "cannot sync" answer degrades this engine's commits
+-        /// instead. Only a header change can make earlier WAL content obsolete (a checkpoint that
++        /// <see cref="DataHeaderDurable"/>); while it answers "cannot sync" no log sync can make a
++        /// commit durable. Only a header change can make earlier WAL content obsolete (a checkpoint that
+         /// does not change it keeps every frame), so the sync is skipped while the header is one a
+         /// successful sync in this process left (<see cref="DurableHeaders"/>).
+         /// Caller holds the log writer lock, or opens the engine.
+@@ -311,26 +329,10 @@ namespace LiteDB.Engine
+         }
+ 
+         /// <summary>
+-        /// A log sync makes the WAL's current content durable, also a truncation (a full
+-        /// checkpoint's emptied WAL) whose backfill is still in the data file's OS cache only:
+-        /// after a data sync answered "cannot sync" (#2242), in this engine or an earlier one. A
+-        /// power loss would then lose commits acknowledged durable before the storage stopped
+-        /// syncing. So a log sync needs the data file synced since its latest writes: an engine's
+-        /// first log sync proves the data file (earlier engines may have left such a backfill),
+-        /// and after a data sync answered "cannot sync" every log sync first retries it. While
+-        /// the data file still cannot sync, the log is only flushed to the OS cache (false): the
+-        /// WAL that last synced stays the durable one, and this engine's commits are reported
+-        /// non-durable meanwhile (<see cref="IsLogFlushDurable"/>).
++        /// A log sync while the data header the WAL depends on is not known to be on the device
++        /// (<see cref="DataHeaderDurable"/>): the writes reach the OS cache only, and a durable commit
++        /// is refused before it writes (<see cref="RequireDurableCommit"/>).
+         /// </summary>
+-        private bool ProveDataBeforeLog()
+-        {
+-            if (_readOnly) return true;
+-            if (!_dataBarrierSynced) this.SyncDataFile();
+-            else if (!_dataSyncProven && _dataIsFile) this.ProveDataFile();
+-            return _dataBarrierSynced;
+-        }
+-
+-        /// <summary>A log sync that waits for the data file: the writes reach the OS cache only.</summary>
+         private void SkipLogSync(Stream log)
+         {
+             _logBarrierSynced = false;
+@@ -373,7 +375,7 @@ namespace LiteDB.Engine
+         {
+             var stream = _writer.Value;
+             var raw = stream is ChecksummedWalStream wal ? wal.RawStream : stream;
+-            if (!this.ProveDataBeforeLog())
++            if (!this.DataHeaderDurable())
+             {
+                 this.SkipLogSync(raw);
+                 return;
+@@ -388,6 +390,10 @@ namespace LiteDB.Engine
+                 _logBarrierSynced = false;
+                 raw.Flush();
+                 this.MarkLogFlushDegraded(ex);
++                if (_durableCommits && !_volatileLog) throw LogCannotSync(ex, "the log file");
++            }
++            catch (Exception ex) when (FailedIn(ex, FileOrigin.Log))
++            {
+             }
+         }
+ 
+@@ -414,15 +420,21 @@ namespace LiteDB.Engine
+             {
+                 _dataBarrierSynced = false;
+                 data.Flush();
+-                if (_sharedDurability != null) _sharedDurability.Degraded = _sharedDurability.FileSyncUnsupported = _sharedDurability.DataUnsynced = true;
++                // Commits stay durable in the WAL (decision 4): only retirement and the WAL's removal wait.
++                if (_sharedDurability != null) _sharedDurability.FileSyncUnsupported = _sharedDurability.DataUnsynced = true;
+                 if (_dataFlushDegraded) return;
+                 _dataFlushDegraded = true;
+                 LOG($"data storage rejected durable flush ({ex.GetType().Name} 0x{ex.HResult:X8}); checkpoints now flush to the OS cache only", "DISK");
+             }
++            catch (Exception ex) when (FailedIn(ex, FileOrigin.Data))
++            {
++            }
+         }
+ 
+         private void MarkLogFlushDegraded(Exception ex)
+         {
++            _commitsProven = false;
++            DurableLogs.Forget(_logPath);
+             if (_sharedDurability != null) _sharedDurability.Degraded = _sharedDurability.FileSyncUnsupported = true;
+             if (_logFlushDegraded) return;
+             _logFlushDegraded = true;
+@@ -449,6 +461,8 @@ namespace LiteDB.Engine
+             catch (Exception ex) when (IsDurableFlushUnsupported(ex))
+             {
+                 _logDirectoryUnsyncable = true;
++                _commitsProven = false;
++                DurableLogs.Forget(_logPath);
+                 if (_sharedDurability != null) _sharedDurability.Degraded = true;
+                 LOG($"log directory rejected a durable sync ({ex.GetType().Name} 0x{ex.HResult:X8}); a new WAL's name is not claimed durable", "DISK");
+             }
+diff --git a/LiteDB/Engine/Disk/DiskService.FileVersion.cs b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+index e34d6148d..4970a3151 100644
+--- a/LiteDB/Engine/Disk/DiskService.FileVersion.cs
++++ b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+@@ -101,6 +101,7 @@ namespace LiteDB.Engine
+                         // another write must not append to (or truncate) the WAL behind it. The next
+                         // open restores the header from the journal.
+                         failure = ex as IOException ?? new IOException("File format promotion failed.", ex);
++                        this.RecordWriteFailure("A file format promotion", failure);
+                         ownsFailure = _state.BeginStop(failure);
+                     }
+                 });
+diff --git a/LiteDB/Engine/Disk/DiskService.WalWrite.cs b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+index 3ca15c188..2e3e48aff 100644
+--- a/LiteDB/Engine/Disk/DiskService.WalWrite.cs
++++ b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+@@ -42,6 +42,8 @@ namespace LiteDB.Engine
+             lock (stream)
+             {
+                 _state.Validate();
++                // Before any frame: a commit that cannot be made durable fails here (decision 3).
++                this.RequireDurableCommit(stream);
+                 var uncertain = false;
+                 try
+                 {
+@@ -130,6 +132,7 @@ namespace LiteDB.Engine
+                     // frame. Whatever the exception type, stop before releasing the writer: no later
+                     // commit may be appended (and acknowledged) behind it.
+                     flushFailure = ex as IOException ?? new IOException("WAL frame write failed.", ex);
++                    this.RecordWriteFailure("A WAL write", WriteFailure.InFile(flushFailure, FileOrigin.Log));
+                     ownsFailure = _state.BeginStop(flushFailure);
+                 }
+ 
+@@ -151,6 +154,7 @@ namespace LiteDB.Engine
+                         // defer teardown: cleanup can need the WAL-index lock while a
+                         // partial checkpoint owns it and waits for this monitor.
+                         flushFailure = ex as IOException ?? new IOException("WAL durable flush failed.", ex);
++                        this.RecordWriteFailure("A commit's log flush", WriteFailure.InFile(flushFailure, FileOrigin.Log));
+                         ownsFailure = _state.BeginStop(flushFailure);
+                     }
+                 }
+diff --git a/LiteDB/Engine/Disk/DiskService.cs b/LiteDB/Engine/Disk/DiskService.cs
+index 73e3f4884..86cb7ceb1 100644
+--- a/LiteDB/Engine/Disk/DiskService.cs
++++ b/LiteDB/Engine/Disk/DiskService.cs
+@@ -43,6 +43,7 @@ namespace LiteDB.Engine
+             {
+                 throw new ArgumentOutOfRangeException(nameof(settings.CompactStorage));
+             }
++            if (settings.WalLimit <= 0) throw new ArgumentOutOfRangeException(nameof(settings.WalLimit), "The WAL limit must be positive.");
+ 
+             _cache = new MemoryCache(memorySegmentSizes, settings.GetCacheSize());
+             _state = state;
+@@ -60,6 +61,7 @@ namespace LiteDB.Engine
+                 // caller streams (memory, devices) are the caller's to share.
+                 _dataIsFile = _dataFactory is FileStreamFactory || settings.DataStream is FileStream;
+                 _dataPath = DurablePath(settings);
++                _logPath = LogDurablePath(settings);
+                 _logFactory = new ChecksummedWalFactory(settings.CreateLogFactory(), _checksums);
+ 
+                 _dataPool = new StreamPool(_dataFactory, false);
+@@ -335,7 +337,8 @@ namespace LiteDB.Engine
+                     this.PreserveFileVersion(page);
+                     this.StampDataPage(page);
+                     this.CountDataWrite();
+-                    stream.Write(page.Array, page.Offset, PAGE_SIZE);
++                    try { stream.Write(page.Array, page.Offset, PAGE_SIZE); }
++                    catch (Exception ex) when (FailedIn(ex, FileOrigin.Data)) { }
+                     this.CrashPoint("checkpoint-after-page-write");
+                     this.CheckpointStage("data-page");
+                 }
+diff --git a/LiteDB/Engine/Disk/DurableLogs.cs b/LiteDB/Engine/Disk/DurableLogs.cs
+new file mode 100644
+index 000000000..27e9de654
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DurableLogs.cs
+@@ -0,0 +1,40 @@
++using System;
++using System.Collections.Generic;
++using System.Runtime.InteropServices;
++
++namespace LiteDB.Engine
++{
++    /// <summary>
++    /// Log files (by full path) whose storage synced in this process, file and directory (decision 3 of
++    /// docs/decisions/durability-policy.md): later engines over the same log skip the proof before their
++    /// first commit. A log that answers "cannot sync" later is forgotten, and each commit's own sync still
++    /// runs; a replaced or remounted log that stops syncing fails that commit (its outcome unknown).
++    /// </summary>
++    internal static class DurableLogs
++    {
++        private const int Capacity = 1024;
++
++        private static readonly HashSet<string> _paths = new HashSet<string>(
++            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
++
++        internal static void Record(string path)
++        {
++            lock (_paths)
++            {
++                if (_paths.Count >= Capacity) _paths.Clear();
++                _paths.Add(path);
++            }
++        }
++
++        internal static bool Contains(string path)
++        {
++            lock (_paths) return _paths.Contains(path);
++        }
++
++        internal static void Forget(string path)
++        {
++            if (path == null) return;
++            lock (_paths) _paths.Remove(path);
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Disk/SharedDurabilityState.cs b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+index 5deb9e7c6..9ef5c73a3 100644
+--- a/LiteDB/Engine/Disk/SharedDurabilityState.cs
++++ b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+@@ -20,5 +20,17 @@ namespace LiteDB.Engine
+         /// <c>$database.walKept</c> of a read-only engine, which never syncs, reports it.
+         /// </summary>
+         internal volatile bool DataUnsynced;
++
++        private WriteFailure _writeFailure;
++
++        /// <summary>
++        /// A write or sync failure of an engine of this connection (decision 6 of
++        /// docs/decisions/durability-policy.md): its later engines open read-only and report it, until
++        /// the connection is reopened.
++        /// </summary>
++        internal WriteFailure WriteFailure => System.Threading.Volatile.Read(ref _writeFailure);
++
++        internal void RecordWriteFailure(WriteFailure failure) =>
++            System.Threading.Interlocked.CompareExchange(ref _writeFailure, failure, null);
+     }
+ }
+diff --git a/LiteDB/Engine/Engine/Collection.cs b/LiteDB/Engine/Engine/Collection.cs
+index 45addff1c..df017a4a9 100644
+--- a/LiteDB/Engine/Engine/Collection.cs
++++ b/LiteDB/Engine/Engine/Collection.cs
+@@ -23,7 +23,7 @@ namespace LiteDB.Engine
+         {
+             if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name));
+ 
+-            _state.Validate();
++            this.EnsureOpen();
+ 
+             // drop collection is possible only in exclusive transaction for this
+             if (_locker.IsInTransaction) throw LiteException.AlreadyExistsTransaction();
+@@ -55,7 +55,7 @@ namespace LiteDB.Engine
+             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
+             if (newName.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(newName));
+ 
+-            _state.Validate();
++            this.EnsureOpen();
+ 
+             // rename collection is possible only in exclusive transaction for this
+             if (_locker.IsInTransaction) throw LiteException.AlreadyExistsTransaction();
+diff --git a/LiteDB/Engine/Engine/Index.cs b/LiteDB/Engine/Engine/Index.cs
+index 35442f3b2..31326e109 100644
+--- a/LiteDB/Engine/Engine/Index.cs
++++ b/LiteDB/Engine/Engine/Index.cs
+@@ -60,7 +60,7 @@ namespace LiteDB.Engine
+ 
+             if (expression.Source == "$._id") return false; // always exists
+ 
+-            _state.Validate();
++            this.EnsureOpen();
+             if (_settings.ReadOnly) return this.EnsureIndexReadOnly(collection, name, expression.Source);
+ 
+             return this.AutoTransaction(transaction =>
+@@ -147,7 +147,7 @@ namespace LiteDB.Engine
+             if (!name.IsWord()) throw LiteException.InvalidIndexName(name, collection, "Use only [a-Z$_]");
+             if (name.StartsWith("$")) throw LiteException.InvalidIndexName(name, collection, "Index name can't start with `$`");
+ 
+-            _state.Validate();
++            this.EnsureOpen();
+             if (_settings.ReadOnly) return this.EnsureIndexReadOnly(collection, name, expression.Source, options);
+ 
+             return this.AutoTransaction(transaction =>
+diff --git a/LiteDB/Engine/Engine/Pragma.cs b/LiteDB/Engine/Engine/Pragma.cs
+index 4778f46c8..935086dc0 100644
+--- a/LiteDB/Engine/Engine/Pragma.cs
++++ b/LiteDB/Engine/Engine/Pragma.cs
+@@ -13,7 +13,7 @@ namespace LiteDB.Engine
+         /// </summary>
+         public BsonValue Pragma(string name)
+         {
+-            _state.Validate();
++            this.EnsureOpen();
+             return _header.Pragmas.Get(name);
+         }
+ 
+diff --git a/LiteDB/Engine/Engine/Query.cs b/LiteDB/Engine/Engine/Query.cs
+index e195d8d6e..a6f3cbd60 100644
+--- a/LiteDB/Engine/Engine/Query.cs
++++ b/LiteDB/Engine/Engine/Query.cs
+@@ -16,7 +16,7 @@ namespace LiteDB.Engine
+         {
+             if (string.IsNullOrWhiteSpace(collection)) throw new ArgumentNullException(nameof(collection));
+             if (query == null) throw new ArgumentNullException(nameof(query));
+-            _state.Validate();
++            this.EnsureOpen();
+ 
+             IEnumerable<BsonDocument> source = null;
+ 
+diff --git a/LiteDB/Engine/Engine/Rebuild.cs b/LiteDB/Engine/Engine/Rebuild.cs
+index 6328fb9f0..86f64fba3 100644
+--- a/LiteDB/Engine/Engine/Rebuild.cs
++++ b/LiteDB/Engine/Engine/Rebuild.cs
+@@ -20,6 +20,8 @@ namespace LiteDB.Engine
+         {
+             if (string.IsNullOrEmpty(_settings.Filename)) return 0; // works only with os file, as in 5.x
+ 
++            this.EnsureOpen();
++
+             if (_settings.ReadOnly) throw _settings.ReadOnlyCause == null ? new IOException("Cannot rebuild a read-only database.") : this.ReadOnlyWrite();
+ 
+             // Every omitted option keeps its current value; conflicting options fail before the engine closes.
+diff --git a/LiteDB/Engine/Engine/Transaction.cs b/LiteDB/Engine/Engine/Transaction.cs
+index 022ec5008..073b3ed07 100644
+--- a/LiteDB/Engine/Engine/Transaction.cs
++++ b/LiteDB/Engine/Engine/Transaction.cs
+@@ -15,7 +15,11 @@ namespace LiteDB.Engine
+         /// </summary>
+         public bool BeginTrans()
+         {
+-            _state.Validate();
++            this.EnsureOpen();
++
++            // A write failure ended this thread's transaction: it still counts as open until Commit
++            // (which throws) or Rollback completes it.
++            if (this.HasLostTransaction()) return false;
+ 
+             // Storage opened read-only because it cannot be written, or because its data file cannot
+             // sync, accepts explicit transactions, as released versions did; writes are still rejected.
+@@ -40,7 +44,10 @@ namespace LiteDB.Engine
+         /// </summary>
+         public bool Commit()
+         {
+-            _state.Validate();
++            this.EnsureOpen();
++
++            // A write failure ended this thread's transaction before it committed.
++            if (this.TakeLostTransaction()) throw this.ReadOnlyWrite();
+ 
+             var transaction = this.GetTransactionForCompletion(commit: true);
+ 
+@@ -72,7 +79,9 @@ namespace LiteDB.Engine
+         /// </summary>
+         public bool Rollback()
+         {
+-            _state.Validate();
++            this.EnsureOpen();
++
++            if (this.TakeLostTransaction()) return true;
+ 
+             var transaction = this.GetTransactionForCompletion(commit: false);
+ 
+@@ -94,15 +103,21 @@ namespace LiteDB.Engine
+         private T AutoReadTransaction<T>(Func<TransactionService, T> fn) => this.ExecuteAutoTransaction(fn, false);
+ 
+         /// <summary>A write to a read-only engine; one that opened read-only on its own says why.</summary>
+-        private IOException ReadOnlyWrite() => new IOException(_settings.ReadOnlyCause == null
+-            ? "Cannot modify a read-only database."
+-            : "Cannot modify this database: it opened read-only because the writable open was refused. " + _settings.ReadOnlyCause);
++        private IOException ReadOnlyWrite() =>
++            _settings.WriteFailure != null ? new IOException(WriteFailedPrefix + _settings.WriteFailure) :
++            new IOException(_settings.ReadOnlyCause == null
++                ? "Cannot modify a read-only database."
++                : "Cannot modify this database: it opened read-only because the writable open was refused. " + _settings.ReadOnlyCause);
++
++        internal const string WriteFailedPrefix = "Cannot modify this database: an earlier write failed, so the engine continues " +
++            "read-only until the database is reopened. ";
+ 
+         private T ExecuteAutoTransaction<T>(Func<TransactionService, T> fn, bool write)
+         {
+-            _state.Validate();
++            this.EnsureOpen();
+ 
+             if (write && _settings.ReadOnly) throw ReadOnlyWrite();
++            if (write) this.RequireWalBelowLimit();
+ 
+             var transaction = _monitor.GetTransaction(true, false, out var isNew);
+ 
+@@ -140,6 +155,7 @@ namespace LiteDB.Engine
+             {
+                 // Completion may have partially persisted state. Do not let a later
+                 // write reuse this transaction and report success without committing.
++                if (ex is IOException) _disk.RecordWriteFailure("A commit", ex);
+                 _state.Stop(ex);
+                 throw;
+             }
+@@ -148,7 +164,10 @@ namespace LiteDB.Engine
+             if (this.CheckpointPages > 0 &&
+                 _disk.GetFileLength(FileOrigin.Log) >= (this.CheckpointPages * PAGE_SIZE))
+             {
+-                _walIndex.TryAutoCheckpoint();
++                // This commit succeeded: a checkpoint's write or sync failure is not its caller's
++                // (decision 6). It is recorded, $database reports it, and the next write throws it.
++                try { _walIndex.TryAutoCheckpoint(); }
++                catch (Exception) when (_state.WriteFailure != null) { }
+             }
+         }
+ 
+@@ -161,6 +180,7 @@ namespace LiteDB.Engine
+             }
+             catch (Exception ex)
+             {
++                if (ex is IOException) _disk.RecordWriteFailure("A rollback", ex);
+                 _state.Stop(ex);
+                 throw;
+             }
+diff --git a/LiteDB/Engine/EngineSettings.cs b/LiteDB/Engine/EngineSettings.cs
+index 428545b50..a67aa77ee 100644
+--- a/LiteDB/Engine/EngineSettings.cs
++++ b/LiteDB/Engine/EngineSettings.cs
+@@ -62,6 +62,13 @@ namespace LiteDB.Engine
+         /// </summary>
+         internal string ReadOnlyCause { get; set; }
+ 
++        /// <summary>
++        /// The write or sync failure after which the engine reopened read-only (set by the engine on its
++        /// own copy of the settings; decision 6 of docs/decisions/durability-policy.md). Writes throw
++        /// with its details until the database is reopened; <c>$database.writeFailure</c> reports it.
++        /// </summary>
++        internal WriteFailure WriteFailure { get; set; }
++
+         // Experimental coordinator: set only on the coordinator's own engine.
+         internal ICoordinationSignals CoordinationSignals { get; set; }
+         internal EngineSettings Clone() => (EngineSettings)this.MemberwiseClone();
+@@ -183,6 +190,19 @@ namespace LiteDB.Engine
+         /// </summary>
+         public bool DurableCommits { get; set; } = true;
+ 
++        /// <summary>Default <see cref="WalLimit"/>: 1 GiB.</summary>
++        public const long DEFAULT_WAL_LIMIT = 1L << 30;
++
++        /// <summary>
++        /// While the data file cannot sync to the device (#2242), checkpoints cannot move the log file into it and
++        /// the log keeps every commit (commits stay durable there). This is how large the kept log file may grow:
++        /// past it, a write that starts throws an <see cref="System.IO.IOException"/> (a transaction already running
++        /// may still commit), reads keep working, and writes resume once a data sync succeeds and a checkpoint
++        /// drains the log. <c>$database</c> reports <c>walKept</c>, <c>logFileSize</c> and <c>walLimit</c>, to warn
++        /// before the limit. Applies with and without durable commits; not stored in the data file. (default: 1 GiB)
++        /// </summary>
++        public long WalLimit { get; set; } = DEFAULT_WAL_LIMIT;
++
+         /// <summary>
+         /// Zone used by <see cref="RejectInvalidLocalTime"/>; null means <see cref="TimeZoneInfo.Local"/>.
+         /// Internal so tests do not depend on the time zone of the machine.
+diff --git a/LiteDB/Engine/EngineState.cs b/LiteDB/Engine/EngineState.cs
+index 75087a7d8..46bf5bb63 100644
+--- a/LiteDB/Engine/EngineState.cs
++++ b/LiteDB/Engine/EngineState.cs
+@@ -15,7 +15,22 @@ namespace LiteDB.Engine
+     internal class EngineState
+     {
+         public volatile bool Disposed = false;
++        // Set once a failure's teardown closed the engine's services (CompleteStop).
++        private readonly ManualResetEventSlim _closed = new ManualResetEventSlim();
+         private Exception _exception;
++        private WriteFailure _writeFailure;
++
++        /// <summary>A failure stopped this engine (<see cref="BeginStop"/>).</summary>
++        internal bool Stopped => Volatile.Read(ref _exception) != null;
++
++        /// <summary>
++        /// The write or sync failure that stopped this engine (decision 6 of
++        /// docs/decisions/durability-policy.md); null when none, or when the engine stopped otherwise.
++        /// </summary>
++        internal WriteFailure WriteFailure => Volatile.Read(ref _writeFailure);
++
++        /// <summary>Threads whose explicit transaction the failure ended: their Commit must throw.</summary>
++        internal int[] LostTransactionThreads { get; set; }
+         private readonly LiteEngine _engine; // can be null for unit tests
+         private readonly EngineSettings _settings;
+ 
+@@ -84,6 +99,20 @@ namespace LiteDB.Engine
+             this.CompleteStop(ex, this.BeginStop(ex));
+         }
+ 
++        /// <summary>
++        /// Record a write or sync failure before the stop it causes, so the engine reopens read-only
++        /// instead of closing for good. The first failure wins; a shared connection keeps it for its
++        /// later engines (their operations open read-only until the connection is reopened).
++        /// </summary>
++        internal void RecordWriteFailure(WriteFailure failure)
++        {
++            if (Interlocked.CompareExchange(ref _writeFailure, failure, null) != null) return;
++            _settings?.SharedDurability?.RecordWriteFailure(failure);
++        }
++
++        /// <summary>Wait until the failure's teardown closed the services; false after <paramref name="milliseconds"/>.</summary>
++        internal bool WaitClosed(int milliseconds) => _closed.Wait(milliseconds);
++
+         /// <summary>
+         /// Make the engine immediately unusable without running cleanup that can
+         /// acquire unrelated locks. The caller later owns <see cref="CompleteStop"/>.
+@@ -104,7 +133,11 @@ namespace LiteDB.Engine
+         {
+             if (!ownsFailure) return;
+             try { _engine?.Close(ex, this); }
+-            finally { this.Disposed = true; }
++            finally
++            {
++                this.Disposed = true;
++                _closed.Set();
++            }
+         }
+ 
+         /// <summary>
+diff --git a/LiteDB/Engine/LiteEngine.WalLimit.cs b/LiteDB/Engine/LiteEngine.WalLimit.cs
+new file mode 100644
+index 000000000..c8a205134
+--- /dev/null
++++ b/LiteDB/Engine/LiteEngine.WalLimit.cs
+@@ -0,0 +1,24 @@
++using System.IO;
++
++namespace LiteDB.Engine
++{
++    public partial class LiteEngine
++    {
++        /// <summary>
++        /// Decision 4 of docs/decisions/durability-policy.md: while the data file cannot sync, the log keeps
++        /// every commit and grows. Past <see cref="EngineSettings.WalLimit"/> a write that starts throws before
++        /// it changes anything; reads keep working. A data sync that succeeds lifts it (the next checkpoint
++        /// drains the log), so each refused write tries one first.
++        /// </summary>
++        private void RequireWalBelowLimit()
++        {
++            var log = _disk.GetFileLength(FileOrigin.Log);
++            if (log <= _settings.WalLimit || _disk.DataSyncConfirmed || _disk.DataFileSyncs()) return;
++            throw new IOException(
++                $"Cannot modify this database now: its log file ({log / (1024 * 1024)} MB) passed the WAL limit " +
++                $"({_settings.WalLimit / (1024 * 1024)} MB) while the data file cannot sync to the device (#2242), so no " +
++                "checkpoint can move the log into it. Reads keep working, and writes resume once the data file syncs. " +
++                "The limit is set with \"wal limit\".");
++        }
++    }
++}
+diff --git a/LiteDB/Engine/LiteEngine.WriteFailure.cs b/LiteDB/Engine/LiteEngine.WriteFailure.cs
+new file mode 100644
+index 000000000..dd0633935
+--- /dev/null
++++ b/LiteDB/Engine/LiteEngine.WriteFailure.cs
+@@ -0,0 +1,98 @@
++using System;
++using System.Linq;
++using System.Threading;
++
++namespace LiteDB.Engine
++{
++    public partial class LiteEngine
++    {
++        // How long a call waits for a failed engine's teardown (on the thread that owns the failure)
++        // before it reopens the engine read-only.
++        private const int REOPEN_WAIT_MILLISECONDS = 30000;
++
++        private readonly object _reopenLock = new object();
++
++        // Set by Dispose: an engine the caller closed is never reopened.
++        private volatile bool _closing;
++
++        // Threads whose explicit transaction a write failure ended (decision 6): their Commit throws.
++        private int[] _lostTransactions = Array.Empty<int>();
++
++        /// <summary>
++        /// Entry of every public operation. A write or sync failure stopped the engine (decision 6 of
++        /// docs/decisions/durability-policy.md): reopen it read-only from the files as they are, so reads
++        /// keep working and every write throws with the recorded failure until the database is reopened.
++        /// Any other failure (a damaged file, a failed read) keeps the engine closed, as before.
++        /// </summary>
++        private void EnsureOpen()
++        {
++            var state = _state;
++            if (state.Stopped && state.WriteFailure != null && !_closing) this.ReopenAfterWriteFailure(state);
++            _state.Validate();
++        }
++
++        private void ReopenAfterWriteFailure(EngineState stopped)
++        {
++            lock (_reopenLock)
++            {
++                if (!ReferenceEquals(stopped, _state) || _closing) return;
++                // The thread that owns the failure closes the services once it released its locks.
++                if (!stopped.WaitClosed(REOPEN_WAIT_MILLISECONDS)) return;
++
++                var failure = stopped.WriteFailure;
++                var settings = _settings.Clone();
++                settings.ReadOnly = true;
++                settings.LegacyIndexScan = true;
++                settings.WriteFailure = failure;
++                settings.ReadOnlyCause = failure.ToString();
++                _settings = settings;
++                _lostTransactions = stopped.LostTransactionThreads ?? Array.Empty<int>();
++                try
++                {
++                    this.Open();
++                }
++                catch (Exception reopen)
++                {
++                    // The files cannot be read either: later calls retry, and throw the failure meanwhile.
++                    _state = stopped;
++                    throw new System.IO.IOException(failure.ToString() + " Reopening it read-only failed too: " + reopen.Message, reopen);
++                }
++            }
++        }
++
++        /// <summary>
++        /// Before a failure's teardown disposes the transactions: remember the threads with an explicit
++        /// transaction, whose Commit must throw instead of finding no transaction after the reopen.
++        /// </summary>
++        private void RememberLostTransactions(EngineState origin)
++        {
++            if (origin.WriteFailure == null || _monitor == null) return;
++            try
++            {
++                origin.LostTransactionThreads = _monitor.Transactions.Where(x => x.ExplicitTransaction)
++                    .Select(x => x.ThreadID).Distinct().ToArray();
++            }
++            catch (ObjectDisposedException)
++            {
++            }
++        }
++
++        /// <summary>The current thread's explicit transaction ended with a write failure: consume the mark.</summary>
++        private bool TakeLostTransaction()
++        {
++            var thread = Thread.CurrentThread.ManagedThreadId;
++            lock (_reopenLock)
++            {
++                if (!_lostTransactions.Contains(thread)) return false;
++                _lostTransactions = _lostTransactions.Where(x => x != thread).ToArray();
++                return true;
++            }
++        }
++
++        private bool HasLostTransaction()
++        {
++            var thread = Thread.CurrentThread.ManagedThreadId;
++            return _lostTransactions.Contains(thread);
++        }
++    }
++}
+diff --git a/LiteDB/Engine/LiteEngine.cs b/LiteDB/Engine/LiteEngine.cs
+index 60af6e2fe..67d07504f 100644
+--- a/LiteDB/Engine/LiteEngine.cs
++++ b/LiteDB/Engine/LiteEngine.cs
+@@ -38,7 +38,8 @@ namespace LiteDB.Engine
+         private bool _markedForRebuild;
+ 
+         // immutable settings
+-        private readonly EngineSettings _settings;
++        // The caller's settings, or the engine's own copy once it opened (or reopened) read-only on its own.
++        private EngineSettings _settings;
+ 
+         /// <summary>
+         /// All system read-only collections for get metadata database information
+@@ -85,6 +86,18 @@ namespace LiteDB.Engine
+                 _settings.ReadOnlyStorage = true;
+             }
+ 
++            // An earlier operation of this shared connection hit a write or sync failure (decision 6):
++            // its later operations open read-only until the connection is reopened.
++            var connectionFailure = settings.SharedDurability?.WriteFailure;
++            if (connectionFailure != null && !_settings.ReadOnly)
++            {
++                _settings = _settings.Clone();
++                _settings.ReadOnly = true;
++                _settings.LegacyIndexScan = true;
++                _settings.WriteFailure = connectionFailure;
++                _settings.ReadOnlyCause = connectionFailure.ToString();
++            }
++
+             try
+             {
+                 this.Open();
+@@ -339,6 +352,7 @@ namespace LiteDB.Engine
+ 
+             var tc = new TryCatch(ex);
+ 
++            this.RememberLostTransactions(_state);
+             tc.Catch(() => _monitor?.Dispose());
+ 
+             // A read-only engine never writes, and storage that cannot be written cannot take the
+@@ -385,7 +399,7 @@ namespace LiteDB.Engine
+         /// </summary>
+         public int Checkpoint()
+         {
+-            _state.Validate();
++            this.EnsureOpen();
+             // Fail before a checkpoint journals the header into a caller's log it cannot finish.
+             if (_settings.ReadOnlyStorage && !_settings.ReadOnly && _disk.GetFileLength(FileOrigin.Log) > 0)
+                 throw new NotSupportedException("A stream of this database cannot be written, so its log cannot be checkpointed.");
+@@ -408,6 +422,7 @@ namespace LiteDB.Engine
+ 
+         protected virtual void Dispose(bool disposing)
+         {
++            _closing = true;
+             this.Close();
+         }
+     }
+diff --git a/LiteDB/Engine/SystemCollections/SysDatabase.cs b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+index d878451dd..845184ca0 100644
+--- a/LiteDB/Engine/SystemCollections/SysDatabase.cs
++++ b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+@@ -26,6 +26,8 @@ namespace LiteDB.Engine
+                 ["readOnly"] = _settings.ReadOnly,
+                 // Why a writable open opened read-only instead (the data file cannot sync); null otherwise.
+                 ["readOnlyReason"] = _settings.ReadOnlyCause,
++                // The write or sync failure after which the engine continues read-only (decision 6).
++                ["writeFailure"] = _settings.WriteFailure?.ToDocument() ?? BsonValue.Null,
+ 
+                 ["lastPageID"] = (int)_header.LastPageID,
+                 ["freeEmptyPageID"] = (int)_header.FreeEmptyPageList,
+@@ -38,6 +40,8 @@ namespace LiteDB.Engine
+                 // one that fails shows in the next read's durableLogFlush.
+                 ["durableLogFlush"] = _disk.IsLogFlushDurable,
+                 ["walKept"] = _disk.WalKeptReport,
++                // How large a kept log may grow before writes throw (decision 4).
++                ["walLimit"] = _settings.WalLimit,
+                 ["checksums"] = _disk.ChecksumsEnabled,
+                 ["checksumCoverage"] = _disk.ChecksumCoverage,
+                 ["legacyLastPageID"] = (long)_disk.LegacyLastPageID,
+diff --git a/LiteDB/Engine/WriteFailure.cs b/LiteDB/Engine/WriteFailure.cs
+new file mode 100644
+index 000000000..8dcf23ea3
+--- /dev/null
++++ b/LiteDB/Engine/WriteFailure.cs
+@@ -0,0 +1,57 @@
++using System;
++
++namespace LiteDB.Engine
++{
++    /// <summary>
++    /// A write or sync that failed (docs/decisions/durability-policy.md, decision 6). The device is
++    /// taken as bad: the engine stops writing, reopens read-only on its next call, and refuses every
++    /// later write until the database is reopened; <c>$database.writeFailure</c> reports this record.
++    /// </summary>
++    internal sealed class WriteFailure
++    {
++        /// <summary>Exception.Data key: the file ("data" or "log") whose write or sync failed.</summary>
++        internal const string FileDataKey = "LiteDB.FailedFile";
++
++        internal WriteFailure(string operation, Exception error, bool walKept)
++        {
++            this.File = error.Data[FileDataKey] as string;
++            this.Operation = operation;
++            this.Error = error.Message;
++            this.Time = DateTime.UtcNow;
++            this.WalKept = walKept;
++        }
++
++        /// <summary>"data", "log", or null when the failure did not say.</summary>
++        internal string File { get; }
++
++        internal string Operation { get; }
++
++        internal string Error { get; }
++
++        internal DateTime Time { get; }
++
++        /// <summary>The log file still held the WAL when the write failed: nothing it held was removed.</summary>
++        internal bool WalKept { get; }
++
++        /// <summary>Name the file whose write or sync failed, unless a deeper failure already did.</summary>
++        internal static T InFile<T>(T error, FileOrigin origin) where T : Exception
++        {
++            if (!error.Data.Contains(FileDataKey)) error.Data[FileDataKey] = origin == FileOrigin.Log ? "log" : "data";
++            return error;
++        }
++
++        internal BsonDocument ToDocument() => new BsonDocument
++        {
++            ["file"] = this.File == null ? BsonValue.Null : new BsonValue(this.File),
++            ["operation"] = this.Operation,
++            ["error"] = this.Error,
++            ["time"] = this.Time,
++            ["walKept"] = this.WalKept
++        };
++
++        public override string ToString() =>
++            $"{this.Operation} failed at {this.Time:yyyy-MM-dd HH:mm:ss} UTC" +
++            (this.File == null ? "" : $" on the {this.File} file") + $": {this.Error} " +
++            (this.WalKept ? "The log file was kept." : "The log file was empty.");
++    }
++}
+-- 
+2.43.0
+

@@ -1,0 +1,151 @@
+From 7157c4f545ff7ed6d86c0a8a274937fe6488a6c8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:32:18 +0000
+Subject: [PATCH 24/24] Test index promotion and fresh-engine log syncs under
+ the decisions
+
+IndexPromotionDurability_Tests: the index-order promotion on a log that
+cannot sync publishes the new format without durable commits (default
+A); with them the promotion's journal barrier is refused, the open falls
+back to read-only, the row reads, writes throw naming the refusal, and
+both files stay byte for byte (decisions 2 and 3).
+FreshEngineLogSync_Tests: the engines that write while the log cannot
+sync opt out of durable commits, so the scenarios reach the same files
+as before (with durable commits those writes now fail loudly).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Engine/IndexPromotionDurability_Tests.cs  | 43 ++++++++++++++++---
+ .../Regressions/FreshEngineLogSync_Tests.cs   | 15 +++++--
+ 2 files changed, 49 insertions(+), 9 deletions(-)
+
+diff --git a/LiteDB.Tests/Engine/IndexPromotionDurability_Tests.cs b/LiteDB.Tests/Engine/IndexPromotionDurability_Tests.cs
+index 68ec10903..a9f0bca4e 100644
+--- a/LiteDB.Tests/Engine/IndexPromotionDurability_Tests.cs
++++ b/LiteDB.Tests/Engine/IndexPromotionDurability_Tests.cs
+@@ -25,20 +25,53 @@ namespace LiteDB.Tests.Engine
+         }
+ 
+         [Fact]
+-        public void Unsupported_journal_sync_publishes_the_new_format_without_a_power_loss_claim()
++        public void Unsupported_journal_sync_publishes_the_new_format_without_a_power_loss_claim_without_durable_commits()
+         {
+-            // #2242: storage that cannot sync keeps working as before #2818.
++            // #2242: storage that cannot sync keeps working as before #2818 for callers that opted out of
++            // durable commits ("cannot sync" is not a failure then, proposed default A of
++            // docs/decisions/durability-policy.md).
+             using var data = LegacyIndexOrdering(password: null, out var originalLog);
+             using var log = new SyncFailureStream(originalLog, new UnauthorizedAccessException("Durable sync unsupported"));
+-            using (var db = Open(data, log, password: null))
++            using (var db = Open(data, log, password: null, durableCommits: false))
+             {
+                 db.GetCollection("$database").FindAll().Single()["durableLogFlush"].AsBoolean.Should().BeFalse();
+                 db.GetCollection("rows").FindById(1)["payload"].AsString.Should().Be("acknowledged");
++                WriteFailureAssert.NoneRecorded(db, "\"cannot sync\" is the reason to opt out, not a failure");
+             }
+             data.ToArray()[HeaderPage.P_FILE_VERSION].Should().Be(HeaderPage.INDEX_FILE_VERSION);
+             AssertRecovered(data, log, password: null);
+         }
+ 
++        /// <summary>
++        /// With durable commits (the default) the promotion's journal sync is a recovery barrier on a
++        /// log that cannot sync: it is refused before the data file changes (decision 3), and the open
++        /// falls back to read-only (decision 2). The row reads, $database says why, a write throws
++        /// naming the refusal, and neither file changes; the format is published once the log syncs.
++        /// </summary>
++        [Fact]
++        public void Unsupported_journal_sync_opens_read_only_without_publishing_the_new_format_with_durable_commits()
++        {
++            using var data = LegacyIndexOrdering(password: null, out var originalLog);
++            var before = data.ToArray();
++            using var log = new SyncFailureStream(originalLog, new UnauthorizedAccessException("Durable sync unsupported"));
++            using (var db = Open(data, log, password: null))
++            {
++                var info = WriteFailureAssert.Info(db);
++                info["readOnly"].AsBoolean.Should().BeTrue();
++                var reason = info["readOnlyReason"].AsString;
++                reason.Should().StartWith(WriteFailureAssert.LogCannotSync);
++                db.GetCollection("rows").FindAll().Should().Equal(new BsonDocument { ["_id"] = 1, ["payload"] = "acknowledged" });
++
++                Action write = () => db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 2 });
++                write.Should().Throw<IOException>().Which.Message.Should().Be(WriteFailureAssert.OpenRefused + reason);
++                db.GetCollection("rows").Count().Should().Be(1);
++            }
++            data.ToArray().Should().Equal(before, "the promotion was refused before it wrote");
++            log.ToArray().Should().Equal(originalLog);
++            data.ToArray()[HeaderPage.P_FILE_VERSION].Should().Be(HeaderPage.CHECKSUM_FILE_VERSION);
++            AssertRecovered(data, log, password: null);
++        }
++
+         [Fact]
+         public void Unsupported_sync_still_rejects_an_encrypted_log_before_changing_the_data_file()
+         {
+@@ -77,8 +110,8 @@ namespace LiteDB.Tests.Engine
+             recovered.GetCollection("rows").FindById(1)["payload"].AsString.Should().Be("acknowledged");
+         }
+ 
+-        private static LiteDatabase Open(Stream data, Stream log, string password) =>
+-            new LiteDatabase(new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, Password = password }));
++        private static LiteDatabase Open(Stream data, Stream log, string password, bool durableCommits = true) =>
++            new LiteDatabase(new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, Password = password, DurableCommits = durableCommits }));
+ 
+         private sealed class SyncFailureStream : MemoryStream, IDurableStream
+         {
+diff --git a/LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs b/LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs
+index cbc780d98..e5dff3bb4 100644
+--- a/LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs
++++ b/LiteDB.Tests/Regressions/FreshEngineLogSync_Tests.cs
+@@ -22,6 +22,10 @@ namespace LiteDB.Tests.Regressions
+     /// this engine no longer leaves such a truncation behind: the first two tests check that the
+     /// acknowledged commits stay recoverable, and the torn-header tests reach a header journal in
+     /// the OS cache only through a log that stops syncing.
++    /// A commit or checkpoint on a log that cannot sync now fails loudly with durable commits
++    /// (decision 3 of docs/decisions/durability-policy.md), so the engines that write while it
++    /// cannot sync opted out ("durable commits=false"): "cannot sync" is not a failure for them
++    /// (proposed default A), and they reach the same files as before.
+     /// </summary>
+     [Trait("Category", "IoSafety")]
+     [Collection(NativeFileSyncCollection.Name)]
+@@ -89,7 +93,8 @@ namespace LiteDB.Tests.Regressions
+             }
+ 
+             power.LogFails = true;
+-            var settings = new EngineSettings { Filename = file.Filename };
++            // Opted out: with durable commits the commit and the journal's barrier would fail loudly.
++            var settings = new EngineSettings { Filename = file.Filename, DurableCommits = false };
+             settings.CheckpointStage = stage => { if (stage == "data-page") throw new IOException("the writer dies mid-checkpoint"); };
+             using (var db = new LiteDatabase(new LiteEngine(settings)))
+             {
+@@ -150,7 +155,8 @@ namespace LiteDB.Tests.Regressions
+                     db.GetCollection("rows").Upsert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, value)));
+             }
+ 
+-            var settings = new EngineSettings { Filename = file.Filename, Password = "secret" };
++            // Opted out: with durable commits the journal's barrier would fail loudly.
++            var settings = new EngineSettings { Filename = file.Filename, Password = "secret", DurableCommits = false };
+             settings.CheckpointStage = stage => { if (stage == "data-page") throw new IOException("the writer dies mid-checkpoint"); };
+             using (var db = new LiteDatabase(new LiteEngine(settings)))
+             {
+@@ -192,7 +198,8 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// Commits 1..5 acknowledged durable, then a full checkpoint and a commit while neither file
+         /// syncs. The backfill and the WAL truncation reached the OS cache only; the checkpoint now
+-        /// finds the data file cannot sync before it writes, and keeps the WAL.
++        /// finds the data file cannot sync before it writes, and keeps the WAL. That engine opted out
++        /// of durable commits: with them its commit on a log that cannot sync would fail loudly.
+         /// </summary>
+         private static FilePowerLossModel TruncatedWhileNothingSynced(string filename)
+         {
+@@ -211,7 +218,7 @@ namespace LiteDB.Tests.Regressions
+                 }
+             }
+             power.DataFails = power.LogFails = true;
+-            using (var db = new LiteDatabase(filename))
++            using (var db = new LiteDatabase($"Filename={filename};durable commits=false"))
+             {
+                 db.Checkpoint();
+                 db.GetCollection("other").Insert(new BsonDocument { ["_id"] = 1 }); // keeps a WAL file
+-- 
+2.43.0
+

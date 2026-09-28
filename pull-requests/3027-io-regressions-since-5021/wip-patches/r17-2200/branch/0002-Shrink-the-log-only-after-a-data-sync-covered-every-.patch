@@ -1,0 +1,1041 @@
+From b5e9b3072a0df55d1ff3699677581b1c900a48d4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 19:45:05 +0000
+Subject: [PATCH 02/24] Shrink the log only after a data sync covered every
+ data write
+
+The WAL, a header journal and a legacy header backup were each removed
+after their own check of the latest data barrier, and a checkpoint's
+salt rotation emptied the WAL after it only through an explicit check.
+Every data file access now goes through one accessor that holds the
+data writer's lock (a data sync outside the WAL writer's lock moved the
+shared stream under a checkpoint's salt rotation), counts each write,
+and records how many writes a successful data sync covered. ShrinkLog
+and EmptyLog, the only ways to shrink a log recovery may still need,
+stop the engine unless every counted write was covered.
+
+Also from the review of the read-only fallback: a shared connection
+reads $database from its own engine, not from the read-only snapshot
+(which reported readOnly on a writable connection and could not report
+readOnlyReason); index creation and rebuild on a fallback engine throw
+the write error that names the refusal; a compact write no longer
+retries a promotion known to be refused for every document.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Regressions/DataSyncConcurrency_Tests.cs  | 154 ++++++++++++++++++
+ .../FreshEngineDurability_Tests.cs            |   9 +-
+ .../Regressions/UnsyncedPromotion_Tests.cs    |   9 +-
+ .../Regressions/UnsyncedReadOnlyOpen_Tests.cs |  17 +-
+ LiteDB/Client/Shared/SharedEngine.Query.cs    |   9 +-
+ LiteDB/Engine/Disk/DiskService.Checksums.cs   |  43 +++--
+ LiteDB/Engine/Disk/DiskService.DataWrites.cs  |  75 +++++++++
+ .../Engine/Disk/DiskService.DurableFlush.cs   |  20 ++-
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs |  10 +-
+ .../Engine/Disk/DiskService.HeaderJournal.cs  |  30 ++--
+ LiteDB/Engine/Disk/DiskService.Initialize.cs  |   2 +
+ LiteDB/Engine/Disk/DiskService.Retirement.cs  |  29 ++--
+ .../Engine/Disk/DiskService.TrailingPages.cs  |  20 ++-
+ LiteDB/Engine/Disk/DiskService.cs             |  62 ++++---
+ LiteDB/Engine/Engine/Index.cs                 |   5 +-
+ LiteDB/Engine/Engine/Rebuild.cs               |   2 +-
+ LiteDB/Engine/Services/Snapshot.Storage.cs    |   4 +
+ .../Services/WalIndexService.Checkpoint.cs    |   5 +-
+ LiteDB/Engine/Services/WalIndexService.cs     |   2 +-
+ docs/release-notes.md                         |  12 +-
+ docs/shared-mode-safety.md                    |   3 +-
+ docs/shared-read-performance.md               |   1 +
+ 22 files changed, 415 insertions(+), 108 deletions(-)
+ create mode 100644 LiteDB.Tests/Regressions/DataSyncConcurrency_Tests.cs
+ create mode 100644 LiteDB/Engine/Disk/DiskService.DataWrites.cs
+
+diff --git a/LiteDB.Tests/Regressions/DataSyncConcurrency_Tests.cs b/LiteDB.Tests/Regressions/DataSyncConcurrency_Tests.cs
+new file mode 100644
+index 000000000..ddb41fbd4
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/DataSyncConcurrency_Tests.cs
+@@ -0,0 +1,154 @@
++#if DEBUG || TESTING
++using System;
++using System.IO;
++using System.Linq;
++using System.Reflection;
++using System.Threading;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Internals;
++using LiteDB.Tests.Issues;
++using Xunit;
++using static LiteDB.Constants;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>
++    /// A data sync that runs outside the WAL writer's lock (DiskService.DataFileSyncs before the engine
++    /// created its WAL writer: a `$database` read, a rebuild's check, an index migration) shares the
++    /// data writer with a checkpoint's header steps. Every positioned access to that writer holds its
++    /// lock. Where the data file cannot sync, a compact write does not retry its refused promotion
++    /// (and the promotion's data sync) for every document.
++    /// </summary>
++    [Trait("Category", "IoSafety")]
++    [Collection(NativeFileSyncCollection.Name)]
++    public class DataSyncConcurrency_Tests
++    {
++        private const int Rows = 64;
++
++        /// <summary>
++        /// A data sync on another thread is paused inside its header read while a full checkpoint
++        /// rotates the WAL salt. The salt rotation's header read and write took only the WAL writer's
++        /// lock, so they moved the shared data writer under the paused read: the checkpoint failed
++        /// ("The stream ended before the requested data was read") and stopped the engine, and a new
++        /// header could land at another offset. The rotation now waits for the data writer's lock; the
++        /// checkpoint completes and the database reopens with every row.
++        /// </summary>
++        [Fact]
++        public void Data_sync_outside_the_wal_writer_lock_waits_for_the_salt_rotation()
++        {
++            using var file = new TempFile();
++            using (var setup = new LiteDatabase(file.Filename))
++                setup.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
++            var logName = FileHelper.GetLogFile(file.Filename);
++            Thread sync = null;
++            Exception syncError = null;
++            var armed = false;
++            using (var data = new GateFile(file.Filename))
++            using (var log = new FileStream(logName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete, 1))
++            {
++                LiteEngine engine = null;
++                var settings = new EngineSettings
++                {
++                    Filename = file.Filename, DataStream = data, LogStream = log,
++                    CheckpointStage = stage =>
++                    {
++                        if (!armed || stage != "before-reclaim") return;
++                        armed = false;
++                        var disk = (DiskService)typeof(LiteEngine).GetField("_disk", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(engine);
++                        sync = new Thread(() =>
++                        {
++                            try { typeof(DiskService).GetMethod("SyncDataFile", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(disk, null); }
++                            catch (Exception ex) { syncError = ex; }
++                        });
++                        data.Armed = sync;
++                        sync.Start();
++                        data.InRead.Wait(5000).Should().BeTrue("the sync reached its header read");
++                    }
++                };
++                engine = new LiteEngine(settings);
++                using (var db = new LiteDatabase(engine, disposeOnClose: false))
++                {
++                    db.CheckpointSize = 0;
++                    for (var value = 1; value <= 3; value++) Update(db, value);
++                    armed = true;
++                    Action checkpoint = () => db.Checkpoint();
++                    checkpoint.Should().NotThrow();
++                    sync.Join();
++                    syncError.Should().BeNull();
++                    SyncPowerLossModel.AssertRows(db, Rows, 3);
++                }
++                engine.Dispose();
++            }
++            using var reopened = new LiteDatabase(file.Filename);
++            SyncPowerLossModel.AssertRows(reopened, Rows, 3);
++        }
++
++        /// <summary>
++        /// While the data file cannot sync, every compact-eligible document (nested documents skip the
++        /// admission back-off) retried the refused v12 promotion: a header read and a data sync per
++        /// document (401 for 400). An engine that knows its data file cannot sync skips the attempt; the
++        /// documents are written as BSON and the file keeps its version.
++        /// </summary>
++        [Fact]
++        public void Refused_compact_promotion_is_not_retried_for_every_document()
++        {
++            using var file = new TempFile();
++            using (var setup = new LiteDatabase(new LiteEngine(new EngineSettings { Filename = file.Filename, CompactStorage = CompactStorageMode.Legacy })))
++            {
++                setup.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
++                setup.Checkpoint();
++            }
++            using var power = new SyncPowerLossModel(file.Filename);
++            var settings = power.Settings();
++            settings.CompactStorage = CompactStorageMode.Auto;
++            using var db = new LiteDatabase(new LiteEngine(settings));
++            power.DataFails = true;
++            var before = power.DataSyncs;
++            const int documents = 400;
++            db.GetCollection("compact").Insert(Enumerable.Range(1, documents).Select(Compact));
++            (power.DataSyncs - before).Should().BeLessThan(5, "the promotion is not retried for every document");
++            db.GetCollection("compact").FindAll().Should().BeEquivalentTo(Enumerable.Range(1, documents).Select(Compact), o => o.WithStrictOrdering());
++            SyncPowerLossModel.ReadShared(file.Filename).Take(PAGE_SIZE).ToArray()[HeaderPage.P_FILE_VERSION]
++                .Should().BeLessThan(HeaderPage.COMPACT_FILE_VERSION);
++        }
++
++        private static void Update(LiteDatabase db, int value) =>
++            db.GetCollection("rows").Upsert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, value)));
++
++        private static BsonDocument Compact(int id) => new BsonDocument
++        {
++            ["_id"] = id, ["longRepeatedFieldName"] = id, ["anotherLongRepeatedFieldName"] = "payload",
++            ["nestedDocument"] = new BsonDocument { ["longNestedFieldName"] = id, ["anotherNestedFieldName"] = true },
++            ["arrayValues"] = new BsonArray(Enumerable.Range(1, 30).Select(x => new BsonValue(x)))
++        };
++
++        /// <summary>A data file whose next read on the armed thread pauses, so another thread's header I/O runs meanwhile.</summary>
++        private sealed class GateFile : FileStream
++        {
++            internal volatile Thread Armed;
++            internal readonly ManualResetEventSlim InRead = new ManualResetEventSlim();
++
++            internal GateFile(string path)
++                : base(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete, 1) { }
++
++            public override int Read(byte[] buffer, int offset, int count)
++            {
++                if (Armed != null && Armed == Thread.CurrentThread)
++                {
++                    Armed = null;
++                    InRead.Set();
++                    Thread.Sleep(500);
++                }
++                return base.Read(buffer, offset, count);
++            }
++
++            protected override void Dispose(bool disposing)
++            {
++                if (disposing) InRead.Dispose();
++                base.Dispose(disposing);
++            }
++        }
++    }
++}
++#endif
+diff --git a/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs b/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
+index 8dffcfafd..a8503215c 100644
+--- a/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
++++ b/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs
+@@ -129,7 +129,8 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// Healthy storage pays the proof once per data header in the process, not per fresh engine:
+         /// neither a shared connection's operations nor direct-mode open, commit and close add a data
+-        /// sync while the header is the one the latest successful data sync left.
++        /// sync while the header is the one the latest successful data sync left. (Reading
++        /// $database.walKept over a WAL that holds frames tries a data sync, as in direct mode.)
+         /// </summary>
+         [Fact]
+         public void Data_file_is_proven_once_per_data_header()
+@@ -143,9 +144,9 @@ namespace LiteDB.Tests.Regressions
+             {
+                 db.CheckpointSize = 0;
+                 for (var id = 1; id <= 8; id++) Insert(db, id);
++                power.DataSyncs.Should().Be(0, "every operation found the header the setup left durable");
+                 DurableLogFlush(db).Should().BeTrue();
+             }
+-            power.DataSyncs.Should().Be(0, "every operation found the header the setup left durable");
+             for (var id = 9; id <= 11; id++)
+             {
+                 using var direct = new LiteDatabase(file.Filename);
+@@ -232,7 +233,9 @@ namespace LiteDB.Tests.Regressions
+                 if (!dataSyncsAgain)
+                 {
+                     var data = SyncPowerLossModel.ReadShared(file.Filename);
+-                    UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(db, 3), UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                    var reason = UnsyncedReadOnlyOpen_Tests.ReadOnlyReason(db); // found out without a write
++                    reason.Should().StartWith(UnsyncedReadOnlyOpen_Tests.RecoveryRefused);
++                    UnsyncedReadOnlyOpen_Tests.AssertWriteRefused(() => Update(db, 3), reason);
+                     AssertRows(db, 2); // the connection keeps reading
+                     SyncPowerLossModel.ReadShared(file.Filename).Should().Equal(data, "the refused write changed nothing");
+                     SyncPowerLossModel.ReadShared(logName).Should().Equal(kept, "the header journal stays");
+diff --git a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+index 8aa512838..d9fb2253c 100644
+--- a/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncedPromotion_Tests.cs
+@@ -98,8 +98,9 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// A compact-storage write would promote a legacy-storage file while the data file cannot sync:
+         /// the promotion is refused before it writes anything, and the write falls back to BSON (as
+-        /// whenever compact storage does not pay) instead of failing and closing the engine. Once the
+-        /// data file syncs, a later compact write promotes the file.
++        /// whenever compact storage does not pay) instead of failing and closing the engine; the engine
++        /// does not retry the refused promotion until a data sync succeeds (the next commit's log sync
++        /// retries it first). Once the data file syncs, the compact write after that commit promotes.
+         /// </summary>
+         [Fact]
+         public void Compact_write_stays_bson_while_the_data_file_cannot_sync()
+@@ -122,11 +123,13 @@ namespace LiteDB.Tests.Regressions
+ 
+                 power.DataFails = false;
+                 db.GetCollection("compact").Insert(Enumerable.Range(5, 4).Select(Compact));
++                Header(file.Filename)[HeaderPage.P_FILE_VERSION].Should().BeLessThan(HeaderPage.COMPACT_FILE_VERSION, "no data sync succeeded before this write");
++                db.GetCollection("compact").Insert(Enumerable.Range(9, 4).Select(Compact));
+                 Header(file.Filename)[HeaderPage.P_FILE_VERSION].Should().BeGreaterOrEqualTo(HeaderPage.COMPACT_FILE_VERSION);
+             }
+             FilePowerLossModel.Open(power.Capture(), x =>
+             {
+-                x.GetCollection("compact").FindAll().Should().BeEquivalentTo(Enumerable.Range(1, 8).Select(Compact), o => o.WithStrictOrdering());
++                x.GetCollection("compact").FindAll().Should().BeEquivalentTo(Enumerable.Range(1, 12).Select(Compact), o => o.WithStrictOrdering());
+                 return SyncPowerLossModel.AssertRows(x, Rows, 0);
+             });
+         }
+diff --git a/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs b/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
+index de77fc7f2..958a78e77 100644
+--- a/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncedReadOnlyOpen_Tests.cs
+@@ -40,7 +40,8 @@ namespace LiteDB.Tests.Regressions
+         /// convert this legacy database now" and nothing could be read. It now opens read-only:
+         /// every row reads, a query on an indexed field finds the right rows (it scans documents,
+         /// as the legacy index keeps the old order), an explicit transaction reads and rolls back,
+-        /// and a write throws before any change, also inside that transaction. The file is
++        /// and a write throws before any change, also inside that transaction; so do a new index
++        /// and a rebuild, with the same message (they threw generic read-only errors). The file is
+         /// unchanged, no log is created and nothing is synced. Once the data file syncs, a plain
+         /// open converts, and a commit it reports durable survives a power loss.
+         /// </summary>
+@@ -67,6 +68,11 @@ namespace LiteDB.Tests.Regressions
+                     AssertPlainRows(db);
+                     db.Rollback().Should().BeTrue();
+                     AssertPlainRows(db);
++                    Action index = () => db.GetCollection("rows").EnsureIndex("payload");
++                    index.Should().Throw<IOException>().Which.Message.Should().Be(WriteRefused + reason);
++                    Action rebuild = () => db.Rebuild();
++                    rebuild.Should().Throw<IOException>().Which.Message.Should().Be(WriteRefused + reason);
++                    AssertPlainRows(db);
+                     power.DataSyncs.Should().Be(syncs, "the read-only engine syncs nothing");
+                 }
+                 File.ReadAllBytes(file.Filename).Should().Equal(original, "the read-only open wrote nothing");
+@@ -131,6 +137,8 @@ namespace LiteDB.Tests.Regressions
+         /// <summary>
+         /// Control: a writable open that succeeds reports no reason, and an explicit read-only
+         /// open reports readOnly without one; its write and transaction errors stay as they were.
++        /// A shared connection's $database describes its own engine, not the read-only snapshot
++        /// engine its other reads use (which reported readOnly on a writable connection).
+         /// </summary>
+         [Fact]
+         public void Healthy_and_explicitly_read_only_opens_report_no_read_only_reason()
+@@ -143,6 +151,13 @@ namespace LiteDB.Tests.Regressions
+                 info["readOnly"].AsBoolean.Should().BeFalse();
+                 info["readOnlyReason"].IsNull.Should().BeTrue();
+             }
++            using (var db = new LiteDatabase($"Filename={file.Filename};Connection=shared"))
++            {
++                db.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32).Should().Equal(1);
++                var info = Info(db);
++                info["readOnly"].AsBoolean.Should().BeFalse();
++                info["readOnlyReason"].IsNull.Should().BeTrue();
++            }
+             var data = File.ReadAllBytes(file.Filename);
+             using (var db = new LiteDatabase($"Filename={file.Filename};ReadOnly=true"))
+             {
+diff --git a/LiteDB/Client/Shared/SharedEngine.Query.cs b/LiteDB/Client/Shared/SharedEngine.Query.cs
+index 93317da1a..c0d752151 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Query.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Query.cs
+@@ -31,15 +31,18 @@ namespace LiteDB
+         private IBsonDataReader QueryCore(string collection, Query query)
+         {
+             var reads = query?.ForUpdate != true && query?.Into == null;
++            // $database describes the connection's own engine (readOnly, readOnlyReason, walKept): it
++            // reads from the operation engine, never from a read-only snapshot engine.
++            var snapshotRead = reads && !string.Equals(collection?.Trim(), "$database", StringComparison.OrdinalIgnoreCase);
+ #if NET8_0_OR_GREATER
+-            if (reads && this.CanScope)
++            if (snapshotRead && this.CanScope)
+             {
+                 var coordinated = this.TryQueryCoordinated(collection, query);
+                 if (coordinated != null) return coordinated;
+             }
+ #endif
+             SharedMutexPin use;
+-            if (reads && _pin == null)
++            if (snapshotRead && _pin == null)
+             {
+                 // The same acquisition as OpenDatabase. Where it would open the writable
+                 // operation engine, a pure read opens the read-only snapshot engine instead.
+@@ -78,7 +81,7 @@ namespace LiteDB
+             else use = this.OpenDatabase(writing: !reads);
+ 
+             // Write queries and explicit transactions retain their writer ownership.
+-            if (_transactionRunning || !reads)
++            if (_transactionRunning || !snapshotRead)
+             {
+                 return this.QueryUnderMutex(collection, query, use);
+             }
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index d567a5213..218d83ebb 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -68,16 +68,18 @@ namespace LiteDB.Engine
+             if (_readOnly || ChecksumsEnabled) return;
+             this.RequireWritableStorage();
+             using var structural = new StructuralScope(_signals);
+-            var stream = _dataPool.Writer.Value;
+             var buffer = new PageBuffer(new byte[PAGE_SIZE], 0, 0);
+-            stream.Position = 0;
+-            stream.ReadRequired(buffer.Array, 0, PAGE_SIZE);
++            this.UseDataWriter(stream =>
++            {
++                stream.Position = 0;
++                stream.ReadRequired(buffer.Array, 0, PAGE_SIZE);
++            });
+             var log = ((ChecksummedWalStream)_writer.Value).RawStream;
+             // Successful syncs are required before crossing the format boundary,
+             // unless the log storage cannot sync at all (#2242): then the
+             // ordered writes keep conversion process-crash safe only. The log is
+             // emptied below, which needs a data file that syncs (KeepsWal).
+-            this.SyncDataBarrier(stream);
++            this.SyncDataFile();
+             if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedDataConversion();
+             SyncLogBarrier(log);
+             HeaderJournal.BackupLegacyHeader(log, buffer.Array, SyncLogBarrier);
+@@ -86,12 +88,16 @@ namespace LiteDB.Engine
+             _dataChecksums.InitializeMixed(header.LastPageID);
+             _checksums.Reset(Guid.NewGuid().ToByteArray());
+             StampDataPage(buffer);
+-            stream.Position = 0;
+-            stream.Write(buffer.Array, 0, PAGE_SIZE);
+-            this.SyncDataBarrier(stream);
++            this.UseDataWriter(stream =>
++            {
++                stream.Position = 0;
++                this.CountDataWrite();
++                stream.Write(buffer.Array, 0, PAGE_SIZE);
++                this.SyncDataBarrier(stream);
++            });
+             // The legacy header backup and the conversion journal go only once the new header synced.
+             if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedDataConversion();
+-            SetLength(0, FileOrigin.Log);
++            this.EmptyLog("a conversion");
+             SyncLogBarrier(log);
+             _recoveredHeader = null;
+             FileVersion = HeaderPage.CHECKSUM_FILE_VERSION;
+@@ -112,16 +118,19 @@ namespace LiteDB.Engine
+         internal void RotateWalSalt()
+         {
+             if (!ChecksumsEnabled) return;
+-            var stream = _dataPool.Writer.Value;
+             var header = new PageBuffer(new byte[PAGE_SIZE], 0, 0);
+-            stream.Position = 0;
+-            stream.ReadRequired(header.Array, 0, PAGE_SIZE);
+-            PageChecksum.Validate(header, 0);
+-            _checksums.Reset(Guid.NewGuid().ToByteArray());
+-            StampDataPage(header);
+-            stream.Position = 0;
+-            stream.Write(header.Array, 0, PAGE_SIZE);
+-            this.SyncDataBarrier(stream);
++            this.UseDataWriter(stream =>
++            {
++                stream.Position = 0;
++                stream.ReadRequired(header.Array, 0, PAGE_SIZE);
++                PageChecksum.Validate(header, 0);
++                _checksums.Reset(Guid.NewGuid().ToByteArray());
++                StampDataPage(header);
++                stream.Position = 0;
++                this.CountDataWrite();
++                stream.Write(header.Array, 0, PAGE_SIZE);
++                this.SyncDataBarrier(stream);
++            });
+         }
+ 
+         internal void DiscardWalTail(long end, bool invalidTail)
+diff --git a/LiteDB/Engine/Disk/DiskService.DataWrites.cs b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+new file mode 100644
+index 000000000..d6e937ff3
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+@@ -0,0 +1,75 @@
++using System;
++using System.IO;
++using System.Threading;
++
++namespace LiteDB.Engine
++{
++    internal partial class DiskService
++    {
++        // Writes this engine made to the data file, and how many of them its latest successful data
++        // sync covered: -1 before its first one, since an earlier engine or process may have left
++        // writes in the OS cache. Both change under the data writer's lock (UseDataWriter,
++        // SyncDataBarrier); ShrinkLog reads them under the WAL writer's.
++        private long _dataWrites, _dataWritesSynced = -1;
++
++        /// <summary>
++        /// The shared data writer's only accessor. Every positioned access (Position, Read, Write,
++        /// SetLength, a sync) runs under its lock: a data sync may run outside the WAL writer's lock
++        /// (<see cref="DataFileSyncs"/> before the WAL writer exists) while a checkpoint rewrites the
++        /// header. Each write or SetLength inside calls <see cref="CountDataWrite"/> right before it.
++        /// </summary>
++        private T UseDataWriter<T>(Func<Stream, T> io)
++        {
++            var data = _dataPool.Writer.Value;
++            lock (data) return io(data);
++        }
++
++        private void UseDataWriter(Action<Stream> io) => this.UseDataWriter(data =>
++        {
++            io(data);
++            return true;
++        });
++
++        /// <summary>
++        /// A write to the data file starts: a data sync must cover it before the log may shrink
++        /// (<see cref="ShrinkLog"/>). Counted before the write, so one that fails half-way counts too;
++        /// a sync that ran earlier (also inside the same UseDataWriter) does not cover it.
++        /// Caller holds the data writer's lock.
++        /// </summary>
++        private void CountDataWrite() => Interlocked.Increment(ref _dataWrites);
++
++        /// <summary>A data sync that succeeded covered <paramref name="covered"/> writes. Caller holds the data writer's lock.</summary>
++        private void DataWritesSynced(long covered)
++        {
++            if (covered > Interlocked.Read(ref _dataWritesSynced)) Interlocked.Exchange(ref _dataWritesSynced, covered);
++        }
++
++        /// <summary>
++        /// The one way to shrink the log where recovery may still need what goes: WAL frames, a header's
++        /// recovery copy (the header journal), a legacy header backup. Every data write this engine made
++        /// must be covered by a successful data sync, and it must have made one: otherwise the OS could
++        /// write the shrunk log back ahead of the data file, and a power loss would lose what only the log
++        /// held. Fails closed with <see cref="DataStoppedSyncing"/>, before anything is removed. A WAL kept
++        /// in memory survives no power loss and is exempt. Bytes no recovery reads (a torn tail, a partial
++        /// trailing page, a failed append's own frame) are trimmed without it.
++        /// </summary>
++        internal void ShrinkLog(Stream log, long length, string operation)
++        {
++            if (log.Length > length) this.RequireDataWritesSynced(operation);
++            log.SetLength(length);
++        }
++
++        /// <summary>Empty the WAL through the same check as <see cref="ShrinkLog"/>, and reset its positions.</summary>
++        internal void EmptyLog(string operation)
++        {
++            if (this.GetFileLength(FileOrigin.Log) > 0) this.RequireDataWritesSynced(operation);
++            this.SetLength(0, FileOrigin.Log);
++        }
++
++        private void RequireDataWritesSynced(string operation)
++        {
++            if (_volatileLog) return;
++            if (Interlocked.Read(ref _dataWritesSynced) < Interlocked.Read(ref _dataWrites)) throw DataStoppedSyncing(operation);
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index e595c6e34..4d71c6431 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -2,6 +2,7 @@ using System;
+ using System.IO;
+ using System.Linq;
+ using System.Runtime.InteropServices;
++using System.Threading;
+ using static LiteDB.Constants;
+ 
+ namespace LiteDB.Engine
+@@ -75,8 +76,8 @@ namespace LiteDB.Engine
+         /// <summary>
+         /// The latest data barrier answered "cannot sync" (#2242), so the data file may not hold on
+         /// the device what the WAL does. The WAL is emptied only after a data sync that covers the
+-        /// backfill succeeded: until one does, a full checkpoint keeps it and the WAL grows
+-        /// (reported as <c>$database.walKept</c>). Whether an earlier engine or process synced WAL
++        /// backfill succeeded (<see cref="ShrinkLog"/> enforces it): until one does, a full checkpoint
++        /// keeps it and the WAL grows (reported as <c>$database.walKept</c>). Whether an earlier engine or process synced WAL
+         /// frames is not known here, and the OS can write an emptied WAL back ahead of the backfill.
+         /// A WAL the engine keeps in memory protects nothing across a power loss and is emptied.
+         /// </summary>
+@@ -140,8 +141,8 @@ namespace LiteDB.Engine
+         /// For <c>$database.walKept</c>: the WAL holds frames kept until a data sync succeeds. An engine
+         /// whose latest data sync did not succeed, or that tried none yet (a reopen, a restart or a
+         /// shared-mode operation after an engine that kept the WAL), retries one first, as its next
+-        /// checkpoint would. A read-only engine (also a shared-mode read) or one over storage that
+-        /// cannot be written never syncs: it reports what the connection's engines found.
++        /// checkpoint would. A read-only engine or one over storage that cannot be written never
++        /// syncs: it reports what the connection's engines found.
+         /// </summary>
+         internal bool WalKeptReport
+         {
+@@ -302,12 +303,11 @@ namespace LiteDB.Engine
+         /// </summary>
+         private void ProveDataFile()
+         {
+-            var data = _dataPool.Writer.Value;
+-            lock (data)
++            this.UseDataWriter(data =>
+             {
+                 if (_dataPath != null && data.Length >= PAGE_SIZE && DurableHeaders.Matches(_dataPath, ReadDataHeader(data))) _dataSyncProven = true;
+                 else this.SyncDataBarrier(data);
+-            }
++            });
+         }
+ 
+         /// <summary>
+@@ -348,8 +348,7 @@ namespace LiteDB.Engine
+         /// <summary>Sync the data file as a barrier. Caller holds the log writer lock (order: log, then data).</summary>
+         private void SyncDataFile()
+         {
+-            var data = _dataPool.Writer.Value;
+-            lock (data) this.SyncDataBarrier(data);
++            this.UseDataWriter(this.SyncDataBarrier);
+         }
+ 
+         private static byte[] ReadDataHeader(Stream data)
+@@ -397,9 +396,12 @@ namespace LiteDB.Engine
+         private void SyncDataBarrier(Stream data)
+         {
+             _dataBarrierTried = true;
++            // Caller holds the data writer's lock (UseDataWriter): no write can slip in before the sync.
++            var covered = Interlocked.Read(ref _dataWrites);
+             try
+             {
+                 data.FlushToDisk();
++                this.DataWritesSynced(covered);
+                 _dataBarrierSynced = _dataSyncProven = true;
+                 if (_sharedDurability != null) _sharedDurability.DataUnsynced = false;
+                 if (_dataPath != null && data.Length >= PAGE_SIZE) DurableHeaders.Record(_dataPath, ReadDataHeader(data));
+diff --git a/LiteDB/Engine/Disk/DiskService.FileVersion.cs b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+index 50e5469bf..e34d6148d 100644
+--- a/LiteDB/Engine/Disk/DiskService.FileVersion.cs
++++ b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+@@ -60,8 +60,7 @@ namespace LiteDB.Engine
+             var ownsFailure = false;
+             lock (writer)
+             {
+-                var stream = _dataPool.Writer.Value;
+-                lock (stream)
++                this.UseDataWriter(stream =>
+                 {
+                     try
+                     {
+@@ -82,12 +81,13 @@ namespace LiteDB.Engine
+                         PageChecksum.Write(header);
+                         stream.Position = 0;
+                         if (compact) this.CrashPoint("promotion-before-header-write");
++                        this.CountDataWrite();
+                         stream.Write(header.Array, 0, PAGE_SIZE);
+                         if (compact) this.CrashPoint("promotion-after-header-write");
+                         this.SyncDataBarrier(stream);
+-                        if (this.KeepsWal) throw DataStoppedSyncing("a file format promotion");
+                         if (compact) this.CrashPoint("promotion-after-header-flush");
+-                        rawLog.SetLength(originalLength);
++                        // Only once a data sync covered the new header (ShrinkLog): otherwise stop below.
++                        this.ShrinkLog(rawLog, originalLength, "a file format promotion");
+                         if (compact) this.CrashPoint("promotion-before-journal-retire-flush");
+                         SyncLogBarrier(rawLog);
+                         if (compact) this.CrashPoint("promotion-after-journal-retire-flush");
+@@ -103,7 +103,7 @@ namespace LiteDB.Engine
+                         failure = ex as IOException ?? new IOException("File format promotion failed.", ex);
+                         ownsFailure = _state.BeginStop(failure);
+                     }
+-                }
++                });
+             }
+             if (failure != null)
+             {
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index 4cf7992fa..7ad373f8a 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -38,9 +38,11 @@ namespace LiteDB.Engine
+         private void PrepareCheckpointHeader()
+         {
+             var header = new byte[PAGE_SIZE];
+-            var data = _dataPool.Writer.Value;
+-            data.Position = 0;
+-            data.ReadRequired(header, 0, header.Length);
++            this.UseDataWriter(data =>
++            {
++                data.Position = 0;
++                data.ReadRequired(header, 0, header.Length);
++            });
+             if (ChecksumsEnabled) PageChecksum.Validate(new BufferSlice(header, 0, PAGE_SIZE), 0);
+             BeginHeaderJournal(header);
+         }
+@@ -96,21 +98,25 @@ namespace LiteDB.Engine
+                     SyncLogBarrierUnproven(((ChecksummedWalStream)_writer.Value).RawStream);
+                     SyncLogDirectory();
+                 }
+-                var data = _dataPool.Writer.Value;
+-                if (_recoveredHeader != null)
++                var repaired = header;
++                this.UseDataWriter(data =>
+                 {
+-                    this.CrashPoint("promotion-recovery-before-header-write");
+-                    data.Position = 0;
+-                    data.Write(header, 0, header.Length);
+-                    this.CrashPoint("promotion-recovery-after-header-write");
+-                }
+-                this.SyncDataBarrier(data);
++                    if (_recoveredHeader != null)
++                    {
++                        this.CrashPoint("promotion-recovery-before-header-write");
++                        data.Position = 0;
++                        this.CountDataWrite();
++                        data.Write(repaired, 0, repaired.Length);
++                        this.CrashPoint("promotion-recovery-after-header-write");
++                    }
++                    this.SyncDataBarrier(data);
++                });
+                 this.CrashPoint("promotion-recovery-after-header-flush");
+                 if (journal.Legacy && !published) return;
+                 // The journal is the header's only recovery copy until a data sync covers it (#2242).
+                 if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedHeaderRecovery();
+                 var writer = ((ChecksummedWalStream)_writer.Value).RawStream;
+-                writer.SetLength(journal.Legacy ? 0 : WalPadding.AlignedLength(journal.Position));
++                this.ShrinkLog(writer, journal.Legacy ? 0 : WalPadding.AlignedLength(journal.Position), "a header repair");
+                 SyncLogBarrier(writer);
+                 _checksums.JournalBytes = 0;
+                 _recoveredHeader = null;
+diff --git a/LiteDB/Engine/Disk/DiskService.Initialize.cs b/LiteDB/Engine/Disk/DiskService.Initialize.cs
+index 33e7ac485..200ad13bd 100644
+--- a/LiteDB/Engine/Disk/DiskService.Initialize.cs
++++ b/LiteDB/Engine/Disk/DiskService.Initialize.cs
+@@ -31,10 +31,12 @@ namespace LiteDB.Engine
+             _checksums.Reset(Guid.NewGuid().ToByteArray());
+             FileVersion = header.FileVersion;
+             this.StampDataPage(buffer);
++            this.CountDataWrite();
+             stream.Write(buffer.Array, buffer.Offset, PAGE_SIZE);
+ 
+             if (initialSize > 0)
+             {
++                this.CountDataWrite();
+                 stream.SetLength(initialSize);
+             }
+ 
+diff --git a/LiteDB/Engine/Disk/DiskService.Retirement.cs b/LiteDB/Engine/Disk/DiskService.Retirement.cs
+index c7ded128d..a7f1477c2 100644
+--- a/LiteDB/Engine/Disk/DiskService.Retirement.cs
++++ b/LiteDB/Engine/Disk/DiskService.Retirement.cs
+@@ -79,19 +79,22 @@ namespace LiteDB.Engine
+             var raw = ((ChecksummedWalStream)_writer.Value).RawStream;
+             if (pending != null)
+             {
+-                var data = _dataPool.Writer.Value;
+                 var header = new BufferSlice(new byte[PAGE_SIZE], 0, PAGE_SIZE);
+-                data.Position = 0;
+-                data.ReadRequired(header.Array, 0, PAGE_SIZE);
+-                PageChecksum.Validate(header, 0);
+-                header[HeaderPage.P_FILE_VERSION] = Math.Max(FileVersion, HeaderPage.MVCC_FILE_VERSION);
+-                pending.WriteHeader(header);
+-                PageChecksum.Write(header);
+-                data.Position = 0;
+-                CheckpointStage("retirement-before-header-write");
+-                data.Write(header.Array, 0, PAGE_SIZE);
+-                CheckpointStage("retirement-after-header-write");
+-                this.SyncDataBarrier(data);
++                this.UseDataWriter(data =>
++                {
++                    data.Position = 0;
++                    data.ReadRequired(header.Array, 0, PAGE_SIZE);
++                    PageChecksum.Validate(header, 0);
++                    header[HeaderPage.P_FILE_VERSION] = Math.Max(FileVersion, HeaderPage.MVCC_FILE_VERSION);
++                    pending.WriteHeader(header);
++                    PageChecksum.Write(header);
++                    data.Position = 0;
++                    CheckpointStage("retirement-before-header-write");
++                    this.CountDataWrite();
++                    data.Write(header.Array, 0, PAGE_SIZE);
++                    CheckpointStage("retirement-after-header-write");
++                    this.SyncDataBarrier(data);
++                });
+                 if (!_dataBarrierSynced && !_volatileLog) throw DataStoppedSyncing("a checkpoint");
+                 CheckpointStage("retirement-header-flushed");
+                 FileVersion = header[HeaderPage.P_FILE_VERSION];
+@@ -100,7 +103,7 @@ namespace LiteDB.Engine
+             }
+             if (_checksums.JournalBytes != 0)
+             {
+-                raw.SetLength(WalPadding.AlignedLength(raw.Length - _checksums.JournalBytes));
++                this.ShrinkLog(raw, WalPadding.AlignedLength(raw.Length - _checksums.JournalBytes), "a checkpoint");
+                 CheckpointStage("retirement-before-journal-retire-flush");
+                 SyncLogBarrier(raw);
+                 _checksums.JournalBytes = 0;
+diff --git a/LiteDB/Engine/Disk/DiskService.TrailingPages.cs b/LiteDB/Engine/Disk/DiskService.TrailingPages.cs
+index a90046696..2d6b0885f 100644
+--- a/LiteDB/Engine/Disk/DiskService.TrailingPages.cs
++++ b/LiteDB/Engine/Disk/DiskService.TrailingPages.cs
+@@ -30,11 +30,23 @@ namespace LiteDB.Engine
+             if (trailingLength == 0) return;
+ 
+             using var structural = new StructuralScope(_signals);
+-            var stream = pool.Writer.Value;
+             this.CrashPoint("startup-before-tail-trim");
+-            stream.SetLength(length);
+-            if (pool == _dataPool) this.SyncDataBarrier(stream);
+-            else this.SyncLogBarrier(stream);
++            // A partial trailing page holds nothing recovery reads: trimmed without ShrinkLog.
++            if (pool == _dataPool)
++            {
++                this.UseDataWriter(data =>
++                {
++                    this.CountDataWrite();
++                    data.SetLength(length);
++                    this.SyncDataBarrier(data);
++                });
++            }
++            else
++            {
++                var stream = pool.Writer.Value;
++                stream.SetLength(length);
++                this.SyncLogBarrier(stream);
++            }
+             this.CrashPoint("startup-after-tail-trim");
+             trailingLength = 0;
+         }
+diff --git a/LiteDB/Engine/Disk/DiskService.cs b/LiteDB/Engine/Disk/DiskService.cs
+index 6ac9ff023..73e3f4884 100644
+--- a/LiteDB/Engine/Disk/DiskService.cs
++++ b/LiteDB/Engine/Disk/DiskService.cs
+@@ -86,8 +86,8 @@ namespace LiteDB.Engine
+                     LOG($"creating new database: '{Path.GetFileName(_dataFactory.Name)}'", "DISK");
+ 
+                     using var structural = new StructuralScope(_signals);
+-                    this.Initialize(_dataPool.Writer.Value, settings.Collation, settings.InitialSize,
+-                        settings.CompactStorage == CompactStorageMode.Auto);
++                    this.UseDataWriter(data => this.Initialize(data, settings.Collation, settings.InitialSize,
++                        settings.CompactStorage == CompactStorageMode.Auto));
+                     dataLength = _dataFactory.GetLength();
+                 }
+ 
+@@ -98,7 +98,7 @@ namespace LiteDB.Engine
+ 
+                 if (settings.ReadOnly == false)
+                 {
+-                    _ = _dataPool.Writer.Value.CanRead;
++                    this.UseDataWriter(data => data.CanRead);
+                 }
+ 
+                 _dataTrailingLength = dataLength % PAGE_SIZE;
+@@ -209,23 +209,26 @@ namespace LiteDB.Engine
+             _signals?.StructuralBegin();
+             return FileHelper.TryExec(60, () =>
+             {
+-                var stream = _dataPool.Writer.Value;
+                 var buffer = _bufferPool.Rent(PAGE_SIZE);
+                 try
+                 {
+-                    stream.Position = 0;
+-                    var offset = 0;
+-                    while (offset < PAGE_SIZE)
++                    this.UseDataWriter(stream =>
+                     {
+-                        var read = stream.Read(buffer, offset, PAGE_SIZE - offset);
+-                        if (read == 0) throw new EndOfStreamException("Cannot mark an incomplete database header");
+-                        offset += read;
+-                    }
+-                    this.MarkHeaderInvalid(new BufferSlice(buffer, 0, PAGE_SIZE));
+-                    this.CrashPoint("invalid-state-before-mark");
+-                    stream.Position = 0;
+-                    stream.Write(buffer, 0, PAGE_SIZE);
+-                    this.SyncDataBarrier(stream);
++                        stream.Position = 0;
++                        var offset = 0;
++                        while (offset < PAGE_SIZE)
++                        {
++                            var read = stream.Read(buffer, offset, PAGE_SIZE - offset);
++                            if (read == 0) throw new EndOfStreamException("Cannot mark an incomplete database header");
++                            offset += read;
++                        }
++                        this.MarkHeaderInvalid(new BufferSlice(buffer, 0, PAGE_SIZE));
++                        this.CrashPoint("invalid-state-before-mark");
++                        stream.Position = 0;
++                        this.CountDataWrite();
++                        stream.Write(buffer, 0, PAGE_SIZE);
++                        this.SyncDataBarrier(stream);
++                    });
+                 }
+                 finally
+                 {
+@@ -318,8 +321,7 @@ namespace LiteDB.Engine
+         /// </summary>
+         public void WriteDataDisk(IEnumerable<PageBuffer> pages)
+         {
+-            var stream = _dataPool.Writer.Value;
+-            lock (stream)
++            this.UseDataWriter(stream =>
+             {
+                 foreach (var page in pages)
+                 {
+@@ -332,6 +334,7 @@ namespace LiteDB.Engine
+                     this.CrashPoint("checkpoint-before-page-write");
+                     this.PreserveFileVersion(page);
+                     this.StampDataPage(page);
++                    this.CountDataWrite();
+                     stream.Write(page.Array, page.Offset, PAGE_SIZE);
+                     this.CrashPoint("checkpoint-after-page-write");
+                     this.CheckpointStage("data-page");
+@@ -341,16 +344,16 @@ namespace LiteDB.Engine
+                 this.SyncDataBarrier(stream);
+                 this.CrashPoint("checkpoint-after-data-flush");
+                 this.CheckpointStage("data-flushed");
+-            }
++            });
+         }
+ 
+         /// <summary>
+-        /// Set new length for file in sync mode. Queue must be empty before set length
++        /// Set new length for file in sync mode. Queue must be empty before set length. A log that loses
++        /// content recovery may need goes through <see cref="EmptyLog"/> or <see cref="ShrinkLog"/>;
++        /// this trims only what no recovery reads (a torn WAL tail, see DiscardWalTail).
+         /// </summary>
+         public void SetLength(long length, FileOrigin origin)
+         {
+-            var stream = origin == FileOrigin.Log ? _logPool.Writer : _dataPool.Writer;
+-
+             if (origin == FileOrigin.Log)
+             {
+                 Interlocked.Exchange(ref _logLength, length - PAGE_SIZE);
+@@ -366,12 +369,19 @@ namespace LiteDB.Engine
+                 Interlocked.Exchange(ref _dataLength, length - PAGE_SIZE);
+             }
+ 
+-            stream.Value.SetLength(length);
+-
+-            if (origin == FileOrigin.Log)
++            if (origin == FileOrigin.Data)
+             {
+-                _logFactory.TrimCapacity(stream.Value);
++                this.UseDataWriter(data =>
++                {
++                    this.CountDataWrite();
++                    data.SetLength(length);
++                });
++                return;
+             }
++
++            var log = _logPool.Writer.Value;
++            log.SetLength(length);
++            _logFactory.TrimCapacity(log);
+         }
+ 
+         /// <summary>
+diff --git a/LiteDB/Engine/Engine/Index.cs b/LiteDB/Engine/Engine/Index.cs
+index 85d026607..35442f3b2 100644
+--- a/LiteDB/Engine/Engine/Index.cs
++++ b/LiteDB/Engine/Engine/Index.cs
+@@ -35,7 +35,10 @@ namespace LiteDB.Engine
+                 return true;
+             });
+ 
+-            if (exists == false) throw new NotSupportedException("Cannot create an index in a read-only database.");
++            // An engine that opened read-only on its own throws the write error that says why.
++            if (exists == false) throw _settings.ReadOnlyCause == null
++                ? new NotSupportedException("Cannot create an index in a read-only database.")
++                : (Exception)this.ReadOnlyWrite();
+ 
+             return false;
+         }
+diff --git a/LiteDB/Engine/Engine/Rebuild.cs b/LiteDB/Engine/Engine/Rebuild.cs
+index 5bd12f129..6328fb9f0 100644
+--- a/LiteDB/Engine/Engine/Rebuild.cs
++++ b/LiteDB/Engine/Engine/Rebuild.cs
+@@ -20,7 +20,7 @@ namespace LiteDB.Engine
+         {
+             if (string.IsNullOrEmpty(_settings.Filename)) return 0; // works only with os file, as in 5.x
+ 
+-            if (_settings.ReadOnly) throw new IOException("Cannot rebuild a read-only database.");
++            if (_settings.ReadOnly) throw _settings.ReadOnlyCause == null ? new IOException("Cannot rebuild a read-only database.") : this.ReadOnlyWrite();
+ 
+             // Every omitted option keeps its current value; conflicting options fail before the engine closes.
+             options = options ?? new RebuildOptions();
+diff --git a/LiteDB/Engine/Services/Snapshot.Storage.cs b/LiteDB/Engine/Services/Snapshot.Storage.cs
+index ed4efa506..e61dc4ba4 100644
+--- a/LiteDB/Engine/Services/Snapshot.Storage.cs
++++ b/LiteDB/Engine/Services/Snapshot.Storage.cs
+@@ -31,6 +31,10 @@ namespace LiteDB.Engine
+         /// </summary>
+         internal bool TryRequireCompactVersion()
+         {
++            if (_header.FileVersion >= HeaderPage.COMPACT_FILE_VERSION) return true;
++            // Known to be refused: skip the promotion's data sync for every document meanwhile. A log
++            // sync retries the data sync first and clears this once the data file syncs again.
++            if (_disk.KeepsWal) return false;
+             try { RequireFileVersion(HeaderPage.COMPACT_FILE_VERSION); return true; }
+             catch (IOException ex) when (ex.Data.Contains(DiskService.UnsyncedPromotionDataKey)) { return false; }
+         }
+diff --git a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+index bef685fbb..7bb634c7e 100644
+--- a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
++++ b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+@@ -220,12 +220,11 @@ namespace LiteDB.Engine
+                     _disk.Cache.Clear();
+                     _disk.CheckpointStage("before-reclaim");
+                     _disk.RotateWalSalt();
+-                    // The new salt must be durable before the WAL of the old one goes.
+-                    if (_disk.KeepsWal) throw DiskService.DataStoppedSyncing("a checkpoint");
+ #if DEBUG || TESTING
+                     _disk.TestCrashPoint("checkpoint-before-clear");
+ #endif
+-                    _disk.SetLength(0, FileOrigin.Log);
++                    // Only once a data sync covered the backfill and the new salt (DiskService.ShrinkLog).
++                    _disk.EmptyLog("a checkpoint");
+ #if DEBUG || TESTING
+                     _disk.TestCrashPoint("checkpoint-after-clear");
+ #endif
+diff --git a/LiteDB/Engine/Services/WalIndexService.cs b/LiteDB/Engine/Services/WalIndexService.cs
+index b71033651..3edf18840 100644
+--- a/LiteDB/Engine/Services/WalIndexService.cs
++++ b/LiteDB/Engine/Services/WalIndexService.cs
+@@ -104,7 +104,7 @@ namespace LiteDB.Engine
+                 _disk.Cache.Clear();
+ 
+                 // clear log file (sync)
+-                _disk.SetLength(0, FileOrigin.Log);
++                _disk.EmptyLog("a WAL reset");
+             }
+             finally
+             {
+diff --git a/docs/release-notes.md b/docs/release-notes.md
+index 11eb3b255..20ad6c498 100644
+--- a/docs/release-notes.md
++++ b/docs/release-notes.md
+@@ -64,15 +64,17 @@ such checkpoint on storage that syncs; a retiring checkpoint's proof already is
+ and writes nothing while that sync fails, in every
+ engine, including a restart or a shared-mode operation: the WAL is kept and grows until the
+ data file syncs again, and `$database.walKept` reports it: a writable engine that has not
+-seen a data sync succeed tries one first, and a read-only engine (also a shared-mode read)
+-reports what its connection's engines found, so a new shared connection may report false
+-until one of its checkpoints tried the data file (`logFileSize` and `dataFileSize` are now
+-64-bit). Once an engine, or an engine of the same shared connection, found that the data file
++seen a data sync succeed tries one first, and a read-only engine reports what its
++connection's engines found (a shared connection reads `$database` from its own engine, not
++from a read-only snapshot, which also reported `readOnly` on a writable connection;
++`logFileSize` and `dataFileSize` are now 64-bit). Once an engine, or an engine of the same shared connection, found that the data file
+ cannot sync, its checkpoints retry the data sync before they scan the WAL. A data sync that fails later in the same
+ checkpoint stops the engine with the WAL and the journal intact. On storage that never syncs
+ the WAL therefore never shrinks (before, it was emptied as before #2818). A writable open that
+ would first have to convert a 5.x file, migrate its indexes, or repair or retire a header
+-journal while the data file cannot sync opens read-only instead, changing neither file: reads
++journal while the data file cannot sync opens read-only instead (a refusal found before the
++open wrote anything changes neither file; one found later leaves what it wrote, which the
++read-only open and the next writable open recover): reads
+ work (indexes in the old order are scanned, as with `legacy index scan=true`), explicit
+ transactions are accepted, and every write throws an `IOException` naming the cause without
+ stopping the engine, so the application can catch it and keep reading. `$database.readOnly`
+diff --git a/docs/shared-mode-safety.md b/docs/shared-mode-safety.md
+index 52f6d715f..29e9ec213 100644
+--- a/docs/shared-mode-safety.md
++++ b/docs/shared-mode-safety.md
+@@ -40,7 +40,8 @@ under the mutex. A larger one registers its lease for that engine's read version
+ while the mutex is still held and then continues the same reader, so the query
+ runs once. A file that needs a writable open first (creation, upgrade, index
+ migration, promotion, auto-rebuild) is read through the writable engine as
+-before. Leases are exclusive handles created with delete-on-close: a held lease
++before, and so is `$database`, which describes the connection's own engine
++(`readOnly`, `readOnlyReason`, `walKept`). Leases are exclusive handles created with delete-on-close: a held lease
+ cannot be taken by a prober's exclusive open, and a closed one removes itself.
+ Registration does not scan the registry; checkpoints remove the leases of
+ crashed readers and fail closed on a registry they cannot read (performance
+diff --git a/docs/shared-read-performance.md b/docs/shared-read-performance.md
+index 1cbb538b1..3c79d6217 100644
+--- a/docs/shared-read-performance.md
++++ b/docs/shared-read-performance.md
+@@ -42,6 +42,7 @@ Two investigations reached the same diagnosis independently: one on Windows, and
+   - A larger one registers its lease for that engine's read version while the mutex is still held, then continues the same reader through `PrefixedDataReader`.
+   - The writable engine is not detached, because its close may delete an empty WAL and the shared `-tmp` file, which outside the mutex could delete a WAL another process just wrote.
+   - Files that need a writable open first still go through the writable engine within the same mutex hold: missing files, a pending upgrade, index migration, promotion and auto-rebuild.
++  - `$database` always reads from the writable engine: it describes the connection's engine (`readOnly`, `readOnlyReason`, `walKept`), not the snapshot.
+ - **Self-deleting leases:** a lease is an exclusive handle created with `DeleteOnClose`, and registration only checks that the registry is readable.
+   - A held lease cannot be taken by another process's exclusive probe (a sharing violation on Windows, `LOCK_EX` on Unix), and .NET deletes it on Unix only at `Dispose`.
+   - Checkpoints still remove crashed readers' leases and fail closed on a registry they cannot read.
+-- 
+2.43.0
+

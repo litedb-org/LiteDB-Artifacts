@@ -1,0 +1,244 @@
+From f8b1b7f01fefedafff574d0aae258ab39bca6068 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:25:21 +0000
+Subject: [PATCH 19/24] Review sticky-failure tests; leave repros of unrecorded
+ write failures
+
+TornWalAppend: a refused write after a failure is either the write-failure
+refusal or, after a safepoint's failed I/O, the closed engine's error; only
+acknowledged commits are counted either way. TornSlotRewrite: the waiting
+commit's refusal carries the recorded failure. WalTransactionBoundary:
+reworded the teardown assertion. ReadOnlyAfterWriteFailure.AssertReported:
+a null file is not checked (existing callers keep working).
+
+Left failing (suspected engine defects):
+- a safepoint's failed WAL append (disk full) is not recorded, so the
+  engine stays closed and reads throw (EngineState.Handle);
+- a commit's failed WAL append records no file;
+- an encrypted WAL preamble sync that cannot sync (UnauthorizedAccess)
+  is not recorded, so reads throw.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../EncryptedWalCreationFailure_Tests.cs      | 43 ++++++++++++---
+ .../Internals/WalTransactionBoundary_Tests.cs |  2 +-
+ LiteDB.Tests/Issues/Issue2821_Tests.cs        | 52 +++++++++++++++++++
+ .../Regressions/ReadOnlyAfterWriteFailure.cs  | 14 ++---
+ .../Regressions/TornSlotRewrite_Tests.cs      |  2 +
+ .../Regressions/TornWalAppend_Tests.cs        |  6 ++-
+ 6 files changed, 105 insertions(+), 14 deletions(-)
+
+diff --git a/LiteDB.Tests/Internals/EncryptedWalCreationFailure_Tests.cs b/LiteDB.Tests/Internals/EncryptedWalCreationFailure_Tests.cs
+index 910070a0a..765603930 100644
+--- a/LiteDB.Tests/Internals/EncryptedWalCreationFailure_Tests.cs
++++ b/LiteDB.Tests/Internals/EncryptedWalCreationFailure_Tests.cs
+@@ -37,10 +37,9 @@ namespace LiteDB.Internals
+                 Action nextWrite = () => rows.Insert(new BsonDocument { ["_id"] = 1000 });
+                 if (unsupported)
+                 {
+-                    // A non-I/O failure is not recorded as a write failure: the engine stays closed.
+-                    nextWrite.Should().Throw<Exception>().WithMessage("*Dispose and reopen*");
+-                    Action rollback = () => db.Rollback();
+-                    rollback.Should().Throw<Exception>().WithMessage("*Dispose and reopen*");
++                    // No later write may commit behind the failed preamble. The engine stays closed here
++                    // instead of continuing read-only: see FailedPreambleSyncThatCannotSync_KeepsReadsWorking.
++                    nextWrite.Should().Throw<Exception>();
+                 }
+                 else
+                 {
+@@ -53,9 +52,9 @@ namespace LiteDB.Internals
+                     ReadOnlyAfterWriteFailure.AssertWriteRefused(nextWrite, record).InnerException.Should().BeSameAs(log.Failure);
+                     db.Rollback().Should().BeFalse("the failed commit left no transaction");
+                     rows.Count().Should().Be(4, "neither write is visible");
+-                    data.ToArray().Should().Equal(original, "the read-only engine writes nothing");
+                 }
+-                log.ToArray().Should().Equal(retainedWal);
++                data.ToArray().Should().Equal(original, "no write reaches the data file");
++                log.ToArray().Should().Equal(retainedWal, "nothing is written behind the failed preamble");
+             }
+ 
+             // Process death keeps the failed barrier's cached bytes; power loss
+@@ -65,6 +64,38 @@ namespace LiteDB.Internals
+             EncryptedWalCreation_Tests.AssertRecovery(original, log.Durable);
+         }
+ 
++        /// <summary>
++        /// Suspected engine defect, left failing: with durable commits, the new encrypted WAL's preamble
++        /// sync answers "cannot sync" (an UnauthorizedAccessException, which
++        /// DiskService.IsDurableFlushUnsupported takes for #2242). The commit throws before it writes a
++        /// frame, but the failure is not recorded (LiteEngine.CommitAndReleaseTransaction records
++        /// IOExceptions only), so the engine stays closed and even reads throw "Dispose and reopen".
++        /// Decisions 2, 3 and 6 (default A) of docs/decisions/durability-policy.md: the failure is
++        /// recorded and reads keep working, as they do after the same preamble sync fails with an
++        /// IOException (above) or a plain log file cannot sync
++        /// (DurabilityPolicy_Tests.Commit_on_a_log_that_cannot_sync_throws_before_it_writes_a_frame).
++        /// </summary>
++        [Fact]
++        public void FailedPreambleSyncThatCannotSync_KeepsReadsWorking()
++        {
++            var original = EncryptedWalCreation_Tests.LegacyData(legacy: false);
++            using var data = ChecksumTestFiles.Copy(original);
++            using var log = new FailedSyncStream(1, unsupported: true);
++            using var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, Password = EncryptedWalCreation_Tests.Password });
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            var rows = db.GetCollection("rows");
++            Action commit = () => rows.Insert(new BsonDocument { ["_id"] = 999, ["value"] = "must not commit" });
++            commit.Should().Throw<Exception>();
++
++            rows.FindAll().Select(x => x["_id"].AsInt32).Should().Equal(1, 2, 3, 4);
++            var info = db.GetCollection("$database").FindAll().Single();
++            info["readOnly"].AsBoolean.Should().BeTrue();
++            info["writeFailure"]["operation"].AsString.Should().Be("A commit");
++            Action nextWrite = () => rows.Insert(new BsonDocument { ["_id"] = 1000 });
++            nextWrite.Should().Throw<IOException>().Which.Message.Should().StartWith(LiteEngine.WriteFailedPrefix);
++            data.ToArray().Should().Equal(original);
++        }
++
+         private sealed class FailedSyncStream : MemoryStream, IDurableStream
+         {
+             private readonly int _failAt;
+diff --git a/LiteDB.Tests/Internals/WalTransactionBoundary_Tests.cs b/LiteDB.Tests/Internals/WalTransactionBoundary_Tests.cs
+index ba8f42c0e..82d78198b 100644
+--- a/LiteDB.Tests/Internals/WalTransactionBoundary_Tests.cs
++++ b/LiteDB.Tests/Internals/WalTransactionBoundary_Tests.cs
+@@ -203,7 +203,7 @@ namespace LiteDB.Internals
+                 Action commit = () => test.Database.Commit();
+                 commit.Should().Throw<IOException>().WithMessage("injected confirmation failure");
+                 test.Log.Length.Should().Be(length);
+-                cache.WritablePages.Should().Be(0, "failed completion closes the engine and releases every frame");
++                cache.WritablePages.Should().Be(0, "failed completion stops the engine, whose teardown releases every frame");
+                 cache.PinnedPages.Should().Be(0);
+                 cache.LostFrames.Should().Be(0);
+                 AssertValues(test.Recover("docs", checkpoint: false), 0);
+diff --git a/LiteDB.Tests/Issues/Issue2821_Tests.cs b/LiteDB.Tests/Issues/Issue2821_Tests.cs
+index 4335e050b..9e83cdb9f 100644
+--- a/LiteDB.Tests/Issues/Issue2821_Tests.cs
++++ b/LiteDB.Tests/Issues/Issue2821_Tests.cs
+@@ -101,6 +101,58 @@ namespace LiteDB.Tests.Issues
+             subsequent.ToString().Should().Contain("injected disk full", "the original I/O cause must remain available");
+         }
+ 
++        /// <summary>
++        /// Suspected engine defect, left failing: a transaction larger than its page limit writes
++        /// safepoints to the WAL before its commit. When such a safepoint append fails (disk full) and
++        /// its cleanup truncates it, the IOException is not recorded as a write failure
++        /// (EngineState.Handle stops the engine for every IOException without recording it), so the
++        /// engine stays closed and even reads throw "Engine closed after an I/O failure". Decision 6
++        /// and default B of docs/decisions/durability-policy.md: disk full is a sticky failure, reads
++        /// keep working and later writes are refused with the record, as after a commit's failed
++        /// append (above).
++        /// </summary>
++        [Fact]
++        public void Disk_full_safepoint_write_leaves_the_engine_read_only()
++        {
++            using var data = new MemoryStream();
++            using var log = new DiskFullStream();
++            using var db = new LiteDatabase(new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, TransactionPageLimit = 1 }));
++            db.CheckpointSize = 0;
++            var rows = db.GetCollection("rows");
++            rows.Insert(new BsonDocument { ["_id"] = 1, ["value"] = "acknowledged" });
++            log.FailNextWrite = true;
++            Action write = () => rows.Insert(Enumerable.Range(2, 20).Select(id => new BsonDocument { ["_id"] = id, ["p"] = new string('p', 3000) }));
++            write.Should().Throw<IOException>().WithMessage("injected disk full");
++
++            rows.FindAll().Select(row => row["_id"].AsInt32).Should().Equal(1);
++            var info = db.GetCollection("$database").FindAll().Single();
++            info["readOnly"].AsBoolean.Should().BeTrue();
++            info["writeFailure"]["error"].AsString.Should().Be("injected disk full");
++            Action next = () => rows.Insert(new BsonDocument { ["_id"] = 100 });
++            next.Should().Throw<IOException>().Which.Message.Should().StartWith(LiteEngine.WriteFailedPrefix);
++        }
++
++        /// <summary>
++        /// Suspected engine defect, left failing: decision 6 of docs/decisions/durability-policy.md
++        /// records the file of a failed write, but a commit whose WAL append fails (disk full) records
++        /// none: $database.writeFailure.file is null and the refusal omits "on the log file"
++        /// (LiteEngine.CommitAndReleaseTransaction records the commit's IOException without naming the
++        /// file, and DiskService.WriteLogPage does not name it when its cleanup truncated the append).
++        /// </summary>
++        [Fact]
++        public void Disk_full_failure_record_names_the_log_file()
++        {
++            using var data = new MemoryStream();
++            using var log = new DiskFullStream();
++            using var db = new LiteDatabase(new LiteEngine(new EngineSettings { DataStream = data, LogStream = log }));
++            db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1 });
++            log.FailNextWrite = true;
++            Action write = () => db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 2 });
++            write.Should().Throw<IOException>().WithMessage("injected disk full");
++            var file = db.GetCollection("$database").FindAll().Single()["writeFailure"]["file"];
++            (file.IsNull ? null : file.AsString).Should().Be("log", "the append to the log file failed");
++        }
++
+         [Fact]
+         public void Reopening_after_disk_full_preserves_commits_and_accepts_new_writes_without_deleting_WAL()
+         {
+diff --git a/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs b/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
+index e3b63114d..842fd67f3 100644
+--- a/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
++++ b/LiteDB.Tests/Regressions/ReadOnlyAfterWriteFailure.cs
+@@ -16,10 +16,11 @@ namespace LiteDB.Tests.Regressions
+     {
+         /// <summary>
+         /// <c>$database</c> of <paramref name="db"/> reports readOnly and a writeFailure of
+-        /// <paramref name="operation"/> on <paramref name="file"/> ("data", "log", or null when the
+-        /// failure named none) whose error starts with <paramref name="error"/>, with the log file
+-        /// kept (<paramref name="walKept"/>) or empty (null: not checked here); readOnlyReason is that
+-        /// record. Returns the record.
++        /// <paramref name="operation"/> on <paramref name="file"/> ("data" or "log"; null: not checked
++        /// here, for failures on paths where the engine names no file, see
++        /// FailedPromotionJournal_Tests.Failed_promotion_header_write_names_the_data_file) whose error
++        /// starts with <paramref name="error"/>, with the log file kept (<paramref name="walKept"/>) or
++        /// empty (null: not checked here); readOnlyReason is that record. Returns the record.
+         /// </summary>
+         internal static string AssertReported(LiteDatabase db, string operation, string file, string error, bool? walKept = true)
+         {
+@@ -28,11 +29,12 @@ namespace LiteDB.Tests.Regressions
+             info["writeFailure"].IsDocument.Should().BeTrue("$database reports the failure without a write");
+             var failure = info["writeFailure"].AsDocument;
+             failure["operation"].AsString.Should().Be(operation);
+-            (failure["file"].IsNull ? null : failure["file"].AsString).Should().Be(file);
++            var reportedFile = failure["file"].IsNull ? null : failure["file"].AsString;
++            if (file != null) reportedFile.Should().Be(file);
+             failure["error"].AsString.Should().StartWith(error);
+             if (walKept.HasValue) failure["walKept"].AsBoolean.Should().Be(walKept.Value);
+             var time = failure["time"].AsDateTime.ToUniversalTime();
+-            var record = $"{operation} failed at {time:yyyy-MM-dd HH:mm:ss} UTC" + (file == null ? "" : $" on the {file} file") +
++            var record = $"{operation} failed at {time:yyyy-MM-dd HH:mm:ss} UTC" + (reportedFile == null ? "" : $" on the {reportedFile} file") +
+                 $": {failure["error"].AsString} " + (failure["walKept"].AsBoolean ? "The log file was kept." : "The log file was empty.");
+             info["readOnlyReason"].AsString.Should().Be(record);
+             return record;
+diff --git a/LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs b/LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs
+index 08667e793..df8dcaea1 100644
+--- a/LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs
++++ b/LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs
+@@ -125,6 +125,8 @@ namespace LiteDB.Tests.Regressions
+                 var record = ReadOnlyAfterWriteFailure.AssertReported(db, "A WAL write", "log", "injected partial overwrite");
+                 refused.Should().BeOfType<IOException>().Which.Message.Should().Be(LiteEngine.WriteFailedPrefix + record,
+                     "the commit found the engine stopped and wrote nothing");
++                refused.InnerException.Should().BeOfType<IOException>().Which.Message.Should().Be("injected partial overwrite",
++                    "the refusal carries the recorded failure");
+                 data.ToArray().Should().Equal(crashData);
+                 log.ToArray().Should().Equal(crashLog);
+             }
+diff --git a/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs b/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
+index 3017e729d..11d8f5421 100644
+--- a/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
++++ b/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
+@@ -155,7 +155,11 @@ namespace LiteDB.Tests.Regressions
+                         db.GetCollection("rows").Insert(Row(id, 0));
+                         acknowledged.Add(id);
+                     }
+-                    catch (Exception ex) when (ex.Message.StartsWith("Engine closed")) { }
++                    // A refused write is not acknowledged: after a recorded write failure the engine
++                    // continues read-only (decision 6 of docs/decisions/durability-policy.md); after a
++                    // safepoint's failed I/O it stays closed instead (a suspected defect, see
++                    // Issue2821_Tests.Disk_full_safepoint_write_leaves_the_engine_read_only).
++                    catch (Exception ex) when (ex.Message.StartsWith(LiteEngine.WriteFailedPrefix) || ex.Message.StartsWith("Engine closed")) { }
+                 }
+                 // A killed process loses what the stream holds; the device keeps what reached it.
+                 image = (data.ToArray(), device.ToArray());
+-- 
+2.43.0
+
