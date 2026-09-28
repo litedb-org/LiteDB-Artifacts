@@ -1,0 +1,330 @@
+From a0c6bc923a639959665aceb611f37b7e6e63ebd1 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:54:20 +0000
+Subject: [PATCH 02/12] Restore a lost header only into never-written sectors;
+ truncate a failed header frame
+
+The header frame fills in a data header only where every 512-byte sector
+is either as the frame holds it or never written (zeros, or past the end
+of a short file): what a power loss leaves of a header that never reached
+the device. A header a drive defect damaged holds other bytes, and its
+open fails as before (PageChecksum_Tests) instead of taking a copy that
+may be older. A header frame whose write fails is truncated like a failed
+append, and the engine goes on; only a failed truncation stops it.
+
+Tests that place frames by position now count the header frame at
+position 0 (Disk, LazyChecksumCutover, WalPowerLoss, WalSlotReuse), and
+the failing-log helper of FailedSafepointWrite skips it.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB.Tests/Internals/Disk_Tests.cs          | 23 ++++++----
+ .../Internals/LazyChecksumCutover_Tests.cs    |  4 +-
+ LiteDB.Tests/Internals/WalPowerLoss_Tests.cs  | 11 ++++-
+ LiteDB.Tests/Internals/WalSlotReuse_Tests.cs  | 11 +++--
+ .../Regressions/FailedSafepointWrite_Tests.cs |  4 +-
+ LiteDB/Engine/Disk/DiskService.HeaderFrame.cs | 46 +++++++++++++++++--
+ LiteDB/Engine/Disk/HeaderFrame.cs             | 26 +++++++++++
+ .../FileReader/FileReaderV8.Checksums.cs      |  2 +-
+ 8 files changed, 102 insertions(+), 25 deletions(-)
+
+diff --git a/LiteDB.Tests/Internals/Disk_Tests.cs b/LiteDB.Tests/Internals/Disk_Tests.cs
+index e03b30d8e..118ec7113 100644
+--- a/LiteDB.Tests/Internals/Disk_Tests.cs
++++ b/LiteDB.Tests/Internals/Disk_Tests.cs
+@@ -35,7 +35,8 @@ namespace LiteDB.Internals
+                 pages.Add(p);
+             }
+ 
+-            // page will be saved in LOG file in PagePosition order (0-99)
++            // page will be saved in LOG file in PagePosition order (0-99), after the header frame
++            // that starts every WAL (decision 11 of docs/decisions/durability-policy.md)
+             disk.WriteLogDisk(pages);
+ 
+             // after release, no page can be read/write
+@@ -46,7 +47,7 @@ namespace LiteDB.Internals
+ 
+             for (var i = 0; i < 100; i++)
+             {
+-                var p = reader.ReadPage(i * 8192, false, FileOrigin.Log);
++                var p = reader.ReadPage((i + 1) * 8192, false, FileOrigin.Log);
+ 
+                 p.All((byte) i).Should().BeTrue();
+ 
+@@ -119,8 +120,9 @@ namespace LiteDB.Internals
+             Action write = () => disk.WriteLogDisk(new[] { failed });
+             write.Should().Throw<IOException>().WithMessage("write failed");
+ 
++            // Frame 0 is the header frame that starts the WAL (decision 11); the failed page was next.
+             Action lookup = () => disk.Cache.GetReadablePage(
+-                0,
++                PAGE_SIZE,
+                 FileOrigin.Log,
+                 (_, __) => throw new IOException("failed position is not cached"));
+             lookup.Should().Throw<IOException>().WithMessage("failed position is not cached");
+@@ -130,9 +132,9 @@ namespace LiteDB.Internals
+             replacement.Fill(2);
+             disk.WriteLogDisk(new[] { replacement });
+ 
+-            replacement.Position.Should().Be(0);
+-            disk.GetFileLength(FileOrigin.Log).Should().Be(PAGE_SIZE);
+-            var read = disk.GetReader().ReadPage(0, false, FileOrigin.Log);
++            replacement.Position.Should().Be(PAGE_SIZE);
++            disk.GetFileLength(FileOrigin.Log).Should().Be(2 * PAGE_SIZE);
++            var read = disk.GetReader().ReadPage(PAGE_SIZE, false, FileOrigin.Log);
+             read.All(2).Should().BeTrue();
+             read.Release();
+             disk.Cache.PinnedPages.Should().Be(0);
+@@ -162,15 +164,18 @@ namespace LiteDB.Internals
+             replacement.Fill(3);
+             disk.WriteLogDisk(new[] { replacement });
+ 
+-            replacement.Position.Should().Be(0);
+-            log.Length.Should().Be(2 * PAGE_SIZE);
++            // The failed write was the header frame that starts the WAL (decision 11): truncated like a
++            // failed append, it is written again before the replacement.
++            replacement.Position.Should().Be(PAGE_SIZE);
++            log.Length.Should().Be(WalPadding.AlignedLength(2 * WalChecksum.FrameSize));
+         }
+ 
+         [Fact]
+         public void WriteLogDisk_PublicationCollision_DiscardsWritableFrame()
+         {
+             using var disk = CreateDisk(out _);
+-            var existing = disk.Cache.GetReadablePage(0, FileOrigin.Log, (_, page) => page.Write(1, 0));
++            // The first frame after the header frame that starts the WAL (decision 11).
++            var existing = disk.Cache.GetReadablePage(PAGE_SIZE, FileOrigin.Log, (_, page) => page.Write(1, 0));
+             existing.Release();
+             var writable = disk.NewPage();
+ 
+diff --git a/LiteDB.Tests/Internals/LazyChecksumCutover_Tests.cs b/LiteDB.Tests/Internals/LazyChecksumCutover_Tests.cs
+index e28c053c2..b73d0d3a1 100644
+--- a/LiteDB.Tests/Internals/LazyChecksumCutover_Tests.cs
++++ b/LiteDB.Tests/Internals/LazyChecksumCutover_Tests.cs
+@@ -45,8 +45,8 @@ namespace LiteDB.Internals
+             data.BytesRead.Should().BeLessThan(20L * PAGE_SIZE);
+             data.BytesWritten.Should().Be(2L * PAGE_SIZE, "checksum and index-order publication each replace only the header");
+             log.MaximumLength.Should().Be(4L * PAGE_SIZE + (password == null ? 0 : PAGE_SIZE));
+-            log.Length.Should().Be(WalPadding.AlignedLength(WalChecksum.FrameSize) + (password == null ? 0 : PAGE_SIZE),
+-                "the committed ordering-revision header remains in WAL when checkpoint is disabled");
++            log.Length.Should().Be(WalPadding.AlignedLength(2 * WalChecksum.FrameSize) + (password == null ? 0 : PAGE_SIZE),
++                "the header frame that starts the WAL (decision 11) and the committed ordering-revision header remain in WAL when checkpoint is disabled");
+         }
+ 
+         private sealed class HeaderOnlyData : MemoryStream
+diff --git a/LiteDB.Tests/Internals/WalPowerLoss_Tests.cs b/LiteDB.Tests/Internals/WalPowerLoss_Tests.cs
+index 3e0f0fa22..a4e7ab1f9 100644
+--- a/LiteDB.Tests/Internals/WalPowerLoss_Tests.cs
++++ b/LiteDB.Tests/Internals/WalPowerLoss_Tests.cs
+@@ -11,6 +11,9 @@ namespace LiteDB.Internals
+ {
+     public class WalPowerLoss_Tests
+     {
++        private static int AcknowledgedEnd(byte[] log, int preamble) =>
++            (log.Length - preamble) / WalChecksum.FrameSize * WalChecksum.FrameSize + preamble;
++
+         [Theory]
+         [InlineData(null, 512)]
+         [InlineData("secret", 512)]
+@@ -23,10 +26,14 @@ namespace LiteDB.Internals
+             source.Database.GetCollection("docs").EnsureIndex("value");
+             source.Database.Checkpoint();
+             source.Update("docs", 1);
++            var preamble = password == null ? 0 : PAGE_SIZE;
++            // Frame counts depend on the layout (every WAL starts with a header frame, decision 11):
++            // when the acknowledged end falls on a sector boundary, one more commit moves it off.
++            if (AcknowledgedEnd(source.Log.ToArray(), preamble) % sectorSize == 0)
++                source.Database.GetCollection("pad").Insert(new BsonDocument { ["_id"] = 1 });
+             var acknowledged = source.Log.ToArray();
+             var expected = source.Database.GetCollection("docs").FindAll().ToArray();
+-            var preamble = password == null ? 0 : PAGE_SIZE;
+-            var end = (acknowledged.Length - preamble) / WalChecksum.FrameSize * WalChecksum.FrameSize + preamble;
++            var end = AcknowledgedEnd(acknowledged, preamble);
+             (end % sectorSize).Should().NotBe(0, "the next append must share a physical sector with the acknowledged confirmation");
+             source.Update("docs", 2);
+             var torn = source.Log.ToArray();
+diff --git a/LiteDB.Tests/Internals/WalSlotReuse_Tests.cs b/LiteDB.Tests/Internals/WalSlotReuse_Tests.cs
+index c9f931e4a..dab4f9751 100644
+--- a/LiteDB.Tests/Internals/WalSlotReuse_Tests.cs
++++ b/LiteDB.Tests/Internals/WalSlotReuse_Tests.cs
+@@ -117,18 +117,19 @@ namespace LiteDB.Internals
+                     positions[pageID] = new PagePosition(pageID, position), positions);
+             }
+ 
++            // Frame 0 is the header frame that starts the WAL (decision 11).
+             Write(1, 10);
+             Write(2, 20);
+             Write(1, 30);
+-            log.Length.Should().Be(WalPadding.AlignedLength(2 * WalChecksum.FrameSize));
+-            positions[1].Position.Should().Be(0);
+-            var updated = reader.ReadPage(0, false, FileOrigin.Log);
++            log.Length.Should().Be(WalPadding.AlignedLength(3 * WalChecksum.FrameSize));
++            positions[1].Position.Should().Be(PAGE_SIZE);
++            var updated = reader.ReadPage(PAGE_SIZE, false, FileOrigin.Log);
+             updated.ReadInt32(PAGE_SIZE - sizeof(int)).Should().Be(30);
+             updated.Release();
+ 
+             Write(1, 40, confirmed: true);
+-            positions[1].Position.Should().Be(2 * PAGE_SIZE, "confirmation must follow every transaction page");
+-            log.Length.Should().Be(WalPadding.AlignedLength(3 * WalChecksum.FrameSize));
++            positions[1].Position.Should().Be(3 * PAGE_SIZE, "confirmation must follow every transaction page");
++            log.Length.Should().Be(WalPadding.AlignedLength(4 * WalChecksum.FrameSize));
+             disk.Cache.PinnedPages.Should().Be(0);
+             disk.Cache.WritablePages.Should().Be(0);
+             disk.Cache.LostFrames.Should().Be(0);
+diff --git a/LiteDB.Tests/Regressions/FailedSafepointWrite_Tests.cs b/LiteDB.Tests/Regressions/FailedSafepointWrite_Tests.cs
+index 992c04fca..998c94adc 100644
+--- a/LiteDB.Tests/Regressions/FailedSafepointWrite_Tests.cs
++++ b/LiteDB.Tests/Regressions/FailedSafepointWrite_Tests.cs
+@@ -138,7 +138,9 @@ namespace LiteDB.Tests.Regressions
+ 
+             public override void Write(byte[] buffer, int offset, int count)
+             {
+-                if (FailNextFrame && count == WalChecksum.FrameSize)
++                // The header frame that starts a WAL (decision 11) is not one of the transaction's frames.
++                if (FailNextFrame && count == WalChecksum.FrameSize &&
++                    BitConverter.ToUInt32(buffer, offset + Constants.PAGE_SIZE + 52) != WalChecksum.HeaderFrameMagic)
+                 {
+                     FailNextFrame = false;
+                     Failed = true;
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+index 60949e7bd..710612aa4 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+@@ -1,5 +1,6 @@
+ using System;
+ using System.IO;
++using System.Runtime.ExceptionServices;
+ using System.Threading;
+ using static LiteDB.Constants;
+ 
+@@ -27,13 +28,34 @@ namespace LiteDB.Engine
+                 if (header[WalChecksum.SaltPosition + i] != _checksums.Salt[i]) throw new PageChecksumException(FileOrigin.Data, 0);
+             Buffer.BlockCopy(header, 0, frame, 0, PAGE_SIZE);
+             WalChecksum.PrepareHeaderFrame(frame, _checksums.Salt);
++            this.CrashPoint("header-frame-before-write");
+             uncertain = true;
+             Interlocked.Exchange(ref _logLength, 0);
+-            this.CrashPoint("header-frame-before-write");
+-            raw.Position = 0;
+-            raw.Write(frame, 0, frame.Length);
+-            this.CrashPoint("header-frame-after-write");
++            try
++            {
++                raw.Position = 0;
++                raw.Write(frame, 0, frame.Length);
++            }
++            catch (Exception failure)
++            {
++                // As for a failed append (WriteLogPage): truncate what the write may have left, and the
++                // engine goes on; if that fails too, the torn frame stays and the caller stops the engine.
++                Interlocked.Exchange(ref _logLength, -PAGE_SIZE);
++                try
++                {
++                    stream.SetLength(0);
++                    _logFactory.TrimCapacity(stream);
++                    uncertain = false;
++                }
++                catch (Exception cleanup)
++                {
++                    LOG($"truncating a failed header frame write failed too: {cleanup.Message}", "ERROR");
++                    ExceptionDispatchInfo.Capture(failure).Throw();
++                }
++                throw;
++            }
+             uncertain = false;
++            this.CrashPoint("header-frame-after-write");
+         }
+ 
+         /// <summary>
+@@ -52,6 +74,7 @@ namespace LiteDB.Engine
+             var header = this.ReadLogHeaderFrame();
+             if (header == null) return false;
+             var state = !exists ? "missing" : dataLength == 0 ? "empty" : "shorter than its header page";
++            if (exists && dataLength > 0 && !HeaderFrame.Completes(this.ReadDataPrefix(dataLength), header)) return false;
+             if (!exists || !HeaderFrame.Fits(header, 0))
+                 throw new LiteException(LiteException.INVALID_DATABASE, $"Cannot open this database: its data file is {state}, " +
+                     "while its log file holds the WAL of a database whose pages were in that data file. Restore the data " +
+@@ -74,7 +97,7 @@ namespace LiteDB.Engine
+         {
+             if (_recoveredHeader != null || HeaderFrame.IsIntact(header)) return;
+             var frame = this.ReadLogHeaderFrame();
+-            if (frame == null || !HeaderFrame.Fits(frame, dataLength)) return;
++            if (frame == null || !HeaderFrame.Completes(header, frame) || !HeaderFrame.Fits(frame, dataLength)) return;
+             header = frame;
+             if (_readOnly)
+             {
+@@ -99,6 +122,19 @@ namespace LiteDB.Engine
+             });
+         }
+ 
++        private byte[] ReadDataPrefix(long dataLength)
++        {
++            var bytes = new byte[dataLength];
++            var stream = _dataPool.Rent();
++            try
++            {
++                stream.Position = 0;
++                stream.ReadRequired(bytes, 0, bytes.Length);
++            }
++            finally { _dataPool.Return(stream); }
++            return bytes;
++        }
++
+         private byte[] ReadLogHeaderFrame()
+         {
+             if (!_logFactory.Exists()) return null;
+diff --git a/LiteDB/Engine/Disk/HeaderFrame.cs b/LiteDB/Engine/Disk/HeaderFrame.cs
+index 072936b8f..4ed8e48d8 100644
+--- a/LiteDB/Engine/Disk/HeaderFrame.cs
++++ b/LiteDB/Engine/Disk/HeaderFrame.cs
+@@ -51,6 +51,32 @@ namespace LiteDB.Engine
+                 string.CompareOrdinal(page.ReadString(HeaderPage.P_HEADER_INFO, HeaderPage.HEADER_INFO.Length), HeaderPage.HEADER_INFO) == 0;
+         }
+ 
++        private const int Sector = 512;
++
++        /// <summary>
++        /// Whether <paramref name="header"/> (the data file's first bytes, maybe fewer than a page) is
++        /// the header frame's header as a power loss leaves a header that never reached the device:
++        /// every 512-byte sector either as written or never written (zeros; a file shorter than a page
++        /// reads zeros past its end). Nothing else is restored: a header a drive defect damaged holds
++        /// other bytes, and its open fails as before instead of taking a copy that may be older.
++        /// </summary>
++        internal static bool Completes(byte[] header, byte[] frame)
++        {
++            for (var sector = 0; sector < PAGE_SIZE; sector += Sector)
++            {
++                var zeros = true;
++                var same = true;
++                for (var i = sector; i < sector + Sector; i++)
++                {
++                    var value = i < header.Length ? header[i] : (byte)0;
++                    zeros &= value == 0;
++                    same &= value == frame[i];
++                }
++                if (!zeros && !same) return false;
++            }
++            return true;
++        }
++
+         /// <summary>
+         /// The data file must still hold every page this header names, the pages that were in it
+         /// when the WAL generation started: the WAL holds only what changed since.
+diff --git a/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs b/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
+index c321ee1bf..015279320 100644
+--- a/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
++++ b/LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs
+@@ -29,7 +29,7 @@ namespace LiteDB.Engine
+             // A data header a power loss dropped: the WAL's header frame holds it (decision 11).
+             if (_recoveredHeader == null && _logStream != null && !HeaderFrame.IsIntact(bytes) &&
+                 HeaderFrame.Read(((ChecksummedWalStream)_logStream).RawStream) is byte[] frame &&
+-                HeaderFrame.Fits(frame, _dataStream.Length))
++                HeaderFrame.Completes(bytes, frame) && HeaderFrame.Fits(frame, _dataStream.Length))
+             {
+                 bytes = _recoveredHeader = frame;
+             }
+-- 
+2.43.0
+

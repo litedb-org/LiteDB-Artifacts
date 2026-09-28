@@ -1,0 +1,669 @@
+From f29c8abc6baa9319568151798a22d8bb1e6d3548 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 22:37:17 +0000
+Subject: [PATCH 12/12] Bound a reopen only while the files are as the failure
+ left them; never initialize over unreadable frames
+
+Review of the header frame and the bounded reopen:
+
+B1: another connection can recover a failed commit whole and checkpoint
+it into the data file without changing the log's length or salt; the
+bounded reopen then mixed the data file's copy of the failed commit with
+a log bounded before it (half a transaction the caller saw fail). The
+failure now records, besides the acknowledged end, the raw log from that
+end on (hash), its salt, the data file's length and header, and its copy
+of every page the failed transaction wrote (safepoints included); a
+reopen is bounded only while all of these still match, otherwise the
+files win, whole. The record is passed to RecordWriteFailure explicitly
+instead of through Exception.Data (no stale bound from a reused
+exception, no internal keys in the caller's exception), and the log is
+read through a pooled reader by its exact length (an encrypted reader
+that hit its end reads nothing more).
+
+B2: an empty or missing data file beside a log whose header frame cannot
+be read (frame 0 never written back while later frames were, or an
+encrypted log opened without its password) was still initialized over,
+and the WAL discarded. Such an open now refuses, changing neither file,
+when the log holds any valid frame or an encryption preamble; a 5.0.21
+legacy WAL beside an empty data file still recovers as before.
+
+Also: an empty caller data stream is restored, not refused as missing;
+note 9 said an encrypted header never written back is not restored, but
+it reads as zeros and is (tested); the proven-log cache versions its
+queue entries, so a path forgotten and proven again is not evicted first.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Regressions/AcknowledgedReopen_Tests.cs   |  48 ++++++
+ LiteDB.Tests/Regressions/HeaderFrame_Tests.cs |  57 +++++++
+ .../Disk/DiskService.AcknowledgedLog.cs       | 140 ++++++++++++++----
+ LiteDB/Engine/Disk/DiskService.DataWrites.cs  |   4 +-
+ LiteDB/Engine/Disk/DiskService.HeaderFrame.cs |  60 +++++++-
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs    |   8 +-
+ LiteDB/Engine/Disk/DiskService.cs             |   2 +-
+ LiteDB/Engine/Disk/DurableLogs.cs             |  49 +++---
+ LiteDB/Engine/WriteFailure.cs                 |  27 +---
+ docs/decisions/durability-policy.md           |  22 +--
+ 10 files changed, 336 insertions(+), 81 deletions(-)
+
+diff --git a/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+index 8e959b5a9..590c0a68d 100644
+--- a/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
++++ b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+@@ -85,6 +85,54 @@ namespace LiteDB.Tests.Regressions
+             finally { NativeFileSync.SimulateErrno = null; }
+         }
+ 
++        /// <summary>
++        /// Another engine (another connection or process) recovers the failed commit from the files,
++        /// whole, and a partial checkpoint (a reader holds an older snapshot) copies its pages into the
++        /// data file without changing the log's length or salt. The reopened engine then must not mix
++        /// the data file's copy of the failed commit with a log bounded before it: its view is one
++        /// state of the database, here the files'. Review finding B1.
++        /// </summary>
++        [Theory]
++        [InlineData("y")] // the failed commit supersedes an acknowledged commit's page: nothing is retired
++        [InlineData("z")] // it supersedes that commit's confirmation frame
++        [InlineData(null)] // it touches no page that has a version in the WAL
++        public void Reopen_after_another_engine_checkpointed_the_failed_commit_shows_one_state(string touched)
++        {
++            using var file = new TempFile();
++            var logName = Path.GetFullPath(FileHelper.GetLogFile(file.Filename));
++            var fail = false;
++            NativeFileSync.SimulateErrno = path => fail && Path.GetFullPath(path) == logName ? EIO : 0;
++            try
++            {
++                using var a = new LiteDatabase(file.Filename);
++                a.CheckpointSize = 0;
++                a.GetCollection("x").Insert(new BsonDocument { ["_id"] = 1 });
++                a.GetCollection("y").Insert(new BsonDocument { ["_id"] = 1, ["v"] = "a" });
++                a.GetCollection("z").Insert(new BsonDocument { ["_id"] = 1, ["v"] = "a" });
++                a.Checkpoint();
++                a.BeginTrans();
++                a.GetCollection("y").Update(new BsonDocument { ["_id"] = 1, ["v"] = "b" });
++                a.GetCollection("z").Update(new BsonDocument { ["_id"] = 1, ["v"] = "b" });
++                a.Commit();
++                fail = true;
++                a.BeginTrans();
++                a.GetCollection("x").Insert(new BsonDocument { ["_id"] = 2 });
++                if (touched != null) a.GetCollection(touched).Update(new BsonDocument { ["_id"] = 1, ["v"] = "c" });
++                Action commit = () => a.Commit();
++                commit.Should().Throw<IOException>();
++                fail = false;
++
++                using (var b = new LiteEngine(new EngineSettings { Filename = file.Filename, SharedReaderVersions = () => new[] { int.MaxValue } }))
++                    b.Checkpoint();
++
++                var x = a.GetCollection("x").FindAll().Select(d => d["_id"].AsInt32).OrderBy(i => i).ToArray();
++                var value = a.GetCollection(touched ?? "y").FindById(1)["v"].AsString;
++                x.Should().Equal(new[] { 1, 2 }, "another engine built on the failed commit: the files win, whole");
++                value.Should().Be(touched == null ? "b" : "c");
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++        }
++
+         /// <summary>A commit refused before its first frame is marked as not committed.</summary>
+         [Fact]
+         public void Commit_refused_before_it_writes_is_marked_not_committed()
+diff --git a/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs b/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+index 6e3a10ea9..03a162d19 100644
+--- a/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
++++ b/LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+@@ -184,6 +184,63 @@ namespace LiteDB.Tests.Regressions
+             File.ReadAllBytes(logName).Should().Equal(log);
+         }
+ 
++        /// <summary>
++        /// Frame 0 of the log never reached the device while later frames did: no header frame can be
++        /// read, but the log holds WAL frames, so the empty data file is not initialized over them.
++        /// The same for an encrypted log opened without its password. Review finding B2.
++        /// </summary>
++        [Theory]
++        [InlineData(false)]
++        [InlineData(true)]
++        public void Log_whose_header_frame_cannot_be_read_is_never_initialized_over(bool encryptedWithoutPassword)
++        {
++            using var file = new TempFile();
++            var logName = FileHelper.GetLogFile(file.Filename);
++            var password = encryptedWithoutPassword ? ";Password=secret" : "";
++            using (var db = new LiteDatabase($"Filename={file.Filename};Durable Commits=false{password}"))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 12).Select(Row));
++            }
++            File.WriteAllBytes(file.Filename, new byte[0]);
++            var log = File.ReadAllBytes(logName);
++            if (!encryptedWithoutPassword) Array.Clear(log, 0, WalChecksum.FrameSize); // frame 0 never written back
++            File.WriteAllBytes(logName, log);
++
++            Action open = () => new LiteDatabase(file.Filename).Dispose();
++            open.Should().Throw<LiteException>().WithMessage("*log file holds WAL frames*");
++            new FileInfo(file.Filename).Length.Should().Be(0, "the refused open writes nothing");
++            File.ReadAllBytes(logName).Should().Equal(log);
++
++            if (encryptedWithoutPassword)
++            {
++                using var db = new LiteDatabase($"Filename={file.Filename}{password}");
++                db.GetCollection("rows").Count().Should().Be(12, "with its password the header is restored");
++            }
++        }
++
++        /// <summary>
++        /// An encrypted data file whose header page was never written back reads as zeros through its
++        /// encryption (a zero block decrypts to zeros), which the header frame completes.
++        /// </summary>
++        [Fact]
++        public void Encrypted_header_page_never_written_back_is_restored()
++        {
++            using var file = new TempFile();
++            var connection = $"Filename={file.Filename};Password=secret;Durable Commits=false";
++            using (var db = new LiteDatabase(connection))
++            {
++                db.CheckpointSize = 0;
++                db.GetCollection("rows").Insert(Enumerable.Range(1, 12).Select(Row));
++            }
++            var data = File.ReadAllBytes(file.Filename);
++            Array.Clear(data, PAGE_SIZE, PAGE_SIZE); // the header page, after the encryption preamble
++            File.WriteAllBytes(file.Filename, data);
++
++            using var reopened = new LiteDatabase(connection);
++            reopened.GetCollection("rows").Count().Should().Be(12);
++        }
++
+         [Fact]
+         public void Encrypted_data_file_left_empty_is_restored_from_its_log()
+         {
+diff --git a/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs b/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
+index 3227638de..0fed1e845 100644
+--- a/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
++++ b/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
+@@ -1,51 +1,139 @@
+ using System;
++using System.Collections.Generic;
++using System.IO;
+ using System.Linq;
++using System.Security.Cryptography;
+ using static LiteDB.Constants;
+ 
+ namespace LiteDB.Engine
+ {
++    /// <summary>
++    /// Decision 13: a WAL batch failed, maybe after its frames reached the operating system (its caller
++    /// got "outcome unknown"). What was acknowledged before it (the WAL's logical end then), and the
++    /// files as the failure left them: the raw log from that end on, its salt, the data file's length,
++    /// its header, and its copy of every page the failed transaction wrote (its safepoints included).
++    /// Another connection or process can build on the failed commit, from the files, without changing
++    /// the log's length or salt: its recovery takes the commit whole, and a partial checkpoint copies
++    /// its pages into the data file. A read-only reopen replays only up to the acknowledged end while
++    /// every one of these still matches; otherwise the files win, whole.
++    /// </summary>
++    internal sealed class AcknowledgedLog
++    {
++        internal long End;
++        internal long RawLength;
++        internal byte[] Salt;
++        internal byte[] LogTail;
++        internal uint[] PageIDs;
++        internal long DataLength;
++        internal byte[] DataPages;
++    }
++
+     internal partial class DiskService
+     {
+-        /// <summary>
+-        /// Decision 13: a WAL batch failed, maybe after its frames reached the operating system (its
+-        /// caller got "outcome unknown"). Mark the failure with the WAL's end before the batch and the
+-        /// raw log as the failure leaves it, so the read-only engine that replaces this one replays
+-        /// only commits acknowledged before it (<see cref="BoundLogToAcknowledged"/>).
+-        /// Caller holds the log writer lock.
+-        /// </summary>
+-        private T WithAcknowledgedLog<T>(T error, long acknowledgedEnd) where T : Exception
++        /// <summary>The record of <see cref="AcknowledgedLog"/>, or null (the files decide). Caller holds the log writer lock.</summary>
++        private AcknowledgedLog AcknowledgedLogAt(long end, IReadOnlyDictionary<uint, PagePosition> transactionPages, List<uint> batchPages)
+         {
+-            if (!ChecksumsEnabled || _volatileLog || !_writer.IsValueCreated) return error;
++            if (!ChecksumsEnabled || _volatileLog || !_writer.IsValueCreated) return null;
+             try
+             {
+-                error.Data[WriteFailure.AcknowledgedRawKey] = ((ChecksummedWalStream)_writer.Value).RawStream.Length;
+-                error.Data[WriteFailure.AcknowledgedSaltKey] = (byte[])_checksums.Salt.Clone();
+-                error.Data[WriteFailure.AcknowledgedEndKey] = acknowledgedEnd;
++                var pages = batchPages.Concat(transactionPages?.Keys ?? Enumerable.Empty<uint>()).Distinct().OrderBy(x => x).ToArray();
++                var record = new AcknowledgedLog { End = end, Salt = (byte[])_checksums.Salt.Clone(), PageIDs = pages };
++                // A reader of its own: reading through the writer would move an encrypted writer's position.
++                var reader = (ChecksummedWalStream)_logPool.Rent();
++                try
++                {
++                    record.RawLength = reader.RawStream.Length;
++                    record.LogTail = HashLogTail(reader.RawStream, end);
++                }
++                finally { _logPool.Return(reader); }
++                (record.DataLength, record.DataPages) = this.HashDataPages(pages);
++                return record;
+             }
+             catch (Exception)
+             {
+-                // The log cannot even report its length: the files decide at the reopen.
++                // The files cannot even be read back: the reopen shows what they hold.
++                return null;
+             }
+-            return error;
+         }
+ 
+         /// <summary>
+-        /// A read-only reopen after a failed WAL batch (decision 13) replays the WAL only up to the end
+-        /// acknowledged before the failure, so this process never shows a transaction its caller saw
+-        /// fail. Only while the log is exactly as the failure left it (same salt, same raw length):
+-        /// if anything wrote to it since (another process committing on top of the failed batch), the
+-        /// files win. A later writable open lets the device decide, as recovery always does.
++        /// The read-only engine that replaces a failed one, or a shared connection's later read-only
++        /// engine, replays the WAL only up to what was acknowledged before the failure, while the files
++        /// are exactly as the failure left them (<see cref="AcknowledgedLog"/>). A later open that
++        /// nothing bounds lets the device decide, as recovery always does.
+         /// </summary>
+         private void BoundLogToAcknowledged(WriteFailure failure)
+         {
+-            if (failure == null || failure.AcknowledgedLogEnd < 0 || !ChecksumsEnabled || !_logFactory.Exists()) return;
+-            if (failure.AcknowledgedLogEnd - PAGE_SIZE >= _logLength || !_checksums.Salt.SequenceEqual(failure.FailedSalt)) return;
+-            var reader = (ChecksummedWalStream)_logPool.Rent();
+-            try { if (reader.RawStream.Length != failure.FailedRawLogLength) return; }
+-            finally { _logPool.Return(reader); }
+-            LOG($"replaying the log up to the last commit acknowledged before the write failure ({failure.AcknowledgedLogEnd} bytes)", "RECOVERY");
+-            _logLength = failure.AcknowledgedLogEnd - PAGE_SIZE;
++            var record = failure?.Acknowledged;
++            if (record == null || !ChecksumsEnabled || !_logFactory.Exists()) return;
++            if (record.End - PAGE_SIZE >= _logLength || !_checksums.Salt.SequenceEqual(record.Salt)) return;
++            try
++            {
++                var reader = (ChecksummedWalStream)_logPool.Rent();
++                try
++                {
++                    if (reader.RawStream.Length != record.RawLength || !HashLogTail(reader.RawStream, record.End).SequenceEqual(record.LogTail)) return;
++                }
++                finally { _logPool.Return(reader); }
++                var (length, pages) = this.HashDataPages(record.PageIDs);
++                if (length != record.DataLength || !pages.SequenceEqual(record.DataPages)) return;
++            }
++            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
++            {
++                return;
++            }
++            LOG($"replaying the log up to the last commit acknowledged before the write failure ({record.End} bytes)", "RECOVERY");
++            _logLength = record.End - PAGE_SIZE;
+             _logTrailingLength = 0;
+         }
++
++        /// <summary>
++        /// The raw log from the acknowledged end's frame to its end, read as whole 16-byte blocks and
++        /// never past the end: an encrypted reader that hit its end reads nothing more, and pooled
++        /// readers are reused. A partial block at the end is covered by the length compared with it.
++        /// </summary>
++        private static byte[] HashLogTail(Stream raw, long end)
++        {
++            var from = Math.Min(end / PAGE_SIZE * WalChecksum.FrameSize, raw.Length);
++            var remaining = (raw.Length - from) / 16 * 16;
++            using (var sha = SHA256.Create())
++            {
++                var buffer = new byte[WalChecksum.FrameSize];
++                raw.Position = from;
++                while (remaining > 0)
++                {
++                    var count = (int)Math.Min(buffer.Length, remaining);
++                    raw.ReadRequired(buffer, 0, count);
++                    sha.TransformBlock(buffer, 0, count, null, 0);
++                    remaining -= count;
++                }
++                sha.TransformFinalBlock(buffer, 0, 0);
++                return sha.Hash;
++            }
++        }
++
++        private (long Length, byte[] Hash) HashDataPages(uint[] pages)
++        {
++            var stream = _dataPool.Rent();
++            try
++            {
++                var length = stream.Length;
++                using (var sha = SHA256.Create())
++                {
++                    var page = new byte[PAGE_SIZE];
++                    foreach (var id in new[] { 0u }.Concat(pages))
++                    {
++                        var position = (long)id * PAGE_SIZE;
++                        if (position + PAGE_SIZE > length) continue;
++                        stream.Position = position;
++                        stream.ReadRequired(page, 0, PAGE_SIZE);
++                        sha.TransformBlock(page, 0, PAGE_SIZE, null, 0);
++                    }
++                    sha.TransformFinalBlock(page, 0, 0);
++                    return (length, sha.Hash);
++                }
++            }
++            finally { _dataPool.Return(stream); }
++        }
+     }
+ }
+diff --git a/LiteDB/Engine/Disk/DiskService.DataWrites.cs b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+index 654a8877d..51a5276fc 100644
+--- a/LiteDB/Engine/Disk/DiskService.DataWrites.cs
++++ b/LiteDB/Engine/Disk/DiskService.DataWrites.cs
+@@ -88,12 +88,12 @@ namespace LiteDB.Engine
+         /// docs/decisions/durability-policy.md): the engine then reopens read-only on its next call and
+         /// refuses writes until the database is reopened.
+         /// </summary>
+-        internal void RecordWriteFailure(string operation, Exception error)
++        internal void RecordWriteFailure(string operation, Exception error, AcknowledgedLog acknowledged = null)
+         {
+             bool walKept;
+             try { walKept = this.GetFileLength(FileOrigin.Log) > 0; }
+             catch (Exception) { walKept = true; }
+-            _state.RecordWriteFailure(new WriteFailure(operation, error, walKept));
++            _state.RecordWriteFailure(new WriteFailure(operation, error, walKept, acknowledged));
+         }
+ 
+         /// <summary>For an exception filter: name the file of a failed write or sync, and let it pass.</summary>
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+index 710612aa4..1b280d9dd 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderFrame.cs
+@@ -65,15 +65,26 @@ namespace LiteDB.Engine
+         /// nothing else when the WAL started, or refuse the open, changing neither file. A WAL without
+         /// a header frame holds no commit of this version, and the database is new as before.
+         /// </summary>
+-        private bool RestoreDataFileFromLog(long dataLength)
++        private bool RestoreDataFileFromLog(long dataLength, bool encrypted)
+         {
+             if (!_logFactory.Exists()) return false;
+-            var exists = _dataFactory.Exists();
++            // A caller's stream exists, also when empty.
++            var exists = !(_dataFactory is FileStreamFactory) || _dataFactory.Exists();
+             // A read-only open of a missing file reports the path error as before.
+             if (_readOnly && !exists) return false;
+             var header = this.ReadLogHeaderFrame();
+-            if (header == null) return false;
+             var state = !exists ? "missing" : dataLength == 0 ? "empty" : "shorter than its header page";
++            if (header == null)
++            {
++                // No readable header frame (torn, never written back, or an encrypted log opened without
++                // its password), but frames of a WAL: never initialize over them either.
++                if (this.LogHoldsFrames(encrypted))
++                    throw new LiteException(LiteException.INVALID_DATABASE, $"Cannot open this database: its data file is {state}, " +
++                        "while its log file holds WAL frames this open cannot read without the data file's header (the log's " +
++                        "header frame is missing or damaged, or the log is encrypted and needs the password). Restore the " +
++                        "data file or open it with its password, or move the log file aside to create a new database.");
++                return false;
++            }
+             if (exists && dataLength > 0 && !HeaderFrame.Completes(this.ReadDataPrefix(dataLength), header)) return false;
+             if (!exists || !HeaderFrame.Fits(header, 0))
+                 throw new LiteException(LiteException.INVALID_DATABASE, $"Cannot open this database: its data file is {state}, " +
+@@ -122,6 +133,49 @@ namespace LiteDB.Engine
+             });
+         }
+ 
++        /// <summary>
++        /// Whether the log holds a WAL frame (checked by its own trailer, <see cref="WalChecksum.IsFrame"/>),
++        /// or, opened without a password, starts like an encrypted file. A log with neither holds no commit.
++        /// </summary>
++        private bool LogHoldsFrames(bool encrypted)
++        {
++            if (!_logFactory.Exists()) return false;
++            var reader = (ChecksummedWalStream)_logPool.Rent();
++            try
++            {
++                var raw = reader.RawStream;
++                var frame = new byte[WalChecksum.FrameSize];
++                if (!encrypted && LooksEncrypted(raw)) return true;
++                for (long position = 0; (position / PAGE_SIZE + 1) * WalChecksum.FrameSize <= raw.Length; position += PAGE_SIZE)
++                {
++                    raw.Position = position / PAGE_SIZE * WalChecksum.FrameSize;
++                    raw.ReadRequired(frame, 0, frame.Length);
++                    if (WalChecksum.IsFrame(frame, position)) return true;
++                }
++                return false;
++            }
++            finally { _logPool.Return(reader); }
++        }
++
++        /// <summary>
++        /// An encryption preamble, read without the password: the marker 1, the salt, zeros, the
++        /// password check at <see cref="AesPreamble.CHECK_START"/>, and zeros to the end of the page. A
++        /// legacy (v5) WAL page starts with its page ID and does not look like this.
++        /// </summary>
++        private static bool LooksEncrypted(Stream raw)
++        {
++            if (raw.Length < PAGE_SIZE) return false;
++            var page = new byte[PAGE_SIZE];
++            raw.Position = 0;
++            raw.ReadRequired(page, 0, PAGE_SIZE);
++            const int saltEnd = 1 + ENCRYPTION_SALT_SIZE, checkEnd = AesPreamble.CHECK_START + AesPreamble.CHECK_SIZE;
++            if (page[0] != 1) return false;
++            for (var i = saltEnd; i < AesPreamble.CHECK_START; i++) if (page[i] != 0) return false;
++            for (var i = checkEnd; i < PAGE_SIZE; i++) if (page[i] != 0) return false;
++            for (var i = AesPreamble.CHECK_START; i < checkEnd; i++) if (page[i] != 0) return true;
++            return false;
++        }
++
+         private byte[] ReadDataPrefix(long dataLength)
+         {
+             var bytes = new byte[dataLength];
+diff --git a/LiteDB/Engine/Disk/DiskService.WalWrite.cs b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+index 0c612a575..eaae0aaf1 100644
+--- a/LiteDB/Engine/Disk/DiskService.WalWrite.cs
++++ b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+@@ -45,6 +45,7 @@ namespace LiteDB.Engine
+                 // The end of what earlier batches acknowledged: a read-only reopen after this batch
+                 // failed replays only up to it (decision 13).
+                 var acknowledgedEnd = Interlocked.Read(ref _logLength) + PAGE_SIZE;
++                var batchPages = new List<uint>();
+                 var uncertain = false;
+                 try
+                 {
+@@ -105,6 +106,7 @@ namespace LiteDB.Engine
+                                     page.Write(false, BasePage.P_IS_CONFIRMED);
+                                 }
+ 
++                                batchPages.Add(page.ReadUInt32(BasePage.P_PAGE_ID));
+                                 this.WriteLogPage(stream, page, written, transactionPages,
+                                     ref transactionAnchored, first && rebase,
+                                     ref count, ref hasConfirmation, ref reusePublished, ref uncertain);
+@@ -149,7 +151,8 @@ namespace LiteDB.Engine
+                     flushFailure = ex as IOException ?? new IOException("WAL frame write failed.", ex);
+                     // A frame may have reached the log whole although its write threw.
+                     flushFailure.Data[CommitOutcomeDataKey] = UnknownOutcome;
+-                    this.RecordWriteFailure("A WAL write", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
++                    this.RecordWriteFailure("A WAL write", WriteFailure.InFile(flushFailure, FileOrigin.Log),
++                        this.AcknowledgedLogAt(acknowledgedEnd, transactionPages, batchPages));
+                     ownsFailure = _state.BeginStop(flushFailure);
+                 }
+                 catch (IOException ex) when (!ex.Data.Contains(CommitOutcomeDataKey))
+@@ -179,7 +182,8 @@ namespace LiteDB.Engine
+                         // partial checkpoint owns it and waits for this monitor.
+                         flushFailure = ex as IOException ?? new IOException("WAL durable flush failed.", ex);
+                         flushFailure.Data[CommitOutcomeDataKey] = UnknownOutcome;
+-                        this.RecordWriteFailure("A commit's log flush", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
++                        this.RecordWriteFailure("A commit's log flush", WriteFailure.InFile(flushFailure, FileOrigin.Log),
++                            this.AcknowledgedLogAt(acknowledgedEnd, transactionPages, batchPages));
+                         ownsFailure = _state.BeginStop(flushFailure);
+                     }
+                 }
+diff --git a/LiteDB/Engine/Disk/DiskService.cs b/LiteDB/Engine/Disk/DiskService.cs
+index 6464e01b4..5719efe21 100644
+--- a/LiteDB/Engine/Disk/DiskService.cs
++++ b/LiteDB/Engine/Disk/DiskService.cs
+@@ -71,7 +71,7 @@ namespace LiteDB.Engine
+ 
+                 var dataLength = _dataFactory.GetLength();
+                 // Decision 11: never initialize over the WAL of a database whose data file lost its header.
+-                if (dataLength < PAGE_SIZE && this.RestoreDataFileFromLog(dataLength)) dataLength = _dataFactory.GetLength();
++                if (dataLength < PAGE_SIZE && this.RestoreDataFileFromLog(dataLength, settings.Password != null)) dataLength = _dataFactory.GetLength();
+                 var isNew = dataLength == 0L;
+ 
+                 if (isNew)
+diff --git a/LiteDB/Engine/Disk/DurableLogs.cs b/LiteDB/Engine/Disk/DurableLogs.cs
+index 71b77b87b..e77bf0a88 100644
+--- a/LiteDB/Engine/Disk/DurableLogs.cs
++++ b/LiteDB/Engine/Disk/DurableLogs.cs
+@@ -1,5 +1,6 @@
+ using System;
+ using System.Collections.Generic;
++using System.Linq;
+ using System.Runtime.InteropServices;
+ 
+ namespace LiteDB.Engine
+@@ -17,31 +18,41 @@ namespace LiteDB.Engine
+         private static readonly HashSet<string> _paths = new HashSet<string>(
+             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+ 
+-        // Recording order: past the capacity the oldest path is forgotten, never one just proven.
+-        private static readonly Queue<string> _order = new Queue<string>();
++        // Recording order: past the capacity the oldest path is forgotten, never one just proven. Each
++        // entry carries the record it was queued for, so an entry a Forget and a later Record left behind
++        // is skipped instead of evicting the newer record.
++        private static readonly Queue<KeyValuePair<string, long>> _order = new Queue<KeyValuePair<string, long>>();
++        private static readonly Dictionary<string, long> _records = new Dictionary<string, long>(
++            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
++        private static long _next;
+ 
+         internal static void Record(string path)
+         {
+             lock (_paths)
+             {
+                 if (!_paths.Add(path)) return;
+-                _order.Enqueue(path);
+-                // Forgotten paths stay queued until they reach the front; skip them there.
+-                while (_paths.Count > Capacity || (_order.Count > 0 && !_paths.Contains(_order.Peek())))
+-                    _paths.Remove(_order.Dequeue());
+-                if (_order.Count > 4 * Capacity) Compact();
++                var record = ++_next;
++                _records[path] = record;
++                _order.Enqueue(new KeyValuePair<string, long>(path, record));
++                while (_order.Count > 0 && (_paths.Count > Capacity || !IsLive(_order.Peek())))
++                {
++                    var oldest = _order.Dequeue();
++                    if (!IsLive(oldest)) continue;
++                    _paths.Remove(oldest.Key);
++                    _records.Remove(oldest.Key);
++                }
++                // Skipped entries behind a live front: drop them before they pile up.
++                if (_order.Count > 4 * Capacity)
++                {
++                    var live = _order.Where(IsLive).ToList();
++                    _order.Clear();
++                    foreach (var entry in live) _order.Enqueue(entry);
++                }
+             }
+         }
+ 
+-        // Forget and re-record can leave stale queue entries behind the front: drop them.
+-        private static void Compact()
+-        {
+-            var live = new List<string>(_order);
+-            _order.Clear();
+-            var seen = new HashSet<string>(_paths.Comparer);
+-            foreach (var path in live)
+-                if (_paths.Contains(path) && seen.Add(path)) _order.Enqueue(path);
+-        }
++        private static bool IsLive(KeyValuePair<string, long> entry) =>
++            _records.TryGetValue(entry.Key, out var record) && record == entry.Value;
+ 
+         internal static bool Contains(string path)
+         {
+@@ -51,7 +62,11 @@ namespace LiteDB.Engine
+         internal static void Forget(string path)
+         {
+             if (path == null) return;
+-            lock (_paths) _paths.Remove(path);
++            lock (_paths)
++            {
++                _paths.Remove(path);
++                _records.Remove(path);
++            }
+         }
+     }
+ }
+diff --git a/LiteDB/Engine/WriteFailure.cs b/LiteDB/Engine/WriteFailure.cs
+index c72453e15..fda9e2567 100644
+--- a/LiteDB/Engine/WriteFailure.cs
++++ b/LiteDB/Engine/WriteFailure.cs
+@@ -12,7 +12,7 @@ namespace LiteDB.Engine
+         /// <summary>Exception.Data key: the file ("data" or "log") whose write or sync failed.</summary>
+         internal const string FileDataKey = "LiteDB.FailedFile";
+ 
+-        internal WriteFailure(string operation, Exception error, bool walKept)
++        internal WriteFailure(string operation, Exception error, bool walKept, AcknowledgedLog acknowledged = null)
+         {
+             this.File = error.Data[FileDataKey] as string;
+             this.Cause = error;
+@@ -20,30 +20,15 @@ namespace LiteDB.Engine
+             this.Error = error.Message;
+             this.Time = DateTime.UtcNow;
+             this.WalKept = walKept;
+-            if (error.Data[AcknowledgedEndKey] is long end && error.Data[AcknowledgedRawKey] is long raw && error.Data[AcknowledgedSaltKey] is byte[] salt)
+-            {
+-                this.AcknowledgedLogEnd = end;
+-                this.FailedRawLogLength = raw;
+-                this.FailedSalt = salt;
+-            }
++            this.Acknowledged = acknowledged;
+         }
+ 
+-        // Exception.Data keys (serializable values on every target) that bound the read-only reopen (decision 13).
+-        internal const string AcknowledgedEndKey = "LiteDB.AcknowledgedLogEnd";
+-        internal const string AcknowledgedRawKey = "LiteDB.FailedRawLogLength";
+-        internal const string AcknowledgedSaltKey = "LiteDB.FailedLogSalt";
+-
+         /// <summary>
+-        /// Decision 13: the WAL's logical end after the last batch acknowledged before a failed WAL
+-        /// batch, -1 when the failure was not one. With <see cref="FailedRawLogLength"/> and
+-        /// <see cref="FailedSalt"/>, the raw log as the failure left it: a read-only reopen replays only
+-        /// up to this end while the log is still exactly so (DiskService.BoundLogToAcknowledged).
++        /// Decision 13: after a failed WAL batch, what was acknowledged before it and the files as the
++        /// failure left them; a read-only reopen replays only that while the files are still so. Null
++        /// for every other failure.
+         /// </summary>
+-        internal long AcknowledgedLogEnd { get; } = -1;
+-
+-        internal long FailedRawLogLength { get; }
+-
+-        internal byte[] FailedSalt { get; }
++        internal AcknowledgedLog Acknowledged { get; }
+ 
+         /// <summary>"data", "log", or null when the failure did not say.</summary>
+         internal string File { get; }
+diff --git a/docs/decisions/durability-policy.md b/docs/decisions/durability-policy.md
+index c7168f17c..2edee4b67 100644
+--- a/docs/decisions/durability-policy.md
++++ b/docs/decisions/durability-policy.md
+@@ -189,15 +189,19 @@ until the owner confirms them.
+    A header with other bytes (a drive defect) fails the open as before, instead of taking a copy that
+    may be older. The header frame must not name pages the data file lost (its `LastPageID` must fit the
+    file); an empty data file beside a WAL whose header frame names pages, and a missing data file
+-   beside a WAL, refuse the open and change neither file. An encrypted data file whose header page was
+-   never written back (its bytes zeros, which decrypt to other bytes) is not restored and fails the
+-   open; an empty encrypted data file is restored. A header frame whose write fails is truncated like a
+-   failed append.
+-10. **Which reopens are bounded (13).** A failed WAL write and a failed commit log flush carry the end of
+-   the WAL before their batch; the read-only engine that replaces the failed one, and a shared
+-   connection's later read-only engines (its read snapshots included), replay up to it while the raw
+-   log has the length and salt the failure left. Other failures (a checkpoint, a promotion) wrote no
+-   commit and are not bounded.
++   beside a WAL, refuse the open and change neither file, and so does a log whose header frame cannot be
++   read (torn, never written back, or encrypted and opened without its password) while it holds WAL
++   frames. An encrypted data file whose header page was never written back reads as zeros through its
++   encryption and is restored like a plain one; an empty encrypted data file is restored too. A header
++   frame whose write fails is truncated like a failed append.
++10. **Which reopens are bounded (13).** A failed WAL write and a failed commit log flush record the end of
++   the WAL before their batch and the files as the failure left them: the raw log from that end on,
++   its salt, the data file's length and header, and its copy of every page the failed transaction
++   wrote. The read-only engine that replaces the failed one, and a shared connection's later read-only
++   engines (its read snapshots included), replay up to that end only while all of these still match:
++   another connection or process can recover the failed commit and checkpoint it into the data file
++   without changing the log's length or salt, and a view bounded then would mix the two. Otherwise the
++   files win, whole. Other failures (a checkpoint, a promotion) wrote no commit and are not bounded.
+ 11. **The data barrier (14)** runs before an engine's first durable commit, skipped when the data file
+    is not a file, when this engine already synced it, and, in a shared connection, after the
+    connection's first barrier or once it found the data file cannot sync. A real I/O error fails that
+-- 
+2.43.0
+

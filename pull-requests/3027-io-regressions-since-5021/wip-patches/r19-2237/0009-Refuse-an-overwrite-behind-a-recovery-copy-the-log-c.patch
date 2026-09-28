@@ -1,0 +1,179 @@
+From 042db3fa8efb49df5040a31fee678daf944ecf8b Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 22:21:14 +0000
+Subject: [PATCH 09/12] Refuse an overwrite behind a recovery copy the log
+ cannot sync, in both modes
+
+A checkpoint's backfill, a format promotion, a conversion and the
+invalid-state mark overwrite the data file behind a header journal and
+WAL. With durable commits=false, a log that answered "cannot sync" (#2242)
+let them proceed with that redo in the OS cache only, so a power loss mid
+overwrite tore the data file (external review, point 1; decision D: the
+strict rule protects the data file's integrity, not only recent commits).
+The journal's barriers now refuse before the journal is written: a
+checkpoint writes nothing and keeps the WAL (returning quietly, decision
+5), a promotion or conversion is refused with the files unchanged. The WAL
+limit holds while the log is known not to sync: no checkpoint can drain
+the WAL then. With durable commits the barrier already threw.
+
+Tests that pinned the old write-order behaviour are updated separately.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ LiteDB/Engine/Disk/DiskService.Checksums.cs   |  1 +
+ .../Engine/Disk/DiskService.DurableFlush.cs   | 14 ++++----
+ .../Engine/Disk/DiskService.HeaderJournal.cs  |  7 +++-
+ .../Disk/DiskService.OverwriteBarrier.cs      | 36 +++++++++++++++++++
+ LiteDB/Engine/LiteEngine.WalLimit.cs          |  3 +-
+ .../Services/WalIndexService.Checkpoint.cs    |  3 +-
+ 6 files changed, 55 insertions(+), 9 deletions(-)
+ create mode 100644 LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs
+
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index 41ba8513a..03cfc56d6 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -82,6 +82,7 @@ namespace LiteDB.Engine
+             this.SyncDataFile();
+             if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedDataConversion();
+             SyncLogBarrier(log);
++            this.RequireLogSynced("a conversion");
+             HeaderJournal.BackupLegacyHeader(log, buffer.Array, SyncLogBarrier);
+             BeginHeaderJournal(buffer.Array, conversion: true);
+             buffer[HeaderPage.P_FILE_VERSION] = HeaderPage.CHECKSUM_FILE_VERSION;
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index 2ede172a0..8be7efd80 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -195,18 +195,20 @@ namespace LiteDB.Engine
+         /// Sync the log first, so that a power loss during the checkpoint can still be redone from it.
+         /// Caller holds the exclusive database lock.
+         /// </summary>
+-        internal void SyncLogBeforeCheckpoint()
++        internal bool SyncLogBeforeCheckpoint()
+         {
+-            if (_readOnly) return;
++            if (_readOnly) return true;
+ 
+             var stream = _writer.Value;
+ 
+             lock (stream)
+             {
+-                // Sync both the header recovery copy and preceding WAL before
+-                // overwriting data. A failed sync stops checkpoint before any data
+-                // overwrite; storage that cannot sync at all proceeds degraded (#2242).
+-                this.PrepareCheckpointHeader();
++                // Sync both the header recovery copy and preceding WAL before overwriting data. A
++                // failed sync stops the checkpoint before any data overwrite; a log that cannot sync
++                // (#2242) refuses it before the journal is written: false, nothing written, WAL kept.
++                try { this.PrepareCheckpointHeader(); }
++                catch (IOException ex) when (IsLogCannotBackOverwrite(ex) && _checksums.JournalBytes == 0) { return false; }
++                return true;
+             }
+         }
+ 
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index 4d7374f83..30b3e88ff 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -13,10 +13,11 @@ namespace LiteDB.Engine
+             // Every caller overwrites existing data or its sole header. Commit
+             // fallback may lose recent transactions, but a failed sync must never
+             // let an in-place overwrite proceed without durable recovery information.
+-            // Storage that cannot sync at all proceeds in write order (#2242).
++            // A log that cannot sync (#2242) refuses the overwrite, in both modes.
+             if (_checksums.JournalBytes != 0)
+             {
+                 SyncLogBarrier(_writer.Value);
++                this.RequireLogSynced("an overwrite of the data file");
+                 return;
+             }
+             var log = ((ChecksummedWalStream)_writer.Value).RawStream;
+@@ -29,9 +30,13 @@ namespace LiteDB.Engine
+                 // only in cache when its own write reached the device.
+                 SyncLogBarrier(log);
+             }
++            else SyncLogBarrier(log);
++            // Before the journal: a refusal leaves no footer that would block the WAL.
++            this.RequireLogSynced("an overwrite of the data file");
+             HeaderJournal.Write(log, header, conversion, _checksums, promotion, SyncLogBarrier);
+             _checksums.JournalBytes = HeaderJournal.Size;
+             SyncLogBarrier(log);
++            this.RequireLogSynced("an overwrite of the data file");
+             SyncLogDirectory();
+         }
+ 
+diff --git a/LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs b/LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs
+new file mode 100644
+index 000000000..222ceb080
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs
+@@ -0,0 +1,36 @@
++using System.IO;
++
++namespace LiteDB.Engine
++{
++    internal partial class DiskService
++    {
++        /// <summary>Exception.Data key: an in-place overwrite refused because the log cannot sync.</summary>
++        internal const string LogCannotBackOverwriteDataKey = "LiteDB.LogCannotBackOverwrite";
++
++        /// <summary>
++        /// The log answered "cannot sync" (#2242) at some sync of this engine: a checkpoint, promotion or
++        /// conversion writes nothing, and the WAL limit holds (a checkpoint cannot drain the WAL).
++        /// </summary>
++        internal bool LogKnownUnsyncable => _logFlushDegraded && !_volatileLog;
++
++        /// <summary>
++        /// An in-place overwrite (a checkpoint's backfill, a format promotion, a conversion, the
++        /// invalid-state mark) needs its recovery information on the device first, in both commit
++        /// modes: durable commits=false gives up recent commits, never the data file's integrity
++        /// (decisions 1 and D; SQLite's synchronous=NORMAL keeps its checkpoint barriers too). The
++        /// latest log barrier answered "cannot sync": refuse before the overwrite and keep the WAL.
++        /// With durable commits the barrier itself already threw. Caller holds the log writer lock.
++        /// </summary>
++        private void RequireLogSynced(string operation)
++        {
++            if (_logBarrierSynced || _volatileLog) return;
++            var error = new IOException($"The log file cannot sync to the device (#2242): {operation} writes nothing " +
++                "behind a recovery copy that is only in the operating system's cache. The log file is kept; " +
++                "its commits stay readable, and a checkpoint drains it once the log file syncs.");
++            error.Data[LogCannotBackOverwriteDataKey] = true;
++            throw UnsyncedStorage(WriteFailure.InFile(error, FileOrigin.Log));
++        }
++
++        internal static bool IsLogCannotBackOverwrite(System.Exception error) => error.Data.Contains(LogCannotBackOverwriteDataKey);
++    }
++}
+diff --git a/LiteDB/Engine/LiteEngine.WalLimit.cs b/LiteDB/Engine/LiteEngine.WalLimit.cs
+index c8a205134..de7c11f98 100644
+--- a/LiteDB/Engine/LiteEngine.WalLimit.cs
++++ b/LiteDB/Engine/LiteEngine.WalLimit.cs
+@@ -13,7 +13,8 @@ namespace LiteDB.Engine
+         private void RequireWalBelowLimit()
+         {
+             var log = _disk.GetFileLength(FileOrigin.Log);
+-            if (log <= _settings.WalLimit || _disk.DataSyncConfirmed || _disk.DataFileSyncs()) return;
++            // Only a WAL a checkpoint can drain may pass the limit: its data file syncs, and its log too.
++            if (log <= _settings.WalLimit || (!_disk.LogKnownUnsyncable && (_disk.DataSyncConfirmed || _disk.DataFileSyncs()))) return;
+             throw new IOException(
+                 $"Cannot modify this database now: its log file ({log / (1024 * 1024)} MB) passed the WAL limit " +
+                 $"({_settings.WalLimit / (1024 * 1024)} MB) while the data file cannot sync to the device (#2242), so no " +
+diff --git a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+index 7bb634c7e..596cc14d1 100644
+--- a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
++++ b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+@@ -188,7 +188,8 @@ namespace LiteDB.Engine
+                 // WAL must be durable before its pages can reach the data file.
+                 // The data flush completes before truncation can become durable.
+                 var retirement = _disk.PrepareRetirement(obsolete);
+-                _disk.SyncLogBeforeCheckpoint();
++                // A log that cannot sync backs no overwrite (decision D): write nothing, keep the WAL.
++                if (!_disk.SyncLogBeforeCheckpoint()) return 0;
+                 _disk.WriteDataDisk(_disk.ReadCheckpointPages(pages));
+                 _backfillVersion = target;
+ 
+-- 
+2.43.0
+
