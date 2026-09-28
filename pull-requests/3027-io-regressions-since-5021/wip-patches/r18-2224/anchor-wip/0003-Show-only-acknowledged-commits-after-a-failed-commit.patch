@@ -1,0 +1,436 @@
+From 3b23fa59cb6f4239de7df8a5acee6829e8085ac9 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 21:54:20 +0000
+Subject: [PATCH 03/11] Show only acknowledged commits after a failed commit's
+ reopen (decision 13)
+
+A WAL batch that fails, maybe after its frames reached the operating
+system ("outcome unknown"), records where the WAL ended before it and the
+raw log as the failure left it. The read-only engine that replaces the
+failed one, and a shared connection's later read-only engines, replay the
+WAL only up to that end while the log is still exactly so: this process
+never shows a transaction its caller saw fail. If anything wrote to the
+log since (another connection committing on top), the files win; a later
+open lets the device decide, as recovery always does.
+
+Tests that read the failed commit in the same process now expect what was
+acknowledged, and check that a later engine shows the commit whose frames
+reached the files.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Internals/CheckpointDurability_Tests.cs   |  8 +-
+ .../Internals/SharedDurability_Tests.cs       | 11 ++-
+ LiteDB.Tests/Internals/WalDurability_Tests.cs | 19 ++--
+ .../Issue2818_DurableCommits_Tests.LogSync.cs |  5 +-
+ .../Issues/Issue2818_FlushFallback_Tests.cs   |  9 +-
+ .../Regressions/AcknowledgedReopen_Tests.cs   | 93 +++++++++++++++++++
+ .../Disk/DiskService.AcknowledgedLog.cs       | 51 ++++++++++
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs    |  7 +-
+ LiteDB/Engine/Disk/DiskService.cs             |  2 +
+ LiteDB/Engine/WriteFailure.cs                 | 23 +++++
+ 10 files changed, 205 insertions(+), 23 deletions(-)
+ create mode 100644 LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+ create mode 100644 LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
+
+diff --git a/LiteDB.Tests/Internals/CheckpointDurability_Tests.cs b/LiteDB.Tests/Internals/CheckpointDurability_Tests.cs
+index 6ee1c840d..27d5dc4f4 100644
+--- a/LiteDB.Tests/Internals/CheckpointDurability_Tests.cs
++++ b/LiteDB.Tests/Internals/CheckpointDurability_Tests.cs
+@@ -223,9 +223,9 @@ namespace LiteDB.Internals
+         /// With durable commits (the default) the same storage fails loudly (decision 3): the log was
+         /// proven by earlier commits, so the commit whose own sync answers "cannot sync" has written its
+         /// frames and throws with an unknown outcome (implementation note 4) instead of being
+-        /// acknowledged. No checkpoint follows; the engine keeps reading the files as they are, records
+-        /// the failure and refuses the next write (decision 6). A process crash keeps the commit (its
+-        /// frames reached the OS), a power loss keeps exactly the earlier state.
++        /// acknowledged. No checkpoint follows; the engine keeps reading what was acknowledged (decision
++        /// 13), records the failure and refuses the next write (decision 6). A process crash keeps the
++        /// commit (its frames reached the OS), a power loss keeps exactly the earlier state.
+         /// </summary>
+         [Theory]
+         [InlineData(null)]
+@@ -255,7 +255,7 @@ namespace LiteDB.Internals
+                 log.RejectedSyncs.Should().Be(1);
+                 data.ToArray().Should().Equal(originalData);
+ 
+-                rows.FindAll().Should().BeEquivalentTo(Documents(1), "its frames reached the operating system");
++                rows.FindAll().Should().BeEquivalentTo(Documents(0), "its caller saw it fail: the reopen shows only what was acknowledged");
+                 var reason = WriteFailureAssert.Recorded(db, "A commit's log flush", "log", WriteFailureAssert.OutcomeUnknown, walKept: true);
+                 var wal = log.ToArray();
+                 WriteFailureAssert.Refused(() => rows.Update(Documents(2)), reason);
+diff --git a/LiteDB.Tests/Internals/SharedDurability_Tests.cs b/LiteDB.Tests/Internals/SharedDurability_Tests.cs
+index b970c7352..6ad4293c2 100644
+--- a/LiteDB.Tests/Internals/SharedDurability_Tests.cs
++++ b/LiteDB.Tests/Internals/SharedDurability_Tests.cs
+@@ -58,14 +58,15 @@ namespace LiteDB.Internals
+         /// with durable commits (the default) it is not acknowledged (decision 3). Its frames reached
+         /// the operating system, so its error says the outcome is unknown (implementation note 4). The
+         /// connection keeps the failure across its short-lived engines (decision 6, proposed default
+-        /// C): every later operation opens read-only, reads return the files as they are, $database
+-        /// reports the failure, and the next write throws with it before it asks the storage anything.
+-        /// A new connection starts fresh.
++        /// C): every later operation opens read-only, reads return what was acknowledged before the
++        /// failure (decision 13: the caller saw this commit fail), $database reports the failure, and
++        /// the next write throws with it before it asks the storage anything. A new connection starts
++        /// fresh and lets the files decide: the commit's frames reached them.
+         /// </summary>
+         [Theory]
+         [InlineData(null)]
+         [InlineData("secret")]
+-        public void UnsupportedSync_FailsTheCommitAndStaysVisibleAfterSharedEngineReopens(string password)
++        public void UnsupportedSync_FailsTheCommitAndItsConnectionShowsOnlyAcknowledgedCommits(string password)
+         {
+             using var file = new TempFile();
+             using var data = new SyncFile(file.Filename);
+@@ -97,7 +98,7 @@ namespace LiteDB.Internals
+             }
+             log.RejectedSyncs.Should().Be(1);
+ 
+-            rows.FindAll().Select(x => x["value"].AsString).Should().Equal(new[] { "after" }, "its frames reached the operating system");
++            rows.FindAll().Select(x => x["value"].AsString).Should().Equal(new[] { "before" }, "the caller saw the update fail");
+             var reason = WriteFailureAssert.Recorded(db, "A commit's log flush", "log", WriteFailureAssert.OutcomeUnknown, walKept: true);
+             IsDurable(db).Should().BeFalse("reopening for diagnostics must retain the weaker guarantee");
+             var syncs = log.DurableSyncs;
+diff --git a/LiteDB.Tests/Internals/WalDurability_Tests.cs b/LiteDB.Tests/Internals/WalDurability_Tests.cs
+index 506f3a95b..4f0091d28 100644
+--- a/LiteDB.Tests/Internals/WalDurability_Tests.cs
++++ b/LiteDB.Tests/Internals/WalDurability_Tests.cs
+@@ -124,11 +124,12 @@ namespace LiteDB.Tests.Internals
+         /// <summary>
+         /// A commit whose durable log flush fails throws that failure, whatever its type, and stops the
+         /// engine. The failure is recorded (decision 6 of docs/decisions/durability-policy.md): the next
+-        /// call reopens the engine read-only from the files as they are. It reads them (the failed
+-        /// commit's frames reached the file before its flush failed, so its outcome is unknown to the
+-        /// caller and the files hold it), Rollback completes the explicit transaction the failure ended,
+-        /// and every later write throws with the record before it changes the files; the read-only
+-        /// engine never flushes.
++        /// call reopens the engine read-only from the files as they are, up to the last commit
++        /// acknowledged before the failure (decision 13): the failed commit's frames reached the file
++        /// before its flush failed, so its outcome is unknown to the caller, but this engine never
++        /// shows it; a later open lets the files decide. Rollback completes the explicit transaction
++        /// the failure ended, and every later write throws with the record before it changes the
++        /// files; the read-only engine never flushes.
+         /// </summary>
+         [Theory]
+         [InlineData(false, false, null)]
+@@ -165,7 +166,8 @@ namespace LiteDB.Tests.Internals
+             var flushes = log.DurableFlushes;
+             var files = (Data: SyncPowerLossModel.ReadShared(dataFile.Filename), Log: SyncPowerLossModel.ReadShared(logFile.Filename));
+             db.Rollback().Should().Be(explicitTransaction, "Rollback completes the explicit transaction the failure ended");
+-            rows.FindAll().Should().BeEquivalentTo(new[] { new BsonDocument { ["_id"] = 1, ["value"] = "after" } });
++            rows.FindAll().Should().BeEquivalentTo(new[] { new BsonDocument { ["_id"] = 1, ["value"] = "before" } },
++                "the caller saw this commit fail: the reopened engine shows only what was acknowledged");
+             var record = ReadOnlyAfterWriteFailure.AssertReported(db, "A commit's log flush", "log",
+                 nonIoFailure ? "WAL durable flush failed." : "flush failed");
+             Action nextWrite = () => rows.Insert(new BsonDocument { ["_id"] = 2 });
+@@ -182,6 +184,11 @@ namespace LiteDB.Tests.Internals
+             SyncPowerLossModel.ReadShared(logFile.Filename).Should().Equal(files.Log);
+             log.DurableFlushes.Should().Be(flushes, "the read-only engine never flushes");
+             log.Failure = null;
++
++            engine.Dispose();
++            using var later = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, Password = password, ReadOnly = true });
++            later.Query("rows", Query.All()).ToList().Single()["value"].AsString.Should().Be("after",
++                "a later open lets the files decide: the failed commit's frames reached them");
+         }
+ 
+         [Theory]
+diff --git a/LiteDB.Tests/Issues/Issue2818_DurableCommits_Tests.LogSync.cs b/LiteDB.Tests/Issues/Issue2818_DurableCommits_Tests.LogSync.cs
+index b548d8f4a..e4068f4cf 100644
+--- a/LiteDB.Tests/Issues/Issue2818_DurableCommits_Tests.LogSync.cs
++++ b/LiteDB.Tests/Issues/Issue2818_DurableCommits_Tests.LogSync.cs
+@@ -136,7 +136,8 @@ namespace LiteDB.Tests.Issues
+         /// With durable commits a log that stops syncing after the engine's proof fails the commit that
+         /// finds out, with an unknown outcome (implementation note 4): its frames reached the operating
+         /// system. The automatic checkpoint behind it never runs, so the data file stays byte for byte;
+-        /// reads return the files as they are, and the next write throws with the recorded failure.
++        /// reads return what was acknowledged (decision 13), and the next write throws with the recorded
++        /// failure. A later engine lets the files decide: the commit's frames reached them.
+         /// </summary>
+         [Fact]
+         public void Commit_on_a_log_that_stops_syncing_fails_before_its_automatic_checkpoint_with_durable_commits()
+@@ -157,7 +158,7 @@ namespace LiteDB.Tests.Issues
+                 insert.Should().Throw<IOException>().WithMessage(WriteFailureAssert.OutcomeUnknown + "*");
+                 ReadShared(storage.Data.Name).Should().Equal(data, "the automatic checkpoint did not run");
+ 
+-                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(-1, 0, 1);
++                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(new[] { -1, 0 }, "the reopen shows only what was acknowledged");
+                 var reason = WriteFailureAssert.Recorded(db, "A commit's log flush", "log", WriteFailureAssert.OutcomeUnknown, walKept: true);
+                 WriteFailureAssert.Refused(() => rows.Insert(new BsonDocument { ["_id"] = 2 }), reason);
+                 ReadShared(storage.Data.Name).Should().Equal(data);
+diff --git a/LiteDB.Tests/Issues/Issue2818_FlushFallback_Tests.cs b/LiteDB.Tests/Issues/Issue2818_FlushFallback_Tests.cs
+index 51f4cabee..a1d3a08ef 100644
+--- a/LiteDB.Tests/Issues/Issue2818_FlushFallback_Tests.cs
++++ b/LiteDB.Tests/Issues/Issue2818_FlushFallback_Tests.cs
+@@ -142,8 +142,9 @@ namespace LiteDB.Tests.Issues
+         /// engine's first commit fails the commit that finds out (decision 3, implementation note 4):
+         /// its frames already reached the operating system, so its error says the outcome is unknown.
+         /// It used to be acknowledged, degraded to a plain flush. The failure is sticky (decision 6): no
+-        /// further device sync is asked, reads return the files as they are (the commit's frames reached
+-        /// the OS, so it is there), $database reports it, and the next write throws with it.
++        /// further device sync is asked, reads return what was acknowledged (decision 13: the commit's
++        /// frames reached the OS, but its caller saw it fail), $database reports it, and the next write
++        /// throws with it. A later engine lets the files decide: the commit's frames are there.
+         /// </summary>
+         [Theory]
+         [MemberData(nameof(UnsupportedDurableFlush))]
+@@ -174,7 +175,7 @@ namespace LiteDB.Tests.Issues
+                     .Which.InnerException.Should().BeSameAs(rejection);
+                 log.DurableFlushes.Should().Be(durableBefore + 1);
+ 
+-                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(0, 1, 2);
++                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(new[] { 0, 1 }, "the reopen shows only what was acknowledged");
+                 var reason = WriteFailureAssert.Recorded(db, "A commit's log flush", "log", WriteFailureAssert.OutcomeUnknown, walKept: true);
+                 var dataNow = TempFile.ReadAllBytesShared(dataFile.Filename);
+                 var logNow = TempFile.ReadAllBytesShared(logFile.Filename);
+@@ -182,7 +183,7 @@ namespace LiteDB.Tests.Issues
+                 log.DurableFlushes.Should().Be(durableBefore + 1, "a refused write asks the storage nothing");
+                 TempFile.ReadAllBytesShared(dataFile.Filename).Should().Equal(dataNow);
+                 TempFile.ReadAllBytesShared(logFile.Filename).Should().Equal(logNow);
+-                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(0, 1, 2);
++                rows.FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).Should().Equal(0, 1);
+             }
+ 
+             log.DurableFailure = null;
+diff --git a/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+new file mode 100644
+index 000000000..514d59a2d
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+@@ -0,0 +1,93 @@
++#if DEBUG || TESTING
++using System;
++using System.IO;
++using System.Linq;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Tests.Issues;
++using Xunit;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>
++    /// Decision 13 of docs/decisions/durability-policy.md: when a commit's log sync fails after its
++    /// frames reached the operating system, its caller gets "outcome unknown", and the read-only
++    /// engine that replaces the failed one replays the WAL only up to the last commit acknowledged
++    /// before it: this process never shows a transaction its caller saw fail. A later open lets the
++    /// files decide. If anything committed on top of the failed batch meanwhile, the files win.
++    /// </summary>
++    [Trait("Category", "IoSafety")]
++    [Collection(NativeFileSyncCollection.Name)]
++    public class AcknowledgedReopen_Tests
++    {
++        private const int EIO = 5;
++
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public void Reopen_after_a_failed_log_sync_shows_only_acknowledged_commits(string password)
++        {
++            using var file = new TempFile();
++            var connection = password == null ? file.Filename : $"Filename={file.Filename};Password={password}";
++            var logName = Path.GetFullPath(FileHelper.GetLogFile(file.Filename));
++            var fail = false;
++            NativeFileSync.SimulateErrno = path => fail && Path.GetFullPath(path) == logName ? EIO : 0;
++            try
++            {
++                using (var db = new LiteDatabase(connection))
++                {
++                    db.CheckpointSize = 0;
++                    var rows = db.GetCollection("rows");
++                    rows.Insert(new[] { Row(1), Row(2) });
++                    rows.Insert(Row(3));
++                    fail = true;
++                    Action insert = () => rows.Insert(Row(4));
++                    insert.Should().Throw<IOException>();
++                    fail = false;
++
++                    Ids(db).Should().Equal(new[] { 1, 2, 3 }, "the caller saw commit 4 fail");
++                    var info = db.Execute("SELECT $ FROM $database").Single();
++                    info["readOnly"].AsBoolean.Should().BeTrue();
++                    info["writeFailure"]["operation"].AsString.Should().Be("A commit's log flush");
++                }
++                using var later = new LiteDatabase(connection);
++                Ids(later).Should().Equal(new[] { 1, 2, 3, 4 }, "a later open lets the files decide: commit 4's frames reached them");
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++        }
++
++        [Fact]
++        public void Commits_of_another_connection_on_top_of_the_failed_batch_let_the_files_win()
++        {
++            using var file = new TempFile();
++            var logName = Path.GetFullPath(FileHelper.GetLogFile(file.Filename));
++            var fail = false;
++            NativeFileSync.SimulateErrno = path => fail && Path.GetFullPath(path) == logName ? EIO : 0;
++            try
++            {
++                using var a = new LiteDatabase($"Filename={file.Filename};Connection=shared");
++                using var b = new LiteDatabase($"Filename={file.Filename};Connection=shared");
++                a.CheckpointSize = 0;
++                b.CheckpointSize = 0;
++                a.GetCollection("rows").Insert(Row(1));
++                fail = true;
++                Action insert = () => a.GetCollection("rows").Insert(Row(2));
++                insert.Should().Throw<IOException>();
++                fail = false;
++                Ids(a).Should().Equal(new[] { 1 }, "the caller saw commit 2 fail");
++
++                // Another connection recovers the WAL as the files hold it, and commits on top of it.
++                b.GetCollection("rows").Insert(Row(3));
++                Ids(b).Should().Equal(1, 2, 3);
++                Ids(a).Should().Equal(new[] { 1, 2, 3 }, "the WAL grew past the failed batch: the files win");
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++        }
++
++        private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id };
++
++        private static int[] Ids(LiteDatabase db) =>
++            db.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32).OrderBy(x => x).ToArray();
++    }
++}
++#endif
+diff --git a/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs b/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
+new file mode 100644
+index 000000000..3227638de
+--- /dev/null
++++ b/LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs
+@@ -0,0 +1,51 @@
++using System;
++using System.Linq;
++using static LiteDB.Constants;
++
++namespace LiteDB.Engine
++{
++    internal partial class DiskService
++    {
++        /// <summary>
++        /// Decision 13: a WAL batch failed, maybe after its frames reached the operating system (its
++        /// caller got "outcome unknown"). Mark the failure with the WAL's end before the batch and the
++        /// raw log as the failure leaves it, so the read-only engine that replaces this one replays
++        /// only commits acknowledged before it (<see cref="BoundLogToAcknowledged"/>).
++        /// Caller holds the log writer lock.
++        /// </summary>
++        private T WithAcknowledgedLog<T>(T error, long acknowledgedEnd) where T : Exception
++        {
++            if (!ChecksumsEnabled || _volatileLog || !_writer.IsValueCreated) return error;
++            try
++            {
++                error.Data[WriteFailure.AcknowledgedRawKey] = ((ChecksummedWalStream)_writer.Value).RawStream.Length;
++                error.Data[WriteFailure.AcknowledgedSaltKey] = (byte[])_checksums.Salt.Clone();
++                error.Data[WriteFailure.AcknowledgedEndKey] = acknowledgedEnd;
++            }
++            catch (Exception)
++            {
++                // The log cannot even report its length: the files decide at the reopen.
++            }
++            return error;
++        }
++
++        /// <summary>
++        /// A read-only reopen after a failed WAL batch (decision 13) replays the WAL only up to the end
++        /// acknowledged before the failure, so this process never shows a transaction its caller saw
++        /// fail. Only while the log is exactly as the failure left it (same salt, same raw length):
++        /// if anything wrote to it since (another process committing on top of the failed batch), the
++        /// files win. A later writable open lets the device decide, as recovery always does.
++        /// </summary>
++        private void BoundLogToAcknowledged(WriteFailure failure)
++        {
++            if (failure == null || failure.AcknowledgedLogEnd < 0 || !ChecksumsEnabled || !_logFactory.Exists()) return;
++            if (failure.AcknowledgedLogEnd - PAGE_SIZE >= _logLength || !_checksums.Salt.SequenceEqual(failure.FailedSalt)) return;
++            var reader = (ChecksummedWalStream)_logPool.Rent();
++            try { if (reader.RawStream.Length != failure.FailedRawLogLength) return; }
++            finally { _logPool.Return(reader); }
++            LOG($"replaying the log up to the last commit acknowledged before the write failure ({failure.AcknowledgedLogEnd} bytes)", "RECOVERY");
++            _logLength = failure.AcknowledgedLogEnd - PAGE_SIZE;
++            _logTrailingLength = 0;
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Disk/DiskService.WalWrite.cs b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+index fa1fd1a5f..4a2f0b6a3 100644
+--- a/LiteDB/Engine/Disk/DiskService.WalWrite.cs
++++ b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+@@ -42,6 +42,9 @@ namespace LiteDB.Engine
+             lock (stream)
+             {
+                 _state.Validate();
++                // The end of what earlier batches acknowledged: a read-only reopen after this batch
++                // failed replays only up to it (decision 13).
++                var acknowledgedEnd = Interlocked.Read(ref _logLength) + PAGE_SIZE;
+                 var uncertain = false;
+                 try
+                 {
+@@ -144,7 +147,7 @@ namespace LiteDB.Engine
+                     // frame. Whatever the exception type, stop before releasing the writer: no later
+                     // commit may be appended (and acknowledged) behind it.
+                     flushFailure = ex as IOException ?? new IOException("WAL frame write failed.", ex);
+-                    this.RecordWriteFailure("A WAL write", WriteFailure.InFile(flushFailure, FileOrigin.Log));
++                    this.RecordWriteFailure("A WAL write", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
+                     ownsFailure = _state.BeginStop(flushFailure);
+                 }
+ 
+@@ -166,7 +169,7 @@ namespace LiteDB.Engine
+                         // defer teardown: cleanup can need the WAL-index lock while a
+                         // partial checkpoint owns it and waits for this monitor.
+                         flushFailure = ex as IOException ?? new IOException("WAL durable flush failed.", ex);
+-                        this.RecordWriteFailure("A commit's log flush", WriteFailure.InFile(flushFailure, FileOrigin.Log));
++                        this.RecordWriteFailure("A commit's log flush", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
+                         ownsFailure = _state.BeginStop(flushFailure);
+                     }
+                 }
+diff --git a/LiteDB/Engine/Disk/DiskService.cs b/LiteDB/Engine/Disk/DiskService.cs
+index ff78f2a00..6464e01b4 100644
+--- a/LiteDB/Engine/Disk/DiskService.cs
++++ b/LiteDB/Engine/Disk/DiskService.cs
+@@ -119,6 +119,8 @@ namespace LiteDB.Engine
+                 {
+                     _logLength = -PAGE_SIZE;
+                 }
++                // A shared connection's read snapshots are read-only already: its record applies too.
++                if (settings.ReadOnly) this.BoundLogToAcknowledged(settings.WriteFailure ?? settings.SharedDurability?.WriteFailure);
+             }
+             catch
+             {
+diff --git a/LiteDB/Engine/WriteFailure.cs b/LiteDB/Engine/WriteFailure.cs
+index 0d11d92fb..c72453e15 100644
+--- a/LiteDB/Engine/WriteFailure.cs
++++ b/LiteDB/Engine/WriteFailure.cs
+@@ -20,8 +20,31 @@ namespace LiteDB.Engine
+             this.Error = error.Message;
+             this.Time = DateTime.UtcNow;
+             this.WalKept = walKept;
++            if (error.Data[AcknowledgedEndKey] is long end && error.Data[AcknowledgedRawKey] is long raw && error.Data[AcknowledgedSaltKey] is byte[] salt)
++            {
++                this.AcknowledgedLogEnd = end;
++                this.FailedRawLogLength = raw;
++                this.FailedSalt = salt;
++            }
+         }
+ 
++        // Exception.Data keys (serializable values on every target) that bound the read-only reopen (decision 13).
++        internal const string AcknowledgedEndKey = "LiteDB.AcknowledgedLogEnd";
++        internal const string AcknowledgedRawKey = "LiteDB.FailedRawLogLength";
++        internal const string AcknowledgedSaltKey = "LiteDB.FailedLogSalt";
++
++        /// <summary>
++        /// Decision 13: the WAL's logical end after the last batch acknowledged before a failed WAL
++        /// batch, -1 when the failure was not one. With <see cref="FailedRawLogLength"/> and
++        /// <see cref="FailedSalt"/>, the raw log as the failure left it: a read-only reopen replays only
++        /// up to this end while the log is still exactly so (DiskService.BoundLogToAcknowledged).
++        /// </summary>
++        internal long AcknowledgedLogEnd { get; } = -1;
++
++        internal long FailedRawLogLength { get; }
++
++        internal byte[] FailedSalt { get; }
++
+         /// <summary>"data", "log", or null when the failure did not say.</summary>
+         internal string File { get; }
+ 
+-- 
+2.43.0
+

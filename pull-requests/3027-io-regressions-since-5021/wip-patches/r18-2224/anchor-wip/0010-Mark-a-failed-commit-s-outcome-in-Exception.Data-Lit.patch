@@ -1,0 +1,124 @@
+From d84f5dd58ecad21169772511314307d18f2fcc3f Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 28 Sep 2026 22:23:13 +0000
+Subject: [PATCH 10/11] Mark a failed commit's outcome in
+ Exception.Data["LiteDB.CommitOutcome"]
+
+"NotCommitted" when no frame of it can be in the log (refused before its
+first frame, or a failed append that was truncated); "Unknown" when frames
+may have reached the log whole (a write that threw, a failed log sync
+after the confirmation). Applications that retry can tell the two apart
+without parsing messages; after "Unknown", a reopen may show the commit
+(decision 13 keeps this process's read-only view to what was
+acknowledged). External review, point 7.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+---
+ .../Regressions/AcknowledgedReopen_Tests.cs   | 23 ++++++++++++++++++-
+ .../Disk/DiskService.CommitDurability.cs      | 11 +++++++++
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs    | 10 ++++++++
+ 3 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+index 514d59a2d..8e959b5a9 100644
+--- a/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
++++ b/LiteDB.Tests/Regressions/AcknowledgedReopen_Tests.cs
+@@ -42,7 +42,8 @@ namespace LiteDB.Tests.Regressions
+                     rows.Insert(Row(3));
+                     fail = true;
+                     Action insert = () => rows.Insert(Row(4));
+-                    insert.Should().Throw<IOException>();
++                    insert.Should().Throw<IOException>().Which.Data["LiteDB.CommitOutcome"].Should().Be("Unknown",
++                        "the commit's frames reached the operating system before its sync failed");
+                     fail = false;
+ 
+                     Ids(db).Should().Equal(new[] { 1, 2, 3 }, "the caller saw commit 4 fail");
+@@ -84,6 +85,26 @@ namespace LiteDB.Tests.Regressions
+             finally { NativeFileSync.SimulateErrno = null; }
+         }
+ 
++        /// <summary>A commit refused before its first frame is marked as not committed.</summary>
++        [Fact]
++        public void Commit_refused_before_it_writes_is_marked_not_committed()
++        {
++            using var file = new TempFile();
++            var logName = Path.GetFullPath(FileHelper.GetLogFile(file.Filename));
++            using (var setup = new LiteDatabase(file.Filename)) setup.GetCollection("rows").Insert(Row(1));
++            DurableLogs.Forget(logName);
++            NativeFileSync.SimulateErrno = path => Path.GetFullPath(path) == logName ? 22 : 0;
++            try
++            {
++                using var db = new LiteDatabase(file.Filename);
++                Action insert = () => db.GetCollection("rows").Insert(Row(2));
++                insert.Should().Throw<IOException>().Which.Data["LiteDB.CommitOutcome"].Should().Be("NotCommitted");
++            }
++            finally { NativeFileSync.SimulateErrno = null; }
++            using var reopened = new LiteDatabase(file.Filename);
++            Ids(reopened).Should().Equal(1);
++        }
++
+         private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id };
+ 
+         private static int[] Ids(LiteDatabase db) =>
+diff --git a/LiteDB/Engine/Disk/DiskService.CommitDurability.cs b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+index dedb28d7b..ed7fcff8d 100644
+--- a/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
++++ b/LiteDB/Engine/Disk/DiskService.CommitDurability.cs
+@@ -50,11 +50,22 @@ namespace LiteDB.Engine
+             }
+             catch (IOException error)
+             {
++                error.Data[CommitOutcomeDataKey] = NotCommittedOutcome;
+                 this.RecordWriteFailure("A commit", error);
+                 throw;
+             }
+         }
+ 
++        /// <summary>
++        /// Exception.Data key on a failed commit or WAL batch: <see cref="NotCommittedOutcome"/> when no
++        /// frame of it can have reached the log, <see cref="UnknownOutcome"/> when frames may have (its
++        /// confirmation included): recovery may then show the commit after a reopen, so an application
++        /// that retries needs idempotent writes, or checks after reopening (decision 13).
++        /// </summary>
++        internal const string CommitOutcomeDataKey = "LiteDB.CommitOutcome";
++        internal const string NotCommittedOutcome = "NotCommitted";
++        internal const string UnknownOutcome = "Unknown";
++
+         /// <summary>
+         /// Decision 14: the header frame covers what the WAL depends on, not what it builds on. A WAL
+         /// holds changed pages only, so before an engine's first durable commit sync the data file
+diff --git a/LiteDB/Engine/Disk/DiskService.WalWrite.cs b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+index 4a2f0b6a3..0c612a575 100644
+--- a/LiteDB/Engine/Disk/DiskService.WalWrite.cs
++++ b/LiteDB/Engine/Disk/DiskService.WalWrite.cs
+@@ -147,9 +147,18 @@ namespace LiteDB.Engine
+                     // frame. Whatever the exception type, stop before releasing the writer: no later
+                     // commit may be appended (and acknowledged) behind it.
+                     flushFailure = ex as IOException ?? new IOException("WAL frame write failed.", ex);
++                    // A frame may have reached the log whole although its write threw.
++                    flushFailure.Data[CommitOutcomeDataKey] = UnknownOutcome;
+                     this.RecordWriteFailure("A WAL write", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
+                     ownsFailure = _state.BeginStop(flushFailure);
+                 }
++                catch (IOException ex) when (!ex.Data.Contains(CommitOutcomeDataKey))
++                {
++                    // Nothing torn stayed behind (a failed append was truncated): this batch's
++                    // confirmation is not in the log, so the commit is not there either.
++                    ex.Data[CommitOutcomeDataKey] = NotCommittedOutcome;
++                    throw;
++                }
+ 
+                 // A confirmation makes this WAL batch recoverable. Make all preceding
+                 // pages durable before WAL-index confirmation or acknowledging commit.
+@@ -169,6 +178,7 @@ namespace LiteDB.Engine
+                         // defer teardown: cleanup can need the WAL-index lock while a
+                         // partial checkpoint owns it and waits for this monitor.
+                         flushFailure = ex as IOException ?? new IOException("WAL durable flush failed.", ex);
++                        flushFailure.Data[CommitOutcomeDataKey] = UnknownOutcome;
+                         this.RecordWriteFailure("A commit's log flush", this.WithAcknowledgedLog(WriteFailure.InFile(flushFailure, FileOrigin.Log), acknowledgedEnd));
+                         ownsFailure = _state.BeginStop(flushFailure);
+                     }
+-- 
+2.43.0
+
