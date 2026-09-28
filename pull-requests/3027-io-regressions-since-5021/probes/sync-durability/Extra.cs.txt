@@ -1,0 +1,71 @@
+        /// <summary>
+        /// Behavioral kill for an unconditional header shortcut: a shared connection's later commit after
+        /// another connection left a rotated header in the OS cache only.
+        /// </summary>
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Shared_connection_proves_again_after_another_connection_left_its_header_unsynced(bool dataSyncsAgain)
+        {
+            using var file = new TempFile();
+            Setup(file.Filename);
+            using var power = new FilePowerLossModel(file.Filename);
+            using var engine = new SharedEngine(new EngineSettings { Filename = file.Filename });
+            using var db = new LiteDatabase(engine, disposeOnClose: false);
+            db.CheckpointSize = 0;
+            Update(db, 1);
+            DurableLogFlush(db).Should().BeTrue();
+
+            var settings = new EngineSettings { Filename = file.Filename };
+            settings.CheckpointStage = stage => { if (stage == "before-reclaim") power.DataFails = true; };
+            using (var otherEngine = new SharedEngine(settings))
+            using (var other = new LiteDatabase(otherEngine, disposeOnClose: false))
+            {
+                Update(other, 2);
+                other.Checkpoint();
+            }
+            power.DataFails = !dataSyncsAgain;
+            Update(db, 3);
+            var durable = DurableLogFlush(db);
+            durable.Should().Be(dataSyncsAgain);
+            var values = power.AfterPowerLoss(Values);
+            if (durable) values.Should().Equal(new[] { 3 }, "a commit reported durable survives the power loss");
+        }
+
+        /// <summary>The torn-tail finding without a crash: a rolled-back transaction's safepoint frames stay at the WAL tail.</summary>
+        [Fact]
+        public void Fresh_engine_open_discarding_a_rolled_back_tail_does_not_lose_commits_acknowledged_durable()
+        {
+            using var file = new TempFile();
+            Setup(file.Filename);
+            using var power = new BothFilesPowerModel(file.Filename);
+
+            using (var a = new LiteDatabase(file.Filename))
+            {
+                a.CheckpointSize = 0;
+                for (var value = 1; value <= 5; value++)
+                {
+                    Update(a, value);
+                    DurableLogFlush(a).Should().BeTrue();
+                }
+            }
+
+            power.DataFails = power.LogFails = true;
+            using (var b = new LiteDatabase(new LiteEngine(new EngineSettings { Filename = file.Filename, TransactionPageLimit = 1 })))
+            {
+                b.Checkpoint();
+                b.GetCollection("other").Insert(new BsonDocument { ["_id"] = 1 });
+                b.BeginTrans().Should().BeTrue();
+                Update(b, 99);
+                b.Rollback().Should().BeTrue();
+            }
+            var walBefore = new FileInfo(FileHelper.GetLogFile(file.Filename)).Length;
+
+            power.DataFails = power.LogFails = false;
+            using (var c = new LiteDatabase(file.Filename))
+            {
+                c.GetCollection("rows").Count().Should().Be(Rows);
+            }
+            new FileInfo(FileHelper.GetLogFile(file.Filename)).Length.Should().BeLessThan(walBefore, "the open discarded the rolled-back tail");
+            power.AfterPowerLoss(Values).Should().Equal(new[] { 5 }, "value 5 was acknowledged durable");
+        }

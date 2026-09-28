@@ -1,0 +1,29 @@
+Test run for $SCRATCH/fixwt/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$SCRATCH/fixwt/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.43]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:02.17]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:02.19]   Starting:    LiteDB.Tests
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Kept_wal_rationing_is_not_stale_after_another_connection_empties_the_wal [2 s]
+MEASURE P1 file-backed dataSyncsAgain=False: changed=0 durable=False
+MEASURE P1 file-backed dataSyncsAgain=True: changed=15 durable=True
+MEASURE slot reuse: data syncs=0 over 5 shared ops, reused frames=75
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Fresh_engine_open_repairing_a_torn_tail_does_not_lose_commits_acknowledged_durable [128 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.File_backed_independent_shared_connection_after_a_root_left_in_the_os_cache(dataSyncsAgain: False) [324 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.File_backed_independent_shared_connection_after_a_root_left_in_the_os_cache(dataSyncsAgain: True) [354 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Caller_streams_fresh_engine_after_a_salt_rotation_whose_data_sync_failed [61 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Shared_connection_proves_again_after_another_connection_left_its_header_unsynced(dataSyncsAgain: True) [158 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Shared_connection_proves_again_after_another_connection_left_its_header_unsynced(dataSyncsAgain: False) [180 ms]
+MEASURE direct: data=2 log=3 per request
+MEASURE direct checkpoint=0: data=0 log=1 per request
+MEASURE shared: data=0 log=1 per operation
+[xUnit.net 00:00:06.55]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Measure_slot_reuse_data_syncs_per_shared_operation [295 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Measure_syncs_per_request [220 ms]
+  Passed LiteDB.Tests.Regressions.ReviewFindings_Tests.Fresh_engine_checkpoint_does_not_make_an_unsynced_truncation_durable_before_its_backfill [56 ms]
+
+Test Run Successful.
+Total tests: 10
+     Passed: 10
+ Total time: 7.4140 Seconds

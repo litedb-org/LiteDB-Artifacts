@@ -1,0 +1,92 @@
+Test run for $SCRATCH/rv-fail6/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$SCRATCH/rv-fail6/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.21]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.40]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.41]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:02.26]     LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [FAIL]
+[xUnit.net 00:00:02.27]       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+[xUnit.net 00:00:02.27]       Stack Trace:
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.27]            at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.27]         $SCRATCH/rv-fail6/LiteDB.Tests/Regressions/ReviewEncryptedLogSync_Tests.cs(69,0): at LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(String password)
+[xUnit.net 00:00:02.27]            at InvokeStub_ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(Object, Span`1)
+[xUnit.net 00:00:02.27]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+PROBE writeback neither=False walBytes=671744 values=5
+PROBE writeback neither=True walBytes=0 values=0
+[xUnit.net 00:00:02.46]     LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(neither: True) [FAIL]
+[xUnit.net 00:00:02.46]       Expected values to be equal to {5}, but {0} differs at index 0.
+[xUnit.net 00:00:02.46]       Stack Trace:
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.46]            at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(T[] elements)
+[xUnit.net 00:00:02.46]         $SCRATCH/rv-fail6/LiteDB.Tests/Regressions/ReviewEncryptedLogSync_Tests.cs(161,0): at LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(Boolean neither)
+[xUnit.net 00:00:02.46]            at InvokeStub_ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(Object, Span`1)
+[xUnit.net 00:00:02.46]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+PROBE reopen password=secret failure=UnauthorizedAccessException: sync unsupported
+PROBE reopen password=none failure=: 
+[xUnit.net 00:00:02.75]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: null) [494 ms]
+  Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [269 ms]
+  Error Message:
+   Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+   at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(String password) in $SCRATCH/rv-fail6/LiteDB.Tests/Regressions/ReviewEncryptedLogSync_Tests.cs:line 69
+   at InvokeStub_ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(neither: False) [105 ms]
+  Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(neither: True) [77 ms]
+  Error Message:
+   Expected values to be equal to {5}, but {0} differs at index 0.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+   at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(T[] elements)
+   at LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(Boolean neither) in $SCRATCH/rv-fail6/LiteDB.Tests/Regressions/ReviewEncryptedLogSync_Tests.cs:line 161
+   at InvokeStub_ReviewEncryptedLogSync_Tests.Writeback_of_the_wal_ahead_of_the_backfill(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Refused_reopen_while_the_data_file_cannot_sync(password: "secret") [154 ms]
+  Passed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.Refused_reopen_while_the_data_file_cannot_sync(password: null) [122 ms]
+
+Test Run Failed.
+Total tests: 6
+     Passed: 4
+     Failed: 2
+ Total time: 3.4218 Seconds

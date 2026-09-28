@@ -1,0 +1,224 @@
+Test run for $TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.16]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.41]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.43]   Starting:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.T1_fallback_explicit_transactions_write_nothing(dataW: True, logW: False) [194 ms]
+  Standard Output Messages:
+ ro=True count=48
+ begin ok True
+ begin nested ok False
+ open cursor ok True
+ commit with cursor THROW LiteException: Current transaction contains open cursors. Close cursors before run Commit()
+ for update ok 48
+ sql for update ok 48
+ write in trans THROW IOException: Cannot modify a read-only database.
+ upsert in trans THROW IOException: Cannot modify a read-only database.
+ ensure existing index ok False
+ pragma THROW LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.
+ commit ok True
+ begin/for update/rollback ok True
+ sql begin/commit ok 0
+ threads ok 
+ count end ok 48
+ data changed=False log changed=False
+ data calls=0
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.T1_fallback_explicit_transactions_write_nothing(dataW: False, logW: True) [126 ms]
+  Standard Output Messages:
+ ro=True count=48
+ begin ok True
+ begin nested ok False
+ open cursor ok True
+ commit with cursor THROW LiteException: Current transaction contains open cursors. Close cursors before run Commit()
+ for update ok 48
+ sql for update ok 48
+ write in trans THROW IOException: Cannot modify a read-only database.
+ upsert in trans THROW IOException: Cannot modify a read-only database.
+ ensure existing index ok False
+ pragma THROW LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.
+ commit ok True
+ begin/for update/rollback ok True
+ sql begin/commit ok 0
+ threads ok 
+ count end ok 48
+ data changed=False log changed=False
+ data calls=0
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.T1_fallback_explicit_transactions_write_nothing(dataW: False, logW: False) [22 ms]
+  Standard Output Messages:
+ ro=True count=48
+ begin ok True
+ begin nested ok False
+ open cursor ok True
+ commit with cursor THROW LiteException: Current transaction contains open cursors. Close cursors before run Commit()
+ for update ok 48
+ sql for update ok 48
+ write in trans THROW IOException: Cannot modify a read-only database.
+ upsert in trans THROW IOException: Cannot modify a read-only database.
+ ensure existing index ok False
+ pragma THROW LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.
+ commit ok True
+ begin/for update/rollback ok True
+ sql begin/commit ok 0
+ threads ok 
+ count end ok 48
+ data changed=False log changed=False
+ data calls=0
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: True, logW: False) [195 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False log 0->0
+ data calls=0
+ log calls=1
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: False, logW: False) [51 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False log 0->0
+ data calls=0
+ log calls=1
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: False, logW: True) [24 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=True log 0->16384
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=2
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+    Write(16384)@0 <- HeaderJournal.Write <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W2_current_file_data_writable_log_readonly(withWal: False) [47 ms]
+  Standard Output Messages:
+ ro=False
+ begin ok True
+ noop delete ok 0
+ commit ok True
+ insert THROW NotSupportedException: probe: not writable
+ count after THROW LiteException: Engine closed after a transaction completion failure. Dispose and reopen the database before retrying. probe: not writable
+ checkpoint THROW LiteException: Engine closed after a transaction completion failure. Dispose and reopen the database before retrying. probe: not writable
+ data changed=False log changed=False
+ data calls=0
+ log calls=2
+    Write(8256)@0 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    SetLength(0) from 0 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W2_current_file_data_writable_log_readonly(withWal: True) [25 ms]
+  Standard Output Messages:
+ ro=False
+ begin ok True
+ noop delete ok 0
+ commit ok True
+ insert THROW NotSupportedException: probe: not writable
+ count after THROW LiteException: Engine closed after a transaction completion failure. Dispose and reopen the database before retrying. probe: not writable
+ checkpoint THROW LiteException: Engine closed after a transaction completion failure. Dispose and reopen the database before retrying. probe: not writable
+ data changed=False log changed=False
+ data calls=0
+ log calls=2
+    Write(8256)@140352 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    SetLength(147456) from 147456 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W4_v11_file_data_readonly_log_writable_compact_write(checkpointed: False) [18 ms]
+  Standard Output Messages:
+ file version=11
+ ro=False
+ insert ok 1000
+ count ok 71
+ data changed=False log changed=True log 147456->172032
+ data calls=0
+ log calls=4
+    Write(8256)@140352 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    Write(8256)@148608 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    Write(8256)@156864 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    SetLength(172032) from 165120 <- WalPadding.Pad <- DiskService.SyncLogBarrier <- DiskService.FlushLogToDisk <- DiskService.FlushConfirmedLog
+ reopen RO/RO: ro=False count=71
+ reopen writable: count=71
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W4_v11_file_data_readonly_log_writable_compact_write(checkpointed: True) [18 ms]
+  Standard Output Messages:
+ file version=11
+ ro=False
+ insert ok 1000
+ count ok 51
+ data changed=False log changed=True log 0->32768
+ data calls=0
+ log calls=4
+    Write(8256)@0 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    Write(8256)@8256 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    Write(8256)@16512 <- DiskService.WriteLogPage <- DiskService.WriteLogDisk <- DiskService.WriteLogDisk <- TransactionService.PersistDirtyPages
+    SetLength(32768) from 24768 <- WalPadding.Pad <- DiskService.SyncLogBarrier <- DiskService.FlushLogToDisk <- DiskService.FlushConfirmedLog
+ reopen RO/RO: ro=False count=51
+ reopen writable: count=51
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W1_current_file_data_readonly_log_writable [4 s]
+  Standard Output Messages:
+ ro=False
+ begin ok True
+ noop delete ok 0
+ commit ok True
+ log after no-op commit=0
+ begin ok True
+ rollback ok True
+ insert ok 1000
+ find ok {"_id":1000,"value":3}
+ big insert ok 2500
+ log after big insert=20955136 pages~2538
+ checkpoint THROW NotSupportedException: A stream of this database cannot be written, so its log cannot be checkpointed.
+ pragma checkpoint=1 ok 1
+ insert2 ok 1001
+ ensureIndex THROW LiteException: Index key must be less than 1023 bytes.
+ explicit trans write ok True
+ count ok 2552 idx ok 366
+ delete ok 366
+ rebuild ok 0
+ data changed=False
+ data calls=0
+ log length=30195712
+ reopen RO-data: ro=False count=2186 value3=0
+ reopen writable: count=2186
+ after checkpoint count=2186 idx p=2186
+
+
+[xUnit.net 00:00:07.43]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W3_current_file_data_readonly_no_log [153 ms]
+  Standard Output Messages:
+ ro=False
+ big insert ok 2500
+ count ok 2550
+ data changed=False
+ data calls=0
+
+
+
+Test Run Successful.
+Total tests: 12
+     Passed: 12
+ Total time: 8.0463 Seconds

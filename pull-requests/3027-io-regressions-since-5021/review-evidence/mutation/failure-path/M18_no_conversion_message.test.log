@@ -1,0 +1,27 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:07.31]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs [FAIL]
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs [74 ms]
+  Error Message:
+   Expected a <System.IO.IOException> to be thrown, but found <LiteDB.LiteException>:
+LiteDB.LiteException: Cannot convert this legacy database while another connection may still read its log file (a shared reader holds a snapshot, or the reader registry cannot be inspected). Close the other connections, or make the registry readable, and open it again.
+   at LiteDB.Engine.LiteEngine.MigrateIndexOrdering() in $SCRATCH/rv-sync/LiteDB/Engine/Engine/IndexMigration.cs:line 128
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync/LiteDB/Engine/LiteEngine.cs:line 225
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.<>c__DisplayClass4_0.<Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs>b__1() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 141
+   at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+   at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 142
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:    36, Skipped:     0, Total:    37, Duration: 8 s - LiteDB.Tests.dll (net10.0)

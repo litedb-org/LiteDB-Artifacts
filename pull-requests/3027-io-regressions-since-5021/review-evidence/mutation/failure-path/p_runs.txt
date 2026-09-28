@@ -1,0 +1,41 @@
+M0_none | ['Failed!  - Failed:     1, Passed:    43, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [70 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+P1_no_write_through | ['Failed!  - Failed:     9, Passed:    35, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [17 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "flush", ioFailure: False) [62 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: True) [5 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "buffered", ioFailure: False) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: False) [3 ms]
+    Failed LiteDB.Tests.Regressions.SharedBufferedLogStream_Tests.Reader_after_a_frame_write_writes_nothing_on(point: "wal-page-after-write", ioFailure: True) [30 ms]
+    Failed LiteDB.Tests.Regressions.SharedBufferedLogStream_Tests.Reader_after_a_frame_write_writes_nothing_on(point: "wal-confirmation-after-write", ioFailure: True) [13 ms]
+    Failed LiteDB.Tests.Regressions.SharedBufferedLogStream_Tests.Reader_after_a_frame_write_writes_nothing_on(point: "wal-confirmation-after-write", ioFailure: False) [13 ms]
+    Failed LiteDB.Tests.Regressions.SharedBufferedLogStream_Tests.Reader_after_a_frame_write_writes_nothing_on(point: "wal-page-after-write", ioFailure: False) [14 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected torn to be False because a frame is written on at the flush after its own write, but found True.
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected readerFailure to be <null> because nothing was held for the reader's seek to write on, but found System.IO.IOException: injected torn write
+       Expected readerFailure to be <null> because nothing was held for the reader's seek to write on, but found System.IO.IOException: injected torn write
+       Expected recovered.GetCollection("b").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 32 item(s) because every acknowledged commit survives (reader failure: InvalidOperationException), but {0}
+       Expected readerFailure to be <null> because nothing was held for the reader's seek to write on, but found System.InvalidOperationException: injected torn write
+P2_length_unlocked | ['Failed!  - Failed:     1, Passed:    43, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [21 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+P3_flush_unlocked | ['Failed!  - Failed:     1, Passed:    43, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [14 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+P4_no_final_batch_flush | ['Failed!  - Failed:     1, Passed:    43, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [27 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+P5_write_through_memory_too | ['Failed!  - Failed:     1, Passed:    43, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [18 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+N3_no_teardown_when_begun | ['Failed!  - Failed:     3, Passed:    41, Skipped:     0, Total:    44, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewBufferedRetry_Tests.Torn_data_page_retried_by_the_callers_buffered_stream(buffered: True, restorePosition: False) [23 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Failed_checkpoint_closes_the_engine(ioFailure: False) [71 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Failed_checkpoint_closes_the_engine(ioFailure: True) [7 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 188416.
+       Expected stages to be empty because the failed checkpoint closed the engine, but found at least one item {"before-commit-lock"}.
+       Expected stages to be empty because the failed checkpoint closed the engine, but found at least one item {"before-commit-lock"}.

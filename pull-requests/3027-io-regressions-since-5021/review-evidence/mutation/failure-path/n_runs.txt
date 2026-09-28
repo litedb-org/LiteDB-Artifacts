@@ -1,0 +1,84 @@
+M0_none | ['Passed!  - Failed:     0, Passed:    36, Skipped:     0, Total:    36, Duration: 991 ms - LiteDB.Tests.dll (net10.0)']
+N1_checkpoint_stop_after_release | ['Failed!  - Failed:     4, Passed:    32, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: False, ioFailure: False) [140 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: True, ioFailure: False) [41 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: True, ioFailure: True) [49 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: False, ioFailure: True) [55 ms]
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+N2_begun_without_beginstop | ['Failed!  - Failed:     4, Passed:    32, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: False, ioFailure: False) [108 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: True, ioFailure: False) [40 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: True, ioFailure: True) [43 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Commit_waiting_on_a_failed_retirement_record_write_is_refused(torn: False, ioFailure: True) [73 ms]
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+       Expected acknowledged to be False because the failed checkpoint stopped the engine before releasing the WAL writer, but found True.
+N3_no_teardown_when_begun | ['Passed!  - Failed:     0, Passed:    36, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+N4_rethrow_cleanup_error | ['Failed!  - Failed:     8, Passed:    28, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: True, ioFailure: False) [68 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: True, ioFailure: False) [5 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: False, ioFailure: True) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: True, ioFailure: True) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: False, ioFailure: True) [2 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: False, ioFailure: False) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: True, ioFailure: True) [2 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: False, ioFailure: False) [4 ms]
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+       Expected exception where x.ToString().Contains("injected torn frame write") because the failure reported is the write that tore the frame, not its failed cleanup, but the condition was not met by:
+N5_never_buffering | ['Failed!  - Failed:     3, Passed:    33, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "buffered", ioFailure: False) [92 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: False) [8 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "flush", ioFailure: False) [9 ms]
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+N6_reset_after_write_always | ['Failed!  - Failed:     1, Passed:    35, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "buffered", ioFailure: False) [71 ms]
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+N7_flush_failure_not_stopping | ['Failed!  - Failed:     1, Passed:    35, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "flush", ioFailure: False) [76 ms]
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+N8_truncation_always_clears | ['Failed!  - Failed:     1, Passed:    35, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: False) [98 ms]
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+N9_no_createsnapshot_check | ['Failed!  - Failed:     1, Passed:    35, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.FailedSafepointWrite_Tests.Transaction_whose_query_safepoint_failed_to_write_only_rolls_back(then: "read") [80 ms]
+       Expected exception message to match the equivalent of "*can only be rolled back*", but "page buffer ownership was transferred to disk" does not.
+N10_always_buffering | ['Failed!  - Failed:     2, Passed:    34, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Truncated_torn_append_is_rewritten_by_the_next_commit(frame: 2, completeFrame: False) [89 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Truncated_torn_append_is_rewritten_by_the_next_commit(frame: 2, completeFrame: True) [6 ms]
+       Expected a <System.InvalidOperationException> to be thrown because a non-I/O failure only rolls back, but found <System.IO.IOException>:
+       Expected a <System.InvalidOperationException> to be thrown because a non-I/O failure only rolls back, but found <System.IO.IOException>:
+N11_truncation_never_clears_buffering | ['Passed!  - Failed:     0, Passed:    36, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+N12_truncate_despite_journal | ['Failed!  - Failed:     2, Passed:    34, Skipped:     0, Total:    36, Duration: 998 ms - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Append_after_a_torn_checkpoint_header_keeps_the_journal(deferredStop: True, ioFailure: True) [11 ms]
+    Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Append_after_a_torn_checkpoint_header_keeps_the_journal(deferredStop: True, ioFailure: False) [6 ms]
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 0.
+       LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 0.
+N13_no_stop_in_writer | ['Failed!  - Failed:     8, Passed:    28, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "buffered", ioFailure: False) [72 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Buffering_log_stream_that_tears_an_earlier_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: False) [6 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: True, ioFailure: False) [8 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: True, ioFailure: False) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 2, completeFrame: False, ioFailure: False) [5 ms]
+    Failed LiteDB.Tests.Regressions.TornWalAppend_Tests.Failed_truncation_of_a_torn_append_stops_the_engine(frame: 1, completeFrame: False, ioFailure: False) [3 ms]
+    Failed LiteDB.Tests.Regressions.TornSlotRewrite_Tests.Failed_in_place_rewrite_stops_the_engine_and_keeps_every_acknowledged_commit [10 ms]
+    Failed LiteDB.Tests.Regressions.TornSlotRewrite_Tests.Commit_waiting_for_the_writer_during_a_failed_rewrite_is_never_acknowledged_and_lost [9 ms]
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected recovered.GetCollection("rows").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 22 item(s) because every acknowledged commit survives, the failed one is absent, but {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+       Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+       Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+       Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+       Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+       Expected a <System.IO.IOException> to be thrown, but found <System.UnauthorizedAccessException>:
+       Expected windowRan to be True because the commit ran after the failed write released the WAL writer, but found False.

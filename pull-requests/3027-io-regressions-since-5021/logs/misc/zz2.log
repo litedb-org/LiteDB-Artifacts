@@ -1,0 +1,40 @@
+Test run for $SCRATCH/fixwt/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:01:07.42]     LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(password: "secret", rejection: "version") [FAIL]
+[xUnit.net 00:01:07.43]     LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(password: null, rejection: "version") [FAIL]
+  Failed LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(password: "secret", rejection: "version") [49 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 138
+Actual:   103
+  Stack Trace:
+     at LiteDB.Tests.Engine.CompactPromotionRejection_Tests.<>c__DisplayClass0_0.<Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers>b__0(Byte[] data, Byte[] log) in $SCRATCH/fixwt/LiteDB.Tests/Engine/CompactPromotionRejection_Tests.cs:line 47
+   at LiteDB.Tests.Engine.PromotionPowerLossScenario.Run(String password, Boolean vector, String phase, Int32 occurrence, Int32 tornPrefix, String recoveryPhase, Boolean readOnly, Boolean damage, Int32 tornJournalPart, Boolean cachedJournal, Boolean tearRecovery, Boolean keepVectorJournal, Action`2 inspectFiles, Boolean shortJournal) in $SCRATCH/fixwt/LiteDB.Tests/Engine/PromotionPowerLossScenario.cs:line 132
+   at LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(String password, String rejection) in $SCRATCH/fixwt/LiteDB.Tests/Engine/CompactPromotionRejection_Tests.cs:line 26
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(password: null, rejection: "version") [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 138
+Actual:   103
+  Stack Trace:
+     at LiteDB.Tests.Engine.CompactPromotionRejection_Tests.<>c__DisplayClass0_0.<Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers>b__0(Byte[] data, Byte[] log) in $SCRATCH/fixwt/LiteDB.Tests/Engine/CompactPromotionRejection_Tests.cs:line 47
+   at LiteDB.Tests.Engine.PromotionPowerLossScenario.Run(String password, Boolean vector, String phase, Int32 occurrence, Int32 tornPrefix, String recoveryPhase, Boolean readOnly, Boolean damage, Int32 tornJournalPart, Boolean cachedJournal, Boolean tearRecovery, Boolean keepVectorJournal, Action`2 inspectFiles, Boolean shortJournal) in $SCRATCH/fixwt/LiteDB.Tests/Engine/PromotionPowerLossScenario.cs:line 132
+   at LiteDB.Tests.Engine.CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(String password, String rejection) in $SCRATCH/fixwt/LiteDB.Tests/Engine/CompactPromotionRejection_Tests.cs:line 26
+   at InvokeStub_CompactPromotionRejection_Tests.Damaged_journal_rejections_preserve_sources_and_valid_journal_still_recovers(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:02:11.01]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [127 ms]
+  Error Message:
+   Expected afterFirst to be 1 because the first operation proves the data file, but found 0 (difference of -1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header() in $SCRATCH/fixwt/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 113
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     3, Passed:  1002, Skipped:     0, Total:  1005, Duration: 3 m 4 s - LiteDB.Tests.dll (net10.0)

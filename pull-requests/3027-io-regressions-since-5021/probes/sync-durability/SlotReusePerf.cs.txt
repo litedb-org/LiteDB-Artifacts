@@ -1,0 +1,44 @@
+        /// <summary>Performance: data syncs per shared operation while retired slots are reused (healthy storage).</summary>
+        [Fact]
+        public void Measure_slot_reuse_data_syncs_per_shared_operation()
+        {
+            using var file = new TempFile();
+            Setup(file.Filename);
+            var logName = FileHelper.GetLogFile(file.Filename);
+            int data = 0;
+            var dataName = Path.GetFullPath(file.Filename);
+            NativeFileSync.SimulateErrno = path =>
+            {
+                if (string.Equals(Path.GetFullPath(path), dataName, StringComparison.OrdinalIgnoreCase)) Interlocked.Increment(ref data);
+                return 0;
+            };
+            try
+            {
+                using var engine = new SharedEngine(new EngineSettings { Filename = file.Filename });
+                using var db = new LiteDatabase(engine, disposeOnClose: false);
+                db.CheckpointSize = 0;
+                for (var value = 1; value <= 5; value++) Update(db, value);
+                using (var reader = engine.Query("rows", new Query()))
+                {
+                    reader.Read().Should().BeTrue();
+                    var t = new Thread(() =>
+                    {
+                        for (var value = 6; value <= 9; value++) Update(db, value);
+                        db.Checkpoint();
+                    });
+                    t.Start(); t.Join();
+                }
+                var before = File.ReadAllBytes(logName);
+                data = 0;
+                const int ops = 5;
+                for (var value = 10; value < 10 + ops; value++) Update(db, value);
+                var after = File.ReadAllBytes(logName);
+                var reused = Enumerable.Range(0, before.Length / WalChecksum.FrameSize).Count(frame =>
+                    !before.Skip(frame * WalChecksum.FrameSize).Take(WalChecksum.FrameSize)
+                        .SequenceEqual(after.Skip(frame * WalChecksum.FrameSize).Take(WalChecksum.FrameSize)));
+                Console.WriteLine($"MEASURE slot reuse: data syncs={data} over {ops} shared ops, reused frames={reused}");
+                reused.Should().BeGreaterThan(0);
+                data.Should().BeLessThan(ops, "healthy storage: the header shortcut should cover slot reuse too");
+            }
+            finally { NativeFileSync.SimulateErrno = null; }
+        }

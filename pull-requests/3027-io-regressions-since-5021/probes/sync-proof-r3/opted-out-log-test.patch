@@ -1,0 +1,20 @@
+diff --git a/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs b/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
+index 0b4a361eb..9850b36f2 100644
+--- a/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
++++ b/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs
+@@ -32,6 +32,7 @@ namespace LiteDB.Tests.Regressions
+         [InlineData("data-detected-earlier")]  // by a checkpoint before the reader
+         [InlineData("data-detected-by-partial")]
+         [InlineData("opted-out-commits")]      // DurableCommits=false: nothing synced before the checkpoint
++        [InlineData("opted-out-log")]          // same, only the WAL cannot sync: found only by the proof's log sync
+         [InlineData("directory")]              // the WAL's directory cannot be synced (EACCES)
+         [InlineData("opted-out-directory")]    // same, found only by the checkpoint's proof
+         public void Storage_that_cannot_sync_neither_retires_nor_reuses_wal_frames(string mode)
+@@ -46,6 +47,7 @@ namespace LiteDB.Tests.Regressions
+ 
+             if (mode.StartsWith("data")) NativeFileSync.SimulateErrno = path => path.EndsWith("-log.db", StringComparison.OrdinalIgnoreCase) ? 0 : 22;
+             if (mode == "opted-out-commits") NativeFileSync.SimulateErrno = _ => 22;
++            if (mode == "opted-out-log") NativeFileSync.SimulateErrno = path => path.EndsWith("-log.db", StringComparison.OrdinalIgnoreCase) ? 22 : 0;
+             if (mode.EndsWith("directory")) NativeFileSync.SimulateDirectoryErrno = _ => 13;
+             try
+             {

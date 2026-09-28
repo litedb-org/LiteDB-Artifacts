@@ -1,0 +1,17 @@
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index be00e4341..a24679044 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -91,6 +91,12 @@ namespace LiteDB.Engine
+                 var data = _dataPool.Writer.Value;
+                 if (_recoveredHeader != null)
+                 {
++                    // CANDIDATE FIX: the data proof before the first log sync must not make a torn primary durable.
++                    if (!_dataSyncProven)
++                    {
++                        data.Position = 0;
++                        data.Write(header, 0, header.Length);
++                    }
+                     // Make an OS-cached recovery copy durable before repairing its primary.
+                     SyncLogBarrier(((ChecksummedWalStream)_writer.Value).RawStream);
+                     SyncLogDirectory();

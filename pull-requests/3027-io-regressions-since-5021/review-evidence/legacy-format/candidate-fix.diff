@@ -1,0 +1,15 @@
+diff --git a/LiteDB/Engine/Services/WalIndexService.cs b/LiteDB/Engine/Services/WalIndexService.cs
+index 04c6e8a8e..33dffa697 100644
+--- a/LiteDB/Engine/Services/WalIndexService.cs
++++ b/LiteDB/Engine/Services/WalIndexService.cs
+@@ -259,6 +259,10 @@ namespace LiteDB.Engine
+                     // Their witnesses still confirm the surviving frames at the same
+                     // stable physical version as before reclamation.
+                     var version = checked((int)(current / PAGE_SIZE + 1));
++                    // A legacy commit that allocated pages confirms with its header, whose LastPageID
++                    // counts every page allocated so far, including those of transactions still open.
++                    if (!_disk.ChecksumsEnabled && pageID == 0 && (PageType)buffer.ReadByte(BasePage.P_PAGE_TYPE) == PageType.Header)
++                        legacyLimit = Math.Max(legacyLimit, buffer.ReadUInt32(HeaderPage.P_LAST_PAGE_ID));
+                     foreach (var entry in list)
+                         if (entry.PageID > legacyLimit) throw LegacyPageOutOfRange(entry.PageID, legacyLimit);
+                     _confirmTransactions.Add(transactionID);

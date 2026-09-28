@@ -1,0 +1,43 @@
+Test run for $SCRATCH/rv-fail8/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$SCRATCH/rv-fail8/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.26]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.84]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.86]   Starting:    LiteDB.Tests
+PROBE shared: wal bytes now=327680
+PROBE reopen: wal bytes now=335872
+[xUnit.net 00:00:02.58]     LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "datastream") [FAIL]
+[xUnit.net 00:00:02.58]       System.IO.FileNotFoundException : Could not find file '/tmp/litedb-7a584191be4648988c1ac53800d8d0d4-log.db'.
+[xUnit.net 00:00:02.58]       Stack Trace:
+[xUnit.net 00:00:02.59]            at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+[xUnit.net 00:00:02.59]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+[xUnit.net 00:00:02.59]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+[xUnit.net 00:00:02.59]            at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+[xUnit.net 00:00:02.59]            at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+[xUnit.net 00:00:02.59]         $SCRATCH/rv-fail8/LiteDB.Tests/Regressions/SyncPowerLossModel.cs(72,0): at LiteDB.Tests.Regressions.SyncPowerLossModel.ReadShared(String filename)
+[xUnit.net 00:00:02.59]         $SCRATCH/rv-fail8/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs(74,0): at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode)
+[xUnit.net 00:00:02.59]            at InvokeStub_ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(Object, Span`1)
+[xUnit.net 00:00:02.59]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.59]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "shared") [493 ms]
+  Passed LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "reopen") [76 ms]
+  Failed LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "datastream") [41 ms]
+  Error Message:
+   System.IO.FileNotFoundException : Could not find file '/tmp/litedb-7a584191be4648988c1ac53800d8d0d4-log.db'.
+  Stack Trace:
+     at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String path, OpenFlags flags, Int32 mode, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64& fileLength, UnixFileMode& filePermissions, Boolean failForSymlink, Boolean& wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share)
+   at LiteDB.Tests.Regressions.SyncPowerLossModel.ReadShared(String filename) in $SCRATCH/rv-fail8/LiteDB.Tests/Regressions/SyncPowerLossModel.cs:line 72
+   at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode) in $SCRATCH/rv-fail8/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs:line 74
+   at InvokeStub_ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 3
+     Passed: 2
+     Failed: 1
+ Total time: 3.3808 Seconds

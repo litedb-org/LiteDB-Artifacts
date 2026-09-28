@@ -1,0 +1,50 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.97]     LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_data_sync_fails_keeps_commits_a_power_loss_must_not_lose(stage: "checkpoint-before-page-write") [FAIL]
+  Failed LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_data_sync_fails_keeps_commits_a_power_loss_must_not_lose(stage: "checkpoint-before-page-write") [270 ms]
+  Error Message:
+   Expected root to be 0L because a checkpoint that lost its data sync before the root publishes none, but found 1196032L (difference of 1196032).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.RetireWhileTheDataFileStopsSyncing(SharedEngine engine, LiteDatabase db, SyncPowerLossModel power, String stage) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs:line 170
+   at LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_data_sync_fails_keeps_commits_a_power_loss_must_not_lose(String stage) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs:line 36
+   at InvokeStub_RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_data_sync_fails_keeps_commits_a_power_loss_must_not_lose(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.06]     LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_log_stops_syncing_publishes_no_root [FAIL]
+  Failed LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_log_stops_syncing_publishes_no_root [176 ms]
+  Error Message:
+   Expected RetirementRoot(SyncPowerLossModel.ReadShared(power.DataFile)) to be 0L because no root names records that may not be durable, but found 1196032L (difference of 1196032).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Retiring_checkpoint_whose_log_stops_syncing_publishes_no_root() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs:line 132
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:06.18]     LiteDB.Tests.Regressions.UnsyncableRetirement_Tests.Shared_connection_never_reuses_slots_retired_while_the_data_file_stopped_syncing(stage: "checkpoint-before-page-write") [FAIL]
+  Failed LiteDB.Tests.Regressions.UnsyncableRetirement_Tests.Shared_connection_never_reuses_slots_retired_while_the_data_file_stopped_syncing(stage: "checkpoint-before-page-write") [676 ms]
+  Error Message:
+   Expected root to be 0L because a checkpoint that lost its data sync before the root publishes none, but found 1196032L (difference of 1196032).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncableRetirement_Tests.Shared_connection_never_reuses_slots_retired_while_the_data_file_stopped_syncing(String stage) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncableRetirement_Tests.cs:line 200
+   at InvokeStub_UnsyncableRetirement_Tests.Shared_connection_never_reuses_slots_retired_while_the_data_file_stopped_syncing(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     3, Passed:    34, Skipped:     0, Total:    37, Duration: 17 s - LiteDB.Tests.dll (net10.0)

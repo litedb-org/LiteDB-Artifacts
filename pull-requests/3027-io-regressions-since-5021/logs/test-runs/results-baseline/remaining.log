@@ -1,0 +1,310 @@
+Test run for $SCRATCH/baseline/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:26.19]     LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Dispose_with_an_open_transaction_rolls_back_and_releases_the_file [FAIL]
+[xUnit.net 00:00:26.21]     LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Opening_through_a_stream_does_not_persistently_change_the_checkpoint_pragma [FAIL]
+[xUnit.net 00:00:26.22]     LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Second_dispose_does_not_throw [FAIL]
+  Failed LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Dispose_with_an_open_transaction_rolls_back_and_releases_the_file [66 ms]
+  Error Message:
+   Did not expect any exception, but found LiteDB.LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.
+   at LiteDB.Engine.LiteEngine.Pragma(String name, BsonValue value) in $SCRATCH/baseline/LiteDB/Engine/Engine/Pragma.cs:line 27
+   at LiteDB.LiteDatabase.Dispose(Boolean disposing) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 411
+   at LiteDB.LiteDatabase.Dispose() in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 396
+   at LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.<>c.<Dispose_with_an_open_transaction_rolls_back_and_releases_the_file>b__1_0(LiteDatabase x) in $SCRATCH/baseline/LiteDB.Tests/Regressions/StreamDatabaseDispose_Tests.cs:line 50
+   at FluentAssertions.AssertionExtensions.<>c__DisplayClass1_0`1.<Invoking>b__0()
+   at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+   at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.NotThrowInternal(Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.NotThrow(String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Dispose_with_an_open_transaction_rolls_back_and_releases_the_file() in $SCRATCH/baseline/LiteDB.Tests/Regressions/StreamDatabaseDispose_Tests.cs:line 50
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Opening_through_a_stream_does_not_persistently_change_the_checkpoint_pragma [16 ms]
+  Error Message:
+   Expected db.CheckpointSize to be 1000, but found 1 (difference of -999).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Opening_through_a_stream_does_not_persistently_change_the_checkpoint_pragma() in $SCRATCH/baseline/LiteDB.Tests/Regressions/StreamDatabaseDispose_Tests.cs:line 83
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Second_dispose_does_not_throw [4 ms]
+  Error Message:
+   Did not expect any exception, but found LiteDB.LiteException: This engine instance already disposed.
+   at LiteDB.Engine.EngineState.Validate() in $SCRATCH/baseline/LiteDB/Engine/EngineState.cs:line 46
+   at LiteDB.Engine.LiteEngine.Pragma(String name) in $SCRATCH/baseline/LiteDB/Engine/Engine/Pragma.cs:line 16
+   at LiteDB.Engine.LiteEngine.Pragma(String name, BsonValue value) in $SCRATCH/baseline/LiteDB/Engine/Engine/Pragma.cs:line 25
+   at LiteDB.LiteDatabase.Dispose(Boolean disposing) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 411
+   at LiteDB.LiteDatabase.Dispose() in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 396
+   at LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.<>c.<Second_dispose_does_not_throw>b__0_0(LiteDatabase x) in $SCRATCH/baseline/LiteDB.Tests/Regressions/StreamDatabaseDispose_Tests.cs:line 32
+   at FluentAssertions.AssertionExtensions.<>c__DisplayClass1_0`1.<Invoking>b__0()
+   at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+   at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.NotThrowInternal(Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.NotThrow(String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.StreamDatabaseDispose_Tests.Second_dispose_does_not_throw() in $SCRATCH/baseline/LiteDB.Tests/Regressions/StreamDatabaseDispose_Tests.cs:line 32
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:28.99]     LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Rebuild_keeps_the_readable_prefix_of_a_damaged_document [FAIL]
+[xUnit.net 00:00:29.01]     LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Database_with_one_damaged_document_still_opens_and_serves_the_other_documents [FAIL]
+[xUnit.net 00:00:29.06]     LiteDB.Tests.Regressions.LegacyDroppedIndex_Tests.Collection_with_an_index_dropped_by_5_0_21_stays_writable [FAIL]
+[xUnit.net 00:00:29.09]     LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_with_a_live_reader_lease_keeps_the_5_0_21_wal_commits [FAIL]
+[xUnit.net 00:00:29.10]     LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_while_the_reader_registry_cannot_be_inspected_keeps_the_5_0_21_wal_commits [FAIL]
+  Failed LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Rebuild_keeps_the_readable_prefix_of_a_damaged_document [27 ms]
+  Error Message:
+   Expected col.Count() to be 3, but found 2.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Rebuild_keeps_the_readable_prefix_of_a_damaged_document() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyDamagedDocument_Tests.cs:line 54
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Database_with_one_damaged_document_still_opens_and_serves_the_other_documents [9 ms]
+  Error Message:
+   LiteDB.LiteException : string length exceeds the document limit
+  Stack Trace:
+     at LiteDB.Constants.ENSURE(Boolean conditional, String message) in $SCRATCH/baseline/LiteDB/Utils/Constants.cs:line 148
+   at LiteDB.Engine.BsonElementReader.Read(BufferReader reader, HashSet`1 remaining, Boolean utcDate, String& name, Int32 containerDepth, Int64 containerEnd) in $SCRATCH/baseline/LiteDB/Engine/Disk/Serializer/BsonElementReader.cs:line 41
+   at LiteDB.Engine.BufferReader.ReadDocument(HashSet`1 fields, Int32 containerDepth, Nullable`1 storedLength) in $SCRATCH/baseline/LiteDB/Engine/Disk/Serializer/BufferReader.cs:line 410
+--- End of stack trace from previous location ---
+   at LiteDB.Result`1.GetValue() in $SCRATCH/baseline/LiteDB/Utils/Result.cs:line 28
+   at LiteDB.Engine.LiteEngine.GetMigrationKeys(Snapshot snapshot, IndexService indexer, CollectionIndex index)+MoveNext() in $SCRATCH/baseline/LiteDB/Engine/Engine/IndexMigration.cs:line 210
+   at LiteDB.Engine.SortService.YieldValues(IEnumerator`1 source, Done done)+MoveNext() in $SCRATCH/baseline/LiteDB/Engine/Sort/SortService.cs:line 184
+   at System.Linq.Enumerable.<ToArray>g__EnumerableToArray|324_0[TSource](IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at System.Linq.Enumerable.OrderedIterator`2.MoveNext()
+   at LiteDB.Engine.SortContainer.Insert(IEnumerable`1 items, Int32 order, BufferSlice buffer) in $SCRATCH/baseline/LiteDB/Engine/Sort/SortContainer.cs:line 68
+   at LiteDB.Engine.SortService.Insert(IEnumerable`1 items) in $SCRATCH/baseline/LiteDB/Engine/Sort/SortService.cs:line 104
+   at LiteDB.Engine.LiteEngine.MigrateIndexOrdering() in $SCRATCH/baseline/LiteDB/Engine/Engine/IndexMigration.cs:line 56
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 177
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 77
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/baseline/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 51
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 39
+   at LiteDB.Tests.Regressions.LegacyDamagedDocument_Tests.Database_with_one_damaged_document_still_opens_and_serves_the_other_documents() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyDamagedDocument_Tests.cs:line 34
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyDroppedIndex_Tests.Collection_with_an_index_dropped_by_5_0_21_stays_writable [49 ms]
+  Error Message:
+   LiteDB.LiteException : request page must be less or equals lastest page in data file
+  Stack Trace:
+     at LiteDB.Constants.ENSURE(Boolean conditional, String message) in $SCRATCH/baseline/LiteDB/Utils/Constants.cs:line 148
+   at LiteDB.Engine.Snapshot.GetPage[T](UInt32 pageID, FileOrigin& origin, Int64& position, Int32& walVersion, Boolean useLatestVersion) in $SCRATCH/baseline/LiteDB/Engine/Services/SnapShot.cs:line 175
+   at LiteDB.Engine.Snapshot.GetPage[T](UInt32 pageID, Boolean useLatestVersion) in $SCRATCH/baseline/LiteDB/Engine/Services/SnapShot.cs:line 165
+   at LiteDB.Engine.VectorIndexService.GetNode(PageAddress address) in $SCRATCH/baseline/LiteDB/Engine/Services/VectorIndexService.cs:line 593
+   at LiteDB.Engine.VectorIndexService.TryFindNode(VectorIndexMetadata metadata, PageAddress dataBlock, PageAddress& address, VectorIndexNode& node) in $SCRATCH/baseline/LiteDB/Engine/Services/VectorIndexService.cs:line 510
+   at LiteDB.Engine.VectorIndexService.Delete(VectorIndexMetadata metadata, PageAddress dataBlock) in $SCRATCH/baseline/LiteDB/Engine/Services/VectorIndexService.cs:line 60
+   at LiteDB.Engine.VectorIndexService.Upsert(CollectionIndex index, VectorIndexMetadata metadata, BsonDocument document, PageAddress dataBlock) in $SCRATCH/baseline/LiteDB/Engine/Services/VectorIndexService.cs:line 49
+   at LiteDB.Engine.LiteEngine.InsertDocument(Snapshot snapshot, BsonDocument doc, BsonAutoId autoId, IndexService indexer, DataService data, VectorIndexService vectorService) in $SCRATCH/baseline/LiteDB/Engine/Engine/Insert.cs:line 96
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass25_0.<Insert>b__0(TransactionService transaction) in $SCRATCH/baseline/LiteDB/Engine/Engine/Insert.cs:line 38
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 92
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 82
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in $SCRATCH/baseline/LiteDB/Engine/Engine/Insert.cs:line 20
+   at LiteDB.LiteCollection`1.Insert(T entity) in $SCRATCH/baseline/LiteDB/Client/Database/Collections/Insert.cs:line 19
+   at LiteDB.Tests.Regressions.LegacyDroppedIndex_Tests.Collection_with_an_index_dropped_by_5_0_21_stays_writable() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyDroppedIndex_Tests.cs:line 38
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_with_a_live_reader_lease_keeps_the_5_0_21_wal_commits [28 ms]
+  Error Message:
+   Expected Recover(settings => settings.SharedReaderVersions = () => new[] { 1 }) to be equal to 
+{
+    Item1 = 21, 
+    Item2 = 101
+}, but found 
+{
+    Item1 = 0, 
+    Item2 = 100
+}.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.ComparableTypeAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_with_a_live_reader_lease_keeps_the_5_0_21_wal_commits() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyWalSharedMigration_Tests.cs:line 44
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_while_the_reader_registry_cannot_be_inspected_keeps_the_5_0_21_wal_commits [9 ms]
+  Error Message:
+   Expected Recover(settings => settings.SharedReaderVersions = () => null) to be equal to 
+{
+    Item1 = 21, 
+    Item2 = 101
+}, but found 
+{
+    Item1 = 0, 
+    Item2 = 100
+}.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.ComparableTypeAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.LegacyWalSharedMigration_Tests.Open_while_the_reader_registry_cannot_be_inspected_keeps_the_5_0_21_wal_commits() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyWalSharedMigration_Tests.cs:line 38
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:29.43]     LiteDB.Tests.Regressions.DumpPinnedWalSlot_Tests.Dump_inside_an_explicit_transaction_does_not_break_the_next_commit [FAIL]
+  Failed LiteDB.Tests.Regressions.DumpPinnedWalSlot_Tests.Dump_inside_an_explicit_transaction_does_not_break_the_next_commit [75 ms]
+  Error Message:
+   LiteDB.LiteException : only idle readable pages can be evicted
+  Stack Trace:
+     at LiteDB.Constants.ENSURE(Boolean conditional, String message) in $SCRATCH/baseline/LiteDB/Utils/Constants.cs:line 148
+   at LiteDB.Engine.MemoryCache.EvictLocked(PageBuffer page) in $SCRATCH/baseline/LiteDB/Engine/Disk/MemoryCache.cs:line 304
+   at LiteDB.Engine.MemoryCache.Invalidate(Int64 position, FileOrigin origin) in $SCRATCH/baseline/LiteDB/Engine/Disk/MemoryCache.cs:line 339
+   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean& transactionAnchored, Boolean forceAppend, Int32& count, Boolean& hasConfirmation, Boolean& reusePublished) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 175
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in $SCRATCH/baseline/LiteDB/Engine/Services/TransactionService.cs:line 263
+   at LiteDB.Engine.TransactionService.Safepoint() in $SCRATCH/baseline/LiteDB/Engine/Services/TransactionService.cs:line 136
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass55_0.<Update>b__0(TransactionService transaction) in $SCRATCH/baseline/LiteDB/Engine/Engine/Update.cs:line 35
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 92
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 82
+   at LiteDB.Engine.LiteEngine.Update(String collection, IEnumerable`1 docs) in $SCRATCH/baseline/LiteDB/Engine/Engine/Update.cs:line 18
+   at LiteDB.LiteCollection`1.Update(IEnumerable`1 entities) in $SCRATCH/baseline/LiteDB/Client/Database/Collections/Update.cs:line 48
+   at LiteDB.Tests.Regressions.DumpPinnedWalSlot_Tests.Dump_inside_an_explicit_transaction_does_not_break_the_next_commit() in $SCRATCH/baseline/LiteDB.Tests/Regressions/DumpPinnedWalSlot_Tests.cs:line 44
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:32.96]     LiteDB.Tests.Regressions.SharedMutexNameLength_Tests.Shared_connection_opens_a_database_in_a_directory_with_a_non_ascii_name [FAIL]
+  Failed LiteDB.Tests.Regressions.SharedMutexNameLength_Tests.Shared_connection_opens_a_database_in_a_directory_with_a_non_ascii_name [3 ms]
+  Error Message:
+   System.ArgumentException : The length of the name exceeds the maximum limit. (Parameter 'name')
+  Stack Trace:
+     at System.Threading.Mutex.CreateMutexCore(Boolean initiallyOwned, String name, NamedWaitHandleOptionsInternal options, Boolean& createdNew)
+   at System.Threading.Mutex..ctor(Boolean initiallyOwned, String name)
+   at LiteDB.SharedMutexFactory.Create(String name) in $SCRATCH/baseline/LiteDB/Client/Shared/SharedMutexFactory.cs:line 20
+   at LiteDB.SharedEngine..ctor(EngineSettings settings) in $SCRATCH/baseline/LiteDB/Client/Shared/SharedEngine.cs:line 76
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/baseline/LiteDB/Client/Structures/ConnectionString.cs:line 303
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 51
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 39
+   at LiteDB.Tests.Regressions.SharedMutexNameLength_Tests.Shared_connection_opens_a_database_in_a_directory_with_a_non_ascii_name() in $SCRATCH/baseline/LiteDB.Tests/Regressions/SharedMutexNameLength_Tests.cs:line 31
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:34.60]     LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Checkpoint_without_durable_commits_succeeds_when_the_wal_directory_cannot_be_opened_for_reading [FAIL]
+[xUnit.net 00:00:34.60]     LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Commit_succeeds_when_the_wal_directory_cannot_be_opened_for_reading [FAIL]
+[xUnit.net 00:00:34.60]     LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(errno: 30) [FAIL]
+[xUnit.net 00:00:34.60]     LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(errno: 22) [FAIL]
+  Failed LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Checkpoint_without_durable_commits_succeeds_when_the_wal_directory_cannot_be_opened_for_reading [5 ms]
+  Error Message:
+   LiteDB.FileSyncException : Device sync of '/tmp' failed (errno 13).
+  Stack Trace:
+     at LiteDB.NativeFileSync.SyncDirectory(String directory) in $SCRATCH/baseline/LiteDB/Utils/NativeFileSync.cs:line 112
+   at LiteDB.Engine.FileStreamFactory.SyncDirectory() in $SCRATCH/baseline/LiteDB/Engine/Disk/StreamFactory/FileStreamFactory.DirectorySync.cs:line 14
+   at LiteDB.Engine.ChecksummedWalFactory.SyncDirectory() in $SCRATCH/baseline/LiteDB/Engine/Disk/StreamFactory/ChecksummedWalFactory.cs:line 26
+   at LiteDB.Engine.DiskService.SyncLogDirectory() in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.DurableFlush.cs:line 173
+   at LiteDB.Engine.DiskService.BeginHeaderJournal(Byte[] header, Boolean conversion, Boolean promotion) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs:line 35
+   at LiteDB.Engine.DiskService.PrepareCheckpointHeader() in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs:line 45
+   at LiteDB.Engine.DiskService.SyncLogBeforeCheckpoint() in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.DurableFlush.cs:line 75
+   at LiteDB.Engine.WalIndexService.TryCheckpointCore(Boolean rationed) in $SCRATCH/baseline/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 148
+   at LiteDB.Engine.WalIndexService.TryCheckpoint(Boolean rationed) in $SCRATCH/baseline/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 73
+   at LiteDB.Engine.WalIndexService.Checkpoint() in $SCRATCH/baseline/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 55
+   at LiteDB.Engine.LiteEngine.Checkpoint() in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 311
+   at LiteDB.LiteDatabase.Checkpoint() in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 306
+   at LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Checkpoint_without_durable_commits_succeeds_when_the_wal_directory_cannot_be_opened_for_reading() in $SCRATCH/baseline/LiteDB.Tests/Regressions/UnreadableWalDirectory_Tests.cs:line 57
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Commit_succeeds_when_the_wal_directory_cannot_be_opened_for_reading [2 ms]
+  Error Message:
+   LiteDB.FileSyncException : Device sync of '/tmp' failed (errno 13).
+  Stack Trace:
+     at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 148
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in $SCRATCH/baseline/LiteDB/Engine/Services/TransactionService.cs:line 263
+   at LiteDB.Engine.TransactionService.PersistAndConfirm() in $SCRATCH/baseline/LiteDB/Engine/Services/TransactionService.cs:line 321
+   at LiteDB.Engine.TransactionService.Commit() in $SCRATCH/baseline/LiteDB/Engine/Services/TransactionService.cs:line 303
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 121
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 96
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in $SCRATCH/baseline/LiteDB/Engine/Engine/Transaction.cs:line 82
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in $SCRATCH/baseline/LiteDB/Engine/Engine/Insert.cs:line 20
+   at LiteDB.LiteCollection`1.Insert(T entity) in $SCRATCH/baseline/LiteDB/Client/Database/Collections/Insert.cs:line 19
+   at LiteDB.Tests.Regressions.UnreadableWalDirectory_Tests.Commit_succeeds_when_the_wal_directory_cannot_be_opened_for_reading() in $SCRATCH/baseline/LiteDB.Tests/Regressions/UnreadableWalDirectory_Tests.cs:line 36
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(errno: 30) [1 ms]
+  Error Message:
+   LiteDB.FileSyncException : Device sync of '/tmp/litedb-5323330c6d37400a9c686ef5c69c017d.db' failed (errno 30).
+  Stack Trace:
+     at LiteDB.NativeFileSync.FlushToDisk(FileStream stream) in $SCRATCH/baseline/LiteDB/Utils/NativeFileSync.cs:line 49
+   at LiteDB.Engine.DiskService.Initialize(Stream stream, Collation collation, Int64 initialSize, Boolean compactByDefault) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.Initialize.cs:line 41
+   at LiteDB.Engine.DiskService..ctor(EngineSettings settings, EngineState state, Int32[] memorySegmentSizes) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.cs:line 82
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 104
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 77
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/baseline/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 51
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 39
+   at LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(Int32 errno) in $SCRATCH/baseline/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs:line 35
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(errno: 22) [1 ms]
+  Error Message:
+   LiteDB.FileSyncException : Device sync of '/tmp/litedb-652e5ce8f57f4223b4c5ef18c7b3a41e.db' failed (errno 22).
+  Stack Trace:
+     at LiteDB.NativeFileSync.FlushToDisk(FileStream stream) in $SCRATCH/baseline/LiteDB/Utils/NativeFileSync.cs:line 49
+   at LiteDB.Engine.DiskService.Initialize(Stream stream, Collation collation, Int64 initialSize, Boolean compactByDefault) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.Initialize.cs:line 41
+   at LiteDB.Engine.DiskService..ctor(EngineSettings settings, EngineState state, Int32[] memorySegmentSizes) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.cs:line 82
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 104
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 77
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/baseline/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 51
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 39
+   at LiteDB.Tests.Regressions.UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(Int32 errno) in $SCRATCH/baseline/LiteDB.Tests/Regressions/UnsyncableDataFile_Tests.cs:line 35
+   at InvokeStub_UnsyncableDataFile_Tests.Database_on_storage_that_cannot_sync_is_created_checkpointed_and_reopened(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:34.62]     LiteDB.Tests.Regressions.TornSlotRewrite_Tests.Commit_after_a_failed_in_place_safepoint_rewrite_survives_crash_recovery [FAIL]
+[xUnit.net 00:00:34.63]     LiteDB.Tests.Regressions.LegacyReadOnlyStream_Tests.Read_only_stream_of_a_5_0_21_database_can_be_queried [FAIL]
+  Failed LiteDB.Tests.Regressions.TornSlotRewrite_Tests.Commit_after_a_failed_in_place_safepoint_rewrite_survives_crash_recovery [5 ms]
+  Error Message:
+   Expected ((object)reopened.GetCollection("b").FindById(2)) not to be <null> because an acknowledged commit must survive crash recovery.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.NotBeNull(String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.TornSlotRewrite_Tests.Commit_after_a_failed_in_place_safepoint_rewrite_survives_crash_recovery() in $SCRATCH/baseline/LiteDB.Tests/Regressions/TornSlotRewrite_Tests.cs:line 70
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyReadOnlyStream_Tests.Read_only_stream_of_a_5_0_21_database_can_be_queried [5 ms]
+  Error Message:
+   System.NotSupportedException : Stream does not support writing.
+  Stack Trace:
+     at System.IO.Strategies.BufferedFileStreamStrategy.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in $SCRATCH/baseline/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
+   at LiteDB.Engine.DiskService.EnableChecksums(HeaderPage& header) in $SCRATCH/baseline/LiteDB/Engine/Disk/DiskService.Checksums.cs:line 87
+   at LiteDB.Engine.LiteEngine.MigrateIndexOrdering() in $SCRATCH/baseline/LiteDB/Engine/Engine/IndexMigration.cs:line 92
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 177
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/baseline/LiteDB/Engine/LiteEngine.cs:line 77
+   at LiteDB.LiteDatabase..ctor(Stream stream, BsonMapper mapper, Stream logStream) in $SCRATCH/baseline/LiteDB/Client/Database/LiteDatabase.cs:line 71
+   at LiteDB.Tests.Regressions.LegacyReadOnlyStream_Tests.Read_only_stream_of_a_5_0_21_database_can_be_queried() in $SCRATCH/baseline/LiteDB.Tests/Regressions/LegacyReadOnlyStream_Tests.cs:line 33
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:49.02]     LiteDB.Tests.Database.PredicateBuilder_Tests.Usage_PredicateBuilder [SKIP]
+  Skipped LiteDB.Tests.Database.PredicateBuilder_Tests.Usage_PredicateBuilder [1 ms]
+Results File: $SCRATCH/results-baseline/remaining.trx
+
+Failed!  - Failed:    16, Passed:   516, Skipped:     1, Total:   533, Duration: 49 s - LiteDB.Tests.dll (net10.0)

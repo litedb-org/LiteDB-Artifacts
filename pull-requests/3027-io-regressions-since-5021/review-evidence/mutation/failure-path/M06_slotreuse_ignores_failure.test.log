@@ -1,0 +1,49 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.54]     LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Independent_connection_does_not_reuse_retired_slots_while_the_data_file_cannot_sync [FAIL]
+  Failed LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Independent_connection_does_not_reuse_retired_slots_while_the_data_file_cannot_sync [221 ms]
+  Error Message:
+   Expected ChangedFrames(before, SyncPowerLossModel.ReadShared(logName)) to be 0 because no retired slot is reused before the data file syncs, but found 1 (difference of 1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Independent_connection_does_not_reuse_retired_slots_while_the_data_file_cannot_sync() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/RetiredSlotPowerLoss_Tests.cs:line 67
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:08.94]     LiteDB.Internals.SharedUnsyncableLog_Tests.Fresh_shared_engines_never_reuse_slots_retired_on_a_log_that_cannot_sync(stopsAt: "clear", secondConnection: True) [FAIL]
+[xUnit.net 00:00:09.68]     LiteDB.Internals.MvccUnsyncableLog_Tests.Fresh_engine_reuses_blank_slots_only_after_its_log_has_synced(syncable: False) [FAIL]
+  Failed LiteDB.Internals.SharedUnsyncableLog_Tests.Fresh_shared_engines_never_reuse_slots_retired_on_a_log_that_cannot_sync(stopsAt: "clear", secondConnection: True) [955 ms]
+  Error Message:
+   Expected ChangedFrames(retired, written, frames) to be 0 because slots retired without durable syncs must not be reused by later engines, but found 1 (difference of 1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Internals.SharedUnsyncableLog_Tests.Fresh_shared_engines_never_reuse_slots_retired_on_a_log_that_cannot_sync(String stopsAt, Boolean secondConnection) in $SCRATCH/rv-sync/LiteDB.Tests/Internals/SharedUnsyncableLog_Tests.cs:line 93
+   at InvokeStub_SharedUnsyncableLog_Tests.Fresh_shared_engines_never_reuse_slots_retired_on_a_log_that_cannot_sync(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Internals.MvccUnsyncableLog_Tests.Fresh_engine_reuses_blank_slots_only_after_its_log_has_synced(syncable: False) [89 ms]
+  Error Message:
+   Expected reused to be 0 because slots cleared without a durable sync must not be reused before a sync succeeds, but found 1 (difference of 1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Internals.MvccUnsyncableLog_Tests.Fresh_engine_reuses_blank_slots_only_after_its_log_has_synced(Boolean syncable) in $SCRATCH/rv-sync/LiteDB.Tests/Internals/MvccUnsyncableLog_Tests.cs:line 117
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+
+Failed!  - Failed:     3, Passed:    34, Skipped:     0, Total:    37, Duration: 8 s - LiteDB.Tests.dll (net10.0)

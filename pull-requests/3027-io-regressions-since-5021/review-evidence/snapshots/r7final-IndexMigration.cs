@@ -1,0 +1,305 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using LiteDB.Vector;
+using static LiteDB.Constants;
+
+namespace LiteDB.Engine
+{
+    public partial class LiteEngine
+    {
+        /// <summary>
+        /// A writable open must migrate every index from its documents, and damaged data prevents
+        /// that. Released versions opened such files and failed only when the damage was read.
+        /// Keep the error code: the failed open marks the file for rebuild (AutoRebuild then
+        /// rebuilds it in the same open), and name the remedies.
+        /// </summary>
+        private LiteException DamagedLegacyData(string collection, LiteException ex) =>
+            new LiteException(LiteException.INVALID_DATAFILE_STATE, ex,
+                "{0} contains damaged data, so the index migration this version needs for writable access cannot run: {1} " +
+                (_settings.DataStream == null
+                    ? "The data file is marked for rebuild: open it with `auto-rebuild=true` to rebuild it (unreadable documents " +
+                      "are listed in `_rebuild_errors` and a backup is kept), or read-only with `legacy index scan=true` to read " +
+                      "its undamaged collections."
+                    : "A stream is not rebuilt in place: copy it to a file and open that with `auto-rebuild=true` (unreadable " +
+                      "documents are listed in `_rebuild_errors`), or pass a stream that cannot be written (or EngineSettings " +
+                      "ReadOnly with LegacyIndexScan) to read its undamaged collections."),
+                collection == null ? "The database" : "Collection '" + collection + "'", ex.Message);
+
+        private void MigrateIndexOrdering()
+        {
+            if (_header.Pragmas.IndexOrderVersion == EnginePragmas.INDEX_ORDER_VERSION)
+            {
+                this.ValidateLegacyCollation();
+                return;
+            }
+
+            if (_settings.ReadOnlyStorage && !_settings.ReadOnly) throw new ReadOnlyOpenRequiredException();
+            if (_settings.ReadOnly)
+            {
+                // The stale ordering stays visible through EnginePragmas.IndexesOrdered;
+                // queries then use full scans instead of seeking these indexes.
+                if (_settings.LegacyIndexScan) return;
+                throw new LiteException(0, "Database index ordering/collation requires migration. " +
+                    "Open the database writable once to automatically rebuild its indexes, or add " +
+                    "`legacy index scan=true` (LegacyIndexScan) to this read-only connection to query " +
+                    "it with full scans instead of its indexes.");
+            }
+
+            // Traverse links, never seek using the new comparer in an old skip list.
+            // Inspect all structures and unique keys before any persistent mutation.
+            try { this.ValidateLegacyCollation(migrating: true); }
+            catch (LiteException ex) when (ex.ErrorCode == LiteException.INVALID_DATAFILE_STATE) { throw DamagedLegacyData(null, ex); }
+            var capacity = new IndexMigrationCapacity(_header, _settings.IndexMigrationLimitSize);
+            var validation = _monitor.GetTransaction(true, true, out _);
+            try
+            {
+                foreach (var collection in _header.GetCollections())
+                {
+                    try
+                    {
+                        var snapshot = validation.CreateSnapshot(LockMode.Read, collection.Key, false);
+                        var indexer = new IndexService(snapshot, _header.Pragmas.Collation, _disk.MAX_ITEMS_COUNT);
+                        foreach (var index in snapshot.CollectionPage.GetCollectionIndexes())
+                        {
+                            if (index.IndexType != 0)
+                            {
+                                this.ValidateVectorMigration(snapshot, indexer, index, capacity);
+                                continue;
+                            }
+                            var memberPath = IndexExpressionIdentity.IsMemberPath(index.BsonExpr);
+                            if (memberPath && !index.Unique) continue;
+                            using (var sort = index.Unique ? new SortService(_sortDisk,
+                                new[] { LiteDB.Query.Ascending }, _header.Pragmas) : null)
+                            {
+                                var keys = this.GetMigrationKeys(snapshot, indexer, index);
+                                if (sort != null)
+                                {
+                                    sort.Insert(keys);
+                                    keys = sort.Sort();
+                                }
+                                BsonValue previous = null;
+                                long maximumNodeBytes = 0;
+                                foreach (var item in keys)
+                                {
+                                    if (index.Unique && previous != null &&
+                                        previous.CompareTo(item.Key, _header.Pragmas.Collation) == 0)
+                                        throw LiteException.IndexDuplicateKey(index.Name, item.Key);
+                                    maximumNodeBytes += IndexNode.GetNodeLength(MAX_LEVEL_LENGTH, item.Key, out _) + BasePage.SLOT_SIZE;
+                                    previous = item.Key;
+                                }
+                                if (!memberPath)
+                                {
+                                    var pages = new HashSet<uint> { index.Head.PageID, index.Tail.PageID };
+                                    foreach (var node in indexer.FindAll(index, LiteDB.Query.Ascending))
+                                    {
+                                        pages.Add(node.Position.PageID);
+                                        snapshot.Safepoint();
+                                    }
+                                    capacity.AddOrdinaryIndex(maximumNodeBytes, pages.Count);
+                                }
+                            }
+                        }
+                        this.FindStaleMemberPathDocuments(snapshot, indexer, capacity);
+                    }
+                    catch (LiteException ex) when (ex.ErrorCode == LiteException.INVALID_DATAFILE_STATE)
+                    {
+                        throw DamagedLegacyData(collection.Key, ex);
+                    }
+                }
+                capacity.Validate(validation.CreateSnapshot(LockMode.Read, "$migration_capacity", false), _header);
+            }
+            finally { _monitor.ReleaseTransaction(validation); }
+
+            // Conversion replaces the legacy WAL, so it must be drained completely first.
+            // A lease-aware checkpoint skips or limits its work while other connections may
+            // read the WAL; discarding what it left would lose committed transactions. A
+            // refused conversion changes neither file; a drain trims partial pages first.
+            // Storage whose data file cannot sync while its log can keeps the WAL on a full
+            // checkpoint (see DataUnsyncedWhileLogSyncs), so a drain cannot empty it either;
+            // it keeps the legacy WAL, and its backfill is what 5.0.21 itself would write.
+            if (!_disk.ChecksumsEnabled && !_walIndex.TryDrain())
+            {
+                if (_disk.DataUnsyncedWhileLogSyncs)
+                    throw new System.IO.IOException("Cannot convert this legacy database: its data file cannot be " +
+                        "synced to the device while its log file can, so emptying the log could lose committed " +
+                        "transactions on a power loss. Move both files to storage that syncs them, or open it with " +
+                        "\"read only=true;legacy index scan=true\".");
+                throw new LiteException(LiteException.LOCK_TIMEOUT,
+                    "Cannot convert this legacy database while another connection may still read its log " +
+                    "file (a shared reader holds a snapshot, or the reader registry cannot be inspected). " +
+                    "Close the other connections, or make the registry readable, and open it again.");
+            }
+            _disk.TrimTrailingPages();
+            if (!_disk.ChecksumsEnabled)
+            {
+                _walIndex.Clear();
+                _disk.EnableChecksums(ref _header);
+                _monitor.Dispose();
+                _monitor = new TransactionMonitor(_header, _locker, _disk, _walIndex, _settings.TransactionPageLimit);
+            }
+            // Old binaries must reject even an unconfirmed migration WAL. The order
+            // revision stays zero until the same transaction commits every index.
+            _disk.PromoteFileFormat(HeaderPage.INDEX_FILE_VERSION);
+            _header.EnsureVersion(HeaderPage.INDEX_FILE_VERSION);
+
+            this.BeginTrans();
+            try
+            {
+                var transaction = _monitor.GetTransaction(true, false, out _);
+                transaction.Pages.IndexMigrationLimitSize = _settings.IndexMigrationLimitSize;
+                foreach (var collection in _header.GetCollections())
+                {
+                    var snapshot = transaction.CreateSnapshot(LockMode.Write, collection.Key, false);
+                    var indexer = new IndexService(snapshot, _header.Pragmas.Collation, _disk.MAX_ITEMS_COUNT);
+                    this.RepairStaleMemberPathDocuments(snapshot, indexer,
+                        this.FindStaleMemberPathDocuments(snapshot, indexer, null));
+                    foreach (var index in snapshot.CollectionPage.GetCollectionIndexes())
+                    {
+                        if (index.IndexType == 0 && IndexExpressionIdentity.IsMemberPath(index.BsonExpr))
+                            this.ReorderIndex(snapshot, indexer, index);
+                    }
+                    var indexes = snapshot.CollectionPage.GetCollectionIndexes()
+                        .Where(x => !IndexExpressionIdentity.IsMemberPath(x.BsonExpr))
+                        .Select(x => new
+                        {
+                            x.Name, x.Expression, x.Unique,
+                            Vector = snapshot.CollectionPage.GetVectorIndexMetadata(x.Name)
+                        }).ToArray();
+
+                    foreach (var index in indexes)
+                    {
+                        // Re-evaluate expressions and multikey distinctness from BSON,
+                        // since the old comparison could have omitted keys entirely.
+                        if (index.Vector == null)
+                            this.RebuildOrdinaryIndex(snapshot, indexer,
+                                snapshot.CollectionPage.GetCollectionIndex(index.Name));
+                        else
+                        {
+                            this.DropIndex(collection.Key, index.Name);
+                            this.EnsureVectorIndex(collection.Key, index.Name, index.Expression,
+                                new VectorIndexOptions(index.Vector.Dimensions, index.Vector.Metric));
+                        }
+                    }
+                }
+                transaction.Pages.Commit += header =>
+                {
+                    if (_settings.IndexMigrationLimitSize.HasValue)
+                        header.Pragmas.Set(Pragmas.LIMIT_SIZE, _settings.IndexMigrationLimitSize.Value, true);
+                    header.Pragmas.CompleteIndexMigration();
+                };
+                this.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Never append rollback pages after a failed/torn migration write.
+                // Fatal I/O closes the engine; the next open restores committed WAL.
+                if (_state.Handle(ex) && !_state.Disposed) this.Rollback();
+                throw;
+            }
+        }
+
+        private void RebuildOrdinaryIndex(Snapshot snapshot, IndexService indexer, CollectionIndex index)
+        {
+            snapshot.RetainEmptyIndexPages = true;
+            // Keep the sentinels and metadata. Empty indexes need no replacement
+            // pages, and node deletion returns unused pages to the database on commit.
+            foreach (var primary in indexer.FindAll(snapshot.CollectionPage.PK, LiteDB.Query.Ascending))
+            {
+                var remove = new HashSet<PageAddress>(indexer.GetNodeList(primary.Position)
+                    .Where(x => x.Slot == index.Slot).Select(x => x.Position));
+                if (remove.Count != 0) indexer.DeleteList(primary.Position, remove);
+                snapshot.Safepoint();
+            }
+            var data = new DataService(snapshot, _disk.MAX_ITEMS_COUNT);
+            foreach (var primary in indexer.FindAll(snapshot.CollectionPage.PK, LiteDB.Query.Ascending))
+            {
+                var position = primary.Position;
+                var dataBlock = primary.DataBlock;
+                using (var reader = new BufferReader(data.Read(dataBlock)))
+                {
+                    var document = reader.ReadDocument().GetValue();
+                    var last = indexer.GetNodeList(position).Last();
+                    foreach (var key in index.BsonExpr.GetIndexKeys(document, _header.Pragmas.Collation))
+                        last = indexer.AddNode(index, key, dataBlock, last);
+                }
+                snapshot.Safepoint();
+            }
+            snapshot.ReleaseEmptyIndexPages(index);
+            snapshot.CollectionPage.IsDirty = true;
+        }
+
+        private void ValidateVectorMigration(Snapshot snapshot, IndexService indexer, CollectionIndex index, IndexMigrationCapacity capacity)
+        {
+            var metadata = snapshot.CollectionPage.GetVectorIndexMetadata(index.Name);
+            ENSURE(metadata != null, "vector index '{0}' has no vector metadata", index.Name);
+            if (IndexExpressionIdentity.IsMemberPath(index.BsonExpr)) return;
+            var data = new DataService(snapshot, _disk.MAX_ITEMS_COUNT);
+            foreach (var node in indexer.FindAll(snapshot.CollectionPage.PK, LiteDB.Query.Ascending))
+            {
+                using (var reader = new BufferReader(data.Read(node.DataBlock)))
+                    index.BsonExpr.ExecuteScalar(reader.ReadDocument().GetValue(), _header.Pragmas.Collation);
+                capacity.AddVectorDocument(metadata.Dimensions);
+                snapshot.Safepoint();
+            }
+        }
+
+        private IEnumerable<KeyValuePair<BsonValue, PageAddress>> GetMigrationKeys(
+            Snapshot snapshot, IndexService indexer, CollectionIndex index)
+        {
+            var data = new DataService(snapshot, _disk.MAX_ITEMS_COUNT);
+            foreach (var node in indexer.FindAll(snapshot.CollectionPage.PK, LiteDB.Query.Ascending))
+            {
+                // Capture addresses before any safepoint can release this node.
+                var position = node.Position;
+                using (var reader = new BufferReader(data.Read(node.DataBlock)))
+                {
+                    var document = reader.ReadDocument().GetValue();
+                    foreach (var key in index.BsonExpr.GetIndexKeys(document, _header.Pragmas.Collation))
+                    {
+                        if (key.IsMinValue || key.IsMaxValue ||
+                            IndexNode.GetKeyLength(key, true) > MAX_INDEX_KEY_LENGTH)
+                            throw LiteException.InvalidIndexKey("Invalid key while migrating index " + index.Name);
+                        yield return new KeyValuePair<BsonValue, PageAddress>(key, position);
+                    }
+                }
+                snapshot.Safepoint();
+            }
+        }
+
+        private void ReorderIndex(Snapshot snapshot, IndexService indexer, CollectionIndex index)
+        {
+            using (var sort = new SortService(_sortDisk, new[] { LiteDB.Query.Ascending }, _header.Pragmas))
+            {
+                IEnumerable<KeyValuePair<BsonValue, PageAddress>> Keys()
+                {
+                    foreach (var node in indexer.FindAll(index, LiteDB.Query.Ascending))
+                    {
+                        yield return new KeyValuePair<BsonValue, PageAddress>(node.Key, node.Position);
+                        snapshot.Safepoint();
+                    }
+                }
+                // A proven scalar member path emits exactly one unchanged value per
+                // document. Reuse its pages, including when LIMIT_SIZE leaves no room.
+                sort.Insert(Keys());
+                var previous = Enumerable.Repeat(index.Head, MAX_LEVEL_LENGTH).ToArray();
+                foreach (var item in sort.Sort())
+                {
+                    var node = indexer.GetNode(item.Value);
+                    for (byte level = 0; level < node.Levels; level++)
+                    {
+                        indexer.GetNode(previous[level]).SetNext(level, node.Position);
+                        node.SetPrev(level, previous[level]);
+                        previous[level] = node.Position;
+                    }
+                    snapshot.Safepoint();
+                }
+                for (byte level = 0; level < MAX_LEVEL_LENGTH; level++)
+                {
+                    indexer.GetNode(previous[level]).SetNext(level, index.Tail);
+                    indexer.GetNode(index.Tail).SetPrev(level, previous[level]);
+                }
+            }
+        }
+    }
+}

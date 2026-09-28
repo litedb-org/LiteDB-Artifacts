@@ -1,0 +1,91 @@
+Test run for $SCRATCH/rv-sync3/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:12.52]     LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [FAIL]
+[xUnit.net 00:00:12.94]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_header_beside_a_converted_wal_whose_first_slot_was_retired [FAIL]
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [121 ms]
+  Error Message:
+   LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 0.
+  Stack Trace:
+     at LiteDB.Engine.PageChecksum.Validate(BufferSlice page, Int64 position) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/PageChecksum.cs:line 34
+   at LiteDB.Engine.DiskService.LoadChecksums(BufferSlice header) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Checksums.cs:line 20
+   at LiteDB.Engine.DiskService.ValidateExistingData() in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Validation.cs:line 43
+   at LiteDB.Engine.DiskService..ctor(EngineSettings settings, EngineState state, Int32[] memorySegmentSizes) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.cs:line 96
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 160
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.OpenImage[T](ValueTuple`2 captured, String password, Func`2 read) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 183
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 77
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_header_beside_a_converted_wal_whose_first_slot_was_retired [412 ms]
+  Error Message:
+   Expected failure not to be <null> because a converted WAL beside a legacy header must be refused.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.NotBeNull(String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_header_beside_a_converted_wal_whose_first_slot_was_retired() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 135
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ WAL 1343488 bytes, frame 0 blank: False, frame 1 is a frame: True
+ read-only open: opened, rows=48
+ writable open: opened, rows=48; data 122880 -> 14625660559360 bytes
+
+
+[xUnit.net 00:00:13.64]     LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(readOnly: False) [FAIL]
+[xUnit.net 00:00:13.64]     LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(readOnly: True) [FAIL]
+  Failed LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(readOnly: False) [16 ms]
+  Error Message:
+   Expected a <LiteDB.LiteException> to be thrown, but found <System.ArgumentOutOfRangeException>:
+System.ArgumentOutOfRangeException: Specified file length was too large for the file system. (Parameter 'value')
+   at System.IO.RandomAccess.WriteAtOffset(SafeFileHandle handle, ReadOnlySpan`1 buffer, Int64 fileOffset)
+   at System.IO.Strategies.OSFileStreamStrategy.Write(ReadOnlySpan`1 buffer)
+   at LiteDB.Engine.DiskService.WriteDataDisk(IEnumerable`1 pages) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.cs:line 336
+   at LiteDB.Engine.WalIndexService.TryCheckpointCore(Boolean rationed, Boolean drain, Boolean& stopBegun, Boolean& stopOwned) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 183
+   at LiteDB.Engine.WalIndexService.TryCheckpoint(Boolean rationed, Boolean drain, Boolean automatic) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 99
+   at LiteDB.Engine.WalIndexService.TryDrain() in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs:line 64
+   at LiteDB.Engine.LiteEngine.MigrateIndexOrdering() in $SCRATCH/rv-sync3/LiteDB/Engine/Engine/IndexMigration.cs:line 126
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 234
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.<>c__DisplayClass0_0.<Committed_legacy_page_beyond_both_files_fails_the_open>b__0() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/LegacyWalPageBound_Tests.cs:line 35
+   at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+   at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(Boolean readOnly) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/LegacyWalPageBound_Tests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(readOnly: True) [7 ms]
+  Error Message:
+   Expected a <LiteDB.LiteException> to be thrown, but no exception was thrown.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(Boolean readOnly) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/LegacyWalPageBound_Tests.cs:line 36
+   at InvokeStub_LegacyWalPageBound_Tests.Committed_legacy_page_beyond_both_files_fails_the_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     4, Passed:    96, Skipped:     0, Total:   100, Duration: 11 s - LiteDB.Tests.dll (net10.0)

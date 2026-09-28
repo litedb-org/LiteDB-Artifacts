@@ -1,0 +1,82 @@
+Test run for $SCRATCH/rv-fail4/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$SCRATCH/rv-fail4/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.21]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.15]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.17]   Starting:    LiteDB.Tests
+PROBE point=wal-confirmation-after-write io=True calls=1 readLog=True readerFailure=IOException torn=True ack=1
+PROBE point=wal-page-after-write io=True calls=1 readLog=True readerFailure=IOException torn=True ack=1
+PROBE point=wal-page-after-write io=False calls=30 readLog=True readerFailure=InvalidOperationException torn=True ack=32
+PROBE point=wal-confirmation-after-write io=False calls=1 readLog=True readerFailure=InvalidOperationException torn=True ack=32
+[xUnit.net 00:00:01.65]     LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(ioFailure: False, point: "wal-confirmation-after-write") [FAIL]
+[xUnit.net 00:00:01.65]       Expected recovered.GetCollection("b").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 32 item(s) because every acknowledged commit survives (reader failure: InvalidOperationException), but {0}
+[xUnit.net 00:00:01.65]       contains 31 item(s) less than
+[xUnit.net 00:00:01.65]       {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 100}.
+[xUnit.net 00:00:01.65]       
+[xUnit.net 00:00:01.65]       With configuration:
+[xUnit.net 00:00:01.65]       - Use declared types and members
+[xUnit.net 00:00:01.65]       - Compare enums by value
+[xUnit.net 00:00:01.65]       - Compare tuples by their properties
+[xUnit.net 00:00:01.65]       - Compare anonymous types by their properties
+[xUnit.net 00:00:01.65]       - Compare records by their members
+[xUnit.net 00:00:01.65]       - Include non-browsable members
+[xUnit.net 00:00:01.65]       - Include all non-private properties
+[xUnit.net 00:00:01.65]       - Include all non-private fields
+[xUnit.net 00:00:01.65]       - Match member by name (or throw)
+[xUnit.net 00:00:01.65]       - Be strict about the order of items in byte arrays
+[xUnit.net 00:00:01.65]       - Without automatic conversion.
+[xUnit.net 00:00:01.65]       
+[xUnit.net 00:00:01.65]       Stack Trace:
+[xUnit.net 00:00:01.65]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Execution.CollectingAssertionStrategy.ThrowIfAny(IDictionary`2 context)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Execution.AssertionScope.Dispose()
+[xUnit.net 00:00:01.65]            at FluentAssertions.Equivalency.EquivalencyValidator.AssertEquality(Comparands comparands, EquivalencyValidationContext context)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Equivalency.EquivalencyValidator.AssertEquality(Comparands comparands, EquivalencyValidationContext context)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Collections.GenericCollectionAssertions`3.BeEquivalentTo[TExpectation](IEnumerable`1 expectation, Func`2 config, String because, Object[] becauseArgs)
+[xUnit.net 00:00:01.65]            at FluentAssertions.Collections.GenericCollectionAssertions`3.BeEquivalentTo[TExpectation](IEnumerable`1 expectation, String because, Object[] becauseArgs)
+[xUnit.net 00:00:01.65]         $SCRATCH/rv-fail4/LiteDB.Tests/Regressions/ReviewBufferedReaderTear_Tests.cs(96,0): at LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(Boolean ioFailure, String point)
+[xUnit.net 00:00:01.65]            at InvokeStub_ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(Object, Span`1)
+[xUnit.net 00:00:01.65]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.66]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(ioFailure: True, point: "wal-confirmation-after-write") [327 ms]
+  Passed LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(ioFailure: True, point: "wal-page-after-write") [11 ms]
+  Passed LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(ioFailure: False, point: "wal-page-after-write") [12 ms]
+  Failed LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(ioFailure: False, point: "wal-confirmation-after-write") [71 ms]
+  Error Message:
+   Expected recovered.GetCollection("b").FindAll().Select(x => x["_id"].AsInt32) to be a collection with 32 item(s) because every acknowledged commit survives (reader failure: InvalidOperationException), but {0}
+contains 31 item(s) less than
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 100}.
+
+With configuration:
+- Use declared types and members
+- Compare enums by value
+- Compare tuples by their properties
+- Compare anonymous types by their properties
+- Compare records by their members
+- Include non-browsable members
+- Include all non-private properties
+- Include all non-private fields
+- Match member by name (or throw)
+- Be strict about the order of items in byte arrays
+- Without automatic conversion.
+
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.CollectingAssertionStrategy.ThrowIfAny(IDictionary`2 context)
+   at FluentAssertions.Execution.AssertionScope.Dispose()
+   at FluentAssertions.Equivalency.EquivalencyValidator.AssertEquality(Comparands comparands, EquivalencyValidationContext context)
+   at FluentAssertions.Equivalency.EquivalencyValidator.AssertEquality(Comparands comparands, EquivalencyValidationContext context)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.BeEquivalentTo[TExpectation](IEnumerable`1 expectation, Func`2 config, String because, Object[] becauseArgs)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.BeEquivalentTo[TExpectation](IEnumerable`1 expectation, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(Boolean ioFailure, String point) in $SCRATCH/rv-fail4/LiteDB.Tests/Regressions/ReviewBufferedReaderTear_Tests.cs:line 96
+   at InvokeStub_ReviewBufferedReaderTear_Tests.Reader_that_tears_a_held_frame_loses_no_acknowledged_commit(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 4
+     Passed: 3
+     Failed: 1
+ Total time: 2.2489 Seconds

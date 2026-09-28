@@ -1,0 +1,89 @@
+Test run for $SCRATCH/rv-fail7/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$SCRATCH/rv-fail7/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.21]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.46]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.48]   Starting:    LiteDB.Tests
+PROBE shared: wal bytes now=0
+[xUnit.net 00:00:02.09]     LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "shared") [FAIL]
+[xUnit.net 00:00:02.09]       Expected recovered.GetCollection("rows").FindAll().Select(x => x["value"].AsInt32).Distinct() to be equal to {1} because the commit acknowledged durable survives, but {0} differs at index 0.
+[xUnit.net 00:00:02.09]       Stack Trace:
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.09]            at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.09]         $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs(80,0): at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.OpenImage(ValueTuple`2 image, Int32 value, Int32 extra)
+[xUnit.net 00:00:02.09]         $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs(69,0): at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode)
+[xUnit.net 00:00:02.09]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.09]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+PROBE reopen: wal bytes now=0
+[xUnit.net 00:00:02.18]     LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "reopen") [FAIL]
+[xUnit.net 00:00:02.18]       Expected recovered.GetCollection("rows").FindAll().Select(x => x["value"].AsInt32).Distinct() to be equal to {1} because the commit acknowledged durable survives, but {0} differs at index 0.
+[xUnit.net 00:00:02.18]       Stack Trace:
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.18]            at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.18]         $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs(80,0): at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.OpenImage(ValueTuple`2 image, Int32 value, Int32 extra)
+[xUnit.net 00:00:02.18]         $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs(69,0): at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode)
+[xUnit.net 00:00:02.18]            at InvokeStub_ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(Object, Span`1)
+[xUnit.net 00:00:02.18]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.19]   Finished:    LiteDB.Tests
+  Failed LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "shared") [482 ms]
+  Error Message:
+   Expected recovered.GetCollection("rows").FindAll().Select(x => x["value"].AsInt32).Distinct() to be equal to {1} because the commit acknowledged durable survives, but {0} differs at index 0.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+   at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.OpenImage(ValueTuple`2 image, Int32 value, Int32 extra) in $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs:line 80
+   at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode) in $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs:line 69
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(mode: "reopen") [78 ms]
+  Error Message:
+   Expected recovered.GetCollection("rows").FindAll().Select(x => x["value"].AsInt32).Distinct() to be equal to {1} because the commit acknowledged durable survives, but {0} differs at index 0.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Object[] args)
+   at FluentAssertions.Execution.GivenSelector`1.FailWith(String message, Func`2[] args)
+   at FluentAssertions.Execution.GivenSelectorExtensions.AssertCollectionsHaveSameItems[TActual,TExpected](GivenSelector`1 givenSelector, ICollection`1 expected, Func`3 findIndex)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.AssertSubjectEquality[TExpectation](IEnumerable`1 expectation, Func`3 equalityComparison, String because, Object[] becauseArgs)
+   at FluentAssertions.Collections.GenericCollectionAssertions`3.Equal(IEnumerable`1 expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.OpenImage(ValueTuple`2 image, Int32 value, Int32 extra) in $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs:line 80
+   at LiteDB.Tests.Regressions.ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(String mode) in $SCRATCH/rv-fail7/LiteDB.Tests/Regressions/ReviewKeptWalAcrossEngines_Tests.cs:line 69
+   at InvokeStub_ReviewKeptWalAcrossEngines_Tests.Wal_kept_by_one_engine_is_emptied_by_the_next(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 2
+     Failed: 2
+ Total time: 2.8219 Seconds

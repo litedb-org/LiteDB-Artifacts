@@ -1,0 +1,17 @@
+Sync an encrypted stream's preamble only from a writer
+
+AesStream synced its file whenever it was created, also for a reader:
+the stream pools create one per concurrent read. That sync bypassed the
+rule that a log sync waits for a data sync after "cannot sync": with a
+password, an emptied WAL was made durable ahead of its unsynced backfill
+by a reader's new log stream (the external review's P1 reproduced), and
+a new data stream threw UnauthorizedAccessException into queries once
+the data file could not sync. Only a writer syncs its preamble now,
+which keeps a writable open's refusal on storage that cannot sync;
+readers write nothing and sync nothing. Test: six concurrent readers of
+an encrypted database over caller files sync neither file (with the
+unconditional sync restored, the test fails). Found by review.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+

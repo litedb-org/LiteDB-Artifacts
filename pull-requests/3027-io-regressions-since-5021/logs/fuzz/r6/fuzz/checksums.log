@@ -1,0 +1,66 @@
+START checksum-page seed=2954 count=28 worker=0
+PASS checksum-page seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-page-s2954-w0-rc36d2827
+START checksum-wal seed=2954 count=28 worker=0
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-wal-s2954-w0-raca69220
+START checksum-crash seed=2954 count=28 worker=0
+PASS checksum-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-crash-s2954-w0-r80069ddb
+START checksum-page seed=2954 count=28 worker=0
+PASS checksum-page seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064359-checksum-page-determinism-s2954-w0-r785ab118
+START checksum-migration seed=2954 count=28 worker=0
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-migration-s2954-w0-r33adb507
+START checksum-wal seed=2954 count=28 worker=0
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064400-checksum-wal-determinism-s2954-w0-r747c63ba
+START compact-crash seed=2954 count=28 worker=0
+PASS compact-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064402-compact-crash-s2954-w0-r24dba7a3
+START checksum-crash seed=2954 count=28 worker=0
+PASS checksum-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064401-checksum-crash-determinism-s2954-w0-rbc4d4eab
+START compact-crash seed=2954 count=28 worker=0
+PASS compact-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064409-compact-crash-determinism-s2954-w0-rdd33c41e
+START checksum-migration seed=2954 count=28 worker=0
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064403-checksum-migration-determinism-s2954-w0-ra113bc12
+START mvcc-retirement seed=2954 count=28 worker=0
+PASS mvcc-retirement seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064405-mvcc-retirement-s2954-w0-r1831ce26
+START checksum-page seed=2954 count=28 worker=0
+PASS checksum-page seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064417-checksum-page-s2954-w0-r4e3c583b
+START mvcc-retirement seed=2954 count=28 worker=0
+PASS mvcc-retirement seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064417-mvcc-retirement-determinism-s2954-w0-r214f3648
+START checksum-migration seed=2954 count=28 worker=0
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064416-checksum-migration-s2954-w0-r7a55a92a
+START mvcc-checkpoint seed=2954 count=28 worker=0
+PASS mvcc-checkpoint seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064412-mvcc-checkpoint-s2954-w0-r8e86d546
+START checksum-wal seed=2954 count=28 worker=0
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064422-checksum-wal-s2954-w0-ra5a3f784
+START compact-crash seed=2937 count=64 worker=0
+PASS compact-crash seed=2937 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064428-compact-crash-s2937-w0-r80f342f1
+START mvcc-checkpoint seed=2954 count=28 worker=0
+PASS mvcc-checkpoint seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064427-mvcc-checkpoint-determinism-s2954-w0-r6c28ead6
+START mvcc-retirement seed=3000002 count=30 worker=0
+PASS mvcc-retirement seed=3000002 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064439-mvcc-retirement-s3000002-w0-rc1055c58
+START mvcc-checkpoint seed=3000003 count=64 worker=0
+PASS mvcc-checkpoint seed=3000003 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064439-mvcc-checkpoint-s3000003-w0-r1c096018
+START checksum-crash seed=4058733 count=111 worker=0
+FAIL checksum-crash seed=4058733 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064426-checksum-crash-s4058733-w0-rc6c16289
+FUZZ FAILURE checksum-crash seed=4058733 step=111
+LiteDB.Fuzz.FuzzFailureException: Corpus input changed: expected 76D03C6250BC2CAA506D5545F400D85F01FF55AA788998A35B12C21DD8C84921, actual EC5FF4FDEFEEBDB997FFAA7097C0F6CD349C04AE43F5DC2391883A71BE49F4B5.
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in $SCRATCH/r6wt/LiteDB.Fuzz/Program.cs:line 127
+START checksum-crash seed=3163459 count=201 worker=0
+FAIL checksum-crash seed=3163459 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064426-checksum-crash-s3163459-w0-rd8eea748
+FUZZ FAILURE checksum-crash seed=3163459 step=201
+LiteDB.Fuzz.FuzzFailureException: Corpus input changed: expected 9B8F44BBE4E6A62D0A424BEE719F53E347F5216FD1F1BD583F43CEBF4B638499, actual 3791366332C1080ECA3CB4E6EA44C98FE7C99E7773FDA9112900CE80C972B134.
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in $SCRATCH/r6wt/LiteDB.Fuzz/Program.cs:line 127
+FUZZ SUMMARY: 13 passed, 0 known/expected, 2 blocking failures
+PASS checksum-page seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-page-s2954-w0-rc36d2827
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-wal-s2954-w0-raca69220
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-migration-s2954-w0-r33adb507
+PASS checksum-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064356-checksum-crash-s2954-w0-r80069ddb
+PASS compact-crash seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064402-compact-crash-s2954-w0-r24dba7a3
+PASS mvcc-retirement seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064405-mvcc-retirement-s2954-w0-r1831ce26
+PASS mvcc-checkpoint seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064412-mvcc-checkpoint-s2954-w0-r8e86d546
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064416-checksum-migration-s2954-w0-r7a55a92a
+PASS checksum-page seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064417-checksum-page-s2954-w0-r4e3c583b
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064422-checksum-wal-s2954-w0-ra5a3f784
+FAIL checksum-crash seed=4058733 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064426-checksum-crash-s4058733-w0-rc6c16289
+FAIL checksum-crash seed=3163459 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064426-checksum-crash-s3163459-w0-rd8eea748
+PASS compact-crash seed=2937 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064428-compact-crash-s2937-w0-r80f342f1
+PASS mvcc-retirement seed=3000002 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064439-mvcc-retirement-s3000002-w0-rc1055c58
+PASS mvcc-checkpoint seed=3000003 artifacts=$SCRATCH/r6/fuzz/a7/20260928-064439-mvcc-checkpoint-s3000003-w0-r1c096018

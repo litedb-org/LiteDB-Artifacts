@@ -1,0 +1,57 @@
+        /// <summary>The external P1 in the default file-backed configuration (SharedFileHandles, no caller streams).</summary>
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void File_backed_independent_shared_connection_after_a_root_left_in_the_os_cache(bool dataSyncsAgain)
+        {
+            using var file = new TempFile();
+            Setup(file.Filename);
+            var logName = FileHelper.GetLogFile(file.Filename);
+            using var power = new FilePowerLossModel(file.Filename);
+            var armed = false;
+            using var first = new SharedEngine(new EngineSettings
+            {
+                Filename = file.Filename,
+                CheckpointStage = stage => { if (armed && stage == "retirement-before-header-write") power.DataFails = true; }
+            });
+            using var firstDb = new LiteDatabase(first, disposeOnClose: false);
+            firstDb.CheckpointSize = 0;
+            for (var value = 1; value <= 5; value++) Update(firstDb, value);
+            Exception failure = null;
+            using (var reader = first.Query("rows", new Query()))
+            {
+                reader.Read().Should().BeTrue();
+                var thread = new Thread(() =>
+                {
+                    try
+                    {
+                        for (var value = 6; value <= 9; value++) Update(firstDb, value);
+                        armed = true;
+                        firstDb.Checkpoint();
+                        armed = false;
+                    }
+                    catch (Exception ex) { failure = ex; }
+                });
+                thread.Start(); thread.Join();
+            }
+            failure.Should().BeNull();
+            power.DataFails.Should().BeTrue("the checkpoint reached its root publication");
+            BitConverter.ToInt64(SyncPowerLossModel.ReadShared(file.Filename), WalRetirement.RootPosition).Should().BeGreaterThan(0);
+
+            power.DataFails = !dataSyncsAgain;
+            var before = SyncPowerLossModel.ReadShared(logName);
+            using var second = new SharedEngine(new EngineSettings { Filename = file.Filename });
+            using var secondDb = new LiteDatabase(second, disposeOnClose: false);
+            Update(secondDb, 10);
+            var after = SyncPowerLossModel.ReadShared(logName);
+            var changed = Enumerable.Range(0, before.Length / WalChecksum.FrameSize).Count(frame =>
+                !before.Skip(frame * WalChecksum.FrameSize).Take(WalChecksum.FrameSize)
+                    .SequenceEqual(after.Skip(frame * WalChecksum.FrameSize).Take(WalChecksum.FrameSize)));
+            var durable = DurableLogFlush(secondDb);
+            Console.WriteLine($"MEASURE P1 file-backed dataSyncsAgain={dataSyncsAgain}: changed={changed} durable={durable}");
+            durable.Should().Be(dataSyncsAgain);
+            if (!dataSyncsAgain) changed.Should().Be(0, "no retired slot is reused before the data file syncs");
+            else changed.Should().BeGreaterThan(0, "control: slots are reused once the data file syncs");
+            var values = power.AfterPowerLoss(Values);
+            if (durable) values.Should().Equal(new[] { 10 });
+        }

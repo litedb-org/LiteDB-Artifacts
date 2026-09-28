@@ -1,0 +1,26 @@
+diff --git a/LiteDB/Engine/Services/WalIndexService.cs b/LiteDB/Engine/Services/WalIndexService.cs
+index 7bf0a3fab..2ebb47373 100644
+--- a/LiteDB/Engine/Services/WalIndexService.cs
++++ b/LiteDB/Engine/Services/WalIndexService.cs
+@@ -232,6 +232,8 @@ namespace LiteDB.Engine
+             var legacyLimit = _disk.ChecksumsEnabled ? uint.MaxValue : this.LegacyPageLimit(header);
+             // Legacy transactions holding a page that is not a page of this format, by transaction ID.
+             var legacyInvalid = _disk.ChecksumsEnabled ? null : new Dictionary<uint, uint>();
++            // A committed legacy header of this database carries its creation time (never rewritten by 5.x).
++            var legacyIdentity = legacyInvalid == null ? 0L : header.Buffer.ReadInt64(HeaderPage.P_CREATION_TIME);
+             foreach (var buffer in pages)
+             {
+                 var current = buffer.Position;
+@@ -268,7 +270,11 @@ namespace LiteDB.Engine
+                         // A 5.x commit that allocated pages confirms with its header, whose LastPageID
+                         // counts every ID handed out so far, also to transactions still open whose
+                         // pages never reached the WAL (concurrent writers).
+-                        if (pageID == 0) legacyLimit = Math.Max(legacyLimit, buffer.ReadUInt32(HeaderPage.P_LAST_PAGE_ID));
++                        if (pageID == 0)
++                        {
++                            if (buffer.ReadInt64(HeaderPage.P_CREATION_TIME) != legacyIdentity) throw LegacyPageInvalid(0);
++                            legacyLimit = Math.Max(legacyLimit, buffer.ReadUInt32(HeaderPage.P_LAST_PAGE_ID));
++                        }
+                         foreach (var entry in list)
+                             if (entry.PageID > legacyLimit) throw LegacyPageOutOfRange(entry.PageID, legacyLimit);
+                     }

@@ -1,0 +1,96 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.09]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Rebuild_is_refused_where_only_the_data_file_cannot_sync [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Rebuild_is_refused_where_only_the_data_file_cannot_sync [119 ms]
+  Error Message:
+   Expected a <System.IO.IOException> to be thrown, but no exception was thrown.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Rebuild_is_refused_where_only_the_data_file_cannot_sync() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 143
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.12]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "second") [FAIL]
+[xUnit.net 00:00:04.24]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "shared") [FAIL]
+[xUnit.net 00:00:04.31]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "direct") [FAIL]
+[xUnit.net 00:00:04.40]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs [FAIL]
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "second") [115 ms]
+  Error Message:
+   Expected value to be greater than 0L because the WAL keeps what the data file could not make durable, but found 0L.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.BeGreaterThan(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(String mode) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 48
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "shared") [120 ms]
+  Error Message:
+   Expected value to be greater than 0L because the WAL keeps what the data file could not make durable, but found 0L.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.BeGreaterThan(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(String mode) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 48
+   at InvokeStub_UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(mode: "direct") [69 ms]
+  Error Message:
+   Expected value to be greater than 0L because the WAL keeps what the data file could not make durable, but found 0L.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.BeGreaterThan(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(String mode) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 48
+   at InvokeStub_UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_the_wal(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs [22 ms]
+  Error Message:
+   Expected a <System.IO.IOException> to be thrown, but no exception was thrown.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+   at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_is_refused_and_keeps_the_wal_when_only_the_wal_syncs() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 142
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:05.03]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept [FAIL]
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept [625 ms]
+  Error Message:
+   Expected checkpoints to be less than 20 because a kept WAL of n pages costs O(log n) automatic checkpoints, not one per commit, but found 125 (difference of 105).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.BeLessThan(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 80
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     6, Passed:    31, Skipped:     0, Total:    37, Duration: 6 s - LiteDB.Tests.dll (net10.0)

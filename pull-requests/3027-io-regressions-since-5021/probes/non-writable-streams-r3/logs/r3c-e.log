@@ -1,0 +1,141 @@
+Test run for $TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.15]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.87]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.88]   Starting:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E2_5021_damaged_page_error_close(dataW: True, logW: False) [111 ms]
+  Standard Output Messages:
+ ro=True read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=True log changed=False
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E2_5021_damaged_page_error_close(dataW: False, logW: True) [2 ms]
+  Standard Output Messages:
+ ro=True read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E2_5021_damaged_page_error_close(dataW: False, logW: False) [2 ms]
+  Standard Output Messages:
+ ro=True read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1b_fallback_error_close_then_reopen(dataW: False, logW: True) [232 ms]
+  Standard Output Messages:
+ ro=True read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log 0->16384
+   after reopen dataR/logR: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen dataR/logW: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen dataW/logR: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen writable engine: invalidState=False ok 48
+ explicit ReadOnly engine read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ explicit ReadOnly: data changed=False log 0->16384
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1b_fallback_error_close_then_reopen(dataW: True, logW: False) [26 ms]
+  Standard Output Messages:
+ ro=True read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log 0->0
+   after reopen dataR/logR: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen dataR/logW: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen dataW/logR: ro=True ok 48 dataChanged=False logChanged=False
+   after reopen writable engine: invalidState=False ok 48
+ explicit ReadOnly engine read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ explicit ReadOnly: data changed=False log 0->0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: True, logW: False) [39 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False log 0->0
+ data calls=0
+ log calls=1
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: False, logW: False) [22 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=False log 0->0
+ data calls=0
+ log calls=1
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E1_fallback_error_close_on_damaged_legacy_page(dataW: False, logW: True) [23 ms]
+  Standard Output Messages:
+ migrated version=11 log=0
+ damaged legacy data pages=4
+ ro=True
+ read THROW LiteException: invalid segment length in index footer: PageID: 0003 : Data (16 Items)/0
+ data changed=False log changed=True log 0->16384
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=2
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+    Write(16384)@0 <- HeaderJournal.Write <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+
+
+[xUnit.net 00:00:01.47]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E3_current_file_error_close(dataW: False, logW: null) [51 ms]
+  Standard Output Messages:
+ damaged+restamped pages=3 version=12
+ ro=False read THROW LiteException: invalid segment length in index footer: PageID: 0004 : Data (17 Items)/0
+ data changed=False log -
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E3_current_file_error_close(dataW: True, logW: False) [6 ms]
+  Standard Output Messages:
+ damaged+restamped pages=3 version=12
+ ro=False read THROW LiteException: invalid segment length in index footer: PageID: 0004 : Data (17 Items)/0
+ data changed=False log 0->0
+ data calls=0
+ log calls=1
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+   after reopen dataR/logR: ro=False ok 50 dataChanged=False logChanged=False
+   after reopen dataR/logW: ro=False ok 50 dataChanged=False logChanged=False
+   after reopen dataW/logR: ro=False ok 50 dataChanged=False logChanged=False
+   after reopen writable engine: invalidState=False ok 50
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.E3_current_file_error_close(dataW: False, logW: True) [8 ms]
+  Standard Output Messages:
+ damaged+restamped pages=3 version=12
+ ro=False read THROW LiteException: invalid segment length in index footer: PageID: 0004 : Data (17 Items)/0
+ data changed=False log 0->16384
+ data calls=1
+    Write(8192)@0 <- DiskService.<MarkAsInvalidState>b__55_0 <- DiskService.MarkAsInvalidState <- LiteEngine.<Close>b__88_1 <- LiteEngine.Close
+ log calls=2
+    SetLength(0) from 0 <- WalPadding.Pad <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+    Write(16384)@0 <- HeaderJournal.Write <- DiskService.BeginHeaderJournal <- DiskService.MarkHeaderInvalid <- DiskService.<MarkAsInvalidState>b__55_0
+   after reopen dataR/logR: ro=True ok 50 dataChanged=False logChanged=False
+   after reopen dataR/logW: ro=True ok 50 dataChanged=False logChanged=False
+   after reopen dataW/logR: ro=True ok 50 dataChanged=False logChanged=False
+   after reopen writable engine: invalidState=False ok 50
+
+
+
+Test Run Successful.
+Total tests: 11
+     Passed: 11
+ Total time: 2.0095 Seconds

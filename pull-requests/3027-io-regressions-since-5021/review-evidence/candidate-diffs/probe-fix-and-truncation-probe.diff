@@ -1,0 +1,64 @@
+diff --git a/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs b/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
+index dfb6774f1..7b2d8d789 100644
+--- a/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
++++ b/LiteDB.Tests/Regressions/TornWalAppend_Tests.cs
+@@ -87,6 +87,24 @@ namespace LiteDB.Tests.Regressions
+             AssertRecovered(data, log);
+         }
+ 
++        [Fact]
++        public void Review_failed_truncation_keeps_the_original_write_failure()
++        {
++            using var data = new MemoryStream();
++            using var log = new TornLog { IoFailure = false };
++            var settings = new EngineSettings { DataStream = data, LogStream = log, TransactionPageLimit = 1 };
++            using var engine = new LiteEngine(settings);
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            db.GetCollection("rows").Insert(Enumerable.Range(1, 20).Select(id => Row(id, 0)));
++            log.Arm(1, false, failSetLength: true);
++            Exception thrown = null;
++            try { db.GetCollection("rows").Insert(Enumerable.Range(100, 30).Select(id => Row(id, 0))); }
++            catch (Exception ex) { thrown = ex; }
++            thrown.Should().NotBeNull();
++            thrown.ToString().Should().Contain("injected torn frame write", "the cause is the torn write, not its cleanup: " + thrown);
++        }
++
+         private static void WriteLater(LiteDatabase db)
+         {
+             var rows = db.GetCollection("rows");
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index ee64cf2f9..742e56d01 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -140,6 +140,12 @@ namespace LiteDB.Engine
+             lock (_writer.Value) _checksums.Forget(transactionID);
+         }
+ 
+-        internal void StopAfterCheckpointFailure(Exception exception) => _state.Stop(exception);
++        private int _checkpointStopOwned;
++        internal void BeginCheckpointStop(Exception exception) { if (_state.BeginStop(exception)) _checkpointStopOwned = 1; }
++        internal void StopAfterCheckpointFailure(Exception exception)
++        {
++            if (System.Threading.Interlocked.Exchange(ref _checkpointStopOwned, 0) == 1) _state.CompleteStop(exception, true);
++            else _state.Stop(exception);
++        }
+     }
+ }
+diff --git a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+index 77e066fb2..70dd78f1b 100644
+--- a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
++++ b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+@@ -221,6 +221,12 @@ namespace LiteDB.Engine
+                 }
+                 return pages.Count;
+             }
++            catch (Exception error) when (writerEntered)
++            {
++                // PROBE FIX: publish the stop before the WAL writer is released.
++                _disk.BeginCheckpointStop(error);
++                throw;
++            }
+             finally
+             {
+                 if (writerEntered) System.Threading.Monitor.Exit(_disk.WalWriterLock);

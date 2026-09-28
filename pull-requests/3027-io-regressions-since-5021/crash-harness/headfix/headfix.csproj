@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <StartupObject>CrashHarness</StartupObject>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="../crash/*.cs" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$SCRATCH/fixsrc/LiteDB/LiteDB.csproj" SetTargetFramework="TargetFramework=net10.0" />
+  </ItemGroup>
+</Project>

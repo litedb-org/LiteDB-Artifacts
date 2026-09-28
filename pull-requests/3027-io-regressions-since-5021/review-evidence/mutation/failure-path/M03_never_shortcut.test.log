@@ -1,0 +1,19 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:04.87]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [211 ms]
+  Error Message:
+   Expected afterFirst to be 1 because the first operation proves the data file, but found 2.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 111
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:    36, Skipped:     0, Total:    37, Duration: 8 s - LiteDB.Tests.dll (net10.0)

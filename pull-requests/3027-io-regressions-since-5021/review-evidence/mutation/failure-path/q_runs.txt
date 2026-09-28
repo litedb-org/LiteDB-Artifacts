@@ -1,0 +1,68 @@
+M0_none | ['Failed!  - Failed:     1, Passed:    85, Skipped:     0, Total:    86, Duration: 17 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [255 ms]
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+Q1_no_first_sync_proof | ['Failed!  - Failed:    14, Passed:    72, Skipped:     0, Total:    86, Duration: 12 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_again_after_another_connection_left_its_header_unsynced(dataSyncsAgain: False) [356 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_again_after_another_connection_left_its_header_unsynced(dataSyncsAgain: True) [355 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: False) [71 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: True) [90 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_over_caller_file_streams_after_a_salt_rotation_whose_data_sync_failed [74 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineLogSync_Tests.Checkpoint_journal_does_not_make_an_unsynced_truncation_durable_first [91 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineLogSync_Tests.Open_repairing_a_torn_tail_keeps_commits_acknowledged_durable [67 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Commits_durable_before_neither_file_synced_survive_when_only_the_wal_syncs_again(mode: "reopen") [101 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Commits_durable_before_neither_file_synced_survive_when_only_the_wal_syncs_again(mode: "second") [70 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_where_only_the_wal_syncs_leaves_the_legacy_pair_durable [14 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.New_wal_directory_entry_waits_for_the_data_file_too [34 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "second") [124 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "shared") [138 ms]
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [162 ms]
+       Expected durable to be False, but found True.
+       Expected power.AfterPowerLoss(Values) to be equal to {3} because a commit reported durable survives the power loss, but {2} differs at index 0.
+       Expected durable to be False because a fresh engine proves the data file before its first durable commit, but found True.
+       Expected values.Single() to be 6 because a commit reported durable survives the power loss, but found 5.
+       Expected DurableLogFlush(second) to be False because the data file still cannot sync the rotated header, but found True.
+       Expected FilePowerLossModel.Open(image, Values) to be equal to {5} because value 5 was acknowledged durable, but {0} differs at index 0.
+       Expected power.AfterPowerLoss(Values) to be equal to {5} because value 5 was acknowledged durable, but {0} differs at index 0.
+       Expected DurableLogFlush(writer) to be False because the data file cannot sync, but found True.
+       Expected DurableLogFlush(writer) to be False because the data file cannot sync, but found True.
+       Expected image.Log to be equal to {0x02, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x66, 0xFA, 0x10, 0x00, 0x00, 0x1A, 0x11, 0x65, 0x00, …516064 more…}, but {0x02, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x66, 0xFA, 0x
+       Expected DurableLogFlush(db) to be False, but found True.
+       Expected DurableLogFlush(writer) to be False, but found True.
+       Expected power.AfterPowerLoss(Rows) to be 9 because commit 10 is not durable: its log sync waits for the data file, but found 0 (difference of -9).
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+Q2_raw_log_ungated | ['Failed!  - Failed:     1, Passed:    85, Skipped:     0, Total:    86, Duration: 12 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [181 ms]
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+Q3_barrier_ungated | ['Failed!  - Failed:    12, Passed:    74, Skipped:     0, Total:    86, Duration: 13 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [301 ms]
+    Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Conversion_where_only_the_data_file_cannot_sync_leaves_the_legacy_file_durable [110 ms]
+    Failed LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.File_backed_independent_connection_after_a_root_left_in_the_os_cache(dataSyncsAgain: False) [380 ms]
+    Failed LiteDB.Tests.Regressions.RetiredSlotPowerLoss_Tests.Independent_connection_does_not_reuse_retired_slots_while_the_data_file_cannot_sync [236 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Commits_durable_before_neither_file_synced_survive_when_only_the_wal_syncs_again(mode: "reopen") [130 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Commits_durable_before_neither_file_synced_survive_when_only_the_wal_syncs_again(mode: "second") [142 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Commits_durable_before_neither_file_synced_survive_when_only_the_wal_syncs_again(mode: "direct") [128 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Legacy_conversion_where_only_the_wal_syncs_leaves_the_legacy_pair_durable [22 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.New_wal_directory_entry_waits_for_the_data_file_too [51 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "direct") [132 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "second") [157 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "shared") [195 ms]
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+       Expected image.Log to be empty because no log sync came before a data sync, but found at least one item {0x02}.
+       Expected collection to be equal to {9} because every commit reported durable is in the durable WAL; a log sync waits for the data file, but {10} differs at index 0.
+       Expected power.AfterPowerLoss(64) to be 9 because commit 10 is not durable: its log sync waits for the data file, but found 10 (difference of 1).
+       Expected power.AfterPowerLoss(Rows) to be 5, but found 0 (difference of -5).
+       Expected power.AfterPowerLoss(Rows) to be 5, but found 0 (difference of -5).
+       Expected power.AfterPowerLoss(Rows) to be 5, but found 0 (difference of -5).
+       Expected image.Log to be equal to {0x02, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x66, 0xFA, 0x10, 0x00, 0x00, 0x1A, 0x11, 0x65, 0x00, …516064 more…}, but {0x02, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x67, 0x1F, 0x
+       Expected directorySyncs to be 0 because the new WAL's name is not synced before the data file, but found 1 (difference of 1).
+       Expected power.AfterPowerLoss(Rows) to be 9 because commit 10 is not durable: its log sync waits for the data file, but found 0 (difference of -9).
+       Expected power.AfterPowerLoss(Rows) to be 9 because commit 10 is not durable: its log sync waits for the data file, but found 0 (difference of -9).
+       Expected power.AfterPowerLoss(Rows) to be 9 because commit 10 is not durable: its log sync waits for the data file, but found 0 (difference of -9).
+Q4_no_retry | ['Failed!  - Failed:     2, Passed:    84, Skipped:     0, Total:    86, Duration: 12 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [191 ms]
+    Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Full_checkpoint_whose_data_sync_fails_keeps_every_durable_commit(mode: "direct") [98 ms]
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.
+       Expected power.AfterPowerLoss(Rows) to be 11 because once the data file syncs again, the next log sync follows a data sync, but found 9 (difference of -2).
+Q5_skip_keeps_synced_flag | ['Failed!  - Failed:     1, Passed:    85, Skipped:     0, Total:    86, Duration: 12 s - LiteDB.Tests.dll (net10.0)']
+    Failed LiteDB.Tests.Regressions.ReviewEncryptedLogSync_Tests.New_log_stream_while_the_data_file_cannot_sync(password: "secret") [279 ms]
+       Expected values to be equal to {5} because commits acknowledged durable before the storage stopped syncing survive, but {0} differs at index 0.

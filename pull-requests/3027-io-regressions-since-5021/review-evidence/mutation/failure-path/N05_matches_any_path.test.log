@@ -1,0 +1,34 @@
+Test run for $SCRATCH/rv-sync2/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:08.19]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Data_file_is_proven_once_per_data_header [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Data_file_is_proven_once_per_data_header [230 ms]
+  Error Message:
+   Expected power.DataSyncs to be 0 because every operation found the header the setup left durable, but found 9 (difference of 9).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Data_file_is_proven_once_per_data_header() in $SCRATCH/rv-sync2/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 117
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:08.87]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Slot_reuse_adds_no_data_sync_per_shared_operation [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Slot_reuse_adds_no_data_sync_per_shared_operation [440 ms]
+  Error Message:
+   Expected power.DataSyncs to be 14, but found 19 (difference of 5).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Slot_reuse_adds_no_data_sync_per_shared_operation() in $SCRATCH/rv-sync2/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 223
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     2, Passed:    82, Skipped:     0, Total:    84, Duration: 14 s - LiteDB.Tests.dll (net10.0)

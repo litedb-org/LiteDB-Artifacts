@@ -1,0 +1,37 @@
+Test run for $SCRATCH/rv-sync3/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:04.97]     LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [FAIL]
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [265 ms]
+  Error Message:
+   LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 0.
+  Stack Trace:
+     at LiteDB.Engine.PageChecksum.Validate(BufferSlice page, Int64 position) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/PageChecksum.cs:line 34
+   at LiteDB.Engine.DiskService.LoadChecksums(BufferSlice header) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Checksums.cs:line 20
+   at LiteDB.Engine.DiskService.ValidateExistingData() in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Validation.cs:line 43
+   at LiteDB.Engine.DiskService..ctor(EngineSettings settings, EngineState state, Int32[] memorySegmentSizes) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.cs:line 96
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 160
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.OpenImage[T](ValueTuple`2 captured, String password, Func`2 read) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 183
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 77
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:11.19]     LiteDB.Tests.Regressions.ConvertedWalBesideLegacyHeader_Tests.Frame_is_recognised_by_its_magic_position_and_crc [FAIL]
+  Failed LiteDB.Tests.Regressions.ConvertedWalBesideLegacyHeader_Tests.Frame_is_recognised_by_its_magic_position_and_crc [85 ms]
+  Error Message:
+   Expected WalChecksum.IsFrame(frame, Constants.PAGE_SIZE) to be False because another position, but found True.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Primitives.BooleanAssertions`1.BeFalse(String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.ConvertedWalBesideLegacyHeader_Tests.Frame_is_recognised_by_its_magic_position_and_crc() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ConvertedWalBesideLegacyHeader_Tests.cs:line 80
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     2, Passed:    98, Skipped:     0, Total:   100, Duration: 11 s - LiteDB.Tests.dll (net10.0)

@@ -1,0 +1,23 @@
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index 2973c19f6..10d811d9c 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -88,13 +88,17 @@ namespace LiteDB.Engine
+                 using var structural = new StructuralScope(_signals);
+                 // Repair and sync the header before removing its recovery copy.
+                 // Legacy redo stays until checkpoint also repairs converted pages.
+-                var data = _dataPool.Writer.Value;
+                 if (_recoveredHeader != null)
+                 {
+                     // Make an OS-cached recovery copy durable before repairing its primary. The primary
+                     // is torn: no data sync may come first (the data barrier below proves the file).
++                    // CANDIDATE: an AesStream syncs its file when created, so open the data writer after.
+                     SyncLogBarrierUnproven(((ChecksummedWalStream)_writer.Value).RawStream);
+                     SyncLogDirectory();
++                }
++                var data = _dataPool.Writer.Value;
++                if (_recoveredHeader != null)
++                {
+                     this.CrashPoint("promotion-recovery-before-header-write");
+                     data.Position = 0;
+                     data.Write(header, 0, header.Length);

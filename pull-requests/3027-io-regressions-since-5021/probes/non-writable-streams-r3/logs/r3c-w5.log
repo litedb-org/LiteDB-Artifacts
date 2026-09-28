@@ -1,0 +1,60 @@
+Test run for $TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+$TMPDIR/review3-c/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.16]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.91]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.93]   Starting:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W5_rooted_v13_data_readonly_log_writable_writes_and_reopen(compact: True) [394 ms]
+  Standard Output Messages:
+ version=13 log=385024
+ ro=False
+ update 0 ok 8
+ update 1 ok 8
+ update 2 ok 8
+ update 3 ok 8
+ update 4 ok 8
+ update 5 ok 8
+ insert ok 100
+ value25 ok 9
+ data changed=False log 385024->442368
+ data calls=0
+ reopen dataR/logR: ro=False count=9 value25=9 all25=9
+ reopen dataR/logW: ro=False count=9 value25=9 all25=9
+ reopen dataW/logR: ro=False count=9 value25=9 all25=9
+ writable+checkpoint: count=9 value25=9 untouched=1
+
+
+[xUnit.net 00:00:01.50]   Finished:    LiteDB.Tests
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W5_rooted_v13_data_readonly_log_writable_writes_and_reopen(compact: False) [92 ms]
+  Standard Output Messages:
+ version=13 log=385024
+ ro=False
+ update 0 ok 8
+ update 1 ok 8
+ update 2 ok 8
+ update 3 ok 8
+ update 4 ok 8
+ update 5 ok 8
+ insert ok 100
+ value25 ok 9
+ data changed=False log 385024->442368
+ data calls=0
+ reopen dataR/logR: ro=False count=9 value25=9 all25=9
+ reopen dataR/logW: ro=False count=9 value25=9 all25=9
+ reopen dataW/logR: ro=False count=9 value25=9 all25=9
+ writable+checkpoint: count=9 value25=9 untouched=1
+
+
+  Passed LiteDB.Tests.Engine.ZzProbe3_Tests.W6_walcrash_fallback_matches_5021_counts [16 ms]
+  Standard Output Messages:
+ dataR/logR: ro=True docs=101 value7=21 idx7=21
+ dataR/logW: ro=True docs=101 value7=21 idx7=21
+ dataW/logR: ro=True docs=101 value7=21 idx7=21
+
+
+
+Test Run Successful.
+Total tests: 3
+     Passed: 3
+ Total time: 2.0137 Seconds

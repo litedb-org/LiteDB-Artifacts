@@ -1,0 +1,70 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:07.57]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: False) [FAIL]
+[xUnit.net 00:00:07.67]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: True) [FAIL]
+[xUnit.net 00:00:07.83]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [FAIL]
+[xUnit.net 00:00:08.02]     LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_conversion_whose_data_sync_failed(dataSyncsAgain: False) [FAIL]
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: False) [164 ms]
+  Error Message:
+   Expected durable to be False because a fresh engine proves the data file before its first durable commit, but found True.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Primitives.BooleanAssertions`1.Be(Boolean expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(Boolean dataSyncsAgain) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 57
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(dataSyncsAgain: True) [100 ms]
+  Error Message:
+   Expected values.Single() to be 6 because a commit reported durable survives the power loss, but found 5.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(Boolean dataSyncsAgain) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 61
+   at InvokeStub_FreshEngineDurability_Tests.Fresh_engine_after_a_salt_rotation_whose_data_sync_failed(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header [153 ms]
+  Error Message:
+   Expected afterFirst to be 1 because the first operation proves the data file, but found 0 (difference of -1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Shared_connection_proves_the_data_file_once_per_data_header() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 111
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_conversion_whose_data_sync_failed(dataSyncsAgain: False) [192 ms]
+  Error Message:
+   Expected durable to be False because a fresh engine proves the data file before its first durable commit, but found True.
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Primitives.BooleanAssertions`1.Be(Boolean expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.FreshEngineDurability_Tests.Fresh_engine_after_a_conversion_whose_data_sync_failed(Boolean dataSyncsAgain) in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/FreshEngineDurability_Tests.cs:line 89
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+
+Failed!  - Failed:     4, Passed:    33, Skipped:     0, Total:    37, Duration: 10 s - LiteDB.Tests.dll (net10.0)

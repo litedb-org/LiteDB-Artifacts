@@ -1,0 +1,19 @@
+Test run for $REPO/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:14.74]     LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_waits_for_an_active_writer_before_replacing_engine_services [FAIL]
+  Failed LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_waits_for_an_active_writer_before_replacing_engine_services [10 ms]
+  Error Message:
+   System.ObjectDisposedException : Cannot access a disposed object.
+Object name: 'System.Threading.ThreadLocal`1[[LiteDB.Engine.TransactionService, LiteDB, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+  Stack Trace:
+     at System.Threading.ThreadLocal`1.GetValueSlow()
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in $REPO/LiteDB/Engine/Engine/Transaction.cs:line 131
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in $REPO/LiteDB/Engine/Engine/Transaction.cs:line 130
+   at LiteDB.Engine.LiteEngine.Commit() in $REPO/LiteDB/Engine/Engine/Transaction.cs:line 60
+   at LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_waits_for_an_active_writer_before_replacing_engine_services() in $REPO/LiteDB.Tests/Issues/Issue2965_Tests.cs:line 28
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:32.83]     LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [SKIP]
+  Skipped LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [1 ms]
+Results File: $SCRATCH/p10c/issues.trx
+
+Failed!  - Failed:     1, Passed:  1565, Skipped:     1, Total:  1567, Duration: 56 s - LiteDB.Tests.dll (net10.0)

@@ -1,0 +1,148 @@
+Test run for $SCRATCH/rv-sync3/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:05.62]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "rollback", collection: "docs", expected: 21) [FAIL]
+[xUnit.net 00:00:05.76]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "churn", collection: "b", expected: 50) [FAIL]
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "rollback", collection: "docs", expected: 21) [21 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "churn", collection: "b", expected: 50) [31 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.78]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "grown", collection: "docs", expected: 300) [FAIL]
+[xUnit.net 00:00:05.83]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-churn", collection: "b", expected: 50) [FAIL]
+[xUnit.net 00:00:05.84]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "bigwal", collection: "docs", expected: 400) [FAIL]
+[xUnit.net 00:00:05.86]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-rollback", collection: "docs", expected: 21) [FAIL]
+[xUnit.net 00:00:05.90]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-grown", collection: "docs", expected: 300) [FAIL]
+[xUnit.net 00:00:05.91]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-initial", collection: "docs", expected: 200) [FAIL]
+[xUnit.net 00:00:05.93]     LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-bigwal", collection: "docs", expected: 400) [FAIL]
+[xUnit.net 00:00:06.24]     LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [FAIL]
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "grown", collection: "docs", expected: 300) [17 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 128) beyond any page the data and log files can hold (up to 127), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-churn", collection: "b", expected: 50) [40 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "bigwal", collection: "docs", expected: 400) [11 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-rollback", collection: "docs", expected: 21) [21 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-grown", collection: "docs", expected: 300) [33 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 103) beyond any page the data and log files can hold (up to 102), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-initial", collection: "docs", expected: 200) [15 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(name: "enc-bigwal", collection: "docs", expected: 400) [16 ms]
+  Error Message:
+   LiteDB.LiteException : Cannot open this database: its log file holds a committed page (ID 2) beyond any page the data and log files can hold (up to 0), so the log is damaged or belongs to another data file. Replaying it would write that page far past the end of the data file. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.
+  Stack Trace:
+     at LiteDB.Engine.WalIndexService.RestoreIndex(HeaderPage& header, Action`1 validateHeader) in $SCRATCH/rv-sync3/LiteDB/Engine/Services/WalIndexService.cs:line 263
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 223
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Legacy_5_0_21_crash_images_open(String name, String collection, Int32 expected) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 164
+   at InvokeStub_ReReview3_Tests.Legacy_5_0_21_crash_images_open(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first [304 ms]
+  Error Message:
+   LiteDB.Engine.PageChecksumException : Checksum mismatch in Data file at position 0.
+  Stack Trace:
+     at LiteDB.Engine.PageChecksum.Validate(BufferSlice page, Int64 position) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/PageChecksum.cs:line 34
+   at LiteDB.Engine.DiskService.LoadChecksums(BufferSlice header) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Checksums.cs:line 20
+   at LiteDB.Engine.DiskService.ValidateExistingData() in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.Validation.cs:line 43
+   at LiteDB.Engine.DiskService..ctor(EngineSettings settings, EngineState state, Int32[] memorySegmentSizes) in $SCRATCH/rv-sync3/LiteDB/Engine/Disk/DiskService.cs:line 96
+   at LiteDB.Engine.LiteEngine.Open() in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 160
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in $SCRATCH/rv-sync3/LiteDB/Engine/LiteEngine.cs:line 90
+   at LiteDB.ConnectionString.CreateEngine(Action`1 engineSettingsAction) in $SCRATCH/rv-sync3/LiteDB/Client/Structures/ConnectionString.cs:line 299
+   at LiteDB.LiteDatabase..ctor(ConnectionString connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 50
+   at LiteDB.LiteDatabase..ctor(String connectionString, BsonMapper mapper) in $SCRATCH/rv-sync3/LiteDB/Client/Database/LiteDatabase.cs:line 38
+   at LiteDB.Tests.Regressions.ReReview3_Tests.OpenImage[T](ValueTuple`2 captured, String password, Func`2 read) in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 183
+   at LiteDB.Tests.Regressions.ReReview3_Tests.Encrypted_open_repairing_a_torn_header_makes_its_journal_durable_first() in $SCRATCH/rv-sync3/LiteDB.Tests/Regressions/ReReview3_Tests.cs:line 77
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:    10, Passed:    90, Skipped:     0, Total:   100, Duration: 12 s - LiteDB.Tests.dll (net10.0)

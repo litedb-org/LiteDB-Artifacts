@@ -1,0 +1,19 @@
+Test run for $SCRATCH/rv-sync/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:13.82]     LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept [FAIL]
+  Failed LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept [6 s]
+  Error Message:
+   Expected checkpoints to be less than 20 because a kept WAL of n pages costs O(log n) automatic checkpoints, not one per commit, but found 299 (difference of 279).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.BeLessThan(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Regressions.UnsyncedBackfillPowerLoss_Tests.Automatic_checkpoints_are_rationed_while_the_wal_is_kept() in $SCRATCH/rv-sync/LiteDB.Tests/Regressions/UnsyncedBackfillPowerLoss_Tests.cs:line 80
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:    36, Skipped:     0, Total:    37, Duration: 12 s - LiteDB.Tests.dll (net10.0)
