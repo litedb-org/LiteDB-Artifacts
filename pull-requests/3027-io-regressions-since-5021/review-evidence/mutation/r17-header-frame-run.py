@@ -1,5 +1,5 @@
 import subprocess, sys, os, pathlib
-ROOT = pathlib.Path("/tmp/claude-0/-home-user-LiteDB/90458809-76fd-5397-a85d-94cbedce3df6/scratchpad/mutwt")
+ROOT = pathlib.Path("$SCRATCH/mutwt")
 env = dict(os.environ, PATH="/root/.dotnet:" + os.environ["PATH"], DOTNET_ROOT="/root/.dotnet")
 FILTER = "|".join("FullyQualifiedName~" + c for c in ["HeaderFrame_Tests","AcknowledgedReopen_Tests","FreshEngineDurability_Tests","PageChecksum_Tests","CompactPromotionRejection_Tests","CompactPromotionFileRecovery_Tests","UnsyncableDataFile_Tests","UnsyncedBackfillPowerLoss_Tests","LiteDB.Internals.Disk_Tests","WalDurability_Tests"])
 HF = "LiteDB/Engine/Disk/DiskService.HeaderFrame.cs"
