@@ -1,0 +1,165 @@
+# Validation of the gate head: safety checks against dev 5dd942a73 (at 0e060c2f5, 899b5acc5 and 3d136a46f), the checksum fuzz command, pinned corpus, LiteDB.Fuzz.Tests and net462/net481 test builds on 0ce00ee55 (logs in logs/fuzz/fuzz-g), the HeaderFrame_Tests split (c98b25b45, 31/31) and the C# size check
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T05:35:47.711Z (result 2026-09-29T05:35:54.817Z): Get the safety checks' exit codes
+$ cd $SCRATCH/anchorwt && for c in check_coverage_regression check_fault_points check_contracts; do python3 .github/scripts/$c.py --base 5dd942a73 --head HEAD > /dev/null 2>&1; echo "$c exit=$?"; done; python3 .github/scripts/check_test_evidence.py --help 2>&1 | head -5
+--- output
+check_coverage_regression exit=0
+check_fault_points exit=0
+check_contracts exit=0
+usage: check_test_evidence.py [-h] --artifacts ARTIFACTS --tier {pr,full}
+                              --sha SHA [--needs-env NEEDS_ENV] [--head HEAD]
+                              [--config CONFIG] [--output OUTPUT]
+
+Safety evidence: a green CI run must be complete, current and actually
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T06:28:20.620Z (result 2026-09-29T06:28:22.987Z): Run fuzz checksum command, corpus replay and Framework builds
+$ S=$SCRATCH; out=$S/fuzz-g; rm -rf $out; mkdir -p $out; cd $S/testwt && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj > $out/restore.log 2>&1
+for fw in net8.0 net10.0; do dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f $fw --no-restore -p:TestingEnabled=true > $out/build-$fw.log 2>&1 || echo "BUILD FAIL $fw"; done
+for fw in net8.0 net10.0; do TZ=UTC dotnet run --project LiteDB.Fuzz -c Release --no-build -f $fw -- --target checksum-page,checksum-wal,checksum-migration,checksum-crash,compact-crash,mvcc-retirement,mvcc-checkpoint --seed 2954 --count 28 --determinism-check --artifact-dir $out/a-$fw > $out/checksums-$fw.log 2>&1; echo "checksums $fw exit=$?"; done
+dotnet restore LiteDB.Fuzz.Tests/LiteDB.Fuzz.Tests.csproj > $out/ftrestore.log 2>&1
+TZ=UTC dotnet test LiteDB.Fuzz.Tests/LiteDB.Fuzz.Tests.csproj -c Release --no-restore -p:TestingEnabled=true > $out/fuzz-tests.log 2>&1; echo "fuzz-tests exit=$?"; grep -E "Passed!|Failed!" $out/fuzz-tests.log
+for fw in net462 net481; do dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f $fw -v q > $out/build-tests-$fw.log 2>&1; echo "tests build $fw exit=$? $(grep -E 'rror\(s\)' $out/build-tests-$fw.log)"; done
+--- output
+Command running in background with ID: bkw9a36wu. Output is being written to: $SESSION/tasks/bkw9a36wu.output. You will be notified when it completes. To check interim output, use Read on that file path.
+Session cwd remains $REPO; directory changes made by the backgrounded command do not apply to subsequent commands.
+
+=== 2026-09-29T06:30:35.990Z (result 2026-09-29T06:30:38.202Z): Read fuzz and Framework build results
+$ cat $SESSION/tasks/bkw9a36wu.output; S=$SCRATCH/fuzz-g; tail -3 $S/checksums-net8.0.log $S/checksums-net10.0.log
+--- output
+Exit code 1
+checksums net8.0 exit=0
+checksums net10.0 exit=0
+fuzz-tests exit=0
+Passed!  - Failed:     0, Passed:    24, Skipped:     0, Total:    24, Duration: 7 s - LiteDB.Fuzz.Tests.dll (net8.0)
+tests build net462 exit=0     0 Error(s)
+tests build net481 exit=0     0 Error(s)
+
+[exited with code 0]
+tail: option used in invalid context -- 3
+
+=== 2026-09-29T06:33:42.731Z (result 2026-09-29T06:34:00.271Z): Split encrypted header tests into a partial file
+$ cd $SCRATCH/anchorwt && python3 - <<'EOF'
+p='LiteDB.Tests/Regressions/HeaderFrame_Tests.cs'
+s=open(p).read()
+start=s.index('''        /// <summary>
+        /// An encrypted data file whose header page was never written back reads as zeros through its''')
+end=s.index('''        /// <summary>
+        /// An intact data header of another salt always wins''')
+moved=s[start:end]
+s=s[:start]+s[end:]
+s=s.replace('    public class HeaderFrame_Tests\n','    public partial class HeaderFrame_Tests\n',1)
+open(p,'w').write(s)
+head='''#if DEBUG || TESTING
+using System;
+using System.IO;
+using System.Linq;
+using FluentAssertions;
+using LiteDB.Engine;
+using LiteDB.Tests.Issues;
+using Xunit;
+using static LiteDB.Constants;
+
+namespace LiteDB.Tests.Regressions
+{
+    /// <summary>
+    /// Decision 11 for encrypted files: through encryption a sector never written back holds zero
+    /// ciphertext, which decrypts to one fixed block (AES in ECB mode), not to zeros. A header page
+    /// never written back, or only some of its sectors, is restored from the header frame like a
+    /// plain one; a sector of any other bytes is refused with both files unchanged.
+    /// </summary>
+    public partial class HeaderFrame_Tests
+    {
+'''
+tail='''    }
+}
+#endif
+'''
+open('LiteDB.Tests/Regressions/HeaderFrame_Tests.Encrypted.cs','w').write(head+moved.rstrip('\n')+'\n'+tail)
+EOF
+wc -l LiteDB.Tests/Regressions/HeaderFrame_Tests*.cs; python3 scripts/check-csharp-size.py --base 5dd942a73 2>&1 | grep -v "^WARNING"; export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error |warning CS|rror\(s\)" | sort -u | head -5 && dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~HeaderFrame_Tests" 2>&1 | grep -E "Passed!|Failed!"
+--- output
+  171 LiteDB.Tests/Regressions/HeaderFrame_Tests.Encrypted.cs
+  429 LiteDB.Tests/Regressions/HeaderFrame_Tests.cs
+  600 total
+ERROR: LiteDB.Tests/Regressions/HeaderFrame_Tests.cs: 578 lines exceeds 500; split by responsibility.
+    0 Error(s)
+$SCRATCH/anchorwt/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(105,57): warning CS1718: Comparison made to same variable; did you mean to compare something else? [$SCRATCH/anchorwt/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+$SCRATCH/anchorwt/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(91,58): warning CS1718: Comparison made to same variable; did you mean to compare something else? [$SCRATCH/anchorwt/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+$SCRATCH/anchorwt/LiteDB.Tests/Issues/Issue2265_Tests.cs(38,20): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [$SCRATCH/anchorwt/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+$SCRATCH/anchorwt/LiteDB.Tests/Regressions/StickyFailure_Tests.cs(350,41): warning CS0649: Field 'StickyFailure_Tests.Syncs.Log' is never assigned to, and will always have its default value 0 [$SCRATCH/anchorwt/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+Passed!  - Failed:     0, Passed:    31, Skipped:     0, Total:    31, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T06:34:09.794Z (result 2026-09-29T06:34:12.832Z): Commit the split and rerun the size check
+$ cd $SCRATCH/anchorwt && git add LiteDB.Tests/Regressions/HeaderFrame_Tests.cs LiteDB.Tests/Regressions/HeaderFrame_Tests.Encrypted.cs && git commit -q -F - <<'EOF'
+Move the encrypted header frame tests into their own file
+
+HeaderFrame_Tests.cs grew to 578 lines with the encrypted partial-header
+tests, past the 500-line limit of scripts/check-csharp-size.py, which CI
+runs. The encrypted tests and their helpers move unchanged into
+HeaderFrame_Tests.Encrypted.cs (a partial of the same class, so the class
+keeps its trait and test collection).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+EOF
+python3 scripts/check-csharp-size.py --base 5dd942a73 > $SCRATCH/size.log 2>&1; echo "size exit=$?"; grep -v "^WARNING" $SCRATCH/size.log | head -3; git log --oneline -2
+--- output
+size exit=0
+c98b25b45 Move the encrypted header frame tests into their own file
+0ce00ee55 Tighten the commit outcome after the independent review of the gate fixes
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T06:35:11.708Z (result 2026-09-29T06:35:37.480Z): Finish the merge and run proof and safety checks
+$ cd $SCRATCH/anchorwt && sed -i 's|HeaderFrame_Tests.cs#Encrypted_data_file_left_empty_is_restored_from_its_log|HeaderFrame_Tests.Encrypted.cs#Encrypted_data_file_left_empty_is_restored_from_its_log|' .github/safety/regression-proofs.json .github/repro-ci.json && git add .github/repro-ci.json .github/safety/regression-proofs.json .github/scripts/test_compose_repro_matrix.py docs/reprorunner.md && GIT_EDITOR=true git cherry-pick --continue 2>&1 | tail -1 && git log --oneline -4 && python3 .github/scripts/regression_proof.py validate 2>&1 | tail -3; python3 .github/scripts/regression_proof.py select --base 5dd942a73 --labels '["bug"]' 2>&1 | tail -6; (cd .github/scripts && python3 -m unittest discover -q -p 'test_*.py' 2>&1 | tail -2); for c in check_coverage_regression check_fault_points check_contracts; do python3 .github/scripts/$c.py --base 5dd942a73 --head HEAD >/dev/null 2>&1; echo "$c exit=$?"; done; python3 scripts/check-csharp-size.py --base 5dd942a73 >/dev/null 2>&1; echo "size exit=$?"
+--- output
+ create mode 100644 LiteDB.ReproRunner/Repros/Issue_3027_TornWalAppend/repro.json
+899b5acc5 Prove the torn WAL append, failed safepoint write and lost data header fixes
+ecb9eb4a5 Prove four more #3027 fixes against the published 6.0.0-prerelease.319
+c98b25b45 Move the encrypted header frame tests into their own file
+0ce00ee55 Tighten the commit outcome after the independent review of the gate fixes
+
+14 regression proofs in `.github/safety/regression-proofs.json`.
+
+## Regression proof: passed
+
+
+Proofs to run: `Issue_3027_LegacyWalConversion` (known bad: package 6.0.0-prerelease.319), `Issue_3027_LegacyDroppedIndex` (known bad: package 6.0.0-prerelease.319), `Issue_3027_LegacyDamagedDocument` (known bad: package 6.0.0-prerelease.319), `Issue_2242_UnsyncableStorage` (known bad: package 6.0.0-prerelease.319), `Issue_3027_SharedMutexNameLength` (known bad: package 6.0.0-prerelease.319), `Issue_3027_DumpInTransaction` (known bad: package 6.0.0-prerelease.319), `Issue_3027_StreamDatabaseDispose` (known bad: package 6.0.0-prerelease.319), `Issue_3027_LegacyReadOnlyStream` (known bad: package 6.0.0-prerelease.319), `Issue_3027_ForeignLegacyWal` (known bad: package 6.0.0-prerelease.319), `Issue_3027_TornWalAppend` (known bad: package 6.0.0-prerelease.319), `Issue_3027_FailedSafepointWrite` (known bad: package 6.0.0-prerelease.319), `Issue_3027_LostHeaderBesideWal` (known bad: package 6.0.0-prerelease.319)
+
+
+OK
+check_coverage_regression exit=0
+check_fault_points exit=0
+check_contracts exit=0
+size exit=0
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T07:36:25.978Z (result 2026-09-29T07:36:51.756Z): Finish merge and run all proof and safety checks
+$ cd $SCRATCH/anchorwt && git add .github/repro-ci.json .github/safety/regression-proofs.json docs/reprorunner.md .github/scripts/test_compose_repro_matrix.py && GIT_EDITOR=true git cherry-pick --continue 2>&1 | tail -1; git log --oneline -4; grep -c "<<<<<<<\|>>>>>>>" .github/repro-ci.json .github/safety/regression-proofs.json docs/reprorunner.md .github/scripts/test_compose_repro_matrix.py; python3 .github/scripts/regression_proof.py validate 2>&1 | tail -2; python3 .github/scripts/regression_proof.py select --base 5dd942a73 --labels '["bug"]' 2>&1 | grep -o "Issue_[0-9A-Za-z_]*" | sort -u | tr '\n' ' '; echo; (cd .github/scripts && python3 -m unittest discover -q -p 'test_*.py' 2>&1 | tail -1); for c in check_coverage_regression check_fault_points check_contracts; do python3 .github/scripts/$c.py --base 5dd942a73 --head HEAD >/dev/null 2>&1; echo "$c exit=$?"; done; python3 scripts/check-csharp-size.py --base 5dd942a73 >/dev/null 2>&1; echo "size exit=$?"; for c in $(git rev-list 899b5acc5..HEAD); do m=$(git log -1 --format=%B $c); echo "$(git log -1 --format=%h $c) co=$(echo "$m" | grep -c '^Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>$') s=$(echo "$m" | grep -c '^Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh$')"; done
+--- output
+ create mode 100644 LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/repro.json
+3d136a46f Prove the promotion that waited on a failed checkpoint fix
+5ffa46d13 Prove the overwrite barrier on a log that cannot sync
+79e53c5cc Prove the header journal recovery fix after a failed header sync
+899b5acc5 Prove the torn WAL append, failed safepoint write and lost data header fixes
+.github/repro-ci.json:0
+.github/safety/regression-proofs.json:0
+docs/reprorunner.md:0
+.github/scripts/test_compose_repro_matrix.py:0
+17 regression proofs in `.github/safety/regression-proofs.json`.
+
+Issue_2242_UnsyncableStorage Issue_3027_DumpInTransaction Issue_3027_FailedHeaderSync Issue_3027_FailedSafepointWrite Issue_3027_ForeignLegacyWal Issue_3027_LegacyDamagedDocument Issue_3027_LegacyDroppedIndex Issue_3027_LegacyReadOnlyStream Issue_3027_LegacyWalConversion Issue_3027_LostHeaderBesideWal Issue_3027_OverwriteBehindUnsyncedLog Issue_3027_PromotionAfterFailedCheckpoint Issue_3027_SharedMutexNameLength Issue_3027_StreamDatabaseDispose Issue_3027_TornWalAppend 
+OK
+check_coverage_regression exit=0
+check_fault_points exit=0
+check_contracts exit=0
+size exit=0
+3d136a46f co=1 s=1
+5ffa46d13 co=1 s=1
+79e53c5cc co=1 s=1
+Shell cwd was reset to $REPO
+

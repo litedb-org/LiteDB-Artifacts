@@ -1,0 +1,116 @@
+WARNING: LiteDB/Engine/Disk/DiskService.CommitDurability.cs:32: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.DataWrites.cs:60: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.DataWrites.cs:71: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.DurableFlush.cs:343: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.HeaderFrame.cs:46: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.TrailingPages.cs:40: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.TrailingPages.cs:47: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.WalWrite.cs:326: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.cs:390: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/DiskService.cs:396: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/Streams/AesStream.cs:172: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:67: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:79: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Engine/Services/RebuildRecovery.cs:71: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+WARNING: LiteDB/Utils/NativeFileSync.cs:47: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+## Fault-point registry: passed
+
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+- :warning: New persistent I/O operation: register a fault point for this boundary or record it under unhookedTransitions in .github/safety/fault-points.json
+
+| Hook | Protocol | Evidence | Gap |
+| --- | --- | --- | --- |
+| `checkpoint-stage:retirement-after-header-write` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-header-write` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, TornPromotion_RemainsRecoverableAfterTwoTornRepairs, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-journal-retire-flush` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-header-flushed` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, DamagedOrCrcValidMalformedProofs_FailClosedWithoutChangingSources, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-journal-retired` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-after-record-write` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-record-write` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-records-flushed` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `process-crash:wal-confirmation-after-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-confirmation-before-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-page-after-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-page-before-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-after-durable-flush` | WAL commit | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, SharedCommit_HonorsDurabilitySettingAtConfirmation, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-before-durable-flush` | WAL commit | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, SharedCommit_DeviceFailuresRecoverWholeTransactionsAndReleaseWriterOwnership, SharedCommit_HonorsDurabilitySettingAtConfirmation, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-after-index-confirmation` | WAL commit publication | Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-before-index-confirmation` | WAL commit publication | RecoveredHeaderKeepsCheckpointOutsideCommitPublication, fuzz:power-loss, fuzz:shared |  |
+| `injector:SimulateDirectoryErrno` | WAL directory entry sync | A_failed_directory_sync_fails_the_commit, A_directory_that_cannot_sync_keeps_committing_without_durable_commits, A_directory_that_cannot_sync_fails_a_durable_commit_before_it_writes |  |
+| `process-crash:header-frame-after-write` | WAL header frame (decision 11) | First_commit_of_an_empty_wal_cut_at_its_header_frame_keeps_the_committed_rows, First_commit_of_an_empty_wal_cut_at_its_header_frame_keeps_the_committed_rows |  |
+| `process-crash:header-frame-before-write` | WAL header frame (decision 11) | First_commit_of_an_empty_wal_cut_at_its_header_frame_keeps_the_committed_rows, First_commit_of_an_empty_wal_cut_at_its_header_frame_keeps_the_committed_rows |  |
+| `injector:SimulateDiskWriteFail` | WAL page writes | Failure_at_each_wal_page_boundary_never_publishes_partial_documents_or_schemas, FailedConfirmationAfterTheLastFlush_ReleasesItsFrameAndRemainsUncommitted, fuzz:storage |  |
+| `checkpoint-stage:before-wal-reclaim-lock` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary |  |
+| `checkpoint-stage:wal-slot-cleared` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `checkpoint-stage:wal-slots-flushed` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `checkpoint-stage:wal-slots-published` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `injector:AfterFailedWalWrite` | WAL write failure teardown | Commit_waiting_for_the_writer_during_a_failed_rewrite_is_never_acknowledged_and_lost |  |
+| `process-crash:checkpoint-after-clear` | checkpoint WAL clearing | RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:mvcc-checkpoint, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-clear` | checkpoint WAL clearing | RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:mvcc-checkpoint, fuzz:power-loss, fuzz:shared |  |
+| `checkpoint-stage:before-commit-lock` | checkpoint admission | RecoveredHeaderKeepsCheckpointOutsideCommitPublication, RootedFullCheckpoint_FailedJournalSyncPreservesOriginalGeneration, fuzz:mvcc-checkpoint |  |
+| `checkpoint-stage:before-index-lock` | checkpoint admission | CheckpointCannotPassVersionCaptureBeforePinPublication, fuzz:cursor-handoff |  |
+| `checkpoint-stage:data-flushed` | checkpoint backfill | InterruptedFullCheckpointRecoversCommittedState |  |
+| `checkpoint-stage:data-page` | checkpoint backfill | InterruptedFullCheckpointRecoversCommittedState, KillingPartialCheckpointerDoesNotInvalidateAnotherProcessesReader |  |
+| `process-crash:checkpoint-after-data-flush` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-after-page-write` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-data-flush` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-page-write` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `checkpoint-stage:after-reclaim` | checkpoint reclamation | InterruptedFullCheckpointRecoversCommittedState | Only the checkpoint exception model is claimed; process death and modeled power loss after reclamation are not. |
+| `checkpoint-stage:before-reclaim` | checkpoint reclamation | InterruptedFullCheckpointRecoversCommittedState, TornRootRemoval_ToleratesRepeatedTornHeaderRepairs, fuzz:mvcc-checkpoint |  |
+| `injector:SimulateDataWriteFail` | data-file page writes | FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit, FailedCloseCheckpoint_LeavesTheWalToRecoverEveryCommit |  |
+| `injector:SimulateErrno` | file sync (fsync) | Failed_log_sync_stops_checkpoint_before_the_data_file_changes, FailedInitialization_ReleasesFileHandle_AndAllowsRetry |  |
+| `process-crash:promotion-recovery-after-header-flush` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-recovery-after-header-write` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-recovery-before-header-write` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-header-flush` | header promotion | Promotion_recovery_preserves_a_later_corruption_guard, Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-header-write` | header promotion | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-header-write` | header promotion | Torn_header_is_recovered_from_durable_journal, Torn_header_recovers_through_real_files_without_touching_unrelated_files, Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-flush` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-page-write` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, Recovery_keeps_a_valid_header_when_the_journal_is_only_OS_cached, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-journal-write` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, Torn_journal_cannot_damage_the_unpromoted_database, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-retire-flush` | header promotion journal retirement | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-journal-retire-flush` | header promotion journal retirement | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `process-crash:invalid-state-before-mark` | invalid-state header mark | Open_is_not_repeated_when_the_rebuild_mark_cannot_be_written | Only the exception model is claimed; a power loss between the mark's write and its sync is not modeled. |
+| `injector:SimulateDiskReadFail` | page reads | ReadHook_Failure_ReleasesAcquiredFrame, InvalidState_PersistsMarkerBeforeClosingDataWriter |  |
+| `rebuild-install:after-log-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:after-source-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:after-temp-install` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-log-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-source-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-temp-install` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-candidate-cleanup` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point |  |
+| `rebuild-install:before-candidate-republish` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-candidate-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Failed_candidate_rollback_keeps_the_original_wal_with_its_backup_data |  |
+| `rebuild-install:before-log-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-source-retraction` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-source-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Shared_handle_adopts_the_collation_of_a_republished_replacement |  |
+| `rebuild-install:before-recovery-marker` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Marker_creation_failure_does_not_move_the_original_files |  |
+| `rebuild-install:before-recovery-marker-delete` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Failed_marker_cleanup_preserves_the_original_error_and_blocks_opens |  |
+| `rebuild-install:before-recovery-marker-flush` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Marker_flush_failure_leaves_the_original_pair_untouched_and_access_blocked |  |
+| `coordination-file:created` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file |  |
+| `coordination-file:flushed` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `coordination-file:published` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Death_during_control_creation_preserves_data_and_recovers_mapped_reads |  |
+| `coordination-file:publishing` | shared coordination sidecar publication | Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `coordination-file:retired` | shared coordination sidecar publication | Failed_retirement_is_repeatable_without_partial_authority_admission |  |
+| `coordination-file:written` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `injector:SimulatePosixDelete` | shared file handles | Volumes_without_posix_delete_open_files_per_operation |  |
+| `process-crash:startup-after-tail-trim` | startup trailing-page trim | InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly, InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly |  |
+| `process-crash:startup-before-tail-trim` | startup trailing-page trim | InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly, InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly |  |
+Known persistent transitions without a hook:
+
+- rebuild install: Directory-entry persistence of the recovery marker and the backup/install renames: rebuild-install hooks fault the operations, but the model does not lose unsynced directory entries. (#3011)
+- shared reader leases: Reader lease-file publication, renewal and expiry have observer stages only (CoordinationStage); no registered fault point interrupts them.
+

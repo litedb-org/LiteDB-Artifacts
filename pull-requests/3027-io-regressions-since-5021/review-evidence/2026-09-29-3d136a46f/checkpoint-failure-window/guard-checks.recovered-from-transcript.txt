@@ -1,0 +1,253 @@
+# CheckpointFailureWindow_Tests (db394db6f): the window test before the fix, each promotion guard removed in turn (first on the Validate() form of local commit 82b44333c, then on the committed ThrowIfStopped() form), and the CheckpointDataSync_Tests failure that replaced Validate()
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T05:27:33.699Z (result 2026-09-29T05:27:44.129Z): Run the window test before the fix
+$ cd $SCRATCH/anchorwt && cp $SCRATCH/cfw4.bak LiteDB.Tests/Regressions/CheckpointFailureWindow_Tests.cs && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error |rror\(s\)" | sort -u | head -5 && timeout 300 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointFailureWindow_Tests.Promotion" 2>&1 | grep -E "Passed!|Failed!|Error Message" -A2 | cut -c1-400 | head -10
+--- output
+    0 Error(s)
+  Error Message:
+   Expected syncsAfterFailure to be 0 because nothing syncs after the recorded failure, least of all the handle whose sync failed, but found 5 (difference of 5).
+  Stack Trace:
+--
+Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 339 ms - LiteDB.Tests.dll (net10.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:30:52.768Z (result 2026-09-29T05:31:19.802Z): Add a deferred-stop row and mutation-check both guards
+$ cd $SCRATCH/anchorwt && python3 - <<'EOF'
+p='LiteDB.Tests/Regressions/CheckpointFailureWindow_Tests.cs'
+s=open(p).read()
+old='''        /// header into the data file. It now throws under the WAL writer before it syncs or writes
+        /// anything (decision 6).
+        /// </summary>
+        [Fact]
+        public void Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing()
+        {'''
+new='''        /// header into the data file. It now throws under the WAL writer before it syncs or writes
+        /// anything (decision 6), also when the stop comes only after the locks (a test hook) and only
+        /// the recorded failure tells.
+        /// </summary>
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(bool deferredStop)
+        {'''
+assert old in s; s=s.replace(old,new)
+old='''                    // No write before the checkpoint: a compact one would promote the file already.
+                    db.CheckpointSize = 0;'''
+new='''                    // No write before the checkpoint: a compact one would promote the file already.
+                    db.CheckpointSize = 0;
+                    engine.SimulateDeferredCheckpointStop = deferredStop;'''
+assert old in s; s=s.replace(old,new)
+open(p,'w').write(s)
+EOF
+grep -n "A file format promotion that waited for the WAL writer" -A8 LiteDB.Tests/Regressions/CheckpointFailureWindow_Tests.cs | head -12
+F=LiteDB/Engine/Disk/DiskService.FileVersion.cs
+export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error " | sort -u | head -3; timeout 600 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointFailureWindow_Tests.Promotion" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed " | cut -c1-200; }
+echo "fixed:"; run
+cp $F $SCRATCH/fv.bak
+echo "M-no-validate:"; sed -i 's/^                _state.Validate();$/                \/\/ _state.Validate();/' $F; run; cp $SCRATCH/fv.bak $F
+echo "M-no-record-check:"; sed -i 's/^                _state.RequireNoWriteFailure();$/                \/\/ _state.RequireNoWriteFailure();/' $F; run; cp $SCRATCH/fv.bak $F
+git diff --stat
+--- output
+63:        /// A file format promotion that waited for the WAL writer a failing checkpoint held. A compact
+64-        /// insert into a v11 file started while the checkpoint synced the data file under the WAL writer;
+65-        /// the sync failed with an I/O error, the checkpoint recorded the failure and began the stop inside
+66-        /// the writer, and released its locks before the teardown. The promotion then ran without looking
+67-        /// at the stop or the record: it synced the data file again on the handle whose sync had just
+68-        /// failed (fsyncgate: the retry "succeeds"), wrote its header journal into the log and the v12
+69-        /// header into the data file. It now throws under the WAL writer before it syncs or writes
+70-        /// anything (decision 6), also when the stop comes only after the locks (a test hook) and only
+71-        /// the recorded failure tells.
+fixed:
+Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 470 ms - LiteDB.Tests.dll (net10.0)
+M-no-validate:
+Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 441 ms - LiteDB.Tests.dll (net10.0)
+M-no-record-check:
+  Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(deferredStop: True) [344 ms]
+Failed!  - Failed:     1, Passed:     1, Skipped:     0, Total:     2, Duration: 512 ms - LiteDB.Tests.dll (net10.0)
+ .../Regressions/CheckpointFailureWindow_Tests.cs   | 115 +++++++++++++++++++++
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs      |   4 +
+ 2 files changed, 119 insertions(+)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:31:42.212Z (result 2026-09-29T05:32:17.056Z): Add a non-I/O failure row and re-run mutations
+$ cd $SCRATCH/anchorwt && python3 - <<'EOF'
+p='LiteDB.Tests/Regressions/CheckpointFailureWindow_Tests.cs'
+s=open(p).read()
+old='''        /// anything (decision 6), also when the stop comes only after the locks (a test hook) and only
+        /// the recorded failure tells.
+        /// </summary>
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(bool deferredStop)
+        {'''
+new='''        /// anything (decision 6): also when the stop comes only after the locks (a test hook, "deferred")
+        /// and only the recorded failure tells, and after a failure that is no I/O error ("other"), which
+        /// stops the engine without a record.
+        /// </summary>
+        [Theory]
+        [InlineData("eio")]
+        [InlineData("deferred")]
+        [InlineData("other")]
+        public void Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(string failure)
+        {'''
+assert old in s; s=s.replace(old,new)
+old='''                if (!isData || !failData || Thread.CurrentThread != checkpointer) return 0;
+                failed = true;
+                atFailure = (SyncPowerLossModel.ReadShared(dataPath), SyncPowerLossModel.ReadShared(logPath));
+                return 5;'''
+new='''                if (!isData || !failData || Thread.CurrentThread != checkpointer) return 0;
+                failed = true;
+                atFailure = (SyncPowerLossModel.ReadShared(dataPath), SyncPowerLossModel.ReadShared(logPath));
+                if (failure == "other") throw new InvalidOperationException("injected checkpoint failure");
+                return 5;'''
+assert old in s; s=s.replace(old,new)
+old='''                    engine.SimulateDeferredCheckpointStop = deferredStop;'''
+new='''                    engine.SimulateDeferredCheckpointStop = failure == "deferred";'''
+assert old in s; s=s.replace(old,new)
+open(p,'w').write(s)
+EOF
+F=LiteDB/Engine/Disk/DiskService.FileVersion.cs
+export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error " | sort -u | head -3; timeout 600 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointFailureWindow_Tests.Promotion" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed |Error Message" -A1 | cut -c1-250; }
+echo "fixed:"; run
+echo "M-no-validate:"; sed -i 's/^                _state.Validate();$/                \/\/ _state.Validate();/' $F; run; cp $SCRATCH/fv.bak $F
+echo "M-no-record-check:"; sed -i 's/^                _state.RequireNoWriteFailure();$/                \/\/ _state.RequireNoWriteFailure();/' $F; run; cp $SCRATCH/fv.bak $F
+dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E "rror\(s\)"; git diff --stat
+--- output
+fixed:
+Passed!  - Failed:     0, Passed:     3, Skipped:     0, Total:     3, Duration: 525 ms - LiteDB.Tests.dll (net10.0)
+M-no-validate:
+  Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(failure: "other") [161 ms]
+  Error Message:
+   Expected syncsAfterFailure to be 0 because nothing syncs after the recorded failure, least of all the handle whose sync failed, but found 5 (difference of 5).
+--
+Failed!  - Failed:     1, Passed:     2, Skipped:     0, Total:     3, Duration: 574 ms - LiteDB.Tests.dll (net10.0)
+M-no-record-check:
+  Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(failure: "deferred") [355 ms]
+  Error Message:
+   Expected syncsAfterFailure to be 0 because nothing syncs after the recorded failure, least of all the handle whose sync failed, but found 5 (difference of 5).
+--
+Failed!  - Failed:     1, Passed:     2, Skipped:     0, Total:     3, Duration: 568 ms - LiteDB.Tests.dll (net10.0)
+    0 Error(s)
+ .../Regressions/CheckpointFailureWindow_Tests.cs   | 118 +++++++++++++++++++++
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs      |   4 +
+ 2 files changed, 122 insertions(+)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:57:37.697Z (result 2026-09-29T05:58:13.267Z): Run the failing test repeatedly at head
+$ cd $SCRATCH/anchorwt && git log --oneline -1 && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E "rror\(s\)" && for i in 1 2 3; do dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointDataSync_Tests.Rationed" 2>&1 | grep -E "Passed!|Failed!|Error Message" -A1 | cut -c1-200 | head -3; done; sed -n 1,40p LiteDB.Tests/Regressions/CheckpointDataSync_Tests.cs | grep -n "Setup\|CompactStorage\|Checkpoint" 
+--- output
+0e060c2f5 Tighten the commit outcome after the independent review of the gate fixes
+    0 Error(s)
+  Error Message:
+   Expected syncedWithoutWriting to be 0 because a rationed checkpoint that writes nothing does not sync the data file, but found 2 (difference of 2).
+--
+  Error Message:
+   Expected syncedWithoutWriting to be 0 because a rationed checkpoint that writes nothing does not sync the data file, but found 2 (difference of 2).
+--
+  Error Message:
+   Expected syncedWithoutWriting to be 0 because a rationed checkpoint that writes nothing does not sync the data file, but found 2 (difference of 2).
+--
+23:    public class CheckpointDataSync_Tests
+37:            Setup(file.Filename);
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:58:18.966Z (result 2026-09-29T05:59:54.259Z): Bisect the failing test across local commits
+$ S=$SCRATCH; cd $S/probewt 2>/dev/null && git status --short | head -3; export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1; for c in 4662fe49f 659784920 ad3382f6a 8c3e2dca6 ae3f68bee 82b44333c; do git -C $S/probewt checkout -q --detach $c 2>&1 | tail -1; cd $S/probewt && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error " | head -2; echo "$c: $(dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter 'FullyQualifiedName~CheckpointDataSync_Tests.Rationed' 2>&1 | grep -E 'Passed!|Failed!' | cut -c1-60)"; done
+--- output
+?? LiteDB.Tests/Engine/ZzHandleProbe_Tests.cs
+4662fe49f: Passed!  - Failed:     0, Passed:     1, Skipped:     0, Tot
+659784920: Passed!  - Failed:     0, Passed:     1, Skipped:     0, Tot
+ad3382f6a: Passed!  - Failed:     0, Passed:     1, Skipped:     0, Tot
+8c3e2dca6: Passed!  - Failed:     0, Passed:     1, Skipped:     0, Tot
+ae3f68bee: Passed!  - Failed:     0, Passed:     1, Skipped:     0, Tot
+82b44333c: Failed!  - Failed:     1, Passed:     0, Skipped:     0, Tot
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T06:00:22.289Z (result 2026-09-29T06:02:09.536Z): Refuse only a stopped engine in the promotion guard
+$ cd $SCRATCH/anchorwt && sed -n 86,96p LiteDB/Engine/EngineState.cs && python3 - <<'EOF'
+p='LiteDB/Engine/EngineState.cs'
+s=open(p).read()
+old='''        public void Validate()
+        {
+            var failure = Volatile.Read(ref _exception);
+            if (failure != null) throw failure;
+            if (this.Disposed) throw Volatile.Read(ref _exception) ?? LiteException.EngineDisposed();
+        }
+'''
+new='''        public void Validate()
+        {
+            this.ThrowIfStopped();
+            if (this.Disposed) throw Volatile.Read(ref _exception) ?? LiteException.EngineDisposed();
+        }
+
+        /// <summary>
+        /// Throw the failure that stopped the engine, if any. Unlike <see cref="Validate"/>, an engine
+        /// that is being disposed passes: its close checkpoint still writes (and may promote the format).
+        /// </summary>
+        internal void ThrowIfStopped()
+        {
+            var failure = Volatile.Read(ref _exception);
+            if (failure != null) throw failure;
+        }
+'''
+assert old in s; s=s.replace(old,new)
+open(p,'w').write(s)
+p='LiteDB/Engine/Disk/DiskService.FileVersion.cs'
+s=open(p).read()
+old='''                // Decision 6, as for a WAL batch: a promotion that waited for the writer (behind a checkpoint
+                // that failed and began the stop, or after a failure was recorded) syncs and writes nothing.
+                _state.Validate();
+                _state.RequireNoWriteFailure();'''
+new='''                // Decision 6, as for a WAL batch: a promotion that waited for the writer (behind a checkpoint
+                // that failed and began the stop, or after a failure was recorded) syncs and writes nothing.
+                // Not Validate(): a close checkpoint promotes while the engine is being disposed.
+                _state.ThrowIfStopped();
+                _state.RequireNoWriteFailure();'''
+assert old in s; s=s.replace(old,new)
+open(p,'w').write(s)
+EOF
+export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error |rror\(s\)" | sort -u | head -3 && dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointDataSync_Tests|FullyQualifiedName~CheckpointFailureWindow_Tests" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed " | cut -c1-220
+--- output
+            CheckpointStage = settings?.CheckpointStage;
+#endif
+        }
+
+        public void Validate()
+        {
+            var failure = Volatile.Read(ref _exception);
+            if (failure != null) throw failure;
+            if (this.Disposed) throw Volatile.Read(ref _exception) ?? LiteException.EngineDisposed();
+        }
+
+    0 Error(s)
+Passed!  - Failed:     0, Passed:    16, Skipped:     0, Total:    16, Duration: 1 m 31 s - LiteDB.Tests.dll (net10.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T06:02:17.812Z (result 2026-09-29T06:02:28.110Z): Mutation-check the stopped-engine guard; read .NET 8 summary
+$ cd $SCRATCH/anchorwt && S=$SCRATCH && F=LiteDB/Engine/Disk/DiskService.FileVersion.cs && cp $F $S/fv2.bak && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && sed -i 's/^                _state.ThrowIfStopped();$/                \/\/ _state.ThrowIfStopped();/' $F && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E "rror\(s\)" && dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointFailureWindow_Tests.Promotion" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed " | cut -c1-220; cp $S/fv2.bak $F; git diff --stat; cat $S/head-net8.0/summary.txt
+--- output
+    0 Error(s)
+  Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(failure: "other") [164 ms]
+Failed!  - Failed:     1, Passed:     2, Skipped:     0, Total:     3, Duration: 561 ms - LiteDB.Tests.dll (net10.0)
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs |  3 ++-
+ LiteDB/Engine/EngineState.cs                  | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+query exit=0 33s Passed!  - Failed:     0, Passed:   824, Skipped:     0, Total:   824, Duration: 29 s - LiteDB.Tests.dll (net8.0)
+engine-index exit=0 28s Passed!  - Failed:     0, Passed:    62, Skipped:     0, Total:    62, Duration: 26 s - LiteDB.Tests.dll (net8.0)
+engine exit=0 56s Passed!  - Failed:     0, Passed:   527, Skipped:     1, Total:   528, Duration: 52 s - LiteDB.Tests.dll (net8.0)
+internals exit=0 69s Passed!  - Failed:     0, Passed:   438, Skipped:     0, Total:   438, Duration: 1 m 6 s - LiteDB.Tests.dll (net8.0)
+remaining exit=1 166s Failed!  - Failed:     1, Passed:   872, Skipped:     0, Total:   873, Duration: 2 m 43 s - LiteDB.Tests.dll (net8.0)
+query-not-equal exit=0 15s Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 12 s - LiteDB.Tests.dll (net8.0)
+shared exit=0 164s Passed!  - Failed:     0, Passed:   150, Skipped:     0, Total:   150, Duration: 2 m 41 s - LiteDB.Tests.dll (net8.0)
+mvcc exit=0 126s Passed!  - Failed:     0, Passed:   402, Skipped:     0, Total:   402, Duration: 2 m 3 s - LiteDB.Tests.dll (net8.0)
+engine-compact exit=0 46s Passed!  - Failed:     0, Passed:   294, Skipped:     0, Total:   294, Duration: 43 s - LiteDB.Tests.dll (net8.0)
+issues exit=0 56s Passed!  - Failed:     0, Passed:  1584, Skipped:     1, Total:  1585, Duration: 53 s - LiteDB.Tests.dll (net8.0)
+rebuild exit=0 8s Passed!  - Failed:     0, Passed:    85, Skipped:     1, Total:    86, Duration: 5 s - LiteDB.Tests.dll (net8.0)
+DONE
+Shell cwd was reset to $REPO
+

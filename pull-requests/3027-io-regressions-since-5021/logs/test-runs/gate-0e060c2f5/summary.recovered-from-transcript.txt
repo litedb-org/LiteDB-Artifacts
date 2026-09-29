@@ -1,0 +1,75 @@
+# Partitioned full suites on 0e060c2f5 (the pre-amend head; its guard used Validate()): summaries overwritten by the rerun on 0ce00ee55
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T05:57:05.144Z (result 2026-09-29T05:57:07.098Z): Check dev and full-suite progress
+$ cd $SCRATCH/anchorwt && timeout 60 git fetch -q origin dev 2>&1 | tail -1; git rev-parse --short origin/dev; S=$SCRATCH; for fw in net10.0 net8.0; do echo "== $fw $(cat $S/head-$fw.status 2>/dev/null)"; cat $S/head-$fw/summary.txt 2>/dev/null; done
+--- output
+5dd942a73
+== net10.0 done
+query exit=0 34s Passed!  - Failed:     0, Passed:   824, Skipped:     0, Total:   824, Duration: 30 s - LiteDB.Tests.dll (net10.0)
+engine-index exit=0 29s Passed!  - Failed:     0, Passed:    62, Skipped:     0, Total:    62, Duration: 27 s - LiteDB.Tests.dll (net10.0)
+engine exit=0 58s Passed!  - Failed:     0, Passed:   527, Skipped:     1, Total:   528, Duration: 55 s - LiteDB.Tests.dll (net10.0)
+internals exit=0 68s Passed!  - Failed:     0, Passed:   438, Skipped:     0, Total:   438, Duration: 1 m 5 s - LiteDB.Tests.dll (net10.0)
+remaining exit=1 190s Failed!  - Failed:     1, Passed:   872, Skipped:     0, Total:   873, Duration: 3 m 8 s - LiteDB.Tests.dll (net10.0)
+query-not-equal exit=0 12s Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 9 s - LiteDB.Tests.dll (net10.0)
+shared exit=0 155s Passed!  - Failed:     0, Passed:   150, Skipped:     0, Total:   150, Duration: 2 m 32 s - LiteDB.Tests.dll (net10.0)
+mvcc exit=0 97s Passed!  - Failed:     0, Passed:   402, Skipped:     0, Total:   402, Duration: 1 m 34 s - LiteDB.Tests.dll (net10.0)
+engine-compact exit=0 36s Passed!  - Failed:     0, Passed:   294, Skipped:     0, Total:   294, Duration: 33 s - LiteDB.Tests.dll (net10.0)
+issues exit=0 50s Passed!  - Failed:     0, Passed:  1584, Skipped:     1, Total:  1585, Duration: 46 s - LiteDB.Tests.dll (net10.0)
+rebuild exit=0 8s Passed!  - Failed:     0, Passed:    85, Skipped:     1, Total:    86, Duration: 5 s - LiteDB.Tests.dll (net10.0)
+DONE
+== net8.0 
+query exit=0 33s Passed!  - Failed:     0, Passed:   824, Skipped:     0, Total:   824, Duration: 29 s - LiteDB.Tests.dll (net8.0)
+engine-index exit=0 28s Passed!  - Failed:     0, Passed:    62, Skipped:     0, Total:    62, Duration: 26 s - LiteDB.Tests.dll (net8.0)
+engine exit=0 56s Passed!  - Failed:     0, Passed:   527, Skipped:     1, Total:   528, Duration: 52 s - LiteDB.Tests.dll (net8.0)
+internals exit=0 69s Passed!  - Failed:     0, Passed:   438, Skipped:     0, Total:   438, Duration: 1 m 6 s - LiteDB.Tests.dll (net8.0)
+remaining exit=1 166s Failed!  - Failed:     1, Passed:   872, Skipped:     0, Total:   873, Duration: 2 m 43 s - LiteDB.Tests.dll (net8.0)
+query-not-equal exit=0 15s Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 12 s - LiteDB.Tests.dll (net8.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:57:09.602Z (result 2026-09-29T05:57:10.905Z): Show the failing test in the remaining partition
+$ S=$SCRATCH; for fw in net10.0 net8.0; do echo "== $fw"; grep -E "^\s+Failed |Error Message" -A6 $S/head-$fw/remaining.log | cut -c1-500 | head -20; done
+--- output
+== net10.0
+  Failed LiteDB.Tests.Regressions.CheckpointDataSync_Tests.Rationed_shared_checkpoints_do_not_sync_the_data_file [577 ms]
+  Error Message:
+   Expected syncedWithoutWriting to be 0 because a rationed checkpoint that writes nothing does not sync the data file, but found 1 (difference of 1).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+== net8.0
+  Failed LiteDB.Tests.Regressions.CheckpointDataSync_Tests.Rationed_shared_checkpoints_do_not_sync_the_data_file [525 ms]
+  Error Message:
+   Expected syncedWithoutWriting to be 0 because a rationed checkpoint that writes nothing does not sync the data file, but found 2 (difference of 2).
+  Stack Trace:
+     at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+
+=== 2026-09-29T06:02:17.812Z (result 2026-09-29T06:02:28.110Z): Mutation-check the stopped-engine guard; read .NET 8 summary
+$ cd $SCRATCH/anchorwt && S=$SCRATCH && F=LiteDB/Engine/Disk/DiskService.FileVersion.cs && cp $F $S/fv2.bak && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && sed -i 's/^                _state.ThrowIfStopped();$/                \/\/ _state.ThrowIfStopped();/' $F && dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E "rror\(s\)" && dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~CheckpointFailureWindow_Tests.Promotion" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed " | cut -c1-220; cp $S/fv2.bak $F; git diff --stat; cat $S/head-net8.0/summary.txt
+--- output
+    0 Error(s)
+  Failed LiteDB.Tests.Regressions.CheckpointFailureWindow_Tests.Promotion_waiting_on_a_failed_checkpoint_syncs_and_writes_nothing(failure: "other") [164 ms]
+Failed!  - Failed:     1, Passed:     2, Skipped:     0, Total:     3, Duration: 561 ms - LiteDB.Tests.dll (net10.0)
+ LiteDB/Engine/Disk/DiskService.FileVersion.cs |  3 ++-
+ LiteDB/Engine/EngineState.cs                  | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+query exit=0 33s Passed!  - Failed:     0, Passed:   824, Skipped:     0, Total:   824, Duration: 29 s - LiteDB.Tests.dll (net8.0)
+engine-index exit=0 28s Passed!  - Failed:     0, Passed:    62, Skipped:     0, Total:    62, Duration: 26 s - LiteDB.Tests.dll (net8.0)
+engine exit=0 56s Passed!  - Failed:     0, Passed:   527, Skipped:     1, Total:   528, Duration: 52 s - LiteDB.Tests.dll (net8.0)
+internals exit=0 69s Passed!  - Failed:     0, Passed:   438, Skipped:     0, Total:   438, Duration: 1 m 6 s - LiteDB.Tests.dll (net8.0)
+remaining exit=1 166s Failed!  - Failed:     1, Passed:   872, Skipped:     0, Total:   873, Duration: 2 m 43 s - LiteDB.Tests.dll (net8.0)
+query-not-equal exit=0 15s Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 12 s - LiteDB.Tests.dll (net8.0)
+shared exit=0 164s Passed!  - Failed:     0, Passed:   150, Skipped:     0, Total:   150, Duration: 2 m 41 s - LiteDB.Tests.dll (net8.0)
+mvcc exit=0 126s Passed!  - Failed:     0, Passed:   402, Skipped:     0, Total:   402, Duration: 2 m 3 s - LiteDB.Tests.dll (net8.0)
+engine-compact exit=0 46s Passed!  - Failed:     0, Passed:   294, Skipped:     0, Total:   294, Duration: 43 s - LiteDB.Tests.dll (net8.0)
+issues exit=0 56s Passed!  - Failed:     0, Passed:  1584, Skipped:     1, Total:  1585, Duration: 53 s - LiteDB.Tests.dll (net8.0)
+rebuild exit=0 8s Passed!  - Failed:     0, Passed:    85, Skipped:     1, Total:    86, Duration: 5 s - LiteDB.Tests.dll (net8.0)
+DONE
+Shell cwd was reset to $REPO
+

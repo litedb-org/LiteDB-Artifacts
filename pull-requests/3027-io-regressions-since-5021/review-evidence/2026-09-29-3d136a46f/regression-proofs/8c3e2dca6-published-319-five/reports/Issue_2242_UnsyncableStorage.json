@@ -1,0 +1,74 @@
+{
+  "GeneratedAt": "2026-09-29T04:55:05.4325202+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_2242_UnsyncableStorage",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false failed at create: FileSyncException: Device sync of",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.2326743,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.0073765\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.0739926\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2242_UnsyncableStorage/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.0860191\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Storage that cannot sync: every fsync and fdatasync of this process now fails with EINVAL (errno 22).\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.150857\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022create threw FileSyncException: Device sync of \\u0027$REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2242_UnsyncableStorage/ver_6_0_0_prerelease_319/run/Issue_2242_UnsyncableStorage/1684703fd2de4755aa4f09c0f2135425/Issue_2242_UnsyncableStorage-b5b7f81b16ce40448e19c6159db9d616/rows.db\\u0027 failed (errno 22).\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.1514338\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false failed at create: FileSyncException: Device sync of \\u0027$REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2242_UnsyncableStorage/ver_6_0_0_prerelease_319/run/Issue_2242_UnsyncableStorage/1684703fd2de4755aa4f09c0f2135425/Issue_2242_UnsyncableStorage-b5b7f81b16ce40448e19c6159db9d616/rows.db\\u0027 failed (errno 22).\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false was created, indexed, written, checkpointed and reopened",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.4190745,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.2300021\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.294616\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B79cb0a60449e966b7a1dc6108bd72767a7f6b9ce loaded from $REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2242_UnsyncableStorage/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.3083047\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Storage that cannot sync: every fsync and fdatasync of this process now fails with EINVAL (errno 22).\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:55:10.5735605\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false was created, indexed, written, checkpointed and reopened with every row and its index\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

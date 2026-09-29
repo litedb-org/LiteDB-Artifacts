@@ -1,0 +1,6 @@
+{"type":"configuration","timestamp":"2026-09-29T06:18:26.6820339+00:00","payload":{"useProjectReference":true,"liteDBPackageVersion":"6.0.0-prerelease.319"}}
+{"type":"log","timestamp":"2026-09-29T06:18:26.7450428+00:00","level":"Information","text":"LiteDB 0.0.0-detached\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $SCRATCH/proofs3027b/against/Issue_3027_StreamDatabaseDispose-head/LiteDB.dll"}
+{"type":"log","timestamp":"2026-09-29T06:18:26.9950794+00:00","level":"Information","text":"After a stream use that ended without LiteDatabase.Dispose, a filename open finds CHECKPOINT=1000 and 2 documents"}
+{"type":"log","timestamp":"2026-09-29T06:18:26.9976911+00:00","level":"Information","text":"Second Dispose: no exception"}
+{"type":"log","timestamp":"2026-09-29T06:18:27.0144369+00:00","level":"Information","text":"Dispose with an open transaction: no exception; a filename open then finds _id 1 only"}
+{"type":"result","timestamp":"2026-09-29T06:18:27.0151554+00:00","text":"FIXED: new LiteDatabase(stream) left the stored CHECKPOINT pragma at 1000 and kept every commit, a second Dispose did not throw, and Dispose with an open transaction rolled it back and released the stream","success":false}

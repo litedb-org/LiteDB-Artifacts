@@ -1,0 +1,102 @@
+{
+  "GeneratedAt": "2026-09-29T06:28:51.1001472+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_DumpInTransaction",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its next safepoint failed an ENSURE (LiteException 999: only idle readable pages can be evicted), which stopped the engine and marked the data file invalid",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 1.0343991,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:56.806187\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:56.9190781\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_DumpInTransaction/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.5357746\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Transaction with $dump: reading $dump(41) failed with LiteException 999: only idle readable pages can be evicted; the engine stopped\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.5980314\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Data file header marked invalid; reopen after $dump: found 1 documents, 0 updated\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.6676525\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Transaction with $page_list: reading $page_list(39) failed with LiteException 999: only idle readable pages can be evicted; the engine stopped\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.6954821\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Data file header marked invalid; reopen after $page_list: found 1 documents, 0 updated\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.6968068\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its next safepoint failed an ENSURE (LiteException 999: only idle readable pages can be evicted), which stopped the engine and marked the data file invalid and lost the transaction (reading $dump(41) failed with LiteException 999: only idle readable pages can be evicted, then the engine stopped, a reopen found 1 documents, 0 updated; reading $page_list(39) failed with LiteException 999: only idle readable pages can be evicted, then the engine stopped, a reopen found 1 documents, 0 updated)\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its safepoints and its commit succeeded, and a reopen found every row of it (1001 documents, 1000 updated)",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.9140231,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.7585438\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:57.828828\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_DumpInTransaction/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.1843295\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022$dump(1..99) inside the transaction returned 99 rows, 99 of them pages the transaction had safepointed into the WAL\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.3054811\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Transaction with $dump: committed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.3662441\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Data file header not marked invalid; reopen after $dump: found 1001 documents, 1000 updated\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.4526993\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022$page_list(1..99) inside the transaction returned 4104 rows\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.5666247\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Transaction with $page_list: committed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.6083676\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Data file header not marked invalid; reopen after $page_list: found 1001 documents, 1000 updated\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:58.6091064\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its safepoints and its commit succeeded, and a reopen found every row of it (1001 documents, 1000 updated)\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

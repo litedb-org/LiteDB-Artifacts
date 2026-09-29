@@ -1,0 +1,39 @@
+Prove four more #3027 fixes against the published 6.0.0-prerelease.319
+
+A PR fixing several bugs adds one regression proof per bug. Register four
+more, each a black-box ReproRunner repro pinned to LiteDB
+6.0.0-prerelease.319, the published NuGet package built from dev at 5dd942a7
+(this PR's base):
+
+- Issue_3027_DumpInTransaction: after $dump(pageID) or $page_list(pageID)
+  read pages an explicit transaction (Transaction Pages=50) had safepointed
+  into the WAL, its next safepoint fails an ENSURE (LiteException 999 "only
+  idle readable pages can be evicted"), the engine stops, the header is
+  marked invalid and the transaction is lost. Guard: DumpPinnedWalSlot_Tests.
+- Issue_3027_StreamDatabaseDispose: new LiteDatabase(stream) leaves
+  CHECKPOINT=1 in the header of a file used without Dispose, a second Dispose
+  throws "This engine instance already disposed." and Dispose with an open
+  transaction throws before disposing the engine. Guard:
+  StreamDatabaseDispose_Tests.
+- Issue_3027_LegacyReadOnlyStream: new LiteDatabase(stream) over a read-only
+  FileStream of the 5.0.21 DropIndex customers.db throws
+  NotSupportedException; beside a writable log stream it first writes
+  32768 bytes into the log. Guard: LegacyReadOnlyStream_Tests.
+- Issue_3027_ForeignLegacyWal: the 5.0.21 ForeignWal log beside WalCrash's
+  crash.db is replayed into it (40960 to 14196736 bytes, log deleted,
+  collections big and fresh in place of docs). Guards: LegacyWalPageBound_Tests,
+  ConvertedWalBesideLegacyHeader_Tests and the 5.0.21 compatibility script.
+  This variant was chosen because its known-bad damage is bounded by the
+  fixture (pages up to 1732). The repro checks the fixture digests and caps
+  its files at 64 MiB with RLIMIT_FSIZE (SIGXFSZ ignored), so a far page fails
+  with EFBIG and cannot grow a sparse file.
+
+Each repro exits 0 only on its defect, 1 only after verifying the fixed
+behavior in full and 2 otherwise; repro.json pins both exit codes and log
+texts. The candidate opens, commits and reads back as the guards require.
+All four also reproduce against dev-commit 5dd942a7 packed with
+pack-known-bad. The repros are retired from the automatic Repro Runner tiers
+like the earlier proofs, and the compose-matrix counts follow.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh

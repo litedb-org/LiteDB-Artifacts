@@ -1,0 +1,86 @@
+{
+  "GeneratedAt": "2026-09-29T06:29:01.5309665+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_StreamDatabaseDispose",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: new LiteDatabase(stream) left CHECKPOINT=1 in the database header, a second Dispose threw and Dispose with an open transaction threw (second Dispose: LiteException: This engine instance already disposed.; with an open transaction: LiteException: The current thread already contains an open transaction.",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.4479742,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.0085243\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.0829018\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_StreamDatabaseDispose/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.3556414\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After a stream use that ended without LiteDatabase.Dispose, a filename open finds CHECKPOINT=1 and 2 documents\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.36033\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Second Dispose: LiteException: This engine instance already disposed.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.3779625\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Dispose with an open transaction: LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.; a filename open then finds _id 1 only\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.3785597\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: new LiteDatabase(stream) left CHECKPOINT=1 in the database header, a second Dispose threw and Dispose with an open transaction threw (second Dispose: LiteException: This engine instance already disposed.; with an open transaction: LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.)\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: new LiteDatabase(stream) left the stored CHECKPOINT pragma at 1000 and kept every commit, a second Dispose did not throw, and Dispose with an open transaction rolled it back and released the stream",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.4121997,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.441205\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.505737\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_StreamDatabaseDispose/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.7712442\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After a stream use that ended without LiteDatabase.Dispose, a filename open finds CHECKPOINT=1000 and 2 documents\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.7747347\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Second Dispose: no exception\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.7954754\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Dispose with an open transaction: no exception; a filename open then finds _id 1 only\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:06.7962904\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: new LiteDatabase(stream) left the stored CHECKPOINT pragma at 1000 and kept every commit, a second Dispose did not throw, and Dispose with an open transaction rolled it back and released the stream\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

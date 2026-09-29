@@ -1,0 +1,78 @@
+{
+  "GeneratedAt": "2026-09-29T04:54:41.9982645+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_LegacyWalConversion",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: the conversion ran while a shared reader held a snapshot and discarded the 5.0.21 WAL",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.4159472,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:47.6438724\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:47.7078873\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_LegacyWalConversion/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:47.9840649\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Shared open while the reader held its lease: 100 documents, 0 with value 7; data file version 8 -\\u003E 11, legacy WAL 516096 -\\u003E 32768 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:47.9950282\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Shared open after the reader closed: 100 documents, 0 with value 7\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:47.9990954\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: the conversion ran while a shared reader held a snapshot and discarded the 5.0.21 WAL (516096 -\\u003E 32768 bytes): 100 documents, 0 with value 7 remain of 101 and 21\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: the conversion was refused with LOCK_TIMEOUT while a shared reader held a snapshot, both files unchanged",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.4394992,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:48.0508986\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:48.1128879\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B79cb0a60449e966b7a1dc6108bd72767a7f6b9ce loaded from $REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_LegacyWalConversion/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:48.2589192\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Shared open while the reader held its lease: refused: LiteException 120: Cannot convert this legacy database while another connection may still read its log file (a shared reader holds a snapshot, or the reader registry cannot be inspected). Close the other connections, or make the registry readable, and open it again.; data file version 8 -\\u003E 8, legacy WAL 516096 -\\u003E 516096 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:48.4434763\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Shared open after the reader closed: 101 documents, 21 with value 7\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T04:54:48.4444742\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: the conversion was refused with LOCK_TIMEOUT while a shared reader held a snapshot, both files unchanged; once the reader closed it converted the file with every 5.0.21 commit (101 documents, 21 with value 7)\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

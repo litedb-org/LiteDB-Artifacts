@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "$REPO/.claude/worktrees/agent-ad1a00c61296566d3/.github/scripts/safety_common.py", line 94, in read_json
+    return json.loads(text)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "$REPO/.claude/worktrees/agent-ad1a00c61296566d3/.github/scripts/check_coverage_regression.py", line 315, in main
+    unresolved = check_ledger(base, head, findings, report)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "$REPO/.claude/worktrees/agent-ad1a00c61296566d3/.github/scripts/check_coverage_regression.py", line 225, in check_ledger
+    ledger = head.read_json(LEDGER, {}) or {}
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "$REPO/.claude/worktrees/agent-ad1a00c61296566d3/.github/scripts/safety_common.py", line 96, in read_json
+    raise MalformedJson(f"{path} is not valid JSON at {self.rev}: {error}") from error
+safety_common.MalformedJson: .github/safety/coverage-ledger.json is not valid JSON at HEAD: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+ERROR: Issue_1_Sample: the run did not meet both expectations (failed=True)
+ERROR: Issue_1_Sample: the known-bad state did not fail as required (package {'expected': 0, 'actual': 1, 'met': False, 'useprojectreference': False, 'output': [{'Stream': 'stdout', 'Text': '{"type": "configuration", "payload": {"useProjectReference": false, "liteDBPackageVersion": "5.0.20"}}'}]})
+----------------------------------------------------------------------
+Ran 85 tests in 16.477s
+
+OK

@@ -1,0 +1,31 @@
+amend! Sync and write nothing in a promotion that waited on a failed checkpoint
+
+Sync and write nothing in a promotion that waited on a failed checkpoint
+
+A file format promotion takes the header lock and then the WAL writer,
+and looked neither at the engine's stop nor at a recorded failure. A
+checkpoint that fails under the WAL writer records the failure (an I/O
+error) and begins the stop there, then releases its locks before the
+teardown. A compact insert that had passed its checks and waited for the
+header lock (the checkpoint's commit lock) then promoted the v11 file to
+v12 in that window: it synced the data file again on the handle whose
+sync had just failed (fsyncgate: the retry "succeeds"), wrote its header
+journal into the log and the new header into the data file, five syncs
+after the failure. Decision 6 says nothing more is written or synced once
+a failure is recorded, also by an operation that passed its entry check.
+
+The promotion now throws the failure that stopped the engine, and
+requires no recorded failure, under the WAL writer, as a WAL batch does
+(not the engine's full validation: a shared connection's close
+checkpoint promotes while its engine is being disposed, and
+CheckpointDataSync_Tests catches that). CheckpointFailureWindow_Tests
+forces the window through the checkpoint's coordination signal: an EIO
+data sync (caught by the record check and the stop), the same with the
+stop deferred past the locks (only the record check catches it) and a
+failure that is no I/O error (only the stop catches it); each guard
+removed fails its row. Found by the review of the refused-promotion path
+(owner's review of 4662fe49f, item 4).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+

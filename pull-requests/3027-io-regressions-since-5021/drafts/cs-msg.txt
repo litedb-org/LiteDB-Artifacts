@@ -1,0 +1,38 @@
+Flush a caller stream once per batch, handing a reader's failure to the writer
+
+c4119caba flushed every caller stream but a MemoryStream after each write,
+so a reader's seek never found a frame the stream still held. For a custom
+stream whose Flush() syncs that is one sync per page instead of one per
+batch: the index migration recovery harness's crash-at-commit case made
+14,370 syncs instead of dev's 3,348 and passed its 90 s limit on a slow
+Windows runner.
+
+Nothing is flushed per write now. The wrappers of a caller stream share
+what it may still hold for a writer (HeldWrites, per factory): another
+wrapper's access (a reader's read or length query, the factory's own)
+first flushes it, under the lock they share, and a failure there fails
+that access and is handed to the writer, whose next write, flush or
+truncation throws it. That flush only writes, so any failure there, also
+one that reads like "cannot sync", is a write failure of the file: the
+read fails, the engine continues read-only (decision 6), and nobody
+writes on for a writer after a failure it heard itself (a failed
+durable flush is not followed by a plain one). The WAL batch keeps 76a28bdd4's window again: while a buffering
+caller log may hold a frame of the batch (the header frame too), a failure
+stops the engine, until the batch's final flush succeeded, which is now
+inside it. The harness makes 3,352 syncs and passes all 16 cases.
+
+CallerStreamFlushCost_Tests counts a custom stream's flushes for a 37-page
+commit and its checkpoint (56 log flushes before, at most 2 now).
+SharedBufferedLogStream_Tests now expects the reader to write the held
+frame on: with a failure the read fails and the writer's batch fails
+(acknowledged: the commits before it) and the engine continues read-only,
+also for tears that read like "cannot sync" (EACCES, EINVAL); without one
+the commit goes on; the
+buffering rows of TornWalAppend_Tests expect the held frame torn at the
+next frame's write again. Mutations (no write-on in reads, no hand-off, no
+batch window, a "cannot sync" exemption, no file on a reader's failure)
+each fail them. Found in review: the exemption and the missing file.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh
+

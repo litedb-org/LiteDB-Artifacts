@@ -1,0 +1,5 @@
+{"type":"configuration","timestamp":"2026-09-29T04:56:41.7439998+00:00","payload":{"useProjectReference":false,"liteDBPackageVersion":"0.0.0-knownbad.5dd942a7367c"}}
+{"type":"log","timestamp":"2026-09-29T04:56:41.8063894+00:00","level":"Information","text":"LiteDB 0.0.0-detached\u002B5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $SCRATCH/proofs/against/Issue_3027_LegacyWalConversion-0.0.0-knownbad.5dd942a7367c/LiteDB.dll"}
+{"type":"log","timestamp":"2026-09-29T04:56:42.1218176+00:00","level":"Information","text":"Shared open while the reader held its lease: 100 documents, 0 with value 7; data file version 8 -\u003E 11, legacy WAL 516096 -\u003E 32768 bytes"}
+{"type":"log","timestamp":"2026-09-29T04:56:42.1395015+00:00","level":"Information","text":"Shared open after the reader closed: 100 documents, 0 with value 7"}
+{"type":"result","timestamp":"2026-09-29T04:56:42.1478887+00:00","text":"REPRODUCED: the conversion ran while a shared reader held a snapshot and discarded the 5.0.21 WAL (516096 -\u003E 32768 bytes): 100 documents, 0 with value 7 remain of 101 and 21","success":true}

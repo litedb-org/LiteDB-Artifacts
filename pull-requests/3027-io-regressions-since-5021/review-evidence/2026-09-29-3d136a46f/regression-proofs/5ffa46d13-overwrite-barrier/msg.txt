@@ -1,0 +1,31 @@
+Prove the overwrite barrier on a log that cannot sync
+
+A bug-fix PR adds one regression proof per bug it fixes. Register one more
+black-box ReproRunner repro pinned to LiteDB 6.0.0-prerelease.319, the published
+package built from dev at 5dd942a7 (this PR's base), which contains the defect:
+
+- Issue_3027_OverwriteBehindUnsyncedLog: with durable commits=false on a log
+  whose sync is refused (#2242, EINVAL), a checkpoint overwrote the data file
+  in place behind a header journal and WAL that were only in the OS cache. The
+  database runs on two caller FileStream subclasses that model a device: each
+  keeps the image of its last successful sync, the data file syncs, the log
+  answers EINVAL, which both versions classify as "cannot sync". The known-bad
+  checkpoint wrote 11 pages, 6 over pages the device held; 19 of the 22 images
+  a power loss before its data sync leaves (a prefix of its writes, the last
+  whole or torn, the log as last synced) do not hold rows 1-10 intact, the
+  first with "Checksum mismatch in Data file at position 16384".
+
+The candidate's checkpoint returns 0 and writes nothing (decision D,
+implementation note 12): the data file stays byte for byte on the device and
+in the cache, the WAL is kept, nothing is recorded, a power loss keeps rows
+1-10 and a process crash rows 1-30; once the log syncs, a checkpoint drains
+the WAL. The repro exits 0 only on the defect, 1 only after verifying that in
+full and 2 otherwise; repro.json pins both exit codes and log texts. It also
+reproduces against dev-commit 5dd942a7 packed with pack-known-bad, and against
+the candidate with only RequireLogSynced's refusal disabled. The permanent
+guards are OverwriteBarrier_Tests and the Issue2242_UnsyncableLog_Tests
+compact promotion fallback. The repro is retired from the automatic Repro
+Runner tiers like the earlier proofs, and the compose-matrix counts follow.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh

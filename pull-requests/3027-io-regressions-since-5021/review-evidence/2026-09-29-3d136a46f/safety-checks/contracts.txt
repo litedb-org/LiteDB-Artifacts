@@ -1,0 +1,46 @@
+## Safety contracts: passed
+
+
+Implicated contracts: name each id in the PR's safety section with its evidence, or explain why the change cannot affect it.
+
+### `durable-ack`: Acknowledged durable transactions survive within the stated fault model
+
+Touched: `LiteDB/Client/Shared/SharedEngine.Query.cs`, `LiteDB/Client/Shared/SharedMutexNameFactory.cs`, `LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs`, `LiteDB/Engine/Disk/DiskService.Checksums.cs`, `LiteDB/Engine/Disk/DiskService.CommitDurability.cs` and 37 more
+
+Evidence: power-loss (modeled-power-loss); SectorTearsOfNewAppends_PreserveAcknowledgedPrefix (modeled-power-loss); RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes (modeled-power-loss); FailedCheckpointSync_PreservesAtomicDataAndStopsWrites (exception); SharedCommit_DeviceFailuresRecoverWholeTransactionsAndReleaseWriterOwnership (exception); shared (process-death); recovery (exception)
+
+Known gaps: No OS/VM reset or physical-device campaign: the device model is unclaimed.; Storage that cannot sync (#2242) is covered for its documented process-crash guarantee only; it makes no power-loss claim.
+
+### `recovery-generation`: Recovery never combines incompatible data and WAL generations
+
+Touched: `LiteDB/Engine/Disk/DiskService.AcknowledgedLog.cs`, `LiteDB/Engine/Disk/DiskService.Checksums.cs`, `LiteDB/Engine/Disk/DiskService.CommitDurability.cs`, `LiteDB/Engine/Disk/DiskService.DataWrites.cs`, `LiteDB/Engine/Disk/DiskService.DurableFlush.cs` and 35 more
+
+Evidence: Every_reachable_fault_combination_honours_the_rollback_contract (exception); Successful_rebuild_passes_every_install_fault_point (exception); Failed_password_rebuild_restores_the_original_data_and_wal_pair (exception); Repeated_recovery_failures_block_shared_reuse_and_fresh_opens (exception); Repeated_power_loss_during_recovery_keeps_the_journal (modeled-power-loss); rebuild-transition (exception)
+
+Known gaps: Directory-entry persistence of the rebuild marker and renames is not modeled (#3011); the install matrix is not power-loss evidence.
+
+### `reader-snapshot`: Readers retain their admitted snapshot across writes and reclamation
+
+Touched: `LiteDB/Client/Shared/SharedEngine.Query.cs`, `LiteDB/Client/Shared/SharedMutexNameFactory.cs`, `LiteDB/Engine/Disk/DiskService.Retirement.cs`, `LiteDB/Engine/Disk/DiskService.WalSlots.cs`, `LiteDB/Engine/Disk/MemoryCache.cs` and 5 more
+
+Evidence: AResolvedButUnreadWalOffsetCannotBeReclaimed (exception); LongLivedCursorsAcrossCheckpoints_MatchModel; InterleavedSharedInstances_ReadersMatchModel; Pin_owner_hands_off_to_each_repeated_waiter; KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery (process-death); threaded-snapshot; transaction-gate; cursor-handoff
+
+Known gaps: Shared reader lease files have observer stages only; no registered fault point interrupts lease publication or expiry.
+
+### `historical-input`: Supported historical inputs preserve their documented behavior
+
+Touched: `LiteDB.Tests/Resources/ConcurrentWalCrash_5_0_21.zip`, `LiteDB.Tests/Resources/DamagedDocument_5_0_21.zip`, `LiteDB.Tests/Resources/DamagedIndexKeys_5_0_21.zip`, `LiteDB.Tests/Resources/DamagedSalvageDuplicate_5_0_21.zip`, `LiteDB.Tests/Resources/DamagedUniqueDocuments_5_0_21.zip` and 18 more
+
+Evidence: Released_indexes_survive_power_loss_and_another_interrupted_recovery (modeled-power-loss); CutoverChangesOnlyHeader_ThenWritesMigratePagesOutOfOrder (exception); scripts/test-v9-compatibility.py; scripts/test-index-compatibility.py; scripts/test-parent-format-compatibility.py (corrupt-input); scripts/test-mvcc-compatibility.py (corrupt-input); scripts/test-prerelease-compatibility.py; compatibility (exception)
+
+Known gaps: Fixtures lack provenance manifests (producer, recipe, hashes, expected outcome).
+Evidence by failure model (a `-` is an unclaimed model, not a pass):
+
+| Contract | exception | process-death | modeled-power-loss | device | corrupt-input |
+| --- | --- | --- | --- | --- | --- |
+| `durable-ack` | yes | yes | yes | - | - |
+| `recovery-generation` | yes | - | yes | - | - |
+| `reader-snapshot` | yes | yes | - | - | - |
+| `historical-input` | yes | - | yes | - | yes |
+| `query-meaning` | - | - | - | - | - |
+

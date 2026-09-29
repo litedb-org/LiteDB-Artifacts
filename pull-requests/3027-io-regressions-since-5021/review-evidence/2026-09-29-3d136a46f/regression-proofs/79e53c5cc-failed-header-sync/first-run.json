@@ -1,0 +1,94 @@
+{
+  "GeneratedAt": "2026-09-29T07:03:39.0488975+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_FailedHeaderSync",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: commits acknowledged durable after the recovery of a failed header sync were lost at a power loss",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.5740261,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.3666323\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.4349401\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Debug/net8.0/runs/Issue_3027_FailedHeaderSync/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.7723734\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint whose header sync failed threw IOException: injected EIO: write-back failed and the pages were marked clean\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.7740415\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed sync the data file\\u0027s header in the page cache differs from the one on the device\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.8241602\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the recovering open and its commits the device holds the header from before the failed sync\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.8477206\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Acknowledged [1-15], recovered after the power loss [1-10]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.8492405\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: commits acknowledged durable after the recovery of a failed header sync were lost at a power loss (acknowledged [1-15], recovered [1-10]): recovery retired the header journal behind a sync that wrote nothing, and the device kept the header from before the failed sync\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: after a failed header sync, recovery wrote the header back before the sync that retired its journal",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.3800726,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.9086255\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:53.9690754\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Debug/net8.0/runs/Issue_3027_FailedHeaderSync/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:54.16387\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint whose header sync failed threw IOException: injected EIO: write-back failed and the pages were marked clean\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:54.1652534\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed sync the data file\\u0027s header in the page cache differs from the one on the device\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:54.2154272\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the recovering open and its commits the device holds the header the engine reads\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:54.2339846\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Acknowledged [1-15], recovered after the power loss [1-15]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:03:54.2353829\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: after a failed header sync, recovery wrote the header back before the sync that retired its journal: the device holds the header the engine reads, the power loss kept every acknowledged row [1-15], and the recovered database took and kept a new commit\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

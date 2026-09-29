@@ -1,0 +1,118 @@
+# Promotion observer over the full suite (gate 4 agent, worktree agent-af988567ece06d389 at 4662fe49f plus its uncommitted gate-4 work): temporary instrumentation, the run, and the result (outstanding.log never created = no promotion started behind an outstanding header journal)
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T04:45:19.746Z (result 2026-09-29T04:45:19.797Z): 
+EDIT $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/EngineState.cs
+--- old_string
+        internal static Action<long> ObserveSortSpill;
+        internal static Action<PageBuffer> ObserveCacheEviction;
++++ new_string
+        internal static Action<long> ObserveSortSpill;
+        internal static Action<PageBuffer> ObserveCacheEviction;
+
+        // Test hook: every engine's file format promotion as it starts under the WAL writer (the version
+        // it promotes to), and whether an earlier header journal is outstanding in the log then.
+        internal static Action<byte, bool> ObservePromotion;
+--- output
+The file $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/EngineState.cs has been updated successfully.
+
+=== 2026-09-29T04:45:22.783Z (result 2026-09-29T04:45:22.830Z): 
+EDIT $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+--- old_string
+            lock (writer)
+            {
+                this.UseDataWriter(stream =>
++++ new_string
+            lock (writer)
+            {
+#if DEBUG || TESTING
+                EngineState.ObservePromotion?.Invoke(version, _checksums.JournalBytes != 0);
+                if (_checksums.JournalBytes != 0) System.IO.File.AppendAllText("$SCRATCH/outstanding.log",
+                    $"TEMP v={version} stopped={_state.Stopped} failure={_state.WriteFailure != null} checkpointStops={checkpointStops}\n{Environment.StackTrace}\n\n");
+#endif
+                this.UseDataWriter(stream =>
+--- output
+The file $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.FileVersion.cs has been updated successfully. (file state is current in your context — no need to Read it back)
+
+=== 2026-09-29T04:45:27.730Z (result 2026-09-29T04:45:27.773Z): 
+EDIT $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+--- old_string
+            if (_checksums.JournalBytes != 0)
+            {
+                SyncLogBarrier(_writer.Value);
++++ new_string
+            if (_checksums.JournalBytes != 0)
+            {
+                System.IO.File.AppendAllText("$SCRATCH/reuse.log",
+                    $"TEMP reuse conversion={conversion} promotion={promotion} stopped={_state.Stopped} checksums={ChecksumsEnabled}\n{Environment.StackTrace}\n\n");
+                SyncLogBarrier(_writer.Value);
+--- output
+The file $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs has been updated successfully. (file state is current in your context — no need to Read it back)
+
+=== 2026-09-29T04:45:50.524Z (result 2026-09-29T04:45:51.671Z): Run full test suite with instrumentation
+$ export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && S=$SCRATCH && rm -f $S/outstanding.log $S/reuse.log && timeout 3000 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true --no-build > $S/fullrun.txt 2>&1; tail -5 $S/fullrun.txt
+--- output
+Command running in background with ID: b9jz0hs0e. Output is being written to: $SESSION/tasks/b9jz0hs0e.output. You will be notified when it completes. To check interim output, use Read on that file path.
+
+=== 2026-09-29T04:47:53.505Z (result 2026-09-29T04:47:54.557Z): Verify instrumented build is in test output
+$ ls -la LiteDB.Tests/bin/Release/net10.0/LiteDB.dll && grep -c "outstanding.log" LiteDB.Tests/bin/Release/net10.0/LiteDB.dll; python3 -c "
+d=open('LiteDB.Tests/bin/Release/net10.0/LiteDB.dll','rb').read(); print('TEMP reuse'.encode('utf-16-le') in d, 'outstanding.log'.encode('utf-16-le') in d)"
+--- output
+-rw-r--r-- 1 root root 1154048 Sep 29 04:45 LiteDB.Tests/bin/Release/net10.0/LiteDB.dll
+0
+True True
+
+=== 2026-09-29T04:54:47.279Z (result 2026-09-29T04:57:48.328Z): Wait for full run to finish
+$ until grep -qE "Total tests|^Passed!|^Failed!" $SCRATCH/fullrun.txt; do sleep 20; done; tail -6 $SCRATCH/fullrun.txt
+--- output
+[xUnit.net 00:08:21.44]     LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture [SKIP]
+  Skipped LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture [1 ms]
+[xUnit.net 00:09:28.99]     LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [SKIP]
+  Skipped LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [1 ms]
+
+Passed!  - Failed:     0, Passed:  5217, Skipped:     3, Total:  5220, Duration: 11 m 37 s - LiteDB.Tests.dll (net10.0)
+
+=== 2026-09-29T04:57:50.967Z (result 2026-09-29T04:57:52.087Z): Summarize instrumentation results
+$ cd $SCRATCH && ls -la outstanding.log 2>&1; grep -c "^TEMP" reuse.log; grep "^TEMP" reuse.log | sort | uniq -c
+--- output
+ls: cannot access 'outstanding.log': No such file or directory
+283
+    283 TEMP reuse conversion=False promotion=False stopped=False checksums=False
+
+=== 2026-09-29T04:57:55.251Z (result 2026-09-29T04:57:56.522Z): Group reuse call stacks by engine frames
+$ cd $SCRATCH && awk '/^TEMP/{c=0} {c++; if (c>=2 && c<=12) print}' reuse.log | grep "LiteDB.Engine" | sed 's/ in \/.*//' | sort | uniq -c | sort -rn | head -12
+--- output
+    283    at LiteDB.Engine.WalIndexService.TryDrain()
+    283    at LiteDB.Engine.WalIndexService.TryCheckpointCore(Boolean rationed, Boolean drain, Boolean& stopBegun, Boolean& stopOwned)
+    283    at LiteDB.Engine.WalIndexService.TryCheckpoint(Boolean rationed, Boolean drain)
+    283    at LiteDB.Engine.LiteEngine.Open()
+    283    at LiteDB.Engine.LiteEngine.MigrateIndexOrdering()
+    283    at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings)
+    283    at LiteDB.Engine.DiskService.SyncLogBeforeCheckpoint()
+    283    at LiteDB.Engine.DiskService.PrepareCheckpointHeader()
+
+=== 2026-09-29T04:58:02.391Z (result 2026-09-29T04:58:02.443Z): 
+EDIT $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+--- old_string
+                EngineState.ObservePromotion?.Invoke(version, _checksums.JournalBytes != 0);
+                if (_checksums.JournalBytes != 0) System.IO.File.AppendAllText("$SCRATCH/outstanding.log",
+                    $"TEMP v={version} stopped={_state.Stopped} failure={_state.WriteFailure != null} checkpointStops={checkpointStops}\n{Environment.StackTrace}\n\n");
+#endif
++++ new_string
+                EngineState.ObservePromotion?.Invoke(version, _checksums.JournalBytes != 0);
+#endif
+--- output
+The file $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.FileVersion.cs has been updated successfully. (file state is current in your context — no need to Read it back)
+
+=== 2026-09-29T04:58:04.741Z (result 2026-09-29T04:58:04.788Z): 
+EDIT $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+--- old_string
+                System.IO.File.AppendAllText("$SCRATCH/reuse.log",
+                    $"TEMP reuse conversion={conversion} promotion={promotion} stopped={_state.Stopped} checksums={ChecksumsEnabled}\n{Environment.StackTrace}\n\n");
+
++++ new_string
+
+--- output
+The file $REPO/.claude/worktrees/agent-af988567ece06d389/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs has been updated successfully. (file state is current in your context — no need to Read it back)
+

@@ -1,0 +1,126 @@
+{
+  "GeneratedAt": "2026-09-29T06:28:16.6296182+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-ad1a00c61296566d3/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_TornWalAppend",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: commits acknowledged behind a torn WAL frame were lost at recovery (torn append whose truncation failed: acknowledged [1-20, 200, 201], recovered [1-20]; frame a BufferedStream log tore later: acknowledged [1-20, 200, 201], recovered [1-20])",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.3670897,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.5909298\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.6515523\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-ad1a00c61296566d3/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_TornWalAppend/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8325512\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert whose frame was torn threw InvalidOperationException: injected truncation failure\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8349919\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert of _id 200 after the failure was acknowledged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.835777\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert of _id 201 after the failure was acknowledged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.884056\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: acknowledged [1-20, 200, 201], recovered [1-20]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8864607\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert whose frame was torn threw InvalidOperationException: injected torn frame write\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8868527\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert of _id 200 after the failure was acknowledged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8870955\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert of _id 201 after the failure was acknowledged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8894594\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: acknowledged [1-20, 200, 201], recovered [1-20]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.8913028\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: commits acknowledged behind a torn WAL frame were lost at recovery (torn append whose truncation failed: acknowledged [1-20, 200, 201], recovered [1-20]; frame a BufferedStream log tore later: acknowledged [1-20, 200, 201], recovered [1-20])\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: after a torn WAL frame (its truncation failed, or a BufferedStream log tore it later) the engine continued read-only and refused every later write",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.3958305,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:20.9435509\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.0058088\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $REPO/.claude/worktrees/agent-ad1a00c61296566d3/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_TornWalAppend/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2042985\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert whose frame was torn threw IOException: WAL frame write failed.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2180143\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert of _id 200 after the failure was refused: Cannot modify this database: an earlier write failed, so the engine continues read-only until the database is reopened. A WAL write failed at 2026-09-29 06:28:21 UTC on the log file: WAL frame write failed. The log file was kept.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2185384\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: the insert of _id 201 after the failure was refused: Cannot modify this database: an earlier write failed, so the engine continues read-only until the database is reopened. A WAL write failed at 2026-09-29 06:28:21 UTC on the log file: WAL frame write failed. The log file was kept.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.280084\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022torn append whose truncation failed: acknowledged [1-20], recovered [1-20]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2838468\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert whose frame was torn threw IOException: WAL frame write failed.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2847258\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert of _id 200 after the failure was refused: Cannot modify this database: an earlier write failed, so the engine continues read-only until the database is reopened. A WAL write failed at 2026-09-29 06:28:21 UTC on the log file: WAL frame write failed. The log file was kept.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2850589\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: the insert of _id 201 after the failure was refused: Cannot modify this database: an earlier write failed, so the engine continues read-only until the database is reopened. A WAL write failed at 2026-09-29 06:28:21 UTC on the log file: WAL frame write failed. The log file was kept.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2886158\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022frame a BufferedStream log tore later: acknowledged [1-20], recovered [1-20]\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:28:21.2901346\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: after a torn WAL frame (its truncation failed, or a BufferedStream log tore it later) the engine continued read-only and refused every later write; recovery kept every acknowledged commit and took new ones\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+Prove the promotion that waited on a failed checkpoint fix
+
+A bug-fix PR adds one regression proof per bug it fixes. Register a black-box
+ReproRunner repro pinned to LiteDB 6.0.0-prerelease.319, the published package
+built from dev at 5dd942a7 (this PR's base), for the fix of db394db6f:
+
+- Issue_3027_PromotionAfterFailedCheckpoint: a v11 database on caller streams
+  keeps one commit in its WAL. Reopened with CompactStorage=Compact, an insert
+  stores a BSON document and then a compact one of the same shape, which
+  promotes the file. The second document's indexer holds the insert when the
+  engine reads its _id for compact encoding, after the per-document check. A
+  checkpoint's first data sync (the caller stream's Flush) releases it, waits
+  until it blocks on the header lock the checkpoint holds, and fails with EIO.
+  On the known bad the insert then synced the log, wrote a v12 header over the
+  v11 one, synced the data file again on the handle whose sync had failed (the
+  device answers success, as fsyncgate storage does), and truncated and synced
+  the log.
+
+The candidate refuses the insert with the checkpoint's failure (ThrowIfStopped
+under the WAL writer): nothing is written or synced after the failed sync, the
+header stays v11, and a copy of the bytes reopens with every committed row and
+takes compact inserts. The header lock orders the promotion after the failure,
+so no timing decides the outcome: 60 known-bad and 60 candidate runs, eight in
+parallel on four cores, all matched. The proof also reproduces against
+dev-commit 5dd942a7 packed with pack-known-bad, and with the fix's two checks
+removed the candidate reproduces the defect. Exit 0 only on the defect, 1 only
+after verifying the fixed behavior in full, 2 otherwise; repro.json pins both
+exit codes and log texts. The permanent guard is CheckpointFailureWindow_Tests;
+the repro is retired from the automatic Repro Runner tiers like the earlier
+proofs, and the compose-matrix counts follow.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh

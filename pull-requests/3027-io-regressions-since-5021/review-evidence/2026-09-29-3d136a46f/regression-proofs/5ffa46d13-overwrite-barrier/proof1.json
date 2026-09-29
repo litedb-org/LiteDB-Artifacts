@@ -1,0 +1,154 @@
+{
+  "GeneratedAt": "2026-09-29T07:04:55.2510822+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-ae670113747d5f100/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_OverwriteBehindUnsyncedLog",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: with durable commits=false on a log that cannot sync (EINVAL), a checkpoint overwrote the data file in place",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.4420661,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:01.6756092\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:01.7358871\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-ae670113747d5f100/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_OverwriteBehindUnsyncedLog/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:01.9835033\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.009352\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Checkpoint with durable commits=false: 11 pages; the log refused 2 syncs; 12 writes to the data file\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0177159\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0191841\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 2 of 11 (8192 bytes at 16384): LiteException: get only index below highest index\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0200366\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 3 of 11 torn (8192 bytes at 49152): PageChecksumException: Checksum mismatch in Data file at position 49152.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0225564\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 3 of 11 (8192 bytes at 49152): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0233162\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 4 of 11 torn (8192 bytes at 24576): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0240693\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 4 of 11 (8192 bytes at 24576): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0248208\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 5 of 11 torn (8192 bytes at 8192): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0255056\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 5 of 11 (8192 bytes at 8192): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0262284\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 6 of 11 torn (8192 bytes at 40960): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0270783\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 6 of 11 (8192 bytes at 40960): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0280198\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 7 of 11 torn (8192 bytes at 57344): PageChecksumException: Checksum mismatch in Data file at position 57344.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0289\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 7 of 11 (8192 bytes at 57344): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0300002\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 8 of 11 torn (8192 bytes at 65536): PageChecksumException: Checksum mismatch in Data file at position 65536.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0310693\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 8 of 11 (8192 bytes at 65536): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.032096\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 9 of 11 torn (8192 bytes at 73728): PageChecksumException: Checksum mismatch in Data file at position 73728.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0331557\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 9 of 11 (8192 bytes at 73728): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.034278\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 10 of 11 torn (8192 bytes at 81920): PageChecksumException: Checksum mismatch in Data file at position 81920.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.035366\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 10 of 11 (8192 bytes at 81920): EndOfStreamException: The stream ended before the requested data was read.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0364294\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Power loss after write 11 of 11 torn (8192 bytes at 90112): PageChecksumException: Checksum mismatch in Data file at position 90112.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.0394439\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: with durable commits=false on a log that cannot sync (EINVAL), a checkpoint overwrote the data file in place behind a header journal and WAL only in the OS cache: 6 of its 11 writes overwrote bytes the device held, and 19 of the 22 images a power loss mid-overwrite leaves do not hold rows 1-10 intact (first: after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384.)\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: with durable commits=false on a log that cannot sync (EINVAL), the checkpoint wrote nothing to the data file",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.4511583,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.101475\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.1656786\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $REPO/.claude/worktrees/agent-ae670113747d5f100/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_OverwriteBehindUnsyncedLog/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.4400875\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.4517756\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Checkpoint with durable commits=false: 0 pages; the log refused 1 syncs; 0 writes to the data file\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:05:02.4951482\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: with durable commits=false on a log that cannot sync (EINVAL), the checkpoint wrote nothing to the data file and kept the WAL: a power loss keeps rows 1-10 of the data file intact (the unsynced WAL\\u0027s rows 11-30 are lost, a process crash keeps them), and once the log syncs a checkpoint drains the WAL (761856 bytes)\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

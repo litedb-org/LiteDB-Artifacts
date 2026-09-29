@@ -1,0 +1,214 @@
+{
+  "GeneratedAt": "2026-09-29T07:15:19.96524+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_PromotionAfterFailedCheckpoint",
+      "State": 0,
+      "Failed": true,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after the failure: it synced the data file again (the retry \u0022succeeded\u0022), wrote its header journal into the log and changed the data header from v11 to v12",
+        "Actual": 1,
+        "Met": false,
+        "ExitCode": 2,
+        "DurationSeconds": 0.3640571,
+        "UseProjectReference": false,
+        "FailureReason": "Expected exit code 0 but observed 2.",
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:25.9694975\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.0359684\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_PromotionAfterFailedCheckpoint/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.2066082\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: a v11 data file (57344 bytes) whose WAL keeps one commit (24576 bytes)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.241355\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint threw IOException: injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.2415466\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The compact insert that waited on it threw IOException: Cannot append WAL pages during header publication.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.257803\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed data sync: 0 data writes, 0 data syncs, 0 log writes, 1 log truncates, 0 log syncs (by the insert); the data header is v11\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.258656\u002B00:00\u0022,\u0022text\u0022:\u0022INCONCLUSIVE: InvalidOperationException: no data sync after the failure\u0022,\u0022success\u0022:false,\u0022payload\u0022:{\u0022exception\u0022:\u0022System.InvalidOperationException: no data sync after the failure\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Require(Boolean condition, String message) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 226\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Run(ReproHostClient host) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 136\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Main() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 58\u0022}}"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "System.InvalidOperationException: no data sync after the failure"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Require(Boolean condition, String message) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 226"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Run(ReproHostClient host) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 136"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Main() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 58"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: the compact insert that waited on the checkpoint whose data sync failed was refused with that failure: nothing was written to or synced on either file after the failed sync, the data header stayed v11, and a reopen has every committed row",
+        "Actual": 1,
+        "Met": false,
+        "ExitCode": 2,
+        "DurationSeconds": 0.4045897,
+        "UseProjectReference": true,
+        "FailureReason": "Expected exit code 1 but observed 2.",
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.3252108\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.3906135\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_PromotionAfterFailedCheckpoint/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.5807286\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: a v11 data file (57344 bytes) whose WAL keeps one commit (32768 bytes)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.6196679\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint threw IOException: injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.6198189\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The compact insert that waited on it threw IOException: Engine closed after an I/O failure. Dispose and reopen the database before retrying. injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.6334402\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed data sync: 0 data writes, 0 data syncs, 0 log writes, 0 log truncates, 0 log syncs (by no thread); the data header is v11\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:15:26.6668036\u002B00:00\u0022,\u0022text\u0022:\u0022INCONCLUSIVE: NotSupportedException: Memory stream is not expandable.\u0022,\u0022success\u0022:false,\u0022payload\u0022:{\u0022exception\u0022:\u0022System.NotSupportedException: Memory stream is not expandable.\\n   at System.IO.MemoryStream.set_Capacity(Int32 value)\\n   at System.IO.MemoryStream.EnsureCapacity(Int32 value)\\n   at System.IO.MemoryStream.Write(Byte[] buffer, Int32 offset, Int32 count)\\n   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 139\\n   at LiteDB.Engine.HeaderJournal.Write(Stream stream, Byte[] header, Boolean conversion, WalChecksum checksums, Boolean promotion, Action\\u00601 sync) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/HeaderJournal.cs:line 232\\n   at LiteDB.Engine.DiskService.BeginHeaderJournal(Byte[] header, Boolean conversion, Boolean promotion) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs:line 36\\n   at LiteDB.Engine.DiskService.\\u003C\\u003Ec__DisplayClass153_0.\\u003CWriteFileVersion\\u003Eb__0(Stream stream) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 100\\n   at LiteDB.Engine.DiskService.\\u003C\\u003Ec__DisplayClass81_0.\\u003CUseDataWriter\\u003Eb__0(Stream data) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 29\\n   at LiteDB.Engine.DiskService.UseDataWriter[T](Func\\u00602 io) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 24\\n   at LiteDB.Engine.DiskService.UseDataWriter(Action\\u00601 io) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 27\\n   at LiteDB.Engine.DiskService.WriteFileVersion(Stream writer, Byte version, Boolean checkpointStops) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 85\\n   at LiteDB.Engine.DiskService.PromoteFileFormat(Byte version, Boolean checkpointStops) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 31\\n   at LiteDB.Engine.Snapshot.RequireFileVersion(Byte requiredVersion) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/Snapshot.FileVersion.cs:line 21\\n   at LiteDB.Engine.Snapshot.TryRequireCompactVersion() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/Snapshot.Storage.cs:line 39\\n   at LiteDB.Engine.DocumentStorageCodec.PrepareWrite(BsonDocument document, Snapshot snapshot) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Storage/DocumentStorageCodec.cs:line 37\\n   at LiteDB.Engine.DataService.Insert(BsonDocument doc) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/DataService.cs:line 38\\n   at LiteDB.Engine.LiteEngine.InsertDocument(Snapshot snapshot, BsonDocument doc, BsonAutoId autoId, IndexService indexer, DataService data, VectorIndexService vectorService) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 73\\n   at LiteDB.Engine.LiteEngine.\\u003C\\u003Ec__DisplayClass28_0.\\u003CInsert\\u003Eb__0(TransactionService transaction) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 38\\n   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func\\u00602 fn, Boolean write) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Transaction.cs:line 130\\n   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func\\u00602 fn) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Transaction.cs:line 106\\n   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable\\u00601 docs, BsonAutoId autoId) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 20\\n   at LiteDB.LiteCollection\\u00601.Insert(IEnumerable\\u00601 entities) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Client/Database/Collections/Insert.cs:line 46\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Reopen(ReproHostClient host, Device data, Device log) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 190\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Run(ReproHostClient host) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 145\\n   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Main() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 58\u0022}}"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "System.NotSupportedException: Memory stream is not expandable."
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.IO.MemoryStream.set_Capacity(Int32 value)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.IO.MemoryStream.EnsureCapacity(Int32 value)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.IO.MemoryStream.Write(Byte[] buffer, Int32 offset, Int32 count)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 139"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.HeaderJournal.Write(Stream stream, Byte[] header, Boolean conversion, WalChecksum checksums, Boolean promotion, Action\u00601 sync) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/HeaderJournal.cs:line 232"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.BeginHeaderJournal(Byte[] header, Boolean conversion, Boolean promotion) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs:line 36"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.\u003C\u003Ec__DisplayClass153_0.\u003CWriteFileVersion\u003Eb__0(Stream stream) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 100"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.\u003C\u003Ec__DisplayClass81_0.\u003CUseDataWriter\u003Eb__0(Stream data) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 29"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.UseDataWriter[T](Func\u00602 io) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 24"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.UseDataWriter(Action\u00601 io) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.DataWrites.cs:line 27"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.WriteFileVersion(Stream writer, Byte version, Boolean checkpointStops) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 85"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DiskService.PromoteFileFormat(Byte version, Boolean checkpointStops) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Disk/DiskService.FileVersion.cs:line 31"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.Snapshot.RequireFileVersion(Byte requiredVersion) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/Snapshot.FileVersion.cs:line 21"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.Snapshot.TryRequireCompactVersion() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/Snapshot.Storage.cs:line 39"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DocumentStorageCodec.PrepareWrite(BsonDocument document, Snapshot snapshot) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Storage/DocumentStorageCodec.cs:line 37"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.DataService.Insert(BsonDocument doc) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Services/DataService.cs:line 38"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.LiteEngine.InsertDocument(Snapshot snapshot, BsonDocument doc, BsonAutoId autoId, IndexService indexer, DataService data, VectorIndexService vectorService) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 73"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.LiteEngine.\u003C\u003Ec__DisplayClass28_0.\u003CInsert\u003Eb__0(TransactionService transaction) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 38"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func\u00602 fn, Boolean write) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Transaction.cs:line 130"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func\u00602 fn) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Transaction.cs:line 106"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable\u00601 docs, BsonAutoId autoId) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Engine/Engine/Insert.cs:line 20"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.LiteCollection\u00601.Insert(IEnumerable\u00601 entities) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB/Client/Database/Collections/Insert.cs:line 46"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Reopen(ReproHostClient host, Device data, Device log) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 190"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Run(ReproHostClient host) in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 145"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3027_PromotionAfterFailedCheckpoint.Program.Main() in $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/Repros/Issue_3027_PromotionAfterFailedCheckpoint/Program.cs:line 58"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+Prove the header journal recovery fix after a failed header sync
+
+A bug-fix PR adds one regression proof per bug it fixes. Register a black-box
+ReproRunner repro pinned to LiteDB 6.0.0-prerelease.319, the published package
+built from dev at 5dd942a7 (this PR's base), which contains the defect:
+
+- Issue_3027_FailedHeaderSync: the database runs on caller streams, FileStream
+  subclasses that model the device (both versions sync them through their
+  Flush(true)). A checkpoint's sync of the salt rotation's header fails with
+  EIO and forgets that write, as Linux does ("fsyncgate"). The next open read
+  the new header from the page cache, took it as published and retired the
+  header journal behind a data sync that wrote nothing; the device kept the
+  header from before the failed sync. Rows 11-15, acknowledged durable
+  (durableLogFlush=true) after that recovery, were lost at the power loss:
+  acknowledged [1-15], recovered [1-10].
+
+The candidate writes the header back before the sync that retires its journal
+(decision 13 of docs/decisions/durability-policy.md): the device holds the
+header the engine reads, the power loss keeps rows 1-15 with their contents,
+and the recovered database takes and keeps a new commit. The repro exits 0
+only on the defect, 1 only after verifying the fixed behavior in full and 2
+otherwise; repro.json pins both exit codes and log texts. It also reproduces
+against dev-commit 5dd942a7 packed as 0.0.0-knownbad.5dd942a7367c. The
+permanent guard is SyncFailureRecovery_Tests. The repro is retired from the
+automatic Repro Runner tiers like the earlier proofs, and the compose-matrix
+test counts follow.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh

@@ -1,0 +1,66 @@
+=== Issue_3027_LegacyWalConversion
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: the conversion ran while a shared reader held a snapshot and discarded the 5.0.21 WAL (516096 -> 32768 bytes): 100 documents, 0 with value 7 remain of 101 and 21
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: the conversion was refused with LOCK_TIMEOUT while a shared reader held a snapshot, both files unchanged; once the reader closed it converted the file with every 5.0.21 commit (101 documents, 21 with value 7)
+=== Issue_3027_LegacyDroppedIndex
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: the collection 5.0.21 dropped index Age from is not writable: request page must be less or equals lastest page in data file
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: the collection 5.0.21 dropped index Age from accepts insert, update, delete and EnsureIndex, and reopens with every document
+=== Issue_3027_LegacyDamagedDocument
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: the first Auto-Rebuild open of a 5.0.21 file with one damaged document failed with LiteException 999: string length exceeds the document limit
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: the first Auto-Rebuild open rebuilt the 5.0.21 file and kept documents 1 and 3 and the readable part of document 2
+=== Issue_2242_UnsyncableStorage
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false failed at create: FileSyncException: Device sync of '$REPO/.claude/worktrees/agent-aaeaca9f570479c49/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2242_UnsyncableStorage/ver_6_0_0_prerelease_319/run/Issue_2242_UnsyncableStorage/1684703fd2de4755aa4f09c0f2135425/Issue_2242_UnsyncableStorage-b5b7f81b16ce40448e19c6159db9d616/rows.db' failed (errno 22).
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: on storage that cannot sync (fsync EINVAL) the database with Durable Commits=false was created, indexed, written, checkpointed and reopened with every row and its index
+=== Issue_3027_SharedMutexNameLength
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: a shared connection cannot open a database in a directory with a non-ASCII name: ArgumentException from the Mutex constructor: The length of the name exceeds the maximum limit. (Parameter 'name')
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: a shared connection opened, wrote and reopened a database in a directory with a non-ASCII name
+DONE

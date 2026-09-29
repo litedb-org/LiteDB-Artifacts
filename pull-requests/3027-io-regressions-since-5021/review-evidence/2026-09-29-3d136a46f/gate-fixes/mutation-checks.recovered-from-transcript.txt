@@ -1,0 +1,155 @@
+# Gate fixes 659784920 (encrypted partial header), ad3382f6a (written confirmation) and 0ce00ee55 (review-driven): mutation checks
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T04:38:21.505Z (result 2026-09-29T04:38:42.177Z): Extend the rebuild-reader test and mutation-check it
+$ cd $SCRATCH/anchorwt && python3 - <<'EOF'
+def edit(p, reps):
+    raw=open(p,'rb').read(); bom=raw.startswith(b'\xef\xbb\xbf'); s=raw.decode('utf-8-sig')
+    crlf='\r\n' in s; s=s.replace('\r\n','\n')
+    for a,b in reps:
+        assert s.count(a)==1, (p, a[:90])
+        s=s.replace(a,b)
+    if crlf: s=s.replace('\n','\r\n')
+    open(p,'wb').write((b'\xef\xbb\xbf' if bom else b'')+s.encode('utf-8'))
+edit('docs/decisions/durability-policy.md', [
+("""   frames. An encrypted data file whose header page was never written back reads as zeros through its
+   encryption and is restored like a plain one; an empty encrypted data file is restored too. A header
+   frame whose write fails is truncated like a failed append.""",
+"""   frames. An encrypted data file whose header page was never written back, or only some of its sectors
+   (a page write spans 16 sectors and is not atomic), is restored like a plain one: a sector never
+   written holds zero ciphertext, which decrypts to one fixed block (AES in ECB mode), and a sector of
+   that block alone counts as never written; any other bytes still fail the open unchanged. An empty
+   encrypted data file is restored too. A header frame whose write fails is truncated like a failed
+   append."""),
+])
+p='LiteDB.Tests/Regressions/HeaderFrameRebuildReader_Tests.cs'
+s=open(p,encoding='utf-8').read()
+a="""    /// (a rebuild from it would install an empty database). Independent review A, finding 1.
+    /// </summary>
+    [Trait("Category", "IoSafety")]
+    public class HeaderFrameRebuildReader_Tests
+    {
+        [Fact]
+        public void Rebuild_reader_takes_a_lost_header_from_the_header_frame()
+        {
+            using var file = new TempFile();
+            using (var db = new LiteDatabase($"Filename={file.Filename};Durable Commits=false"))
+            {
+                db.CheckpointSize = 0;
+                db.GetCollection("rows").Insert(Enumerable.Range(1, 20).Select(Row));
+            }
+            var data = File.ReadAllBytes(file.Filename);
+            Array.Clear(data, 0, 512); // the header's first sector never written back
+            File.WriteAllBytes(file.Filename, data);
+
+            var errors = new List<FileReaderError>();
+            using var reader = new FileReaderV8(new EngineSettings { Filename = file.Filename }, errors);"""
+b="""    /// (a rebuild from it would install an empty database). Independent review A, finding 1. Encrypted,
+    /// a header of which only the first sector reached the device is taken from it too (the owner's
+    /// review of 4662fe49f, item 1): its other sectors hold zero ciphertext, which does not decrypt to zeros.
+    /// </summary>
+    [Trait("Category", "IoSafety")]
+    public class HeaderFrameRebuildReader_Tests
+    {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("secret")]
+        public void Rebuild_reader_takes_a_lost_header_from_the_header_frame(string password)
+        {
+            using var file = new TempFile();
+            var connection = $"Filename={file.Filename};Durable Commits=false" + (password == null ? "" : ";Password=" + password);
+            using (var db = new LiteDatabase(connection))
+            {
+                db.CheckpointSize = 0;
+                db.GetCollection("rows").Insert(Enumerable.Range(1, 20).Select(Row));
+            }
+            var data = File.ReadAllBytes(file.Filename);
+            if (password == null) Array.Clear(data, 0, 512); // the header's first sector never written back
+            else Array.Clear(data, Constants.PAGE_SIZE + 512, Constants.PAGE_SIZE - 512); // after the preamble, all but its first sector
+            File.WriteAllBytes(file.Filename, data);
+
+            var errors = new List<FileReaderError>();
+            using var reader = new FileReaderV8(new EngineSettings { Filename = file.Filename, Password = password }, errors);"""
+assert s.count(a)==1
+open(p,'w',encoding='utf-8').write(s.replace(a,b))
+EOF
+export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1; dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true 2>&1 | grep -E " error " | sort -u | head; dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 --no-build --filter "FullyQualifiedName~HeaderFrame" 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]|Error Message" -A1 | head; echo "== mutation: no blank block in rebuild reader"; sed -i 's/HeaderFrame.Completes(bytes, frame, (_dataStream as AesStream)?.BlankBlock)/HeaderFrame.Completes(bytes, frame)/' LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs; dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true 2>&1 | grep -E " error " | head -2; dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 --no-build --filter "FullyQualifiedName~HeaderFrameRebuildReader" 2>&1 | grep -E "Passed!|Failed!"; git checkout LiteDB/Engine/FileReader/FileReaderV8.Checksums.cs 2>/dev/null; git diff --stat
+--- output
+Passed!  - Failed:     0, Passed:    36, Skipped:     0, Total:    36, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+== mutation: no blank block in rebuild reader
+Failed!  - Failed:     1, Passed:     1, Skipped:     0, Total:     2, Duration: 350 ms - LiteDB.Tests.dll (net10.0)
+ .../Regressions/HeaderFrameRebuildReader_Tests.cs  | 18 ++--
+ LiteDB.Tests/Regressions/HeaderFrame_Tests.cs      | 99 +++++++++++++++++++++-
+ LiteDB/Engine/Disk/DiskService.HeaderFrame.cs      | 12 ++-
+ LiteDB/Engine/Disk/HeaderFrame.cs                  | 18 ++--
+ LiteDB/Engine/Disk/Streams/AesStream.cs            |  8 ++
+ docs/decisions/durability-policy.md                |  9 +-
+ 6 files changed, 146 insertions(+), 18 deletions(-)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T04:53:15.769Z (result 2026-09-29T04:53:59.717Z): Run four mutations against the new tests
+$ cd $SCRATCH/anchorwt && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+F=LiteDB/Engine/Disk/DiskService.WalWrite.cs
+run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error " | sort -u | head -5; dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~WrittenConfirmation" 2>&1 | grep -E "Passed!|Failed!" ; }
+echo "M1: no sync"; python3 -c "
+p='$F'; s=open(p).read(); s=s.replace('(!confirmationWritten || this.SyncTruncatedConfirmation())','true'); open(p,'w').write(s)"; run; git checkout -q -- $F
+echo "M2: no uncertain reset"; python3 -c "
+p='$F'; s=open(p).read(); s=s.replace('if (confirmationWritten) uncertain = true;',''); open(p,'w').write(s)"; run; git checkout -q -- $F
+echo "M3: ignore cannot-sync answer"; python3 -c "
+p='$F'; s=open(p).read(); s=s.replace('            return _logBarrierSynced;\n        }\n    }\n}','            return true;\n        }\n    }\n}'); open(p,'w').write(s)"; git diff --stat; run; git checkout -q -- $F
+echo "M4: sync every failed frame"; python3 -c "
+p='$F'; s=open(p).read(); s=s.replace('(!confirmationWritten || this.SyncTruncatedConfirmation())','this.SyncTruncatedConfirmation()'); open(p,'w').write(s)"; run; git checkout -q -- $F
+git status --short
+--- output
+M1: no sync
+Failed!  - Failed:     9, Passed:     2, Skipped:     0, Total:    11, Duration: 457 ms - LiteDB.Tests.dll (net10.0)
+M2: no uncertain reset
+Failed!  - Failed:     2, Passed:     9, Skipped:     0, Total:    11, Duration: 496 ms - LiteDB.Tests.dll (net10.0)
+M3: ignore cannot-sync answer
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+Failed!  - Failed:     1, Passed:    10, Skipped:     0, Total:    11, Duration: 556 ms - LiteDB.Tests.dll (net10.0)
+M4: sync every failed frame
+Failed!  - Failed:     2, Passed:     9, Skipped:     0, Total:    11, Duration: 536 ms - LiteDB.Tests.dll (net10.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T05:34:08.225Z (result 2026-09-29T05:34:46.461Z): Mutation-check the review-driven tests
+$ cd $SCRATCH/anchorwt && S=$SCRATCH && W=LiteDB/Engine/Disk/DiskService.WalWrite.cs && H=LiteDB/Engine/Disk/HeaderFrame.cs && cp $W $S/ww.bak && cp $H $S/hf.bak && grep -n "blank = blank &&" $H
+export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
+run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 -v q 2>&1 | grep -E " error " | sort -u | head -3; timeout 900 dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Debug -f net10.0 --no-build --filter "FullyQualifiedName~WrittenConfirmation|FullyQualifiedName~HeaderFrame_Tests" 2>&1 | grep -E "Passed!|Failed!|^\s+Failed " | cut -c1-230; }
+echo M1; python3 -c "
+p='$W';s=open(p).read();s=s.replace('return _logBarrierSynced && !this.LogSyncUnverified;','return _logBarrierSynced;');open(p,'w').write(s)"; run; cp $S/ww.bak $W
+echo M2; python3 -c "
+p='$W';s=open(p).read();s=s.replace('catch (Exception ex) when (!ex.Data.Contains(CommitOutcomeDataKey))','catch (IOException ex) when (!ex.Data.Contains(CommitOutcomeDataKey))');open(p,'w').write(s)"; run; cp $S/ww.bak $W
+echo M3; python3 -c "
+p='$W';s=open(p).read();s=s.replace('if (confirmationWritten) uncertain = true;','');open(p,'w').write(s)"; run; cp $S/ww.bak $W
+echo M4; python3 -c "
+p='$H';s=open(p).read();s=s.replace('blank = blank && (i >= header.Length ||','blank = blank && (i >= sector + 16 || i >= header.Length ||');open(p,'w').write(s)"; git diff --stat $H; run; cp $S/hf.bak $H
+git diff --stat
+--- output
+79:                    blank = blank && (i >= header.Length || value == blankBlock[i % blankBlock.Length]);
+M1
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Confirmation_whose_truncation_sync_cannot_report_failure_is_unknown [58 ms]
+Failed!  - Failed:     1, Passed:    45, Skipped:     0, Total:    46, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+M2
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Failed_commit_whose_write_failure_is_no_io_error_carries_its_outcome(phase: "wal-confirmation-after-write") [61 ms]
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Failed_commit_whose_write_failure_is_no_io_error_carries_its_outcome(phase: "wal-page-after-write") [8 ms]
+Failed!  - Failed:     2, Passed:    44, Skipped:     0, Total:    46, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+M3
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Failed_commit_is_reported_not_committed_only_once_no_confirmation_can_be_in_the_log(phase: "wal-confirmation-after-write", eio: True, password: null) [63 ms]
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Failed_commit_is_reported_not_committed_only_once_no_confirmation_can_be_in_the_log(phase: "wal-confirmation-after-write", eio: True, password: "secret") [22 ms]
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Confirmation_whose_truncation_sync_cannot_report_failure_is_unknown [6 ms]
+  Failed LiteDB.Tests.Regressions.WrittenConfirmation_Tests.Confirmation_written_before_a_later_step_failed_is_unknown [2 ms]
+Failed!  - Failed:     4, Passed:    42, Skipped:     0, Total:    46, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+M4
+ LiteDB/Engine/Disk/HeaderFrame.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+  Failed LiteDB.Tests.Regressions.HeaderFrame_Tests.Encrypted_header_page_with_a_sector_of_other_bytes_is_refused_unchanged(blankFirstBlock: True) [116 ms]
+Failed!  - Failed:     1, Passed:    45, Skipped:     0, Total:    46, Duration: 1 s - LiteDB.Tests.dll (net10.0)
+ LiteDB.Tests/Regressions/HeaderFrame_Tests.cs      |  9 ++-
+ .../Regressions/WrittenConfirmation_Tests.cs       | 82 ++++++++++++++++++++++
+ LiteDB/Engine/Disk/DiskService.WalWrite.cs         | 10 +--
+ 3 files changed, 95 insertions(+), 6 deletions(-)
+Shell cwd was reset to $REPO
+

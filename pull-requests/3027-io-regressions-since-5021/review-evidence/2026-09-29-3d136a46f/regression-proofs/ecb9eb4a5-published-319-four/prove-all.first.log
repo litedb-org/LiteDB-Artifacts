@@ -1,0 +1,53 @@
+=== Issue_3027_DumpInTransaction
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its next safepoint failed an ENSURE (LiteException 999: only idle readable pages can be evicted), which stopped the engine and marked the data file invalid and lost the transaction (reading $dump(41) failed with LiteException 999: only idle readable pages can be evicted, then the engine stopped, a reopen found 1 documents, 0 updated; reading $page_list(39) failed with LiteException 999: only idle readable pages can be evicted, then the engine stopped, a reopen found 1 documents, 0 updated)
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its safepoints and its commit succeeded, and a reopen found every row of it (1001 documents, 1000 updated)
+=== Issue_3027_StreamDatabaseDispose
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: new LiteDatabase(stream) left CHECKPOINT=1 in the database header, a second Dispose threw and Dispose with an open transaction threw (second Dispose: LiteException: This engine instance already disposed.; with an open transaction: LiteException: The current thread already contains an open transaction. Use the Commit/Rollback method to release the previous transaction.)
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: new LiteDatabase(stream) left the stored CHECKPOINT pragma at 1000 and kept every commit, a second Dispose did not throw, and Dispose with an open transaction rolled it back and released the stream
+=== Issue_3027_LegacyReadOnlyStream
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file failed with NotSupportedException: Stream does not support writing. (with a writable log stream too, after writing 32768 bytes into it)
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file opened read-only, read all 200 documents and their indexed queries, rejected an insert (IOException: Cannot modify a read-only database.) and left the file unchanged, also beside an unwritten writable log stream
+=== Issue_3027_ForeignLegacyWal
+reprorunner exit=0
+## Regression proof: passed
+
+
+
+verify exit=0
+  Package: exit 0, met True, failure None
+     configuration {'useProjectReference': False, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result REPRODUCED: the open replayed the 5.0.21 log of another database into this data file (40960 to 14196736 bytes, log deleted): collections [big,fresh], 0 documents, 0 with value 7
+  Latest: exit 1, met True, failure None
+     configuration {'useProjectReference': True, 'liteDBPackageVersion': '6.0.0-prerelease.319'}
+     result FIXED: the open beside the 5.0.21 log of another database failed with INVALID_DATABASE and changed neither file; beside its own WAL the data file opened with every commit (101 documents, 21 with value 7)
+DONE

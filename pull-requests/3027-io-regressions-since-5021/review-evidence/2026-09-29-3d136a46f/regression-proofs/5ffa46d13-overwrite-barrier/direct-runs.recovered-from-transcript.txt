@@ -1,0 +1,73 @@
+# Issue_3027_OverwriteBehindUnsyncedLog: direct runs against 6.0.0-prerelease.319, the candidate (FIXED), dev 5dd942a73 packed, and the candidate with the overwrite barrier disabled (against/head-with-fix-reverted/run.log is that last run)
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T07:07:00.640Z (result 2026-09-29T07:07:04.535Z): Run repro against published 319 package
+$ chmod +x $SCRATCH/ob3027/against.sh && $SCRATCH/ob3027/against.sh 6.0.0-prerelease.319
+--- output
+Issue_3027_OverwriteBehindUnsyncedLog against LiteDB 6.0.0-prerelease.319: exit 0
+  log "LiteDB 6.0.0-prerelease.319\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $SCRATCH/ob3027/against/6.0.0-prerelease.319/LiteDB.dll"
+  log "Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL"
+  log "Checkpoint with durable commits=false: 11 pages; the log refused 2 syncs; 12 writes to the data file"
+  log "At the data sync after the overwrite the log held 116 writes (journal and WAL) in the OS cache only; its device image is 114688 bytes"
+  log "Power loss after write 1 of 11 torn (8192 bytes at 0): intact, rows [1-10]"
+  log "Power loss after write 1 of 11 (8192 bytes at 0): intact, rows [1-10]"
+  log "Power loss after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384."
+  log "Power loss after write 2 of 11 (8192 bytes at 16384): LiteException: get only index below highest index"
+  log "Power loss after write 3 of 11 torn (8192 bytes at 49152): PageChecksumException: Checksum mismatch in Data file at position 49152."
+  log "Power loss after write 3 of 11 (8192 bytes at 49152): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 4 of 11 torn (8192 bytes at 24576): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 4 of 11 (8192 bytes at 24576): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 5 of 11 torn (8192 bytes at 8192): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 5 of 11 (8192 bytes at 8192): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 6 of 11 torn (8192 bytes at 40960): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 6 of 11 (8192 bytes at 40960): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 7 of 11 torn (8192 bytes at 57344): PageChecksumException: Checksum mismatch in Data file at position 57344."
+  log "Power loss after write 7 of 11 (8192 bytes at 57344): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 8 of 11 torn (8192 bytes at 65536): PageChecksumException: Checksum mismatch in Data file at position 65536."
+  log "Power loss after write 8 of 11 (8192 bytes at 65536): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 9 of 11 torn (8192 bytes at 73728): PageChecksumException: Checksum mismatch in Data file at position 73728."
+  log "Power loss after write 9 of 11 (8192 bytes at 73728): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 10 of 11 torn (8192 bytes at 81920): PageChecksumException: Checksum mismatch in Data file at position 81920."
+  log "Power loss after write 10 of 11 (8192 bytes at 81920): EndOfStreamException: The stream ended before the requested data was read."
+  log "Power loss after write 11 of 11 torn (8192 bytes at 90112): PageChecksumException: Checksum mismatch in Data file at position 90112."
+  log "Power loss after write 11 of 11 (8192 bytes at 90112): intact, rows [1-30]"
+  RESULT "REPRODUCED: with durable commits=false on a log that cannot sync (EINVAL), a checkpoint (11 pages) overwrote the data file in place behind a header journal and WAL only in the OS cache: 6 of its 11 writes overwrote bytes the device held, and 19 of the 22 images a power loss mid-overwrite leaves do not hold rows 1-10 intact (first: after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384.)"
+
+=== 2026-09-29T07:07:22.615Z (result 2026-09-29T07:07:27.536Z): Run repro against in-repo candidate
+$ $SCRATCH/ob3027/against.sh head
+--- output
+Issue_3027_OverwriteBehindUnsyncedLog against LiteDB head: exit 1
+  log "LiteDB 0.0.0-detached\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $SCRATCH/ob3027/against/head/LiteDB.dll"
+  log "Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL"
+  log "Checkpoint with durable commits=false: 0 pages; the log refused 1 syncs; 0 writes to the data file"
+  log "The WAL is kept: 761856 bytes in the OS cache, 122880 bytes on the device"
+  RESULT "FIXED: with durable commits=false on a log that cannot sync (EINVAL), the checkpoint wrote nothing to the data file and kept the WAL: a power loss keeps rows 1-10 of the data file intact (the unsynced WAL\u0027s rows 11-30 are lost, a process crash keeps them), and once the log syncs a checkpoint drains the WAL"
+
+=== 2026-09-29T07:07:30.878Z (result 2026-09-29T07:07:34.512Z): Run repro against packed dev commit 5dd942a7
+$ $SCRATCH/ob3027/against.sh 0.0.0-knownbad.5dd942a7367c $SCRATCH/proofs/feed | grep -v "Power loss"
+--- output
+Issue_3027_OverwriteBehindUnsyncedLog against LiteDB 0.0.0-knownbad.5dd942a7367c: exit 0
+  log "LiteDB 0.0.0-detached\u002B5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $SCRATCH/ob3027/against/0.0.0-knownbad.5dd942a7367c/LiteDB.dll"
+  log "Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL"
+  log "Checkpoint with durable commits=false: 11 pages; the log refused 2 syncs; 12 writes to the data file"
+  log "At the data sync after the overwrite the log held 116 writes (journal and WAL) in the OS cache only; its device image is 114688 bytes"
+  RESULT "REPRODUCED: with durable commits=false on a log that cannot sync (EINVAL), a checkpoint (11 pages) overwrote the data file in place behind a header journal and WAL only in the OS cache: 6 of its 11 writes overwrote bytes the device held, and 19 of the 22 images a power loss mid-overwrite leaves do not hold rows 1-10 intact (first: after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384.)"
+
+=== 2026-09-29T07:08:05.389Z (result 2026-09-29T07:08:06.507Z): Apply temporary mutant undoing the fix
+$ sed -i 's/            if (_logBarrierSynced || _volatileLog) return;/            if (_logBarrierSynced || _volatileLog || !_durableCommits) return; \/\/ MUTANT/' LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs && git diff --stat
+--- output
+ LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+=== 2026-09-29T07:08:09.967Z (result 2026-09-29T07:08:15.082Z): Run repro against mutant then restore source
+$ $SCRATCH/ob3027/against.sh head | grep -v "Power loss after"; cd $REPO/.claude/worktrees/agent-ae670113747d5f100 && git checkout -- LiteDB/Engine/Disk/DiskService.OverwriteBarrier.cs && git status --short
+--- output
+Issue_3027_OverwriteBehindUnsyncedLog against LiteDB head: exit 0
+  log "LiteDB 0.0.0-detached\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $SCRATCH/ob3027/against/head/LiteDB.dll"
+  log "Setup: rows 1-10 are in the data file on the device (57344 bytes); the log now answers every sync with EINVAL"
+  log "Checkpoint with durable commits=false: 11 pages; the log refused 2 syncs; 12 writes to the data file"
+  log "At the data sync after the overwrite the log held 117 writes (journal and WAL) in the OS cache only; its device image is 122880 bytes"
+  RESULT "REPRODUCED: with durable commits=false on a log that cannot sync (EINVAL), a checkpoint (11 pages) overwrote the data file in place behind a header journal and WAL only in the OS cache: 6 of its 11 writes overwrote bytes the device held, and 19 of the 22 images a power loss mid-overwrite leaves do not hold rows 1-10 intact (first: after write 2 of 11 torn (8192 bytes at 16384): PageChecksumException: Checksum mismatch in Data file at position 16384.)"
+?? LiteDB.ReproRunner/Repros/Issue_3027_OverwriteBehindUnsyncedLog/
+

@@ -1,0 +1,94 @@
+{
+  "GeneratedAt": "2026-09-29T07:34:21.37356+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_PromotionAfterFailedCheckpoint",
+      "State": 0,
+      "Failed": true,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after that failure: it wrote a v12 header over the v11 one and synced the data file again on the handle whose sync had just failed, which reported success",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.336945,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:26.974649\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.0332932\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_PromotionAfterFailedCheckpoint/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.2000221\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: a v11 data file (57344 bytes) whose WAL keeps one commit (24576 bytes)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.2367474\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint threw IOException: injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.2368937\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The insert that waited on it threw LiteException: page must be writable to support changes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.2506155\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.2511891\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after that failure: it wrote a v12 header over the v11 one and synced the data file again on the handle whose sync had just failed, which reported success\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: the compact insert that waited on the checkpoint whose data sync failed was refused with that failure: nothing was written to or synced on either file after the failed sync, the data header stayed v11, and a reopen has every committed row",
+        "Actual": 0,
+        "Met": false,
+        "ExitCode": 0,
+        "DurationSeconds": 0.3702004,
+        "UseProjectReference": true,
+        "FailureReason": "Expected non-zero exit code.",
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.3117866\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.3761752\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $REPO/.claude/worktrees/agent-ae3466fb0272766da/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_PromotionAfterFailedCheckpoint/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.5673775\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Setup: a v11 data file (57344 bytes) whose WAL keeps one commit (32768 bytes)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.6103269\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The checkpoint threw IOException: injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.6105182\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022The insert that waited on it threw IOException: Engine closed after an I/O failure. Dispose and reopen the database before retrying. injected EIO: the data file\\u0027s sync failed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.625912\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022After the failed data sync: the insert: data read, data sync, log truncate, log write, log sync, log read, log read, log read, log read, log write, log write, log sync, data write, data sync, log truncate, log sync; the data header is v12\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T07:34:27.6265328\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after that failure: it wrote a v12 header over the v11 one and synced the data file again on the handle whose sync had just failed, which reported success\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      }
+    }
+  ]
+}

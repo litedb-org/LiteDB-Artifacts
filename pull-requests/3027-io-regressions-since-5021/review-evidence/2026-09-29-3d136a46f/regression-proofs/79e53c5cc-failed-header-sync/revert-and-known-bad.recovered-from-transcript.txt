@@ -1,0 +1,53 @@
+# Issue_3027_FailedHeaderSync: the candidate with only the fix's condition reverted (mutant.json) and the run against dev 5dd942a73 packed by hand
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T07:04:20.836Z (result 2026-09-29T07:04:21.886Z): Temporarily revert the fix and run the repro as a sanity check
+$ sed -i 's/var rewrite = _recoveredHeader != null || !(journal.Legacy \&\& !published);/var rewrite = _recoveredHeader != null;/' LiteDB/Engine/Disk/DiskService.HeaderJournal.cs && git diff --stat && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && timeout 900 dotnet run --project LiteDB.ReproRunner/LiteDB.ReproRunner.Cli -- run Issue_3027_FailedHeaderSync --ci --report $SCRATCH/fhs/mutant.json > /dev/null 2>&1; echo exit=$?; git checkout LiteDB/Engine/Disk/DiskService.HeaderJournal.cs && git status --short
+--- output
+This agent is isolated in the worktree $REPO/.claude/worktrees/agent-a3b31b7327f17254c, but this command names git in a form too complex to verify that it stays inside the worktree. Refusing to run it — a worktree-isolated agent's git operations must target its own worktree. Split it into plain, separate commands and run them from $REPO/.claude/worktrees/agent-a3b31b7327f17254c.
+
+=== 2026-09-29T07:04:24.656Z (result 2026-09-29T07:04:25.803Z): Temporarily revert the fix condition
+$ sed -i 's/var rewrite = _recoveredHeader != null || !(journal.Legacy \&\& !published);/var rewrite = _recoveredHeader != null;/' LiteDB/Engine/Disk/DiskService.HeaderJournal.cs && grep -n "var rewrite" LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+--- output
+104:                var rewrite = _recoveredHeader != null;
+
+=== 2026-09-29T07:04:29.895Z (result 2026-09-29T07:04:41.545Z): Run the repro against the reverted candidate
+$ export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 && timeout 900 dotnet run --project LiteDB.ReproRunner/LiteDB.ReproRunner.Cli -- run Issue_3027_FailedHeaderSync --ci --report $SCRATCH/fhs/mutant.json > /dev/null 2>&1; echo exit=$?
+--- output
+exit=1
+
+=== 2026-09-29T07:04:45.150Z (result 2026-09-29T07:04:46.424Z): Restore the fix and show the mutant run result
+$ git checkout -- LiteDB/Engine/Disk/DiskService.HeaderJournal.cs && git status --short && python3 -c "
+import json
+d=json.load(open('$SCRATCH/fhs/mutant.json', encoding='utf-8-sig'))
+for r in d['Repros']:
+    v=r['Latest']
+    print({kk:vv for kk,vv in v.items() if kk!='Output'})
+    for line in v['Output']: print('   ', line['Text'][:500])
+"
+--- output
+?? LiteDB.ReproRunner/Repros/Issue_3027_FailedHeaderSync/
+{'Expected': 1, 'ExpectedExitCode': 1, 'ExpectedLogContains': 'FIXED: after a failed header sync, recovery wrote the header back before the sync that retired its journal', 'Actual': 0, 'Met': False, 'ExitCode': 0, 'DurationSeconds': 0.3914925, 'UseProjectReference': True, 'FailureReason': 'Expected non-zero exit code.'}
+    {"type":"configuration","timestamp":"2026-09-29T07:04:41.105231+00:00","payload":{"useProjectReference":true,"liteDBPackageVersion":"6.0.0-prerelease.319"}}
+    {"type":"log","timestamp":"2026-09-29T07:04:41.1687586+00:00","level":"Information","text":"LiteDB 0.0.0-detached\u002B899b5acc56dcf16ee76d92ae71f606d6e51b8f59 loaded from $REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Debug/net8.0/runs/Issue_3027_FailedHeaderSync/ver_latest/build/LiteDB.dll"}
+    {"type":"log","timestamp":"2026-09-29T07:04:41.3698251+00:00","level":"Information","text":"The checkpoint whose header sync failed threw IOException: injected EIO: write-back failed and the pages were marked clean"}
+    {"type":"log","timestamp":"2026-09-29T07:04:41.3716745+00:00","level":"Information","text":"After the failed sync the data file\u0027s header in the page cache differs from the one on the device"}
+    {"type":"log","timestamp":"2026-09-29T07:04:41.4229513+00:00","level":"Information","text":"After the recovering open and its commits the device holds the header from before the failed sync"}
+    {"type":"log","timestamp":"2026-09-29T07:04:41.4364008+00:00","level":"Information","text":"Acknowledged [1-15], recovered after the power loss [1-10]"}
+    {"type":"result","timestamp":"2026-09-29T07:04:41.4380883+00:00","text":"REPRODUCED: commits acknowledged durable after the recovery of a failed header sync were lost at a power loss (acknowledged [1-15], recovered [1-10]): recovery retired the header journal behind a sync that wrote nothing, and the device kept the header from before the failed sync","success":true}
+
+=== 2026-09-29T07:07:41.050Z (result 2026-09-29T07:07:48.116Z): Run the repro against the freshly packed known-bad dev commit
+$ export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1 NUGET_PACKAGES=$SCRATCH/fhs/nuget && timeout 900 dotnet run --project LiteDB.ReproRunner/Repros/Issue_3027_FailedHeaderSync/Issue_3027_FailedHeaderSync.csproj -p:LiteDBPackageVersion=0.0.0-knownbad.5dd942a7367c -p:RestoreAdditionalProjectSources=$SCRATCH/fhs/feed > $SCRATCH/fhs/knownbad-run.log 2>&1; echo exit=$?; tail -12 $SCRATCH/fhs/knownbad-run.log | cut -c1-600
+--- output
+exit=0
+$REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/Repros/Issue_3027_FailedHeaderSync/Issue_3027_FailedHeaderSync.csproj : warning NU1904: Package 'LiteDB' 0.0.0-knownbad.5dd942a7367c has a known critical severity vulnerability, https://github.com/advisories/GHSA-3x49-g6rc-c284
+$REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/Repros/Issue_3027_FailedHeaderSync/Issue_3027_FailedHeaderSync.csproj : warning NU1904: Package 'LiteDB' 0.0.0-knownbad.5dd942a7367c has a known critical severity vulnerability, https://github.com/advisories/GHSA-3x49-g6rc-c284
+{"type":"configuration","timestamp":"2026-09-29T07:07:47.6123803+00:00","payload":{"useProjectReference":false,"liteDBPackageVersion":"0.0.0-knownbad.5dd942a7367c"}}
+{"type":"log","timestamp":"2026-09-29T07:07:47.6940693+00:00","level":"Information","text":"LiteDB 0.0.0-detached loaded from $REPO/.claude/worktrees/agent-a3b31b7327f17254c/LiteDB.ReproRunner/Repros/Issue_3027_FailedHeaderSync/bin/Debug/net8.0/LiteDB.dll"}
+{"type":"log","timestamp":"2026-09-29T07:07:47.9648632+00:00","level":"Information","text":"The checkpoint whose header sync failed threw IOException: injected EIO: write-back failed and the pages were marked clean"}
+{"type":"log","timestamp":"2026-09-29T07:07:47.9671582+00:00","level":"Information","text":"After the failed sync the data file\u0027s header in the page cache differs from the one on the device"}
+{"type":"log","timestamp":"2026-09-29T07:07:48.0302791+00:00","level":"Information","text":"After the recovering open and its commits the device holds the header from before the failed sync"}
+{"type":"log","timestamp":"2026-09-29T07:07:48.0795386+00:00","level":"Information","text":"Acknowledged [1-15], recovered after the power loss [1-10]"}
+{"type":"result","timestamp":"2026-09-29T07:07:48.082136+00:00","text":"REPRODUCED: commits acknowledged durable after the recovery of a failed header sync were lost at a power loss (acknowledged [1-15], recovered [1-10]): recovery retired the header journal behind a sync that wrote nothing, and the device kept the header from before the failed sync","success":true}
+

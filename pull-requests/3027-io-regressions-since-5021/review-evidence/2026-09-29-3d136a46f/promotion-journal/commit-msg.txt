@@ -1,0 +1,25 @@
+Prove no promotion starts behind an earlier header journal
+
+The PR listed "a promotion refused while an earlier header journal is
+outstanding" as untested, with a legacy conversion journal kept at open
+as its precondition. That state is not reachable in an engine that has
+not failed: an open retires every journal it recovers before it accepts
+a write, or does not open writable. The one it keeps, a legacy
+conversion journal whose converted header never synced, needs the index
+migration, whose drain backfills behind it and empties the log before
+the conversion journals its own header; a conversion whose header does
+not sync opens read-only before the migration's promotion.
+
+A test-only observer (EngineState.ObservePromotion, registered in
+fault-points.json) reports each promotion as it starts under the WAL
+writer and whether a journal is outstanding. KeptJournalPromotion_Tests,
+plain and encrypted, builds the kept conversion journal from the 5.0.21
+fixture, reopens it while the data file cannot sync (refused before any
+promotion, log and power-loss image unchanged), then with syncing
+storage refuses the migration's promotion at its start (both files
+unchanged, no failure recorded, every row after a power loss) and
+finally migrates; a promotion journal an open repairs a torn header from
+is retired before the next promotion.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01UFnsmor6qyZMSd1VoKwfJh

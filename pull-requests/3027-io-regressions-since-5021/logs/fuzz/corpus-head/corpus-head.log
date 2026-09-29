@@ -1,0 +1,141 @@
+START bson seed=1 count=1 worker=0
+PASS bson seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-bson-s1-w0-rcbfb9c96
+START checksum-page seed=1 count=1 worker=0
+PASS checksum-page seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-page-s1-w0-ra4c33e69
+START checksum-crash seed=1 count=1 worker=0
+PASS checksum-crash seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-crash-s1-w0-r785bc6e0
+START compact-codec seed=1 count=1 worker=0
+PASS compact-codec seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-compact-codec-s1-w0-r1d091d7c
+START checksum-migration seed=1 count=1 worker=0
+PASS checksum-migration seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-migration-s1-w0-r49c5559e
+START checksum-wal seed=1 count=1 worker=0
+PASS checksum-wal seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-wal-s1-w0-rc55ffafd
+START compact-crash seed=1 count=1 worker=0
+PASS compact-crash seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-compact-crash-s1-w0-r3b774469
+START compact-power-loss seed=1 count=1 worker=0
+PASS compact-power-loss seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-compact-power-loss-s1-w0-r354acd09
+START conflict seed=1 count=1 worker=0
+PASS conflict seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-conflict-s1-w0-r2018213e
+START concurrent seed=1 count=1 worker=0
+PASS concurrent seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-concurrent-s1-w0-r61ef9a62
+START index seed=1 count=1 worker=0
+PASS index seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-index-s1-w0-r28ef2775
+START cursor-handoff seed=1 count=1 worker=0
+PASS cursor-handoff seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-cursor-handoff-s1-w0-r7802f611
+START linq-cache seed=1 count=1 worker=0
+FAIL linq-cache seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-linq-cache-s1-w0-r69ae8d73
+FUZZ FAILURE linq-cache seed=1 step=1
+LiteDB.Fuzz.FuzzFailureException: LINQ grammar produced too few supported translations.
+   at LiteDB.Fuzz.FuzzContext.Check(Boolean condition, String message, String file, Int32 line) in $SCRATCH/anchorwt/LiteDB.Fuzz/FuzzContext.cs:line 108
+   at LiteDB.Fuzz.Targets.LinqCacheFuzzer.RunAsync(FuzzContext context) in $SCRATCH/anchorwt/LiteDB.Fuzz/Targets/LinqCacheFuzzer.cs:line 53
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in $SCRATCH/anchorwt/LiteDB.Fuzz/Program.cs:line 123
+START mvcc-checkpoint seed=1 count=1 worker=0
+PASS mvcc-checkpoint seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-mvcc-checkpoint-s1-w0-r2634e50a
+START parser seed=1 count=1 worker=0
+PASS parser seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-parser-s1-w0-r2e5bca67
+START mvcc-retirement seed=1 count=1 worker=0
+PASS mvcc-retirement seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-mvcc-retirement-s1-w0-r6091896f
+START transaction seed=1 count=1 worker=0
+PASS transaction seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-transaction-s1-w0-r40061bae
+START storage seed=1 count=1 worker=0
+PASS storage seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-storage-s1-w0-r1bd64bf1
+START transaction-gate seed=1 count=1 worker=0
+PASS transaction-gate seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-transaction-gate-s1-w0-r047069d0
+START rebuild-transition seed=1 count=1 worker=0
+PASS rebuild-transition seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-rebuild-transition-s1-w0-rf913e13e
+START bson seed=9 count=31 worker=0
+PASS bson seed=9 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s9-w0-r8206c691
+START bson seed=42947 count=31 worker=0
+PASS bson seed=42947 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s42947-w0-r0b357b82
+START bson seed=900000 count=5 worker=0
+PASS bson seed=900000 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s900000-w0-r71ffe4d1
+START index seed=2905001 count=200 worker=0
+PASS index seed=2905001 artifacts=$SCRATCH/corpus-head/20260929-010550-index-s2905001-w0-r38fa4f93
+START linq-cache seed=2944001 count=200 worker=0
+PASS linq-cache seed=2944001 artifacts=$SCRATCH/corpus-head/20260929-010550-linq-cache-s2944001-w0-re7f4ea48
+START linq-cache seed=2944002 count=200 worker=0
+PASS linq-cache seed=2944002 artifacts=$SCRATCH/corpus-head/20260929-010550-linq-cache-s2944002-w0-r9a229fa8
+START transaction seed=700001 count=26 worker=0
+PASS transaction seed=700001 artifacts=$SCRATCH/corpus-head/20260929-010553-transaction-s700001-w0-r893c65e7
+START storage seed=700001 count=12 worker=0
+PASS storage seed=700001 artifacts=$SCRATCH/corpus-head/20260929-010553-storage-s700001-w0-refe2592d
+START conflict seed=2947 count=3 worker=0
+PASS conflict seed=2947 artifacts=$SCRATCH/corpus-head/20260929-010553-conflict-s2947-w0-r0cba1db3
+START rebuild-transition seed=9947 count=6 worker=0
+PASS rebuild-transition seed=9947 artifacts=$SCRATCH/corpus-head/20260929-010554-rebuild-transition-s9947-w0-r970c5b9d
+START parser seed=2946001 count=100 worker=0
+PASS parser seed=2946001 artifacts=$SCRATCH/corpus-head/20260929-010550-parser-s2946001-w0-r32dcc4c4
+START checksum-page seed=2954 count=28 worker=0
+PASS checksum-page seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010554-checksum-page-s2954-w0-r18bdf841
+START checksum-wal seed=2954 count=28 worker=0
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010556-checksum-wal-s2954-w0-rbef43687
+START transaction-gate seed=2991 count=20 worker=0
+PASS transaction-gate seed=2991 artifacts=$SCRATCH/corpus-head/20260929-010600-transaction-gate-s2991-w0-r29e9671a
+START checksum-migration seed=2954 count=28 worker=0
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010554-checksum-migration-s2954-w0-r83436a87
+START concurrent seed=1682725737 count=67 worker=0
+PASS concurrent seed=1682725737 artifacts=$SCRATCH/corpus-head/20260929-010602-concurrent-s1682725737-w0-rfdc8c5c7
+START cursor-handoff seed=2991 count=20 worker=0
+PASS cursor-handoff seed=2991 artifacts=$SCRATCH/corpus-head/20260929-010601-cursor-handoff-s2991-w0-rb1fab8d4
+START checksum-crash seed=4058733 count=111 worker=0
+PASS checksum-crash seed=4058733 artifacts=$SCRATCH/corpus-head/20260929-010556-checksum-crash-s4058733-w0-r61eedb72
+START compact-codec seed=2999 count=64 worker=0
+PASS compact-codec seed=2999 artifacts=$SCRATCH/corpus-head/20260929-010610-compact-codec-s2999-w0-r9fcfc078
+START compact-crash seed=2937 count=64 worker=0
+PASS compact-crash seed=2937 artifacts=$SCRATCH/corpus-head/20260929-010608-compact-crash-s2937-w0-r94daa210
+START compact-power-loss seed=2937 count=64 worker=0
+PASS compact-power-loss seed=2937 artifacts=$SCRATCH/corpus-head/20260929-010611-compact-power-loss-s2937-w0-r60147c48
+START concurrent seed=1681725734 count=178 worker=0
+PASS concurrent seed=1681725734 artifacts=$SCRATCH/corpus-head/20260929-010605-concurrent-s1681725734-w0-r6d9a7172
+START mvcc-retirement seed=3000002 count=30 worker=0
+PASS mvcc-retirement seed=3000002 artifacts=$SCRATCH/corpus-head/20260929-010612-mvcc-retirement-s3000002-w0-reccc9c22
+START checksum-crash seed=3163459 count=201 worker=0
+PASS checksum-crash seed=3163459 artifacts=$SCRATCH/corpus-head/20260929-010558-checksum-crash-s3163459-w0-r9f37a10b
+START mvcc-checkpoint seed=3000003 count=64 worker=0
+PASS mvcc-checkpoint seed=3000003 artifacts=$SCRATCH/corpus-head/20260929-010613-mvcc-checkpoint-s3000003-w0-r3094cf6d
+FUZZ SUMMARY: 44 passed, 0 known/expected, 1 blocking failures
+PASS bson seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-bson-s1-w0-rcbfb9c96
+PASS checksum-crash seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-crash-s1-w0-r785bc6e0
+PASS checksum-migration seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-migration-s1-w0-r49c5559e
+PASS checksum-page seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-page-s1-w0-ra4c33e69
+PASS checksum-wal seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-checksum-wal-s1-w0-rc55ffafd
+PASS compact-codec seed=1 artifacts=$SCRATCH/corpus-head/20260929-010546-compact-codec-s1-w0-r1d091d7c
+PASS compact-crash seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-compact-crash-s1-w0-r3b774469
+PASS compact-power-loss seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-compact-power-loss-s1-w0-r354acd09
+PASS concurrent seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-concurrent-s1-w0-r61ef9a62
+PASS conflict seed=1 artifacts=$SCRATCH/corpus-head/20260929-010547-conflict-s1-w0-r2018213e
+PASS cursor-handoff seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-cursor-handoff-s1-w0-r7802f611
+PASS index seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-index-s1-w0-r28ef2775
+FAIL linq-cache seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-linq-cache-s1-w0-r69ae8d73
+PASS mvcc-checkpoint seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-mvcc-checkpoint-s1-w0-r2634e50a
+PASS mvcc-retirement seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-mvcc-retirement-s1-w0-r6091896f
+PASS parser seed=1 artifacts=$SCRATCH/corpus-head/20260929-010548-parser-s1-w0-r2e5bca67
+PASS rebuild-transition seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-rebuild-transition-s1-w0-rf913e13e
+PASS storage seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-storage-s1-w0-r1bd64bf1
+PASS transaction seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-transaction-s1-w0-r40061bae
+PASS transaction-gate seed=1 artifacts=$SCRATCH/corpus-head/20260929-010549-transaction-gate-s1-w0-r047069d0
+PASS bson seed=9 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s9-w0-r8206c691
+PASS bson seed=42947 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s42947-w0-r0b357b82
+PASS bson seed=900000 artifacts=$SCRATCH/corpus-head/20260929-010550-bson-s900000-w0-r71ffe4d1
+PASS linq-cache seed=2944001 artifacts=$SCRATCH/corpus-head/20260929-010550-linq-cache-s2944001-w0-re7f4ea48
+PASS linq-cache seed=2944002 artifacts=$SCRATCH/corpus-head/20260929-010550-linq-cache-s2944002-w0-r9a229fa8
+PASS parser seed=2946001 artifacts=$SCRATCH/corpus-head/20260929-010550-parser-s2946001-w0-r32dcc4c4
+PASS index seed=2905001 artifacts=$SCRATCH/corpus-head/20260929-010550-index-s2905001-w0-r38fa4f93
+PASS transaction seed=700001 artifacts=$SCRATCH/corpus-head/20260929-010553-transaction-s700001-w0-r893c65e7
+PASS storage seed=700001 artifacts=$SCRATCH/corpus-head/20260929-010553-storage-s700001-w0-refe2592d
+PASS conflict seed=2947 artifacts=$SCRATCH/corpus-head/20260929-010553-conflict-s2947-w0-r0cba1db3
+PASS rebuild-transition seed=9947 artifacts=$SCRATCH/corpus-head/20260929-010554-rebuild-transition-s9947-w0-r970c5b9d
+PASS checksum-migration seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010554-checksum-migration-s2954-w0-r83436a87
+PASS checksum-page seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010554-checksum-page-s2954-w0-r18bdf841
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/corpus-head/20260929-010556-checksum-wal-s2954-w0-rbef43687
+PASS checksum-crash seed=4058733 artifacts=$SCRATCH/corpus-head/20260929-010556-checksum-crash-s4058733-w0-r61eedb72
+PASS checksum-crash seed=3163459 artifacts=$SCRATCH/corpus-head/20260929-010558-checksum-crash-s3163459-w0-r9f37a10b
+PASS transaction-gate seed=2991 artifacts=$SCRATCH/corpus-head/20260929-010600-transaction-gate-s2991-w0-r29e9671a
+PASS cursor-handoff seed=2991 artifacts=$SCRATCH/corpus-head/20260929-010601-cursor-handoff-s2991-w0-rb1fab8d4
+PASS concurrent seed=1682725737 artifacts=$SCRATCH/corpus-head/20260929-010602-concurrent-s1682725737-w0-rfdc8c5c7
+PASS concurrent seed=1681725734 artifacts=$SCRATCH/corpus-head/20260929-010605-concurrent-s1681725734-w0-r6d9a7172
+PASS compact-crash seed=2937 artifacts=$SCRATCH/corpus-head/20260929-010608-compact-crash-s2937-w0-r94daa210
+PASS compact-codec seed=2999 artifacts=$SCRATCH/corpus-head/20260929-010610-compact-codec-s2999-w0-r9fcfc078
+PASS compact-power-loss seed=2937 artifacts=$SCRATCH/corpus-head/20260929-010611-compact-power-loss-s2937-w0-r60147c48
+PASS mvcc-retirement seed=3000002 artifacts=$SCRATCH/corpus-head/20260929-010612-mvcc-retirement-s3000002-w0-reccc9c22
+PASS mvcc-checkpoint seed=3000003 artifacts=$SCRATCH/corpus-head/20260929-010613-mvcc-checkpoint-s3000003-w0-r3094cf6d

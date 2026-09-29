@@ -1,0 +1,78 @@
+{
+  "GeneratedAt": "2026-09-29T06:29:09.2391743+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_LegacyReadOnlyStream",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file failed with NotSupportedException: Stream does not support writing. (with a writable log stream too, after writing 32768 bytes into it)",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.5683536,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.1565272\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.2703315\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_LegacyReadOnlyStream/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.6003823\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022new LiteDatabase(stream) over a read-only FileStream: threw NotSupportedException: Stream does not support writing.; customers.db unchanged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.6120243\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022new LiteDatabase(stream, null, log) over a read-only data stream and an empty writable log: threw NotSupportedException: Stream does not support writing.; log 32768 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.6124989\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file failed with NotSupportedException: Stream does not support writing. (with a writable log stream too, after writing 32768 bytes into it)\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file opened read-only, read all 200 documents and their indexed queries, rejected an insert",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.6252698,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.7013012\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:14.8436253\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_LegacyReadOnlyStream/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:15.0177195\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022new LiteDatabase(stream) over a read-only FileStream: opened; reads: all 200 documents and their indexed queries; insert: IOException: Cannot modify a read-only database.; customers.db unchanged\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:15.0231893\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022new LiteDatabase(stream, null, log) over a read-only data stream and an empty writable log: opened; reads: all 200 documents and their indexed queries; insert: IOException: Cannot modify a read-only database.; log 0 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:29:15.2367219\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: new LiteDatabase(stream) over a read-only stream of a 5.0.21 file opened read-only, read all 200 documents and their indexed queries, rejected an insert (IOException: Cannot modify a read-only database.) and left the file unchanged, also beside an unwritten writable log stream\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

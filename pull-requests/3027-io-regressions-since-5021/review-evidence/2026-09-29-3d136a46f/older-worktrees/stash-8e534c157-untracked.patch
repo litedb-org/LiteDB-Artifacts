@@ -1,0 +1,540 @@
+diff --git a/LiteDB.Tests/Regressions/StrictStopReview_Probe_Tests.cs b/LiteDB.Tests/Regressions/StrictStopReview_Probe_Tests.cs
+new file mode 100644
+index 000000000..bcf9f34a9
+--- /dev/null
++++ b/LiteDB.Tests/Regressions/StrictStopReview_Probe_Tests.cs
+@@ -0,0 +1,534 @@
++#if DEBUG || TESTING
++using System;
++using System.Collections.Generic;
++using System.IO;
++using System.Linq;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Internals;
++using LiteDB.Tests.Issues;
++using Xunit;
++using Xunit.Abstractions;
++
++namespace LiteDB.Tests.Regressions
++{
++    /// <summary>Review probes for the strict-stop change (not part of the change).</summary>
++    [Collection(NativeFileSyncCollection.Name)]
++    public class StrictStopReview_Probe_Tests
++    {
++        private readonly ITestOutputHelper _out;
++        public StrictStopReview_Probe_Tests(ITestOutputHelper output) => _out = output;
++
++        private const int Rows = 64;
++
++        /// <summary>
++        /// Owner's case: a reclaiming checkpoint whose data sync fails from a stage on. Every commit
++        /// acknowledged durable must survive each power-loss image, and restarts must keep them.
++        /// </summary>
++        [Theory]
++        [InlineData("data-page")]
++        [InlineData("data-flushed")]
++        [InlineData("before-reclaim")]
++        [InlineData("after-reclaim")]
++        public void Probe_reclaiming_checkpoint_data_sync_fails_at(string stage)
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            var engine = new LiteEngine(power.Settings());
++            var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            for (var value = 1; value <= 5; value++)
++            {
++                Update(db, value);
++                DurableLogFlush(db).Should().BeTrue();
++            }
++            var logBefore = new FileInfo(logName).Length;
++            power.RetirementStage = stage;
++            Exception thrown = null;
++            try { db.Checkpoint(); } catch (Exception ex) { thrown = ex; }
++            power.RetirementStage = null;
++            _out.WriteLine($"stage={stage} thrown={thrown?.GetType().Name}: {thrown?.Message}");
++            _out.WriteLine($"log before={logBefore} after={new FileInfo(logName).Length} dataFails={power.DataFails}");
++            power.DataFails.Should().BeTrue();
++            if (stage != "after-reclaim")
++            {
++                thrown.Should().BeOfType<IOException>();
++                new FileInfo(logName).Length.Should().BeGreaterThan(0, "the WAL is kept");
++                Action write = () => Update(db, 6);
++                write.Should().Throw<Exception>("the engine stopped");
++            }
++
++            // power-loss images
++            var durable = power.Capture();
++            var os = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++            FilePowerLossModel.Open(durable, Values).Should().Equal(new[] { 5 }, "each file as of its last sync");
++            FilePowerLossModel.Open(os, Values).Should().Equal(new[] { 5 }, "OS state of both files");
++            FilePowerLossModel.Open((os.Item1, durable.Log), Values).Should().Equal(new[] { 5 }, "OS data, durable log");
++            FilePowerLossModel.Open((durable.Data, os.Item2), Values).Should().Equal(new[] { 5 }, "durable data, OS log");
++
++            try { db.Dispose(); } catch (Exception ex) { _out.WriteLine("db dispose: " + ex.Message); }
++            try { engine.Dispose(); } catch (Exception ex) { _out.WriteLine("engine dispose: " + ex.Message); }
++            _out.WriteLine($"log after dispose={new FileInfo(logName).Length}");
++
++            // restart while the data file still cannot sync
++            DurableHeaders.Forget(file.Filename);
++            var beforeReopen = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++            Exception reopen = null;
++            try
++            {
++                using var again = new LiteDatabase(new LiteEngine(power.Settings()));
++                _out.WriteLine("reopen writable values: " + string.Join(",", Values(again)));
++                again.Checkpoint();
++            }
++            catch (Exception ex) { reopen = ex; }
++            _out.WriteLine($"reopen while unsyncable: {reopen?.GetType().Name}: {reopen?.Message}");
++            var afterReopen = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++            _out.WriteLine($"refused open left data identical={beforeReopen.Item1.SequenceEqual(afterReopen.Item1)} log identical={beforeReopen.Item2.SequenceEqual(afterReopen.Item2)}");
++            FilePowerLossModel.Open(power.Capture(), Values).Should().Equal(new[] { 5 });
++            var readOnly = power.Settings();
++            readOnly.ReadOnly = true;
++            try
++            {
++                using var ro = new LiteDatabase(new LiteEngine(readOnly));
++                _out.WriteLine("readonly values: " + string.Join(",", Values(ro)));
++            }
++            catch (Exception ex) { _out.WriteLine($"readonly open FAILED {ex.GetType().Name}: {ex.Message}"); }
++
++            // storage syncs again, new process
++            power.DataFails = false;
++            DurableHeaders.Forget(file.Filename);
++            using (var healed = new LiteDatabase(new LiteEngine(power.Settings())))
++            {
++                Values(healed).Should().Equal(5);
++                healed.Checkpoint();
++                new FileInfo(logName).Length.Should().Be(0);
++            }
++            FilePowerLossModel.Open(power.Capture(), Values).Should().Equal(new[] { 5 });
++        }
++
++        /// <summary>
++        /// A retiring (partial) checkpoint whose data sync fails from a stage on, on a direct engine.
++        /// </summary>
++        [Theory]
++        [InlineData("data-page")]
++        [InlineData("retirement-before-header-write")]
++        [InlineData("retirement-after-header-write")]
++        [InlineData("retirement-header-flushed")]
++        [InlineData("retirement-before-journal-retire-flush")]
++        [InlineData("wal-slot-cleared")]
++        public void Probe_partial_checkpoint_data_sync_fails_at(string stage)
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            using var engine = new LiteEngine(power.Settings());
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            for (var value = 1; value <= 5; value++) Update(db, value);
++            Exception thrown = null;
++            using (var reader = engine.Query("rows", new Query()))
++            {
++                reader.Read().Should().BeTrue();
++                Worker(() =>
++                {
++                    for (var value = 6; value <= 9; value++) Update(db, value);
++                    DurableLogFlush(db).Should().BeTrue();
++                    power.RetirementStage = stage;
++                    try { db.Checkpoint(); } catch (Exception ex) { thrown = ex; }
++                    power.RetirementStage = null;
++                });
++            }
++            _out.WriteLine($"stage={stage} dataFails={power.DataFails} thrown={thrown?.GetType().Name}: {thrown?.Message}");
++            power.DataFails.Should().BeTrue("the checkpoint reached " + stage);
++            var durable = power.Capture();
++            var os = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++            FilePowerLossModel.Open(durable, Values).Should().Equal(new[] { 9 });
++            FilePowerLossModel.Open(os, Values).Should().Equal(new[] { 9 });
++            FilePowerLossModel.Open((os.Item1, durable.Log), Values).Should().Equal(new[] { 9 });
++            FilePowerLossModel.Open((durable.Data, os.Item2), Values).Should().Equal(new[] { 9 });
++        }
++
++        /// <summary>
++        /// The v13 promotion inside a retiring checkpoint's PrepareRetirement is the first to find
++        /// that the data file cannot sync. Does the checkpoint then still write to the data file?
++        /// </summary>
++        [Fact]
++        public void Probe_checkpoint_continues_after_promotion_data_sync_failed()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            Header(file.Filename)[HeaderPage.P_FILE_VERSION].Should().BeLessThan(HeaderPage.MVCC_FILE_VERSION);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            var settings = power.Settings();
++            var pagesAfterFailure = 0;
++            var armed = false;
++            (byte[] Data, byte[] Log) beforePromotion = default;
++            var logSyncsAtFailure = -1;
++            settings.CheckpointStage = stage => { if (stage == "data-page" && power.DataFails) pagesAfterFailure++; };
++            using var engine = new LiteEngine(settings);
++            engine.SimulateCrashPoint = phase =>
++            {
++                if (!armed) return;
++                if (phase == "promotion-before-journal-write") beforePromotion = power.Capture();
++                if (phase == "promotion-after-header-write") { power.DataFails = true; logSyncsAtFailure = power.LogSyncs; }
++            };
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            for (var value = 1; value <= 5; value++) UpdateWithNewPages(db, value);
++            Exception thrown = null;
++            using (var reader = engine.Query("rows", new Query()))
++            {
++                reader.Read().Should().BeTrue();
++                Worker(() =>
++                {
++                    for (var value = 6; value <= 9; value++) Update(db, value);
++                    DurableLogFlush(db).Should().BeTrue();
++                    armed = true;
++                    try { db.Checkpoint(); } catch (Exception ex) { thrown = ex; }
++                    armed = false;
++                });
++            }
++            _out.WriteLine($"dataFails={power.DataFails} pagesWrittenAfterFailedDataSync={pagesAfterFailure} thrown={thrown?.GetType().Name}: {thrown?.Message}");
++            _out.WriteLine($"log syncs at failure={logSyncsAtFailure} after checkpoint={power.LogSyncs}");
++            power.DataFails.Should().BeTrue("the promotion ran");
++
++            var durable = power.Capture();
++            var osData = SyncPowerLossModel.ReadShared(file.Filename);
++            var osLog = SyncPowerLossModel.ReadShared(logName);
++            var page0Changed = Enumerable.Range(0, Constants.PAGE_SIZE).Where(i => osData[i] != durable.Data[i]).ToArray();
++            _out.WriteLine($"header bytes changed in OS cache vs durable: {page0Changed.Length}, max offset {(page0Changed.Length == 0 ? -1 : page0Changed.Max())}");
++            _out.WriteLine($"durable log={durable.Log.Length} log before promotion={beforePromotion.Log?.Length} OS log={osLog.Length}");
++
++            // The OS wrote back the WAL's truncation (the state before the promotion's journal) and
++            // then the first 4 KiB of the backfilled header page; power fails before the rest.
++            var torn = (byte[])durable.Data.Clone();
++            Buffer.BlockCopy(osData, 0, torn, 0, 4096);
++            foreach (var (name, image) in new[]
++            {
++                ("durable pair", durable),
++                ("OS pair", (osData, osLog)),
++                ("torn header + durable log", (torn, durable.Log)),
++                ("torn header + log as before promotion", (torn, beforePromotion.Log)),
++            })
++            {
++                try { _out.WriteLine($"{name}: values {string.Join(",", FilePowerLossModel.Open(image, Values))}"); }
++                catch (Exception ex) { _out.WriteLine($"{name}: OPEN FAILED {ex.GetType().Name}: {ex.Message}"); }
++            }
++            pagesAfterFailure.Should().Be(0, "a checkpoint writes nothing to a data file whose sync just failed");
++        }
++
++        /// <summary>
++        /// Same as above with a header whose collection list crosses the 4 KiB boundary, so the
++        /// backfilled header page can be written back torn at OS-page granularity. The OS wrote
++        /// back the log as the promotion left it (its journal truncated), then the first 4 KiB of
++        /// the backfilled header; the checkpoint's own journal never synced.
++        /// </summary>
++        [Fact]
++        public void Probe_torn_backfilled_header_after_promotion_failure_has_no_durable_repair_copy()
++        {
++            using var file = new TempFile();
++            using (var setup = new LiteDatabase(file.Filename))
++            {
++                setup.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
++                for (var i = 0; i < 160; i++) setup.GetCollection($"collection_with_long_name_{i:D4}").Insert(new BsonDocument { ["_id"] = 1 });
++            }
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            var settings = power.Settings();
++            var pagesAfterFailure = 0;
++            var armed = false;
++            (byte[] Data, byte[] Log) beforePromotion = default;
++            settings.CheckpointStage = stage => { if (stage == "data-page" && power.DataFails) pagesAfterFailure++; };
++            using var engine = new LiteEngine(settings);
++            engine.SimulateCrashPoint = phase =>
++            {
++                if (!armed) return;
++                if (phase == "promotion-before-journal-write") beforePromotion = power.Capture();
++                if (phase == "promotion-after-header-write") power.DataFails = true;
++            };
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            for (var value = 1; value <= 5; value++)
++            {
++                Update(db, value);
++                db.GetCollection($"zz_new_collection_long_name_{value}").Insert(new BsonDocument { ["_id"] = value });
++            }
++            Exception thrown = null;
++            using (var reader = engine.Query("rows", new Query()))
++            {
++                reader.Read().Should().BeTrue();
++                Worker(() =>
++                {
++                    for (var value = 6; value <= 9; value++) Update(db, value);
++                    DurableLogFlush(db).Should().BeTrue();
++                    armed = true;
++                    try { db.Checkpoint(); } catch (Exception ex) { thrown = ex; }
++                    armed = false;
++                });
++            }
++            var durable = power.Capture();
++            var osData = SyncPowerLossModel.ReadShared(file.Filename);
++            var osLog = SyncPowerLossModel.ReadShared(logName);
++            var changed = Enumerable.Range(0, Constants.PAGE_SIZE).Where(i => osData[i] != durable.Data[i]).ToArray();
++            _out.WriteLine($"thrown={thrown?.GetType().Name}; pages after failed sync={pagesAfterFailure}; header bytes changed={changed.Length} min={changed.DefaultIfEmpty(-1).Min()} max={changed.DefaultIfEmpty(-1).Max()}");
++            _out.WriteLine($"durable log={durable.Log.Length} before promotion={beforePromotion.Log?.Length} OS log={osLog.Length}");
++            changed.Max().Should().BeGreaterThan(4096, "the header change spans both OS pages of the header");
++
++            var torn = (byte[])durable.Data.Clone();
++            Buffer.BlockCopy(osData, 0, torn, 0, 4096);
++            var results = new Dictionary<string, string>();
++            foreach (var (name, image) in new[]
++            {
++                ("durable pair", durable),
++                ("OS pair", (osData, osLog)),
++                ("torn header + durable log", (torn, durable.Log)),
++                ("torn header + OS log", (torn, osLog)),
++                ("torn header + log as the promotion left it", (torn, beforePromotion.Log)),
++            })
++            {
++                string result;
++                try { result = "values " + string.Join(",", FilePowerLossModel.Open(image, Values)); }
++                catch (Exception ex) { result = $"OPEN FAILED {ex.GetType().Name}: {ex.Message}"; }
++                results[name] = result;
++                _out.WriteLine($"{name}: {result}");
++            }
++            results["torn header + log as the promotion left it"].Should().Be("values 9");
++        }
++
++        /// <summary>Owner's case through a shared connection: later operations and dispose.</summary>
++        [Theory]
++        [InlineData("before-reclaim")]
++        [InlineData("data-page")]
++        public void Probe_shared_connection_reclaim_failure(string stage)
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            var engine = new SharedEngine(power.Settings());
++            var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 0;
++            for (var value = 1; value <= 5; value++) Update(db, value);
++            DurableLogFlush(db).Should().BeTrue();
++            power.RetirementStage = stage;
++            Exception thrown = null;
++            try { db.Checkpoint(); } catch (Exception ex) { thrown = ex; }
++            power.RetirementStage = null;
++            _out.WriteLine($"checkpoint: {thrown?.GetType().Name}: {thrown?.Message}");
++            new FileInfo(logName).Length.Should().BeGreaterThan(0);
++            Exception next = null;
++            try { Update(db, 6); } catch (Exception ex) { next = ex; }
++            _out.WriteLine($"next op: {next?.GetType().Name}: {next?.Message}");
++            try { _out.WriteLine("read: " + string.Join(",", Values(db))); } catch (Exception ex) { _out.WriteLine($"read: {ex.GetType().Name}: {ex.Message}"); }
++            try { db.Dispose(); engine.Dispose(); } catch (Exception ex) { _out.WriteLine($"dispose: {ex.GetType().Name}: {ex.Message}"); }
++            _out.WriteLine($"log after dispose: {new FileInfo(logName).Length}");
++            new FileInfo(logName).Length.Should().BeGreaterThan(0);
++            var durable = power.Capture();
++            var os = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++            FilePowerLossModel.Open(durable, Values).Should().Equal(new[] { next == null ? 5 : 5 });
++            var osValues = FilePowerLossModel.Open(os, Values);
++            _out.WriteLine("OS image values: " + string.Join(",", osValues));
++        }
++
++        /// <summary>Shared connection: walKept after the data file syncs again, before a checkpoint.</summary>
++        [Fact]
++        public void Probe_shared_walKept_after_data_syncs_again()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            using var engine = new SharedEngine(power.Settings());
++            using var db = new LiteDatabase(engine, disposeOnClose: false);
++            db.CheckpointSize = 100000;
++            Update(db, 1);
++            power.DataFails = true;
++            db.Checkpoint();
++            var kept = WalKept(db);
++            power.DataFails = false;
++            Update(db, 2);
++            var afterCommit = WalKept(db);
++            var syncsBefore = power.DataSyncs;
++            Update(db, 3);
++            _out.WriteLine($"walKept while failing={kept}; after data syncs again + commit={afterCommit}; data syncs by next commit={power.DataSyncs - syncsBefore}; durableLogFlush={DurableLogFlush(db)}");
++        }
++
++        /// <summary>A fresh engine on a kept WAL, before any checkpoint or commit: what does walKept say?</summary>
++        [Theory]
++        [InlineData(false)]
++        [InlineData(true)]
++        public void Probe_walKept_on_fresh_engine_over_kept_wal(bool shared)
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            using (var db = new LiteDatabase(new LiteEngine(power.Settings())))
++            {
++                db.CheckpointSize = 0;
++                Update(db, 1);
++                power.DataFails = true;
++                db.Checkpoint();
++                WalKept(db).Should().BeTrue();
++            }
++            new FileInfo(logName).Length.Should().BeGreaterThan(0);
++            using ILiteEngine engine = shared ? new SharedEngine(power.Settings()) : new LiteEngine(power.Settings());
++            using var again = new LiteDatabase(engine, disposeOnClose: false);
++            var info = again.GetCollection("$database").FindAll().Single();
++            _out.WriteLine($"shared={shared} walKept={info["walKept"]} logFileSize={info["logFileSize"]} durableLogFlush={info["durableLogFlush"]}");
++            info["walKept"].AsBoolean.Should().BeTrue("the WAL is kept: the data file cannot sync");
++        }
++
++        /// <summary>Rebuild while the data file cannot sync: refused, engine open, files unchanged.</summary>
++        [Fact]
++        public void Probe_rebuild_refused_leaves_engine_open_and_files_identical()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new FilePowerLossModel(file.Filename);
++            try
++            {
++                using var db = new LiteDatabase(file.Filename);
++                db.CheckpointSize = 0;
++                Update(db, 1);
++                power.DataFails = true;
++                var before = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++                Action rebuild = () => db.Rebuild();
++                rebuild.Should().Throw<IOException>().WithMessage("Cannot rebuild*");
++                var after = (SyncPowerLossModel.ReadShared(file.Filename), SyncPowerLossModel.ReadShared(logName));
++                after.Item1.Should().Equal(before.Item1);
++                after.Item2.Should().Equal(before.Item2);
++                Values(db).Should().Equal(1);
++                Update(db, 2);
++                Values(db).Should().Equal(2);
++            }
++            finally { File.Delete(logName); }
++        }
++
++        /// <summary>Rebuild whose close checkpoint loses the data sync after the up-front check.</summary>
++        [Fact]
++        public void Probe_rebuild_when_data_stops_syncing_in_the_close_checkpoint()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new FilePowerLossModel(file.Filename);
++            var armed = false;
++            try
++            {
++                using var db = new LiteDatabase($"Filename={file.Filename}");
++                db.CheckpointSize = 0;
++                Update(db, 1);
++                // data-page stage has no hook through LiteDatabase(string): use the static crash hook
++                EngineState.SimulateProcessCrash = phase => { if (armed && phase == "checkpoint-before-page-write") power.DataFails = true; };
++                armed = true;
++                Exception thrown = null;
++                try { db.Rebuild(); } catch (Exception ex) { thrown = ex; }
++                armed = false;
++                EngineState.SimulateProcessCrash = null;
++                _out.WriteLine($"dataFails={power.DataFails} rebuild threw={thrown?.GetType().Name}: {thrown?.Message}");
++                Exception use = null;
++                try { _out.WriteLine("values after: " + string.Join(",", Values(db))); } catch (Exception ex) { use = ex; }
++                _out.WriteLine($"engine usable after rebuild attempt: {use == null} {use?.Message}");
++            }
++            finally
++            {
++                EngineState.SimulateProcessCrash = null;
++                power.DataFails = false;
++            }
++            File.Exists(logName).Should().BeTrue();
++        }
++
++        /// <summary>Rebuild whose replacement cannot sync (the live file passed the up-front check).</summary>
++        [Fact]
++        public void Probe_rebuild_refused_by_the_replacement_log()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            try
++            {
++                using var db = new LiteDatabase(file.Filename);
++                db.CheckpointSize = 0;
++                Update(db, 1);
++                NativeFileSync.SimulateErrno = path => path.Contains("-temp") && !path.EndsWith("-log.db") ? 22 : 0;
++                Exception thrown = null;
++                try { db.Rebuild(); } catch (Exception ex) { thrown = ex; }
++                NativeFileSync.SimulateErrno = null;
++                _out.WriteLine($"rebuild: {thrown?.GetType().Name}: {thrown?.Message}");
++                Exception use = null;
++                try { _out.WriteLine("values after: " + string.Join(",", Values(db))); } catch (Exception ex) { use = ex; }
++                _out.WriteLine($"engine usable after refused rebuild: {use == null} {use?.GetType().Name}: {use?.Message}");
++            }
++            finally { NativeFileSync.SimulateErrno = null; File.Delete(logName); }
++        }
++
++        /// <summary>Healthy storage: data syncs per full checkpoint and the WAL is emptied.</summary>
++        [Fact]
++        public void Probe_healthy_storage_syncs_per_checkpoint()
++        {
++            using var file = new TempFile();
++            Setup(file.Filename);
++            var logName = FileHelper.GetLogFile(file.Filename);
++            using var power = new SyncPowerLossModel(file.Filename);
++            using var db = new LiteDatabase(new LiteEngine(power.Settings()));
++            db.CheckpointSize = 0;
++            Update(db, 1);
++            var before = power.DataSyncs;
++            db.Checkpoint();
++            _out.WriteLine($"data syncs by one full checkpoint: {power.DataSyncs - before}");
++            new FileInfo(logName).Length.Should().Be(0);
++            WalKept(db).Should().BeFalse();
++        }
++
++        private static void Setup(string filename)
++        {
++            using var setup = new LiteDatabase(filename);
++            setup.GetCollection("rows").Insert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, 0)));
++        }
++
++        private static void Update(LiteDatabase db, int value) =>
++            db.GetCollection("rows").Upsert(Enumerable.Range(1, Rows).Select(id => MvccRetirementScenario.Document(id, value)));
++
++        private static void UpdateWithNewPages(LiteDatabase db, int value)
++        {
++            db.BeginTrans();
++            Update(db, value);
++            db.GetCollection("extra").Insert(Enumerable.Range(1, 10).Select(id => new BsonDocument { ["_id"] = value * 100 + id, ["p"] = new string('e', 3000) }));
++            db.Commit();
++        }
++
++        private static int[] Values(LiteDatabase db) =>
++            db.GetCollection("rows").FindAll().Select(x => x["value"].AsInt32).Distinct().ToArray();
++
++        private static bool DurableLogFlush(LiteDatabase db) =>
++            db.GetCollection("$database").FindAll().Single()["durableLogFlush"].AsBoolean;
++
++        private static bool WalKept(LiteDatabase db) =>
++            db.GetCollection("$database").FindAll().Single()["walKept"].AsBoolean;
++
++        private static byte[] Header(string filename)
++        {
++            var bytes = SyncPowerLossModel.ReadShared(filename);
++            return bytes.Take(Constants.PAGE_SIZE).ToArray();
++        }
++
++        private static void Worker(Action action)
++        {
++            System.Runtime.ExceptionServices.ExceptionDispatchInfo failure = null;
++            var thread = new System.Threading.Thread(() =>
++            {
++                try { action(); }
++                catch (Exception ex) { failure = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex); }
++            });
++            thread.Start();
++            thread.Join();
++            failure?.Throw();
++        }
++    }
++}
++#endif

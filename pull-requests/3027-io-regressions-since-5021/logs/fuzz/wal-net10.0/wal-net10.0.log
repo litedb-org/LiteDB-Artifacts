@@ -1,0 +1,10 @@
+START checksum-wal seed=2954 count=28 worker=0
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/wal-net10.0/20260929-002600-checksum-wal-s2954-w0-r08e07ae0
+START checksum-wal seed=2954 count=28 worker=0
+FAIL checksum-wal seed=2954 artifacts=$SCRATCH/wal-net10.0/20260929-002600-checksum-wal-s2954-w0-raaa4799b
+FUZZ FAILURE checksum-wal seed=2954 step=28
+LiteDB.Fuzz.FuzzFailureException: Corpus trace changed: expected 28B07E2299CB2AFB945194FEF7D2D453D8855D5A9B7770EA917640B22C466EB1, actual AC49A3AAC457E62169FB584C4FF94927E8D5D71C2B25EB494292DE97760FC088.
+   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in $SCRATCH/anchorwt/LiteDB.Fuzz/Program.cs:line 133
+FUZZ SUMMARY: 1 passed, 0 known/expected, 1 blocking failures
+PASS checksum-wal seed=2954 artifacts=$SCRATCH/wal-net10.0/20260929-002600-checksum-wal-s2954-w0-r08e07ae0
+FAIL checksum-wal seed=2954 artifacts=$SCRATCH/wal-net10.0/20260929-002600-checksum-wal-s2954-w0-raaa4799b

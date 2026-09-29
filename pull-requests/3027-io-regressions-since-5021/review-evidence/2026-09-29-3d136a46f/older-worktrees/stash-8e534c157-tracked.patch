@@ -1,0 +1,548 @@
+diff --git a/LiteDB/Engine/Disk/DiskService.Checksums.cs b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+index c5aebb5ea..f3946b33b 100644
+--- a/LiteDB/Engine/Disk/DiskService.Checksums.cs
++++ b/LiteDB/Engine/Disk/DiskService.Checksums.cs
+@@ -78,7 +78,7 @@ namespace LiteDB.Engine
+             // ordered writes keep conversion process-crash safe only. The log is
+             // emptied below, which needs a data file that syncs (KeepsWal).
+             this.SyncDataBarrier(stream);
+-            if (!_dataBarrierSynced) throw UnsyncedDataConversion();
++            if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedDataConversion();
+             SyncLogBarrier(log);
+             HeaderJournal.BackupLegacyHeader(log, buffer.Array, SyncLogBarrier);
+             BeginHeaderJournal(buffer.Array, conversion: true);
+@@ -89,6 +89,8 @@ namespace LiteDB.Engine
+             stream.Position = 0;
+             stream.Write(buffer.Array, 0, PAGE_SIZE);
+             this.SyncDataBarrier(stream);
++            // The legacy header backup and the conversion journal go only once the new header synced.
++            if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedDataConversion();
+             SetLength(0, FileOrigin.Log);
+             SyncLogBarrier(log);
+             _recoveredHeader = null;
+@@ -97,6 +99,10 @@ namespace LiteDB.Engine
+             _cache.Clear();
+         }
+ 
++        internal static IOException UnsyncedHeaderRecovery() => new IOException("Cannot recover this database now: " +
++            "its data file cannot sync to the device, and the header's recovery copy in the log file stays until the " +
++            "repaired header synced. Reopen it once the storage syncs, or open it with \"readonly=true\".");
++
+         internal static IOException UnsyncedDataConversion() => new IOException("Cannot convert this legacy database now: " +
+             "its data file cannot sync to the device, and the conversion empties the log file only after the data file " +
+             "synced. Reopen it once the storage syncs, or open it with \"readonly=true;legacy index scan=true\".");
+diff --git a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+index 2d154eb72..f0e3f8d2c 100644
+--- a/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
++++ b/LiteDB/Engine/Disk/DiskService.DurableFlush.cs
+@@ -40,6 +40,9 @@ namespace LiteDB.Engine
+         // false after "cannot sync" (#2242), and for the log also while its sync waits for the data file.
+         private volatile bool _dataBarrierSynced = true, _logBarrierSynced;
+ 
++        // Set by this engine's first data barrier, whatever it answered.
++        private volatile bool _dataBarrierTried;
++
+         // Set once this engine made the WAL's directory entry durable. Until then a durable
+         // commit is not acknowledged: syncing a new WAL does not persist its name on Unix.
+         private volatile bool _logDirectorySynced;
+@@ -80,24 +83,52 @@ namespace LiteDB.Engine
+         internal bool KeepsWal => !_volatileLog && !_dataBarrierSynced;
+ 
+         /// <summary>
+-        /// While the WAL is kept, a checkpoint first retries the data sync and does nothing while
+-        /// the data file still cannot sync: it writes no page to a file that cannot make it durable,
+-        /// and does not scan the growing WAL again at every commit.
++        /// This engine's latest data sync succeeded. False before its first one: an earlier engine or
++        /// process may have found that the data file cannot sync and kept the WAL, which this one
++        /// cannot tell from the files.
+         /// </summary>
+-        internal bool DefersCheckpoint()
+-        {
+-            if (!this.KeepsWal) return false;
+-            this.SyncDataFile();
+-            return !_dataBarrierSynced;
+-        }
++        internal bool DataSyncConfirmed => _dataBarrierTried && _dataBarrierSynced;
+ 
+-        /// <summary>Sync the data file now: false when it answers "cannot sync" (#2242).</summary>
++        /// <summary>
++        /// Sync the data file now: false when it answers "cannot sync" (#2242). A checkpoint calls it
++        /// right before it writes anything, so that it writes to a data file that just synced, whatever
++        /// an earlier engine or process found (see <see cref="KeepsWal"/>).
++        /// </summary>
+         internal bool DataFileSyncs()
+         {
+-            this.SyncDataFile();
++            lock (this.WalWriterLock) this.SyncDataFile();
+             return _dataBarrierSynced;
+         }
+ 
++        /// <summary>
++        /// A data sync of a checkpoint (or a recovery) that already wrote pages answered "cannot sync":
++        /// the data file stopped syncing since the sync that let it start. What the WAL and its header
++        /// journal hold is the only durable copy, so the caller stops before removing any of it.
++        /// </summary>
++        internal static IOException DataStoppedSyncing(string operation) => new IOException(
++            $"The data file stopped syncing to the device during {operation}: the log file and its header recovery " +
++            "copy are kept, and the database must be reopened once the storage syncs.");
++
++        /// <summary>
++        /// For <c>$database.walKept</c>: the WAL holds frames kept until a data sync succeeds. An engine
++        /// whose latest data sync did not succeed, or that tried none yet (a reopen, a restart or a
++        /// shared-mode operation after an engine that kept the WAL), retries one first, as its next
++        /// checkpoint would. A read-only engine (also a shared-mode read) never syncs: it reports what
++        /// the connection's engines found.
++        /// </summary>
++        internal bool WalKeptReport
++        {
++            get
++            {
++                if (_volatileLog || this.GetFileLength(FileOrigin.Log) == 0) return false;
++                if (_readOnly) return _sharedDurability?.DataUnsynced ?? false;
++                return !this.DataSyncConfirmed && !this.DataFileSyncs();
++            }
++        }
++
++        /// <summary>The engine keeps its WAL in memory (<see cref="EngineSettings.VolatileLog"/>).</summary>
++        internal bool LogIsVolatile => _volatileLog;
++
+         /// <summary>
+         /// Before a checkpoint retires frames, sync the data file and the log (and, once per engine,
+         /// the log's directory), so storage that answers "cannot sync" (#2242), also storage that
+@@ -339,17 +370,19 @@ namespace LiteDB.Engine
+         /// </summary>
+         private void SyncDataBarrier(Stream data)
+         {
++            _dataBarrierTried = true;
+             try
+             {
+                 data.FlushToDisk();
+                 _dataBarrierSynced = _dataSyncProven = true;
++                if (_sharedDurability != null) _sharedDurability.DataUnsynced = false;
+                 if (_dataPath != null && data.Length >= PAGE_SIZE) DurableHeaders.Record(_dataPath, ReadDataHeader(data));
+             }
+             catch (Exception ex) when (IsDurableFlushUnsupported(ex))
+             {
+                 _dataBarrierSynced = false;
+                 data.Flush();
+-                if (_sharedDurability != null) _sharedDurability.Degraded = _sharedDurability.FileSyncUnsupported = true;
++                if (_sharedDurability != null) _sharedDurability.Degraded = _sharedDurability.FileSyncUnsupported = _sharedDurability.DataUnsynced = true;
+                 if (_dataFlushDegraded) return;
+                 _dataFlushDegraded = true;
+                 LOG($"data storage rejected durable flush ({ex.GetType().Name} 0x{ex.HResult:X8}); checkpoints now flush to the OS cache only", "DISK");
+diff --git a/LiteDB/Engine/Disk/DiskService.FileVersion.cs b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+index b5f6dd2b7..fd79d4217 100644
+--- a/LiteDB/Engine/Disk/DiskService.FileVersion.cs
++++ b/LiteDB/Engine/Disk/DiskService.FileVersion.cs
+@@ -17,8 +17,10 @@ namespace LiteDB.Engine
+         /// Writes hold the header lock and an active transaction; startup migration
+         /// owns the disk exclusively. Only the persisted header is copied, never
+         /// uncommitted header fields. Flush before publishing dependent WAL pages.
++        /// A checkpoint (<paramref name="checkpointStops"/>) holds the WAL writer until it stopped
++        /// the engine after any failure, so the promotion leaves the stop to it.
+         /// </summary>
+-        internal void PromoteFileFormat(byte version)
++        internal void PromoteFileFormat(byte version, bool checkpointStops = false)
+         {
+             if (FileVersion >= version) return;
+             if (!ChecksumsEnabled) throw new InvalidOperationException("Enable checksums before promoting index storage.");
+@@ -26,7 +28,7 @@ namespace LiteDB.Engine
+             _signals?.StructuralBegin();
+             try
+             {
+-                this.WriteFileVersion(writer, version);
++                this.WriteFileVersion(writer, version, checkpointStops);
+             }
+             finally
+             {
+@@ -34,7 +36,17 @@ namespace LiteDB.Engine
+             }
+         }
+ 
+-        private void WriteFileVersion(Stream writer, byte version)
++        /// <summary>
++        /// The promotion keeps its header journal (the log's recovery copy of the header) until a
++        /// data sync covered the new header, like a checkpoint (<see cref="KeepsWal"/>): it writes only
++        /// to a data file that just synced, is refused unchanged while the data file cannot sync, and
++        /// stops the engine with the journal kept when the data file stops syncing in between.
++        /// </summary>
++        internal static IOException UnsyncedPromotion() => new IOException("Cannot upgrade this database's " +
++            "file format now: its data file cannot sync to the device, and the upgrade keeps its header's recovery " +
++            "copy in the log file until the new header synced. Retry once the storage syncs.");
++
++        private void WriteFileVersion(Stream writer, byte version, bool checkpointStops)
+         {
+             Exception failure = null;
+             var ownsFailure = false;
+@@ -52,6 +64,7 @@ namespace LiteDB.Engine
+                         _ = new HeaderPage(header);
+                         var rawLog = ((ChecksummedWalStream)writer).RawStream;
+                         var originalLength = rawLog.Length;
++                        if (!_volatileLog && !this.DataFileSyncs()) throw UnsyncedPromotion();
+                         var compact = version >= HeaderPage.COMPACT_FILE_VERSION;
+                         if (compact) this.CrashPoint("promotion-before-journal-write");
+                         BeginHeaderJournal(header.Array, promotion: compact);
+@@ -64,6 +77,7 @@ namespace LiteDB.Engine
+                         stream.Write(header.Array, 0, PAGE_SIZE);
+                         if (compact) this.CrashPoint("promotion-after-header-write");
+                         this.SyncDataBarrier(stream);
++                        if (this.KeepsWal) throw DataStoppedSyncing("a file format promotion");
+                         if (compact) this.CrashPoint("promotion-after-header-flush");
+                         rawLog.SetLength(originalLength);
+                         if (compact) this.CrashPoint("promotion-before-journal-retire-flush");
+@@ -72,7 +86,7 @@ namespace LiteDB.Engine
+                         _checksums.JournalBytes = 0;
+                         FileVersion = version;
+                     }
+-                    catch (Exception ex) when (_checksums.JournalBytes != 0)
++                    catch (Exception ex) when (_checksums.JournalBytes != 0 && !checkpointStops)
+                     {
+                         // The journal is the only recovery copy of a header this write may have torn.
+                         // Whatever the exception type, stop before releasing the writer: a rollback or
+diff --git a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+index 4a53ee3ce..4cf7992fa 100644
+--- a/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
++++ b/LiteDB/Engine/Disk/DiskService.HeaderJournal.cs
+@@ -107,6 +107,8 @@ namespace LiteDB.Engine
+                 this.SyncDataBarrier(data);
+                 this.CrashPoint("promotion-recovery-after-header-flush");
+                 if (journal.Legacy && !published) return;
++                // The journal is the header's only recovery copy until a data sync covers it (#2242).
++                if (!_dataBarrierSynced && !_volatileLog) throw UnsyncedHeaderRecovery();
+                 var writer = ((ChecksummedWalStream)_writer.Value).RawStream;
+                 writer.SetLength(journal.Legacy ? 0 : WalPadding.AlignedLength(journal.Position));
+                 SyncLogBarrier(writer);
+diff --git a/LiteDB/Engine/Disk/DiskService.Retirement.cs b/LiteDB/Engine/Disk/DiskService.Retirement.cs
+index 2ab8af914..c7ded128d 100644
+--- a/LiteDB/Engine/Disk/DiskService.Retirement.cs
++++ b/LiteDB/Engine/Disk/DiskService.Retirement.cs
+@@ -17,7 +17,7 @@ namespace LiteDB.Engine
+             if (!ChecksumsEnabled || positions.Count == 0) return null;
+             // Old readers must reject the representation before any witnesses
+             // enter the WAL. This header-only promotion uses the existing journal.
+-            PromoteFileFormat(HeaderPage.MVCC_FILE_VERSION);
++            PromoteFileFormat(HeaderPage.MVCC_FILE_VERSION, checkpointStops: true);
+             var wanted = new HashSet<long>(positions);
+             var witnesses = new List<WalRetirement.Witness>();
+             foreach (var page in ReadFull(FileOrigin.Log))
+@@ -92,6 +92,7 @@ namespace LiteDB.Engine
+                 data.Write(header.Array, 0, PAGE_SIZE);
+                 CheckpointStage("retirement-after-header-write");
+                 this.SyncDataBarrier(data);
++                if (!_dataBarrierSynced && !_volatileLog) throw DataStoppedSyncing("a checkpoint");
+                 CheckpointStage("retirement-header-flushed");
+                 FileVersion = header[HeaderPage.P_FILE_VERSION];
+                 _checksums.Retirement = WalRetirement.Load(header, raw, _checksums);
+diff --git a/LiteDB/Engine/Disk/SharedDurabilityState.cs b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+index 8f9b4eb22..08c565e31 100644
+--- a/LiteDB/Engine/Disk/SharedDurabilityState.cs
++++ b/LiteDB/Engine/Disk/SharedDurabilityState.cs
+@@ -13,5 +13,12 @@ namespace LiteDB.Engine
+         /// earlier checkpoints reached the device, so they neither retire nor reuse WAL frames.
+         /// </summary>
+         internal volatile bool FileSyncUnsupported;
++
++        /// <summary>
++        /// The latest data sync of an engine of this connection answered "cannot sync": its WAL is
++        /// kept until one succeeds. Reported by <c>$database.walKept</c> of the connection's read-only
++        /// engines (its reads), which never sync.
++        /// </summary>
++        internal volatile bool DataUnsynced;
+     }
+ }
+diff --git a/LiteDB/Engine/Engine/IndexMigration.cs b/LiteDB/Engine/Engine/IndexMigration.cs
+index 2dc7eb08c..507cae79a 100644
+--- a/LiteDB/Engine/Engine/IndexMigration.cs
++++ b/LiteDB/Engine/Engine/IndexMigration.cs
+@@ -55,7 +55,7 @@ namespace LiteDB.Engine
+             if (!_disk.ChecksumsEnabled && _walIndex.DrainBlocked()) throw ConversionBlocked();
+             // The conversion empties the log only after a data sync that succeeds (KeepsWal): a data
+             // file that cannot sync (#2242) refuses it here, both files unchanged.
+-            if (!_disk.ChecksumsEnabled && !_disk.DataFileSyncs()) throw DiskService.UnsyncedDataConversion();
++            if (!_disk.ChecksumsEnabled && !_disk.LogIsVolatile && !_disk.DataFileSyncs()) throw DiskService.UnsyncedDataConversion();
+ 
+             // Traverse links, never seek using the new comparer in an old skip list.
+             // Inspect all structures and unique keys before any persistent mutation.
+diff --git a/LiteDB/Engine/Engine/Rebuild.cs b/LiteDB/Engine/Engine/Rebuild.cs
+index 2813b9880..5bd12f129 100644
+--- a/LiteDB/Engine/Engine/Rebuild.cs
++++ b/LiteDB/Engine/Engine/Rebuild.cs
+@@ -33,6 +33,9 @@ namespace LiteDB.Engine
+             // admitted between that wait and Close(). Close disposes the old lock,
+             // so this exclusive lease intentionally is not released here.
+             if (_locker.IsInTransaction) throw LiteException.AlreadyExistsTransaction();
++            // A replacement that cannot sync is refused (RebuildService): find out before this engine
++            // closes, so that a refusal leaves it open.
++            if (!_disk.DataFileSyncs()) throw RebuildService.UnsyncedRebuild();
+             _locker.EnterExclusive();
+ 
+             this.Close();
+@@ -55,6 +58,13 @@ namespace LiteDB.Engine
+                     _settings.Password = password;
+                     _settings.Collation = collation;
+                 }
++                // A refused rebuild installed nothing: reopen the unchanged database, as a refusal
++                // before Close() leaves it open.
++                if (ex.Data.Contains(RebuildService.RefusedDataKey))
++                {
++                    this.Open();
++                    _state.Disposed = false;
++                }
+                 throw;
+             }
+ 
+diff --git a/LiteDB/Engine/Services/RebuildService.cs b/LiteDB/Engine/Services/RebuildService.cs
+index 7b04c691e..1e1825127 100644
+--- a/LiteDB/Engine/Services/RebuildService.cs
++++ b/LiteDB/Engine/Services/RebuildService.cs
+@@ -138,9 +138,19 @@ namespace LiteDB.Engine
+             // data sync succeeds (DiskService.KeepsWal): a data file that cannot sync (#2242) would
+             // lose what the WAL holds, so the original database stays.
+             var tempLog = FileHelper.GetLogFile(tempFilename);
+-            if (File.Exists(tempLog) && new FileInfo(tempLog).Length > 0)
+-                throw new IOException("Cannot rebuild this database now: the rebuilt data file cannot sync to the device, " +
+-                    "so its log file could not be emptied. The database is unchanged; retry once the storage syncs.");
++            if (File.Exists(tempLog) && new FileInfo(tempLog).Length > 0) throw UnsyncedRebuild();
++        }
++
++        /// <summary>Exception.Data key on a rebuild refused before it installed anything: the original files are unchanged.</summary>
++        internal const string RefusedDataKey = "LiteDB.Rebuild.Refused";
++
++        internal static IOException UnsyncedRebuild()
++        {
++            var error = new IOException("Cannot rebuild this database now: its data file cannot sync to the device, and " +
++                "a rebuilt file's log is emptied only after its data file synced. The database is unchanged; retry once " +
++                "the storage syncs.");
++            error.Data[RefusedDataKey] = true;
++            return error;
+         }
+ 
+         /// <summary>
+diff --git a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+index 2e078a092..6bd468416 100644
+--- a/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
++++ b/LiteDB/Engine/Services/WalIndexService.Checkpoint.cs
+@@ -106,9 +106,16 @@ namespace LiteDB.Engine
+         {
+             if (_disk.GetFileLength(FileOrigin.Log) == 0) return 0;
+ 
+-            // The WAL is kept until a data sync succeeds (DiskService.KeepsWal): retry it first,
+-            // and change nothing while the data file still cannot sync.
+-            if (_disk.DefersCheckpoint()) return 0;
++            // The WAL is kept until a data sync succeeds (DiskService.KeepsWal), and a checkpoint writes
++            // only to a data file that just synced. An engine that has not seen its latest data sync
++            // succeed (its first checkpoint, or any after "cannot sync", which an earlier engine or
++            // process may have met) syncs it now, before scanning a WAL that grows while it cannot.
++            var dataSynced = false;
++            if (!_disk.LogIsVolatile && !_disk.DataSyncConfirmed)
++            {
++                if (!_disk.DataFileSyncs()) return 0;
++                dataSynced = true;
++            }
+ 
+             // Acquire transaction exclusion before the index lock. Snapshot disposal
+             // needs the index lock, so waiting for transactions while holding it deadlocks.
+@@ -175,9 +182,14 @@ namespace LiteDB.Engine
+                 // Retiring frames only lets their slots be reused, which storage that cannot
+                 // sync never does; its witness could not be published durably either.
+                 var obsolete = reclaim ? new List<long>() : this.FindObsoleteFrames(live);
+-                if (obsolete.Count > 0 && !_disk.ProveRetirementSyncs()) obsolete.Clear();
++                var proven = obsolete.Count > 0 && _disk.ProveRetirementSyncs();
++                if (!proven) obsolete.Clear();
+                 if (pages.Count == 0 && obsolete.Count == 0 && !reclaim) return 0;
+ 
++                // Write only to a data file that just synced (above, or by the retirement proof): one
++                // that cannot, also one another engine or process found so, keeps the WAL untouched.
++                if (!proven && !dataSynced && !_disk.LogIsVolatile && !_disk.DataFileSyncs()) return 0;
++
+                 // WAL must be durable before its pages can reach the data file.
+                 // The data flush completes before truncation can become durable.
+                 var retirement = _disk.PrepareRetirement(obsolete);
+@@ -185,10 +197,10 @@ namespace LiteDB.Engine
+                 _disk.WriteDataDisk(_disk.ReadCheckpointPages(pages));
+                 _backfillVersion = target;
+ 
+-                // A backfill the data file could not sync (#2242): the WAL is emptied only after a
+-                // data sync that covers the backfill succeeded (KeepsWal), so it is kept, as a
+-                // partial checkpoint keeps its frames.
+-                if (reclaim && _disk.KeepsWal) reclaim = false;
++                // The data file stopped syncing since the sync above (#2242): the backfill may be torn
++                // and the WAL and its header journal are its only durable copy. Stop before removing
++                // any of it; the next open recovers from them (DiskService.KeepsWal).
++                if (_disk.KeepsWal) throw DiskService.DataStoppedSyncing("a checkpoint");
+ 
+                 // Storage that stopped syncing after the retirement's proof may not have made its
+                 // witness records durable: a root published now could leave a durable header naming
+@@ -213,6 +225,8 @@ namespace LiteDB.Engine
+                     _disk.Cache.Clear();
+                     _disk.CheckpointStage("before-reclaim");
+                     _disk.RotateWalSalt();
++                    // The new salt must be durable before the WAL of the old one goes.
++                    if (_disk.KeepsWal) throw DiskService.DataStoppedSyncing("a checkpoint");
+ #if DEBUG || TESTING
+                     _disk.TestCrashPoint("checkpoint-before-clear");
+ #endif
+diff --git a/LiteDB/Engine/Services/WalIndexService.cs b/LiteDB/Engine/Services/WalIndexService.cs
+index 251b7e6b4..b71033651 100644
+--- a/LiteDB/Engine/Services/WalIndexService.cs
++++ b/LiteDB/Engine/Services/WalIndexService.cs
+@@ -76,10 +76,15 @@ namespace LiteDB.Engine
+         public int LastTransactionID => _lastTransactionID;
+ 
+         /// <summary>
+-        /// Clear WAL index links and cache memory. Used after checkpoint and rebuild rollback
++        /// Clear WAL index links and cache memory. Only the legacy conversion uses it, once its drain
++        /// emptied the WAL and before checksums are on.
+         /// </summary>
+         public void Clear()
+         {
++            // Emptying a WAL that holds frames needs a checkpoint's data sync first (DiskService.KeepsWal),
++            // and with checksums a salt rotation that stops the engine if it does not sync: a reset does neither.
++            if (_disk.ChecksumsEnabled || _disk.GetFileLength(FileOrigin.Log) > 0)
++                throw new InvalidOperationException("Only a drained legacy WAL can be reset.");
+             _signals?.StructuralBegin();
+             _indexLock.TryEnterWriteLock(-1);
+ 
+@@ -98,8 +103,6 @@ namespace LiteDB.Engine
+                 _disk.ClearSchemaCache();
+                 _disk.Cache.Clear();
+ 
+-                // Invalidate the old generation only after checkpoint synced data.
+-                _disk.RotateWalSalt();
+                 // clear log file (sync)
+                 _disk.SetLength(0, FileOrigin.Log);
+             }
+diff --git a/LiteDB/Engine/SystemCollections/SysDatabase.cs b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+index b01070650..dccc9c009 100644
+--- a/LiteDB/Engine/SystemCollections/SysDatabase.cs
++++ b/LiteDB/Engine/SystemCollections/SysDatabase.cs
+@@ -30,10 +30,10 @@ namespace LiteDB.Engine
+ 
+                 ["creationTime"] = _header.CreationTime,
+ 
+-                ["dataFileSize"] = (int)_disk.GetFileLength(FileOrigin.Data),
+-                ["logFileSize"] = (int)_disk.GetFileLength(FileOrigin.Log),
++                ["dataFileSize"] = _disk.GetFileLength(FileOrigin.Data),
++                ["logFileSize"] = _disk.GetFileLength(FileOrigin.Log),
+                 ["durableLogFlush"] = _disk.IsLogFlushDurable,
+-                ["walKept"] = _disk.KeepsWal,
++                ["walKept"] = _disk.WalKeptReport,
+                 ["checksums"] = _disk.ChecksumsEnabled,
+                 ["checksumCoverage"] = _disk.ChecksumCoverage,
+                 ["legacyLastPageID"] = (long)_disk.LegacyLastPageID,
+diff --git a/docs/header-publication.md b/docs/header-publication.md
+index 74f69b685..13a8306d6 100644
+--- a/docs/header-publication.md
++++ b/docs/header-publication.md
+@@ -172,15 +172,18 @@ only flushes the log to the OS cache while the data file still cannot sync, so t
+ last synced stays the durable one, with every commit acknowledged durable before, also if
+ the WAL alone syncs again, and a stream opened to read never syncs. The OS can still write
+ an emptied WAL back ahead of the backfill, and no engine knows whether an earlier one (of any
+-connection or process) synced the WAL's frames. So the WAL is emptied only after a data sync
+-that covers its backfill succeeded: a full checkpoint whose backfill did not sync keeps it,
+-and every later checkpoint first retries the data sync and writes nothing while it fails. The
+-WAL grows until the data file syncs again (`$database.walKept`), also on storage that never
+-syncs. A conversion and a rebuild, which empty a log, are refused there with both files
+-unchanged. Only a WAL the engine keeps in memory, which survives no power loss, is emptied.
+-The checkpoint that first finds the data file cannot sync may have written the header with
+-its journal no longer synced (log syncs wait for the data file): a header the OS writes back
+-torn then has no durable repair copy, as where neither file syncs. A legacy header
++connection or process) synced the WAL's frames. So the WAL and its header journal are removed
++only after a data sync that covers what they protect succeeded. Every checkpoint that writes
++first syncs the data file and writes nothing while that sync fails, whichever engine runs
++it: the WAL grows until the data file syncs again (`$database.walKept`), also on storage that
++never syncs. A data sync that fails later in the same checkpoint (after the backfill, the
++salt rotation or a retirement root) stops the engine before anything is removed, leaving
++the state of a crash at that point; the next open repairs a torn header from the journal,
++and an open that would have to retire a journal while the data file cannot sync is refused
++(`readonly=true` still opens). A conversion and a rebuild, which empty a log, are refused
++there with both files unchanged. Only a WAL the engine keeps in memory, which survives no
++power loss, is emptied. A format promotion still retires its journal after a data sync that
++may have answered "cannot sync"; its header change is confined to the first sector. A legacy header
+ found beside checksummed frames (neither file synced and the OS wrote the log back first,
+ or a data file restored without its log) fails the open without changing either file, since
+ legacy rules would replay the frames as pages at positions read from their trailers.
+diff --git a/docs/release-notes.md b/docs/release-notes.md
+index b90f451ad..723d8df53 100644
+--- a/docs/release-notes.md
++++ b/docs/release-notes.md
+@@ -55,18 +55,28 @@ the engine, as it does in a checkpoint. After a data sync answered "cannot sync"
+ sync waits for the data file (each one retries its sync first and otherwise flushes the log
+ to the OS cache only), so no log sync makes an emptied or converted WAL durable ahead of
+ its unsynced backfill or header: commits acknowledged durable before the storage stopped
+-syncing survive a power loss, also when the WAL alone syncs again. The WAL is emptied only
+-after a data sync that covers its backfill succeeded: a full checkpoint whose backfill did
+-not sync keeps the WAL (the OS could write an emptied WAL back ahead of the backfill, and no
+-engine can know whether an earlier one, maybe of another process, synced its frames), and
+-later checkpoints first retry the data sync and write nothing while it fails. The WAL grows
+-until the data file syncs again; `$database.walKept` reports it. On storage that never syncs
+-the WAL therefore never shrinks (before, it was emptied as before #2818). For the same reason
+-a 5.x conversion is refused with an `IOException` while the data file cannot sync (open such
+-a file with `readonly=true;legacy index scan=true`), and so is a rebuild, both leaving the
+-database unchanged; 5.0.21 converted and rebuilt there. A WAL the engine keeps in memory
+-(`:memory:`, `:temp:`, `LiteDatabase(Stream)` without a log stream) is still emptied.
+-Encrypted streams opened to read no longer sync their file. A 5.x data file found beside its conversion's WAL (whose
++syncing survive a power loss, also when the WAL alone syncs again. The WAL and its header
++journal (the log's recovery copy of the data header) are removed only after a data sync
++that covers what they protect succeeded (the OS could write an emptied WAL back ahead of the
++backfill, and no engine can know whether an earlier one, maybe of another process, synced
++its frames). Every checkpoint that writes first syncs the data file (one more data sync per
++such checkpoint on storage that syncs; a retiring checkpoint's proof already is that sync)
++and writes nothing while that sync fails, in every
++engine, including a restart or a shared-mode operation: the WAL is kept and grows until the
++data file syncs again, and `$database.walKept` reports it (also in shared mode;
++`logFileSize` and `dataFileSize` are now 64-bit). A data sync that fails later in the same
++checkpoint stops the engine with the WAL and the journal intact, and an open that must
++repair or retire a header journal while the data file cannot sync is refused
++(`readonly=true` still opens). On storage that never syncs the WAL therefore never shrinks
++(before, it was emptied as before #2818). For the same reason a 5.x conversion is refused
++with an `IOException` while the data file cannot sync (open such a file with
++`readonly=true;legacy index scan=true`), and so is a rebuild, which leaves the database open
++and unchanged; 5.0.21 converted and rebuilt there. A WAL the engine keeps in memory
++(`:memory:`, `:temp:`, `LiteDatabase(Stream)` without a log stream) survives no power loss
++and is still emptied, also by a conversion. A format promotion (a compact or vector write
++that raises the file version) still retires its journal after a data sync that may have
++answered "cannot sync"; it changes only the header's first sector. Encrypted streams
++opened to read no longer sync their file. A 5.x data file found beside its conversion's WAL (whose
+ converted header never reached the device) fails to open instead of being replayed. Larger
+ shared-mode query results stream from a private snapshot protected by a lease
+ file in `<database filename>-readers/`. All shared participants must run on one
+diff --git a/docs/rules/compatibility.md b/docs/rules/compatibility.md
+index f6c30a9dc..fd4834f16 100644
+--- a/docs/rules/compatibility.md
++++ b/docs/rules/compatibility.md
+@@ -145,11 +145,13 @@ storage that answers "cannot sync" (#2242) neither retires nor reuses frames. On
+ that stops syncing during a retiring checkpoint degrades its barriers; that checkpoint keeps
+ the frames it retired and publishes no root once it found out. Before its first slot reuse
+ every engine (of any connection) syncs the WAL, and before its first log sync an engine
+-whose data is a file proves the data file (once per data header in the process). Empty a
+-file WAL only after a data sync that covers its backfill succeeded; never infer that no
+-earlier engine or process synced its frames. After a data sync answered "cannot sync", a
+-checkpoint keeps the WAL and writes nothing, a conversion or rebuild is refused unchanged,
+-and a log sync waits for a data sync that succeeds.
++whose data is a file proves the data file (once per data header in the process). Remove a
++file WAL or a header journal only after a data sync that covers what it protects succeeded;
++never infer that no earlier engine or process synced its frames. A checkpoint syncs the data
++file before it writes and writes nothing while that fails; a failure later in the checkpoint
++stops the engine before any removal; recovery that would retire a journal without a data
++sync refuses the open; a conversion or rebuild is refused unchanged; and after "cannot sync"
++a log sync waits for a data sync that succeeds.
+ Remove/sync the WAL-bound header journal before clearing or reusing payloads.
+ Keep per-transaction page positions increasing across safepoints even when a
+ checkpoint introduces earlier holes. Only full checkpoint can clear the root and
+diff --git a/docs/storage-stack-safety.md b/docs/storage-stack-safety.md
+index dd43233ea..d477d6b2c 100644
+--- a/docs/storage-stack-safety.md
++++ b/docs/storage-stack-safety.md
+@@ -123,7 +123,10 @@ sync stops them. Storage that answers "cannot sync" (#2242), for the WAL or the
+ to ordered OS-cache flushes that survive a process crash, not power loss, as before
+ #2818; encrypted preambles still require a successful sync. A file WAL is emptied only after
+ a data sync that covers its backfill succeeded, so there it is kept and grows
+-(`$database.walKept`), and a conversion or rebuild is refused unchanged. A WAL directory the process
++(`$database.walKept`), a checkpoint writes only right after a data sync that succeeded (a
++later failure in it stops the engine with the WAL and journal intact), recovery that would
++retire a header journal without a data sync refuses the open, and a conversion or rebuild
++is refused unchanged. A WAL directory the process
+ cannot open for reading (EACCES/EPERM) counts as a directory that cannot sync. On Unix, released .NET
+ runtimes report every fsync failure as success (dotnet/runtime#124725), so file
+ handles are synced natively (`fsync`; `F_FULLFSYNC` with `fsync` fallback on macOS)

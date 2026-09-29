@@ -1,0 +1,65 @@
+# Caller-stream fix (063c83289) and its review fixes (folded in by 01:23): mutation checks
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T01:00:02.193Z (result 2026-09-29T01:00:27.108Z): Mutation-check the reader flush, hand-off and batch window
+$ cd $SCRATCH/anchorwt && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1; run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true 2>&1 | grep -E " error " | sort -u | head -3; dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 --no-build --filter "FullyQualifiedName~CallerStreamFlushCost|FullyQualifiedName~SharedBufferedLogStream|FullyQualifiedName~TornWalAppend" 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]" | sed 's/.*Regressions\.//' | head -12; }
+F=LiteDB/Engine/Disk/Streams/ConcurrentStream.cs; cp $F $SCRATCH/cs.bak
+echo "== M1: reader does not write on held"; python3 - <<'EOF'
+p='LiteDB/Engine/Disk/Streams/ConcurrentStream.cs'; s=open(p,encoding='utf-8-sig').read()
+s=s.replace("""                _held?.WriteOn(_stream, this);
+                _stream.Position = _position;
+                var read""","""                _stream.Position = _position;
+                var read""",1); open(p,'w',encoding='utf-8-sig').write(s)
+EOF
+run; cp $SCRATCH/cs.bak $F
+echo "== M2: writer never hears"; sed -i 's/            _held.ThrowIfTorn(this);/            \/\/ M2/' $F; run; cp $SCRATCH/cs.bak $F
+echo "== M3: no batch-wide window"; sed -i 's/_logMayBuffer = settings.LogStream != null \&\& !(settings.LogStream is MemoryStream);/_logMayBuffer = false;/' LiteDB/Engine/Disk/DiskService.cs; run; git checkout -q LiteDB/Engine/Disk/DiskService.cs 2>/dev/null || true; git diff --stat LiteDB/Engine/Disk/DiskService.cs
+--- output
+== M1: reader does not write on held
+SharedBufferedLogStream_Tests.Reader_that_writes_a_held_frame_on_hands_its_failure_to_the_writer(point: "wal-confirmation-after-write", failure: "other") [FAIL]
+SharedBufferedLogStream_Tests.Reader_that_writes_a_held_frame_on_hands_its_failure_to_the_writer(point: "wal-page-after-write", failure: "other") [FAIL]
+Failed!  - Failed:     2, Passed:    24, Skipped:     0, Total:    26, Duration: 675 ms - LiteDB.Tests.dll (net10.0)
+== M2: writer never hears
+SharedBufferedLogStream_Tests.Reader_that_writes_a_held_frame_on_hands_its_failure_to_the_writer(point: "wal-confirmation-after-write", failure: "other") [FAIL]
+SharedBufferedLogStream_Tests.Reader_that_writes_a_held_frame_on_hands_its_failure_to_the_writer(point: "wal-page-after-write", failure: "other") [FAIL]
+Failed!  - Failed:     2, Passed:    24, Skipped:     0, Total:    26, Duration: 685 ms - LiteDB.Tests.dll (net10.0)
+== M3: no batch-wide window
+TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "flush", ioFailure: False) [FAIL]
+TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "buffered", ioFailure: False) [FAIL]
+TornWalAppend_Tests.Buffering_log_stream_that_tears_a_frame_loses_no_acknowledged_commit(tear: "frame", ioFailure: False) [FAIL]
+Failed!  - Failed:     3, Passed:    23, Skipped:     0, Total:    26, Duration: 719 ms - LiteDB.Tests.dll (net10.0)
+Shell cwd was reset to $REPO
+
+=== 2026-09-29T01:22:27.760Z (result 2026-09-29T01:22:45.027Z): Mutation-check the two review fixes
+$ cd $SCRATCH/anchorwt && export PATH=$DOTNET_ROOT:$PATH DOTNET_ROOT=$DOTNET_ROOT DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1; F=LiteDB/Engine/Disk/Streams/HeldWrites.cs; cp $F $SCRATCH/hw.bak; run() { dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true 2>&1 | grep -E " error " | sort -u | head -3; dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 --no-build --filter "FullyQualifiedName~SharedBufferedLogStream" 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]" | sed 's/.*to_the_writer//' | head -12; }
+echo "== exemption back"; python3 - <<'EOF'
+p='LiteDB/Engine/Disk/Streams/HeldWrites.cs'; s=open(p).read()
+s=s.replace("""            catch (Exception ex)
+            {
+                if (_writeOnFailure == null)""","""            catch (Exception ex) when (DiskService.IsDurableFlushUnsupported(ex)) { }
+            catch (Exception ex)
+            {
+                if (_writeOnFailure == null)""",1); open(p,'w').write(s)
+EOF
+run; cp $SCRATCH/hw.bak $F
+echo "== no file tag"; sed -i 's/^                WriteFailure.InFile(ex, _origin);/                \/\/ M/' $F; run; cp $SCRATCH/hw.bak $F; git diff --stat
+--- output
+== exemption back
+(point: "wal-confirmation-after-write", failure: "unauthorized") [FAIL]
+(point: "wal-page-after-write", failure: "einval") [FAIL]
+(point: "wal-page-after-write", failure: "unauthorized") [FAIL]
+(point: "wal-confirmation-after-write", failure: "einval") [FAIL]
+Failed!  - Failed:     4, Passed:     6, Skipped:     0, Total:    10, Duration: 530 ms - LiteDB.Tests.dll (net10.0)
+== no file tag
+(point: "wal-confirmation-after-write", failure: "io") [FAIL]
+(point: "wal-page-after-write", failure: "einval") [FAIL]
+(point: "wal-page-after-write", failure: "io") [FAIL]
+(point: "wal-confirmation-after-write", failure: "einval") [FAIL]
+Failed!  - Failed:     4, Passed:     6, Skipped:     0, Total:    10, Duration: 467 ms - LiteDB.Tests.dll (net10.0)
+ .../Regressions/SharedBufferedLogStream_Tests.cs   | 57 +++++++++++++++++-----
+ LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs  |  2 +-
+ LiteDB/Engine/Disk/Streams/HeldWrites.cs           | 23 +++++----
+ 3 files changed, 58 insertions(+), 24 deletions(-)
+Shell cwd was reset to $REPO
+

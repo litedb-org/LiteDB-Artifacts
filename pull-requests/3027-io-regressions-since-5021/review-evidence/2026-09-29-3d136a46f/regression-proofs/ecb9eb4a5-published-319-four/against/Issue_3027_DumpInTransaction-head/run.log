@@ -1,0 +1,9 @@
+{"type":"configuration","timestamp":"2026-09-29T06:25:49.5745718+00:00","payload":{"useProjectReference":true,"liteDBPackageVersion":"6.0.0-prerelease.319"}}
+{"type":"log","timestamp":"2026-09-29T06:25:49.6431191+00:00","level":"Information","text":"LiteDB 0.0.0-detached\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $SCRATCH/proofs3027b/against/Issue_3027_DumpInTransaction-head/LiteDB.dll"}
+{"type":"log","timestamp":"2026-09-29T06:25:49.9416096+00:00","level":"Information","text":"$dump(1..99) inside the transaction returned 99 rows, 99 of them pages the transaction had safepointed into the WAL"}
+{"type":"log","timestamp":"2026-09-29T06:25:50.0325565+00:00","level":"Information","text":"Transaction with $dump: committed"}
+{"type":"log","timestamp":"2026-09-29T06:25:50.0843852+00:00","level":"Information","text":"Data file header not marked invalid; reopen after $dump: found 1001 documents, 1000 updated"}
+{"type":"log","timestamp":"2026-09-29T06:25:50.1419727+00:00","level":"Information","text":"$page_list(1..99) inside the transaction returned 4104 rows"}
+{"type":"log","timestamp":"2026-09-29T06:25:50.2081642+00:00","level":"Information","text":"Transaction with $page_list: committed"}
+{"type":"log","timestamp":"2026-09-29T06:25:50.2339442+00:00","level":"Information","text":"Data file header not marked invalid; reopen after $page_list: found 1001 documents, 1000 updated"}
+{"type":"result","timestamp":"2026-09-29T06:25:50.234577+00:00","text":"FIXED: after $dump or $page_list read pages that an explicit transaction had safepointed into the WAL, its safepoints and its commit succeeded, and a reopen found every row of it (1001 documents, 1000 updated)","success":false}

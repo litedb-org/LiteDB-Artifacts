@@ -1,0 +1,293 @@
+diff --git a/LiteDB.Tests/Regressions/SharedBufferedLogStream_Tests.cs b/LiteDB.Tests/Regressions/SharedBufferedLogStream_Tests.cs
+index 07c71ba13..f11158bde 100644
+--- a/LiteDB.Tests/Regressions/SharedBufferedLogStream_Tests.cs
++++ b/LiteDB.Tests/Regressions/SharedBufferedLogStream_Tests.cs
+@@ -3,6 +3,7 @@ using System;
+ using System.Collections.Generic;
+ using System.IO;
+ using System.Linq;
++using System.Runtime.InteropServices;
+ using System.Threading;
+ using FluentAssertions;
+ using LiteDB.Engine;
+@@ -17,10 +18,12 @@ namespace LiteDB.Tests.Regressions
+     /// reader's thread: a failure tore it there and the writer never saw it (a non-I/O failure
+     /// stopped nothing), the BufferedStream wrote the frame again further on at the writer's next
+     /// access, and the commit was acknowledged and lost at recovery (31 of 32 rows). A reader's
+-    /// access now first flushes what the stream holds for the writer (HeldWrites): a failure there
+-    /// fails the read and is handed to the writer, whose batch fails and leaves the engine
+-    /// read-only (decision 6); without a failure the commit goes on. Nothing is flushed per write
+-    /// (CallerStreamFlushCost_Tests). The reader runs in the window after a frame's write returned.
++    /// access now first flushes what the stream holds for the writer (HeldWrites): a failure there,
++    /// also one that reads like "cannot sync" (that flush only writes), fails the read as a write
++    /// failure of the log and is handed to the writer, whose batch fails; the engine continues
++    /// read-only (decision 6) with the acknowledged commits. Without a failure the commit goes on.
++    /// Nothing is flushed per write (CallerStreamFlushCost_Tests). The reader runs in the window
++    /// after a frame's write returned.
+     /// </summary>
+     [Trait("Category", "IoSafety")]
+     public class SharedBufferedLogStream_Tests
+@@ -29,13 +32,17 @@ namespace LiteDB.Tests.Regressions
+         [InlineData("wal-page-after-write", "none")]
+         [InlineData("wal-page-after-write", "io")]
+         [InlineData("wal-page-after-write", "other")]
++        [InlineData("wal-page-after-write", "unauthorized")]
++        [InlineData("wal-page-after-write", "einval")]
+         [InlineData("wal-confirmation-after-write", "none")]
+         [InlineData("wal-confirmation-after-write", "io")]
+         [InlineData("wal-confirmation-after-write", "other")]
++        [InlineData("wal-confirmation-after-write", "unauthorized")]
++        [InlineData("wal-confirmation-after-write", "einval")]
+         public void Reader_that_writes_a_held_frame_on_hands_its_failure_to_the_writer(string point, string failure)
+         {
+             using var data = new MemoryStream();
+-            using var device = new TearingDevice { IoFailure = failure == "io" };
++            using var device = new TearingDevice { Failure = failure };
+             using var log = new BufferedStream(device, 1 << 20);
+             using (var db = new LiteDatabase(new LiteEngine(new EngineSettings { DataStream = data, LogStream = log })))
+             {
+@@ -46,6 +53,8 @@ namespace LiteDB.Tests.Regressions
+ 
+             var acknowledged = new List<int> { 0 };
+             Exception readerFailure = null, writerFailure = null;
++            List<int> readAfter = null;
++            BsonDocument info = null;
+             var readerReadLog = false;
+             byte[] imageData, imageLog;
+             using (var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log, TransactionPageLimit = 4 }))
+@@ -79,6 +88,9 @@ namespace LiteDB.Tests.Regressions
+                     catch (Exception ex) { writerFailure ??= ex; }
+                 }
+                 reader.Should().NotBeNull("the writer reached " + point);
++                // The engine goes on: read-only after a failure (decision 6), with what was acknowledged.
++                readAfter = db.GetCollection("b").FindAll().Select(x => x["_id"].AsInt32).ToList();
++                info = db.Execute("SELECT $ FROM $database").Single().AsDocument;
+                 // A killed process loses what the stream holds; the device keeps what reached it.
+                 imageData = data.ToArray();
+                 imageLog = device.ToArray();
+@@ -94,31 +106,42 @@ namespace LiteDB.Tests.Regressions
+                     "every acknowledged commit survives (reader failure: {0})", readerFailure?.GetType().Name);
+             }
+             readerReadLog.Should().BeTrue("the reader read the WAL in the window");
++            readAfter.Should().BeEquivalentTo(acknowledged, "the engine reads what was acknowledged");
+             if (failure == "none")
+             {
+                 readerFailure.Should().BeNull("the reader wrote the held frame on whole");
+                 writerFailure.Should().BeNull();
+                 acknowledged.Should().HaveCount(32);
++                info["readOnly"].AsBoolean.Should().BeFalse();
+                 return;
+             }
+-            readerFailure.Should().BeOfType(failure == "io" ? typeof(IOException) : typeof(InvalidOperationException));
++            readerFailure.Should().BeOfType(TearingDevice.ExceptionType(failure));
+             readerFailure.Message.Should().Be("injected torn write", "the reader's seek wrote the held frame on and tore it");
+             writerFailure.Should().NotBeNull("the writer's batch failed");
+-            // A non-I/O failure reaches the writer only by the hand-off. An I/O failure also stops the
+-            // engine from the reader's own call (any call's I/O error does, as in 5.0.21), which the
+-            // writer's batch can meet first; either way it fails inside the batch and stops.
+-            if (failure == "other")
++            // A failure that is no IOException reaches the writer only by the hand-off. An I/O failure
++            // also stops the engine from the reader's own call (recorded as a write failure of the log),
++            // which the writer's batch can meet first; either way it fails inside the batch and stops.
++            if (!(readerFailure is IOException))
+                 writerFailure.ToString().Should().Contain("failed when another access wrote it on: injected torn write");
+             acknowledged.Should().Equal(new[] { 0 }, "the torn batch failed and the engine refuses later writes");
++            info["readOnly"].AsBoolean.Should().BeTrue("the engine continues read-only after the write failure");
++            info["writeFailure"]["file"].AsString.Should().Be("log");
+         }
+ 
+         private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id, ["payload"] = new string('p', 1500) };
+ 
+-        /// <summary>Armed, the next write of at least a frame stores half of it and fails.</summary>
++        /// <summary>
++        /// Armed, the next write of at least a frame stores half of it and fails: an I/O error, a
++        /// non-I/O failure, or one that reads like "cannot sync" (EACCES, EINVAL; a write failure here).
++        /// </summary>
+         private sealed class TearingDevice : MemoryStream
+         {
+             internal volatile bool Armed;
+-            internal bool IoFailure;
++            internal string Failure;
++
++            internal static Type ExceptionType(string failure) =>
++                failure == "other" ? typeof(InvalidOperationException) :
++                failure == "unauthorized" ? typeof(UnauthorizedAccessException) : typeof(IOException);
+ 
+             public override void Write(byte[] buffer, int offset, int count)
+             {
+@@ -126,7 +149,15 @@ namespace LiteDB.Tests.Regressions
+                 {
+                     Armed = false;
+                     base.Write(buffer, offset, count / 2);
+-                    throw IoFailure ? new IOException("injected torn write") : new InvalidOperationException("injected torn write");
++                    const string message = "injected torn write";
++                    switch (Failure)
++                    {
++                        case "other": throw new InvalidOperationException(message);
++                        case "unauthorized": throw new UnauthorizedAccessException(message);
++                        case "einval":
++                            throw new IOException(message, RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? unchecked((int)0x80070032) : 22);
++                        default: throw new IOException(message);
++                    }
+                 }
+                 base.Write(buffer, offset, count);
+             }
+diff --git a/LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs b/LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs
+index 55151e4a6..5b7b83989 100644
+--- a/LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs
++++ b/LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs
+@@ -29,7 +29,7 @@ namespace LiteDB.Engine
+             _password = password;
+             _ownsStream = ownsStream;
+             _isLog = isLog;
+-            _held = stream is MemoryStream ? null : new HeldWrites();
++            _held = stream is MemoryStream ? null : new HeldWrites(isLog ? FileOrigin.Log : FileOrigin.Data);
+         }
+ 
+         /// <summary>
+diff --git a/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs b/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs
+index d00509cbb..0b79e48e7 100644
+--- a/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs
++++ b/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs
+@@ -53,7 +53,8 @@ namespace LiteDB.Engine
+             lock (_stream)
+             {
+                 this.BeforeWrite();
+-                _stream.Flush();
++                try { _stream.Flush(); }
++                catch { _held?.Heard(); throw; }
+                 _held?.Flushed();
+             }
+         }
+@@ -63,7 +64,8 @@ namespace LiteDB.Engine
+             lock (_stream)
+             {
+                 this.BeforeWrite();
+-                _stream.FlushToDisk();
++                try { _stream.FlushToDisk(); }
++                catch { _held?.Heard(); throw; }
+                 _held?.Flushed();
+             }
+         }
+@@ -74,7 +76,8 @@ namespace LiteDB.Engine
+             lock (_stream)
+             {
+                 this.BeforeWrite();
+-                _stream.SetLength(value);
++                try { _stream.SetLength(value); }
++                catch { _held?.Heard(); throw; }
+             }
+         }
+ 
+@@ -130,8 +133,12 @@ namespace LiteDB.Engine
+                 this.BeforeWrite();
+                 // Held from here: a write that fails part-way may leave part of it in the stream.
+                 _held?.Wrote(this);
+-                _stream.Position = _position;
+-                _stream.Write(buffer, offset, count);
++                try
++                {
++                    _stream.Position = _position;
++                    _stream.Write(buffer, offset, count);
++                }
++                catch { _held?.Heard(); throw; }
+                 _position = _stream.Position;
+             }
+         }
+diff --git a/LiteDB/Engine/Disk/Streams/HeldWrites.cs b/LiteDB/Engine/Disk/Streams/HeldWrites.cs
+index 5e45328dc..7a29ef1cf 100644
+--- a/LiteDB/Engine/Disk/Streams/HeldWrites.cs
++++ b/LiteDB/Engine/Disk/Streams/HeldWrites.cs
+@@ -10,24 +10,35 @@ namespace LiteDB.Engine
+     /// and changed only under the lock on that stream: which wrapper's write the stream may still
+     /// hold, and a failure another access met while writing it on.
+     /// A wrapper's own accesses need nothing: a failure there is its own. Any other access (a
+-    /// reader's seek) first flushes the stream. A failure there may have torn the held write, so it
+-    /// fails that access and is handed to the writer: its next write, flush or truncation throws it,
+-    /// and the writer never acknowledges what the stream tore (a WAL batch stops the engine). An
+-    /// answer that the stream cannot sync means the bytes were handed on. Nothing is flushed per
++    /// reader's seek) first flushes the stream. That flush only writes (a sync is the writer's), so
++    /// any failure there, also one that reads like "cannot sync", may have torn the held write: it
++    /// fails that access as a write failure of the file (the engine continues read-only, decision 6)
++    /// and is handed to the writer, whose next write, flush or truncation throws it, so the writer
++    /// never acknowledges what the stream tore (a WAL batch stops the engine). After a failure the
++    /// writer heard itself, nobody writes on for it. Nothing is flushed per
+     /// write: a caller stream whose Flush() syncs is synced once per WAL batch or sync, as in 5.0.21.
+     /// </summary>
+     internal sealed class HeldWrites
+     {
++        private readonly FileOrigin _origin;
+         private object _writer;
+         private object _tornWriter;
+         private Exception _writeOnFailure;
+ 
++        internal HeldWrites(FileOrigin origin) => _origin = origin;
++
+         /// <summary><paramref name="writer"/> writes: the stream may hold it until the next flush.</summary>
+         internal void Wrote(object writer) => _writer = writer;
+ 
+         /// <summary>The stream was flushed: it holds nothing.</summary>
+         internal void Flushed() => _writer = null;
+ 
++        /// <summary>
++        /// A write, flush or truncation failed and its caller heard it: nobody writes on for the
++        /// writer after its failure (decision 6: nothing more is written or synced through the handle).
++        /// </summary>
++        internal void Heard() => _writer = null;
++
+         /// <summary>
+         /// Before <paramref name="accessor"/> uses the stream: flush a write it holds for another
+         /// wrapper, and hand a failure there to that writer.
+@@ -39,10 +50,6 @@ namespace LiteDB.Engine
+             {
+                 stream.Flush();
+             }
+-            catch (Exception ex) when (DiskService.IsDurableFlushUnsupported(ex))
+-            {
+-                // Handed on; only the stream's sync is unsupported (#2242), which the writer's own sync finds.
+-            }
+             catch (Exception ex)
+             {
+                 if (_writeOnFailure == null)
+@@ -50,6 +57,8 @@ namespace LiteDB.Engine
+                     _tornWriter = _writer;
+                     _writeOnFailure = ex;
+                 }
++                // A write failure of this file, also on a reader's call.
++                WriteFailure.InFile(ex, _origin);
+                 throw;
+             }
+             _writer = null;
+@@ -62,7 +71,8 @@ namespace LiteDB.Engine
+             var failure = _writeOnFailure;
+             _writeOnFailure = null;
+             _tornWriter = null;
+-            throw new IOException("A write the stream still held failed when another access wrote it on: " + failure.Message, failure);
++            throw WriteFailure.InFile(new IOException("A write the stream still held failed when another access wrote it on: " +
++                failure.Message, failure), _origin);
+         }
+     }
+ }
+diff --git a/docs/release-notes.md b/docs/release-notes.md
+index b4a8a2d92..15062c2fd 100644
+--- a/docs/release-notes.md
++++ b/docs/release-notes.md
+@@ -319,11 +319,13 @@ after their write returned (a `BufferedStream`, a `FileStream` with a large buff
+ write them on at its next write, seek, length query or flush, where a failure can tear
+ one: a failure while it may still hold a frame of the batch stops the engine, until the
+ batch's final flush succeeded. A reader's access (a seek) first flushes what the stream
+-holds for the writer, under the lock the wrappers share, and a failure there fails the
+-read and is handed to the writer, whose batch fails; before, the reader's seek tore a frame
+-the writer never heard of. The engine still flushes a caller stream once per WAL batch and
+-per sync, not per page: a custom stream whose `Flush()` syncs or uploads pays that per
+-batch, plus one flush when a reader reads it while a batch is being written. A caller stream must not replay a write that failed at another
++holds for the writer, under the lock the wrappers share; that flush only writes, so any
++failure there fails the read as a write failure of the file (the engine continues
++read-only) and is handed to the writer, whose batch fails. Before, the reader's seek tore a
++frame the writer never heard of. The engine still flushes a caller stream once per WAL
++batch and per sync, not per page: a custom stream whose `Flush()` syncs or uploads pays that
++per batch, plus, while other threads read it during a batch or checkpoint, at most one flush
++per page written. A caller stream must not replay a write that failed at another
+ position: a `BufferedStream` keeps a buffer whose write failed and writes it again at its
+ next access, at the inner stream's current position, so over an inner stream that advanced
+ past the bytes it stored before failing (a `FileStream` does not) the page lands shifted

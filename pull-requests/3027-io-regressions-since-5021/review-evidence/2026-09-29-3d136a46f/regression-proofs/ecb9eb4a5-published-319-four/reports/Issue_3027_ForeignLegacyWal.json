@@ -1,0 +1,78 @@
+{
+  "GeneratedAt": "2026-09-29T06:30:54.1284229+00:00",
+  "Root": "$REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3027_ForeignLegacyWal",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REPRODUCED: the open replayed the 5.0.21 log of another database into this data file (40960 to 14196736 bytes, log deleted): collections [big,fresh], 0 documents",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.4368387,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.3541785\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.416802\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 6.0.0-prerelease.319\\u002BBranch.dev.Sha.5dd942a7367c361fadd600be4ce10aace2768b27.5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_ForeignLegacyWal/ver_6_0_0_prerelease_319/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.4220494\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022File size guard: RLIMIT_FSIZE 67108864 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.7255071\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Open of crash.db beside the log of another database: opened, collections [big,fresh], 0 documents, 0 with value 7; data file 40960 to 14196736 bytes, log 32768 to deleted\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.7259907\u002B00:00\u0022,\u0022text\u0022:\u0022REPRODUCED: the open replayed the 5.0.21 log of another database into this data file (40960 to 14196736 bytes, log deleted): collections [big,fresh], 0 documents, 0 with value 7\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 1,
+        "ExpectedLogContains": "FIXED: the open beside the 5.0.21 log of another database failed with INVALID_DATABASE and changed neither file; beside its own WAL the data file opened with every commit (101 documents, 21 with value 7)",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.3890451,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.7890925\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.8511783\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022LiteDB 0.0.0-detached\\u002B0ce00ee55e6e7bb213351113723f0d56b2d2b0ca loaded from $REPO/.claude/worktrees/agent-af1c17944ad1df782/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_3027_ForeignLegacyWal/ver_latest/build/LiteDB.dll\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.8558271\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022File size guard: RLIMIT_FSIZE 67108864 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:00.926741\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Open of crash.db beside the log of another database: LiteException 103: Cannot open this database: its log file commits the header of another database (created at another time), so the log belongs to another data file. Replaying it would overwrite the data file with that database\\u0027s pages. Nothing was changed; move the log file aside to open the database without its uncheckpointed transactions.; data file 40960 to 40960 bytes, log 32768 to 32768 bytes\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-29T06:31:01.1213869\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED: the open beside the 5.0.21 log of another database failed with INVALID_DATABASE and changed neither file; beside its own WAL the data file opened with every commit (101 documents, 21 with value 7)\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

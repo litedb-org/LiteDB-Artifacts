@@ -1,0 +1,98 @@
+# Issue_3027_PromotionAfterFailedCheckpoint: stress loops (bin-pkg = 6.0.0-prerelease.319, bin-latest = candidate, bin-devbad = dev 5dd942a73 packed), dev-commit cross-checks and the fix-removed run
+# Recovered verbatim from the Claude Code session transcript (tool call and its output); the files these runs wrote were overwritten or never saved.
+# Paths scrubbed: $SCRATCH (session scratch directory), $SESSION (its parent), $REPO (the LiteDB checkout), $DOTNET_ROOT ($DOTNET_ROOT).
+
+=== 2026-09-29T07:25:53.252Z (result 2026-09-29T07:25:59.736Z): Stress the known-bad variant 60 times, 8 parallel
+$ chmod +x $SCRATCH/promo-proof/stress.sh && $SCRATCH/promo-proof/stress.sh bin-pkg 60 8
+--- output
+      4 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync, log write, log write, log write, log write, log write, log truncate, log sync; the data header is v12
+     56 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12
+
+=== 2026-09-29T07:26:03.747Z (result 2026-09-29T07:26:11.171Z): Stress the candidate variant 60 times, 8 parallel
+$ $SCRATCH/promo-proof/stress.sh bin-latest 60 8
+--- output
+     60 exit=1 result=FIXED | After the failed data sync: no stream operation; the data header is v11
+
+=== 2026-09-29T07:26:23.641Z (result 2026-09-29T07:27:03.787Z): Cross-check 5 runs against the dev-commit known-bad pack
+$ chmod +x $SCRATCH/promo-proof/devbad.sh && $SCRATCH/promo-proof/devbad.sh 2>&1 | tail -30
+--- output
+verify exit 0
+== devbad run 2 cli exit 0
+## Regression proof: passed
+
+
+
+verify exit 0
+== devbad run 3 cli exit 0
+## Regression proof: passed
+
+
+
+verify exit 0
+== devbad run 4 cli exit 0
+## Regression proof: passed
+
+
+
+verify exit 0
+== devbad run 5 cli exit 0
+## Regression proof: passed
+
+
+
+verify exit 0
+
+Time Elapsed 00:00:01.91
+
+=== 2026-09-29T07:27:12.501Z (result 2026-09-29T07:27:16.387Z): Stress the dev-commit known-bad build 30 times
+$ $SCRATCH/promo-proof/stress.sh bin-devbad 30 8
+--- output
+      2 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync, log write, log write, log write, log write, log write, log truncate, log sync; the data header is v12
+     28 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12
+
+=== 2026-09-29T07:32:58.788Z (result 2026-09-29T07:33:13.861Z): Rebuild final binaries and stress both variants
+$ $SCRATCH/promo-proof/buildbins.sh 2>&1 | tail -2 && $SCRATCH/promo-proof/stress.sh bin-pkg 50 8 && $SCRATCH/promo-proof/stress.sh bin-latest 50 8
+--- output
+-rw-r--r-- 1 root root 1132032 Sep 29 07:24 $SCRATCH/promo-proof/bin-latest/LiteDB.dll
+-rwxr--r-- 1 root root 1082368 Sep 28 22:22 $SCRATCH/promo-proof/bin-pkg/LiteDB.dll
+      2 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync, log write, log write, log write, log write, log write, log truncate, log sync; the data header is v12
+     48 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12
+     50 exit=1 result=FIXED | After the failed data sync: no stream operation; the data header is v11
+
+=== 2026-09-29T07:33:19.592Z (result 2026-09-29T07:34:04.303Z): Confirm rebuild, rerun dev-commit cross-check and stress
+$ ls -la --time-style=+%H:%M:%S $SCRATCH/promo-proof/bin-pkg/Issue_3027_PromotionAfterFailedCheckpoint.dll $SCRATCH/promo-proof/bin-latest/Issue_3027_PromotionAfterFailedCheckpoint.dll; date +%H:%M:%S; $SCRATCH/promo-proof/devbad.sh 2>&1 | grep -E "devbad run|verify exit|Regression proof|knownbad" ; $SCRATCH/promo-proof/stress.sh bin-devbad 40 8
+--- output
+-rw-r--r-- 1 root root 28160 07:33:04 $SCRATCH/promo-proof/bin-latest/Issue_3027_PromotionAfterFailedCheckpoint.dll
+-rw-r--r-- 1 root root 28160 07:33:02 $SCRATCH/promo-proof/bin-pkg/Issue_3027_PromotionAfterFailedCheckpoint.dll
+07:33:20
+9:    <LiteDBPackageVersion Condition="'$(LiteDBPackageVersion)' == ''">0.0.0-knownbad.5dd942a7367c</LiteDBPackageVersion>
+== devbad run 1 cli exit 0
+## Regression proof: passed
+verify exit 0
+== devbad run 2 cli exit 0
+## Regression proof: passed
+verify exit 0
+== devbad run 3 cli exit 0
+## Regression proof: passed
+verify exit 0
+== devbad run 4 cli exit 0
+## Regression proof: passed
+verify exit 0
+== devbad run 5 cli exit 0
+## Regression proof: passed
+verify exit 0
+      1 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync, log write, log write, log write, log write, log write, log truncate, log sync; the data header is v12
+     39 exit=0 result=REPRODUCED | After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12
+
+=== 2026-09-29T07:34:17.523Z (result 2026-09-29T07:34:27.773Z): Mutation check: proof fails with the fix removed
+$ chmod +x $SCRATCH/promo-proof/mutate.sh && $SCRATCH/promo-proof/mutate.sh 2>&1 | cut -c1-330
+--- output
+cli exit 1
+Package exit 0 met True None
+   log After the failed data sync: the insert: data read, log sync, data write, data sync, log truncate, log sync; the data header is v12
+   result REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after that failure: it wrote a v12 header over the v11 one and synced the data file again on the handle whose sync had just failed, which reported success
+Latest exit 0 met False Expected non-zero exit code.
+   log After the failed data sync: the insert: data read, data sync, log truncate, log write, log sync, log read, log read, log read, log read, log write, log write, log sync, data write, data sync, log truncate, log sync; the data header is v12
+   result REPRODUCED: a compact insert that waited on the checkpoint whose data sync failed promoted the file after that failure: it wrote a v12 header over the v11 one and synced the data file again on the handle whose sync had just failed, which reported success
+restored
+

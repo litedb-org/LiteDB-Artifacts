@@ -1,0 +1,5 @@
+{"type":"configuration","timestamp":"2026-09-29T04:56:58.0010367+00:00","payload":{"useProjectReference":false,"liteDBPackageVersion":"0.0.0-knownbad.5dd942a7367c"}}
+{"type":"log","timestamp":"2026-09-29T04:56:58.0668502+00:00","level":"Information","text":"LiteDB 0.0.0-detached\u002B5dd942a7367c361fadd600be4ce10aace2768b27 loaded from $SCRATCH/proofs/against/Issue_3027_SharedMutexNameLength-0.0.0-knownbad.5dd942a7367c/LiteDB.dll"}
+{"type":"log","timestamp":"2026-09-29T04:56:58.0723905+00:00","level":"Information","text":"Database path: 76 characters, 324 once escaped"}
+{"type":"log","timestamp":"2026-09-29T04:56:58.1032042+00:00","level":"Information","text":"Shared open threw ArgumentException from the Mutex constructor: The length of the name exceeds the maximum limit. (Parameter \u0027name\u0027)"}
+{"type":"result","timestamp":"2026-09-29T04:56:58.1036679+00:00","text":"REPRODUCED: a shared connection cannot open a database in a directory with a non-ASCII name: ArgumentException from the Mutex constructor: The length of the name exceeds the maximum limit. (Parameter \u0027name\u0027)","success":true}
