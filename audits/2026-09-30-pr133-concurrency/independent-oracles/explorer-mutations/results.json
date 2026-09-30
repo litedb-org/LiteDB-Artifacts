@@ -1,0 +1,30 @@
+[
+  {
+    "mode": "missing-boundary",
+    "exit": 2,
+    "seconds": 15.439161772024818,
+    "stdout": "",
+    "stderr": "System.TimeoutException: Worker stalled: A/insert-callback\n   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/ExplorerSchedule.cs:line 66\n   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/ExplorerSchedule.cs:line 51\n   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Boundary.Wait() in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/ExplorerSchedule.cs:line 155\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.OverlapAndReaderTransfer(Int32 seed) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/TransactionInterleavingExplorer.cs:line 122\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/TransactionInterleavingExplorer.cs:line 40\n--- End of stack trace from previous location ---\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/TransactionInterleavingExplorer.cs:line 92\n   at Program.<Main>$(String[] args) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/missing-boundary/Program.cs:line 10\n"
+  },
+  {
+    "mode": "worker-starvation",
+    "exit": 2,
+    "seconds": 15.07879525993485,
+    "stdout": "",
+    "stderr": "System.TimeoutException: Worker stalled: A/stalled\n   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/worker-starvation/ExplorerSchedule.cs:line 66\n   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/worker-starvation/ExplorerSchedule.cs:line 51\n   at Program.<Main>$(String[] args) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/worker-starvation/Program.cs:line 7\n"
+  },
+  {
+    "mode": "control",
+    "exit": 0,
+    "seconds": 0.414512361981906,
+    "stdout": "SCENARIO_PASSED\n",
+    "stderr": ""
+  },
+  {
+    "mode": "wrong-value",
+    "exit": 2,
+    "seconds": 0.3725980279268697,
+    "stdout": "",
+    "stderr": "System.InvalidOperationException: Oracle: cold exact state rows\n   at LiteDB.ConcurrencyTesting.ExplorerDatabase.Require(Boolean condition, String message) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/wrong-value/ExplorerDatabase.cs:line 40\n   at LiteDB.ConcurrencyTesting.ExplorerDatabase.VerifyCold() in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/wrong-value/ExplorerDatabase.cs:line 51\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/wrong-value/TransactionInterleavingExplorer.cs:line 82\n--- End of stack trace from previous location ---\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/wrong-value/TransactionInterleavingExplorer.cs:line 92\n   at Program.<Main>$(String[] args) in __WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/explorer-mutations/wrong-value/Program.cs:line 10\n"
+  }
+]

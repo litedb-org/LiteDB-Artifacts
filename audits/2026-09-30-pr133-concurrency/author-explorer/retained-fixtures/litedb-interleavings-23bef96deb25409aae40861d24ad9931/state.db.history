@@ -1,0 +1,36 @@
+1 873371987218256 configuration seed=0 schedule=28 shared=True encrypted=True
+2 873372267184124 A invoke ordinary-input-callback
+3 873372289698378 A error ordinary-input-callback System.InvalidOperationException: Missing observation field _pin
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.Field(Object value, String name) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 13
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.<>c__DisplayClass2_0.<<Run>g__Input|0>d.MoveNext() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 45
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass34_0.<Insert>b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Transaction.cs:line 103
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.SharedEngine.<>c__DisplayClass173_0`1.<WriteDatabase>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 80
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 125
+   at LiteDB.SharedEngine.WriteDatabase[T](Func`1 write, Boolean scoped) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 76
+   at LiteDB.SharedEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.cs:line 401
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.<>c__DisplayClass2_0.<Run>b__1() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 56
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Actor.<>c__DisplayClass6_0.<Invoke>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 123
+4 873372289963622 FAIL System.InvalidOperationException: A: ordinary-input-callback
+ ---> System.InvalidOperationException: Missing observation field _pin
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.Field(Object value, String name) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 13
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.<>c__DisplayClass2_0.<<Run>g__Input|0>d.MoveNext() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 45
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass34_0.<Insert>b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Transaction.cs:line 103
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.SharedEngine.<>c__DisplayClass173_0`1.<WriteDatabase>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 80
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 125
+   at LiteDB.SharedEngine.WriteDatabase[T](Func`1 write, Boolean scoped) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 76
+   at LiteDB.SharedEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Shared/SharedEngine.cs:line 401
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.<>c__DisplayClass2_0.<Run>b__1() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 56
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Actor.<>c__DisplayClass6_0.<Invoke>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 123
+   --- End of inner exception stack trace ---
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 64
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 51
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Boundary.Wait() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 155
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.Run(ExplorerSchedule schedule, ExplorerDatabase model, ExplorerDatabase other, List`1 resources, Actor actor, Actor cleanup, Int32 variant) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 57
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 51
+5 873372290018735 release ordinary input callback executing with writer ownership
+6 873372290184103 all-workers-joined
+7 873372454404929 FAIL retained __WORKSPACE__/temporary/litedb-interleavings-23bef96deb25409aae40861d24ad9931/state.db

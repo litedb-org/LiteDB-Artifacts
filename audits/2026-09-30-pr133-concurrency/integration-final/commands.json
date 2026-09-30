@@ -1,0 +1,46 @@
+[
+  {
+    "framework": "net8.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests/LiteDB.Tests.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleInterleaving_Tests|FullyQualifiedName~TransactionHandleMaintenanceCycle_Tests|FullyQualifiedName~TransactionHandleCrossDatabaseCycle_Tests",
+      "--logger",
+      "trx;LogFileName=audit-final-net8.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/concurrency-audit/artifacts_temp/final-qualification"
+    ],
+    "exit": 1
+  },
+  {
+    "framework": "net10.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests/LiteDB.Tests.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleInterleaving_Tests|FullyQualifiedName~TransactionHandleMaintenanceCycle_Tests|FullyQualifiedName~TransactionHandleCrossDatabaseCycle_Tests",
+      "--logger",
+      "trx;LogFileName=audit-final-net10.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/concurrency-audit/artifacts_temp/final-qualification"
+    ],
+    "exit": 1
+  }
+]

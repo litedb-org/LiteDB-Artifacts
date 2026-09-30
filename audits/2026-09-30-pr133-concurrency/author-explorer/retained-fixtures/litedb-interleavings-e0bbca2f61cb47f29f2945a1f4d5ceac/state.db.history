@@ -1,0 +1,11 @@
+1 872475503366732 configuration seed=3034152 schedule=19 shared=True encrypted=True
+2 872475868575485 A invoke owner-begin-write
+3 872475883866643 A complete owner-begin-write
+4 872475884437949 B invoke contended-begin
+5 872490885212934 FAIL System.TimeoutException: Worker stalled: B/contended-begin
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 66
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 51
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Boundary.Wait() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 153
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.SharedAdmission(Int32 variant) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 220
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 40
+6 872505885580830 LIVE-WORKER fixture retained; no cleanup or cold inspection

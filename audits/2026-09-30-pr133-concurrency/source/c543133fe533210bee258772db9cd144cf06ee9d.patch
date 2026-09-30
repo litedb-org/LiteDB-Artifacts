@@ -1,0 +1,2940 @@
+diff --git a/.github/safety/contracts.json b/.github/safety/contracts.json
+index 484e30cd9..22895766c 100644
+--- a/.github/safety/contracts.json
++++ b/.github/safety/contracts.json
+@@ -32,9 +32,6 @@
+         "LiteDB/Engine/Services/OperationLifetime.cs"
+       ],
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "Selected native admission, confirmed WAL and checkpoint boundaries are observed before terminating a child; parent acknowledgements require complete durable transactions, indeterminate work has only complete permitted outcomes, and surviving processes plus cold indexed state are checked."},
+-        {"fuzz": "transaction-interleavings", "model": "exception", "proves": "Deterministic actor schedules compare explicit/legacy commit and rollback effects against an independent document model, with positive overlap/admission boundaries and cold index/sentinel checks; discovered cycles fail the target."},
+-
+         {
+           "test": "LiteDB.Tests/Engine/SharedFinalCheckpointContract_Tests.cs#Parent_final_checkpoint_remains_best_effort_and_failed_attempt_keeps_committed_wal",
+           "model": "exception",
+@@ -109,9 +106,6 @@
+         "LiteDB/Engine/Services/OperationLifetime.cs"
+       ],
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "An observed independent leased snapshot remains unchanged across external writer commits, or its process is killed before disposal; native waiters and surviving reader/opener/checkpoint actors have separate completion deadlines."},
+-        {"fuzz": "transaction-interleavings", "model": "exception", "proves": "Bound readers transfer across actors, overlapping handle use refuses before execution, and independent reads cannot see the selected uncommitted writes; schedule histories record actual callback and admission boundaries."},
+-
+         {"test": "LiteDB.Tests/Engine/TransactionHandleCallbackScopeRetention_Tests.cs#Idle_caller_thread_does_not_root_completed_application_graph", "proves": "After successful or throwing pinned work, an idle live caller thread retains no database, Shared engine, settings or callback state through the execution stack; cold committed/aborted indexed state is preserved."},
+         {"test": "LiteDB.Tests/Engine/TransactionHandleOrdinaryCallbackBegin_Tests.cs#Pinned_input_without_holds_refuses_handle_before_admission", "model": "exception", "proves": "An ordinary pin operation with zero holds rejects same-namespace handle admission before local/native waits, including a peer facade, while its outer write completes and cold indexed state remains correct."},
+         {"test": "LiteDB.Tests/Engine/TransactionHandleOrdinaryCallbackBegin_Tests.cs#Transferred_mutex_reader_refuses_handle_before_admission", "model": "exception", "proves": "After actual reader handoff and a later transform callback, locking and fallback snapshots reject self-dependent handle begin through the same or a peer facade without releasing native protection."},
+diff --git a/.github/safety/coverage-ledger.json b/.github/safety/coverage-ledger.json
+index b8b4eb895..62645272d 100644
+--- a/.github/safety/coverage-ledger.json
++++ b/.github/safety/coverage-ledger.json
+@@ -243,17 +243,6 @@
+       "invariant": "Transaction callback context restores before public admission transfers. All four workers must finish 1000 calls, with correct context before/after yielding, then commit and pass two cold indexed/sentinel checks.",
+       "reason": "Exact e855 macOS Intel/net10 job 110008599282 recorded four fixed 15s workload deadlines without completed counts; throughput exhaustion, starvation and unexpected rejection cannot be distinguished retrospectively. Add forced gate-order oracle, retry only exact pre-callback overlap refusal, and report worker-specific completed/rejected/last-success state. Replace the 15s total-work limit with 15s without that worker completing real work plus a 60s absolute cap; peer progress and retries cannot renew it. External monitoring detects a worker blocked inside Run; bounded joins retain live fixtures instead of disposing storage beneath workers. Deterministic watchdog controls cover stalled, unstarted and continually progressing workers. No production change or assertion retry. Original cause remains unknown.",
+       "decision": "docs/transaction-handles-safety-review.md#callback-handoff-progress-observation"
+-    },
+-    {
+-      "id": "133-systematic-concurrency-campaign",
+-      "kind": "ci-test-config-changed",
+-      "subjects": [
+-        ".github/workflows/fuzz.yml"
+-      ],
+-      "disposition": "strengthened",
+-      "invariant": "Existing smoke and nightly shards retain their targets, assertions and time budgets; new concurrent actor/process campaigns add observed-boundary, progress and cold-state coverage.",
+-      "reason": "Adds a separate bounded Linux/net8 and Windows/net10 smoke job and separate extended nightly shard using the existing fuzz runner. New source triggers keep linked explorer changes scheduled. No prior test, timeout, corpus or target is removed, relaxed or repinned. Newly confirmed defects fail the new audit target and remain merge blockers, not expected-success exceptions.",
+-      "decision": "docs/audits/pr133-concurrency-audit.md"
+     }
+   ]
+ }
+diff --git a/.github/safety/fault-points.json b/.github/safety/fault-points.json
+index 5786da84e..5c5007d76 100644
+--- a/.github/safety/fault-points.json
++++ b/.github/safety/fault-points.json
+@@ -552,7 +552,6 @@
+       "name": "checkpoint-after-data-flush",
+       "protocol": "checkpoint backfill",
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "A parent observes this exact child hook and terminates the paused process; parent acknowledgements and two cold indexed-state checks constrain complete transaction outcomes while survivor roles must progress.", "via": ["LiteDB.Fuzz/Targets/SharedLifecycleChild.cs"]},
+         {
+           "test": "LiteDB.Tests/Engine/CompactPromotionPowerLoss_Tests.cs#Power_loss_preserves_legacy_rows_and_atomic_compact_transaction",
+           "model": "modeled-power-loss",
+@@ -648,7 +647,6 @@
+       "name": "checkpoint-before-data-flush",
+       "protocol": "checkpoint backfill",
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "A parent observes this exact child hook and terminates the paused process; parent acknowledgements and two cold indexed-state checks constrain complete transaction outcomes while survivor roles must progress.", "via": ["LiteDB.Fuzz/Targets/SharedLifecycleChild.cs"]},
+         {
+           "test": "LiteDB.Tests/Engine/CompactPromotionPowerLoss_Tests.cs#Power_loss_preserves_legacy_rows_and_atomic_compact_transaction",
+           "model": "modeled-power-loss",
+@@ -1035,7 +1033,6 @@
+       "name": "wal-after-durable-flush",
+       "protocol": "WAL commit",
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "A parent observes this exact child hook and terminates the paused process; parent acknowledgements and two cold indexed-state checks constrain complete transaction outcomes while survivor roles must progress.", "via": ["LiteDB.Fuzz/Targets/SharedLifecycleChild.cs"]},
+         {
+           "test": "LiteDB.Tests/Engine/CompactPromotionPowerLoss_Tests.cs#Power_loss_preserves_legacy_rows_and_atomic_compact_transaction",
+           "model": "modeled-power-loss",
+@@ -1088,7 +1085,6 @@
+       "name": "wal-before-durable-flush",
+       "protocol": "WAL commit",
+       "evidence": [
+-        {"fuzz": "shared-lifecycle", "model": "process-death", "proves": "A parent observes this exact child hook and terminates the paused process; parent acknowledgements and two cold indexed-state checks constrain complete transaction outcomes while survivor roles must progress.", "via": ["LiteDB.Fuzz/Targets/SharedLifecycleChild.cs"]},
+         {
+           "test": "LiteDB.Tests/Engine/CompactPromotionPowerLoss_Tests.cs#Power_loss_preserves_legacy_rows_and_atomic_compact_transaction",
+           "model": "modeled-power-loss",
+diff --git a/.github/workflows/fuzz.yml b/.github/workflows/fuzz.yml
+index 8a9b29331..55a7c8df7 100644
+--- a/.github/workflows/fuzz.yml
++++ b/.github/workflows/fuzz.yml
+@@ -11,8 +11,6 @@ on:
+       - 'LiteDB.Tests/Mapper/LinqCacheFuzzGenerator.cs'
+       - 'LiteDB.Tests/Internals/MvccRetirementScenario.cs'
+       - 'LiteDB.Tests/Internals/MvccRootedCheckpointScenario.cs'
+-      - 'LiteDB.Tests/Engine/ConcurrencyExplorer/**'
+-      - 'LiteDB.Tests/Engine/TransactionHandleInterleaving*.cs'
+       - 'LiteDB.Tests/Engine/PromotionPowerLossStream.cs'
+       - 'LiteDB.Tests/Engine/PromotionPowerLossScenario.cs'
+       - 'tools/V8Differential/**'
+@@ -32,8 +30,6 @@ on:
+       - 'LiteDB.Tests/Mapper/LinqCacheFuzzGenerator.cs'
+       - 'LiteDB.Tests/Internals/MvccRetirementScenario.cs'
+       - 'LiteDB.Tests/Internals/MvccRootedCheckpointScenario.cs'
+-      - 'LiteDB.Tests/Engine/ConcurrencyExplorer/**'
+-      - 'LiteDB.Tests/Engine/TransactionHandleInterleaving*.cs'
+       - 'LiteDB.Tests/Engine/PromotionPowerLossStream.cs'
+       - 'LiteDB.Tests/Engine/PromotionPowerLossScenario.cs'
+       - 'tools/V8Differential/**'
+@@ -165,49 +161,6 @@ jobs:
+           path: artifacts/fuzz
+           if-no-files-found: error
+ 
+-  concurrency:
+-    if: github.event_name != 'schedule' && (github.event_name != 'workflow_dispatch' || inputs.tier == 'smoke')
+-    name: Concurrency (${{ matrix.os }}, ${{ matrix.framework }})
+-    runs-on: ${{ matrix.os }}
+-    timeout-minutes: 15
+-    strategy:
+-      fail-fast: false
+-      matrix:
+-        include:
+-          - os: ubuntu-latest
+-            framework: net8.0
+-            seed: 133098
+-          - os: windows-latest
+-            framework: net10.0
+-            seed: 233098
+-    steps:
+-      - uses: actions/checkout@v4
+-        with: { fetch-depth: 0 }
+-      - uses: actions/setup-dotnet@v4
+-        with:
+-          dotnet-version: |
+-            8.0.x
+-            10.0.x
+-      - run: dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj
+-      - run: dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f "${{ matrix.framework }}" --no-restore -p:TestingEnabled=true
+-      - name: Explore bounded actor schedules
+-        run: >-
+-          dotnet run --project LiteDB.Fuzz -c Release -f "${{ matrix.framework }}" --no-build --
+-          --target transaction-interleavings --seed "${{ matrix.seed }}" --count 272
+-          --artifact-dir artifacts/concurrency --max-artifact-mb 0
+-      - name: Explore bounded process schedules
+-        if: success() || failure()
+-        run: >-
+-          dotnet run --project LiteDB.Fuzz -c Release -f "${{ matrix.framework }}" --no-build --
+-          --target shared-lifecycle --seed "${{ matrix.seed }}" --count 32
+-          --artifact-dir artifacts/concurrency --max-artifact-mb 0
+-      - uses: actions/upload-artifact@v4
+-        if: always()
+-        with:
+-          name: fuzz-concurrency-${{ matrix.os }}-${{ matrix.framework }}
+-          path: artifacts/concurrency
+-          if-no-files-found: error
+-
+   checksums:
+     name: Checksums (${{ matrix.os }}, ${{ matrix.framework }})
+     if: github.event_name != 'workflow_dispatch' || inputs.tier != 'campaign'
+@@ -270,19 +223,12 @@ jobs:
+         include:
+           - shard: correctness
+             targets: query,linq-cache,transaction,page,index,bson,parser,sql-dml,sort,value,api-boundary,oracle-selftest,pressure,compact-codec
+-            artifactBudget: 512
+             seedOffset: 500000
+             framework: net8.0
+           - shard: persistence
+             targets: wal,shared,storage,storage-failure,rebuild,rebuild-transition,vector,mapper,integrity,snapshot,threaded-snapshot,concurrent,transaction-gate,cursor-handoff,conflict,power-loss,recovery,chaos,boundary,read-only,compatibility,malformed-file,compact-storage,compact-power-loss
+-            artifactBudget: 512
+             seedOffset: 1500000
+             framework: net10.0
+-          - shard: concurrency
+-            targets: transaction-interleavings,shared-lifecycle
+-            artifactBudget: 0
+-            seedOffset: 2500000
+-            framework: net10.0
+     env:
+       TZ: Asia/Kolkata
+       LANG: en_US.UTF-8
+@@ -311,14 +257,13 @@ jobs:
+         env:
+           FUZZ_TARGETS: ${{ matrix.targets }}
+           SEED_OFFSET: ${{ matrix.seedOffset }}
+-          FUZZ_ARTIFACT_BUDGET: ${{ matrix.artifactBudget }}
+           FUZZ_FRAMEWORK: ${{ matrix.framework }}
+         run: |
+           FUZZ_SEED=$((GITHUB_RUN_ID % 2000000000 + SEED_OFFSET))
+           echo "Rotating seed: $FUZZ_SEED"
+           dotnet run --project LiteDB.Fuzz -c Release -f "$FUZZ_FRAMEWORK" --no-build -- \
+             --target "$FUZZ_TARGETS" --seed "$FUZZ_SEED" --duration 150m --workers 2 \
+-            --epoch-duration 2m --coverage-guided --artifact-dir artifacts/fuzz --max-artifact-mb "$FUZZ_ARTIFACT_BUDGET"
++            --epoch-duration 2m --coverage-guided --artifact-dir artifacts/fuzz
+       - name: Classify findings by canonical fingerprint
+         if: always()
+         run: python3 scripts/summarize-fuzz-artifacts.py artifacts/fuzz --output artifacts/fuzz/failure-groups.json --github-summary
+diff --git a/LiteDB.Fuzz.Tests/SharedLifecycleOracle_Tests.cs b/LiteDB.Fuzz.Tests/SharedLifecycleOracle_Tests.cs
+deleted file mode 100644
+index 5bc8e94a8..000000000
+--- a/LiteDB.Fuzz.Tests/SharedLifecycleOracle_Tests.cs
++++ /dev/null
+@@ -1,72 +0,0 @@
+-using LiteDB.Fuzz.Targets;
+-using Xunit;
+-
+-namespace LiteDB.Fuzz.Tests;
+-
+-public sealed class SharedLifecycleOracle_Tests
+-{
+-    [Theory]
+-    [InlineData("ack-loss")]
+-    [InlineData("partial-insert")]
+-    [InlineData("partial-update")]
+-    [InlineData("partial-delete")]
+-    [InlineData("sentinel")]
+-    [InlineData("index")]
+-    [InlineData("peer-partial")]
+-    public void Independent_model_rejects_controlled_bad_states(string mutation)
+-    {
+-        var directory = Path.Combine(Path.GetTempPath(), "litedb-lifecycle-oracle-" + Guid.NewGuid().ToString("N"));
+-        Directory.CreateDirectory(directory);
+-        try
+-        {
+-            var path = Path.Combine(directory, "oracle.db");
+-            SharedLifecycleOracle.Seed(path, null);
+-            using (var db = new LiteDatabase(path))
+-            {
+-                var rows = db.GetCollection("rows");
+-                switch (mutation)
+-                {
+-                    case "partial-insert": rows.Insert(SharedLifecycleOracle.Document(10)); break;
+-                    case "partial-update": rows.Update(new BsonDocument { ["_id"] = 2, ["value"] = 202, ["payload"] = "changed" }); break;
+-                    case "partial-delete": rows.Delete(3); break;
+-                    case "sentinel": db.GetCollection("sentinel").Delete(99); break;
+-                    case "index": rows.DropIndex("value"); break;
+-                    case "peer-partial": rows.Insert(SharedLifecycleOracle.Document(20)); break;
+-                }
+-            }
+-            using var context = new FuzzContext("shared-lifecycle", 1, 1, null, directory);
+-            Assert.Throws<FuzzFailureException>(() => SharedLifecycleOracle.Verify(context, path, null,
+-                mutation == "ack-loss" ? true : null, null));
+-        }
+-        finally { Directory.Delete(directory, true); }
+-    }
+-
+-    [Theory]
+-    [InlineData(false)]
+-    [InlineData(true)]
+-    public void Unknown_outcome_accepts_only_a_complete_before_or_after_group(bool commit)
+-    {
+-        var directory = Path.Combine(Path.GetTempPath(), "litedb-lifecycle-control-" + Guid.NewGuid().ToString("N"));
+-        Directory.CreateDirectory(directory);
+-        try
+-        {
+-            var path = Path.Combine(directory, "oracle.db");
+-            SharedLifecycleOracle.Seed(path, null);
+-            if (commit)
+-            {
+-                using var db = new LiteDatabase(path);
+-                using var tx = db.BeginTransaction();
+-                var rows = tx.GetCollection("rows");
+-                rows.Update(new BsonDocument { ["_id"] = 2, ["value"] = 202, ["payload"] = "changed" });
+-                rows.Delete(3);
+-                rows.Insert(SharedLifecycleOracle.Document(10)); rows.Insert(SharedLifecycleOracle.Document(11));
+-                tx.Commit();
+-            }
+-            using var context = new FuzzContext("shared-lifecycle", 1, 1, null, directory);
+-            var result = SharedLifecycleOracle.Verify(context, path, null, null, false);
+-            Assert.Equal(commit, result.Owner);
+-            Assert.False(result.Peer);
+-        }
+-        finally { Directory.Delete(directory, true); }
+-    }
+-}
+diff --git a/LiteDB.Fuzz.Tests/SharedLifecycleProgress_Tests.cs b/LiteDB.Fuzz.Tests/SharedLifecycleProgress_Tests.cs
+deleted file mode 100644
+index aba717420..000000000
+--- a/LiteDB.Fuzz.Tests/SharedLifecycleProgress_Tests.cs
++++ /dev/null
+@@ -1,75 +0,0 @@
+-using System.Diagnostics;
+-using LiteDB.Fuzz.Targets;
+-using Xunit;
+-
+-namespace LiteDB.Fuzz.Tests;
+-
+-public sealed class SharedLifecycleProgress_Tests
+-{
+-    [Fact]
+-    public async Task One_stalled_actor_fails_even_while_an_independent_peer_completes_commands()
+-    {
+-        var directory = Path.Combine(Path.GetTempPath(), "litedb-lifecycle-watchdog-" + Guid.NewGuid().ToString("N"));
+-        Directory.CreateDirectory(directory);
+-        var complete = false;
+-        try
+-        {
+-            var path = Path.Combine(directory, "oracle.db");
+-            SharedLifecycleOracle.Seed(path, null);
+-            await using var stalled = new SharedLifecycleProcess(path, directory, "stalled", false);
+-            await using var peer = new SharedLifecycleProcess(path, directory, "peer", false);
+-            await Task.WhenAll(stalled.Expect("ready"), peer.Expect("ready"));
+-            stalled.Send("stop:watchdog-control"); await stalled.Expect("stop:watchdog-control");
+-            stalled.Send("read");
+-            var waiting = stalled.Expect("read", TimeSpan.FromMilliseconds(500));
+-            for (var i = 0; i < 5; i++) { peer.Send("read"); await peer.Expect("read"); }
+-            var error = await Assert.ThrowsAsync<FuzzFailureException>(() => waiting);
+-            Assert.Contains("failed to complete read", error.Message);
+-            await peer.Finish();
+-            complete = true;
+-        }
+-        finally { if (complete) Directory.Delete(directory, true); }
+-    }
+-
+-    [Fact]
+-    public async Task Waiting_later_does_not_reset_the_command_invocation_deadline()
+-    {
+-        var directory = Path.Combine(Path.GetTempPath(), "litedb-lifecycle-deadline-" + Guid.NewGuid().ToString("N"));
+-        Directory.CreateDirectory(directory);
+-        var complete = false;
+-        try
+-        {
+-            var path = Path.Combine(directory, "oracle.db");
+-            SharedLifecycleOracle.Seed(path, null);
+-            await using var actor = new SharedLifecycleProcess(path, directory, "stalled", false);
+-            await actor.Expect("ready");
+-            actor.Send("stop:watchdog-control"); await actor.Expect("stop:watchdog-control");
+-            actor.Send("read");
+-            await Task.Delay(300);
+-            var elapsed = Stopwatch.StartNew();
+-            await Assert.ThrowsAsync<FuzzFailureException>(() => actor.Expect("read", TimeSpan.FromMilliseconds(200)));
+-            Assert.True(elapsed.Elapsed < TimeSpan.FromMilliseconds(150), "Expect reset the expired command deadline.");
+-            complete = true;
+-        }
+-        finally { if (complete) Directory.Delete(directory, true); }
+-    }
+-
+-    [Fact]
+-    public async Task An_unreached_native_marker_is_not_accepted_as_deadlock_prevention()
+-    {
+-        var directory = Path.Combine(Path.GetTempPath(), "litedb-lifecycle-marker-" + Guid.NewGuid().ToString("N"));
+-        Directory.CreateDirectory(directory);
+-        var complete = false;
+-        try
+-        {
+-            var path = Path.Combine(directory, "oracle.db");
+-            SharedLifecycleOracle.Seed(path, null);
+-            await using var actor = new SharedLifecycleProcess(path, directory, "reader", false);
+-            await actor.Expect("ready"); actor.Send("read");
+-            var error = await Assert.ThrowsAsync<FuzzFailureException>(() => actor.Expect("native-wait"));
+-            Assert.Contains("expected native-wait, received read", error.Message);
+-            await actor.Finish(); complete = true;
+-        }
+-        finally { if (complete) Directory.Delete(directory, true); }
+-    }
+-}
+diff --git a/LiteDB.Fuzz/LiteDB.Fuzz.csproj b/LiteDB.Fuzz/LiteDB.Fuzz.csproj
+index 4253e152a..b79a4b788 100644
+--- a/LiteDB.Fuzz/LiteDB.Fuzz.csproj
++++ b/LiteDB.Fuzz/LiteDB.Fuzz.csproj
+@@ -21,7 +21,4 @@
+     <None Include="..\LiteDB.Tests\Resources\v4.db" Link="Corpus\Legacy\v4.db" CopyToOutputDirectory="PreserveNewest" />
+     <None Include="..\LiteDB.Tests\Resources\Issue_2494_EncryptedV4.db" Link="Corpus\Legacy\Issue_2494_EncryptedV4.db" CopyToOutputDirectory="PreserveNewest" />
+   </ItemGroup>
+-  <ItemGroup>
+-    <Compile Include="../LiteDB.Tests/Engine/ConcurrencyExplorer/*.cs" Link="ConcurrencyExplorer/%(Filename)%(Extension)" />
+-  </ItemGroup>
+ </Project>
+diff --git a/LiteDB.Fuzz/Program.cs b/LiteDB.Fuzz/Program.cs
+index fbe4ea409..49dfa151c 100644
+--- a/LiteDB.Fuzz/Program.cs
++++ b/LiteDB.Fuzz/Program.cs
+@@ -7,10 +7,10 @@ internal static class Program
+     private static readonly IFuzzTarget[] Targets =
+     {
+         new QueryFuzzer(), new LinqCacheFuzzer(), new TransactionFuzzer(), new WalFuzzer(),
+-        new PageFuzzer(), new IndexFuzzer(), new SharedProcessFuzzer(), new SharedLifecycleFuzzer(), new BsonFuzzer(),
++        new PageFuzzer(), new IndexFuzzer(), new SharedProcessFuzzer(), new BsonFuzzer(),
+         new ParserFuzzer(), new MapperFuzzer(), new StorageFuzzer(), new RebuildFuzzer(),
+         new VectorFuzzer(), new SortFuzzer(), new ValueFuzzer(), new IntegrityFuzzer(),
+-        new SnapshotFuzzer(), new ThreadedSnapshotFuzzer(), new ConcurrentFuzzer(), new TransactionInterleavingFuzzer(),
++        new SnapshotFuzzer(), new ThreadedSnapshotFuzzer(), new ConcurrentFuzzer(),
+         new PowerLossFuzzer(), new BoundaryFuzzer(), new ReadOnlyFuzzer(), new SqlDmlFuzzer(),
+         new CompatibilityFuzzer(), new RecoveryFuzzer(), new ChaosFuzzer(), new ApiBoundaryFuzzer(),
+         new StorageFailureFuzzer(), new OracleSelfTestFuzzer(), new PressureFuzzer(), new MalformedFileFuzzer(),
+@@ -27,7 +27,6 @@ internal static class Program
+         catch (Exception error) { Console.Error.WriteLine(error.Message); PrintHelp(); return 2; }
+ 
+         if (options.Child == "verify-checkpointed") return CheckpointedFileVerifier.Run(options);
+-        if (options.Child == "shared-lifecycle") return SharedLifecycleChild.Run(options);
+         if (options.Child == "shared") return SharedProcessFuzzer.RunChild(options);
+         if (options.Child == "snapshot-writer") return SnapshotWriterProcess.RunChild(options);
+         if (options.Child == "snapshot-reader") return SnapshotFuzzer.RunChild(options);
+diff --git a/LiteDB.Fuzz/README.md b/LiteDB.Fuzz/README.md
+index 947effb3d..27c5ef544 100644
+--- a/LiteDB.Fuzz/README.md
++++ b/LiteDB.Fuzz/README.md
+@@ -105,7 +105,6 @@ using the same artifact root automatically replays the retained coverage corpus.
+ | `page` | slot payload model plus page/footer/accounting/overlap invariants |
+ | `index` | scalar, multikey, unique, ordering, and key-moving update checks |
+ | `shared` | real child processes, acknowledged ledgers, and owner-process death |
+-| `shared-lifecycle` | observed native-waiter/owner death, reused handle WAL cuts, live snapshot retirement, checkpoint cuts and independent survivor deadlines |
+ | `bson` | contiguous vs fragmented reader/writer round trips and mutations |
+ | `parser` | fresh vs cached SQL/expression parsing, binding, malformed errors |
+ | `mapper` | supported CLR shape round trips and cyclic failure isolation |
+@@ -120,7 +119,6 @@ using the same artifact root automatically replays the retained coverage corpus.
+ | `threaded-snapshot` | barrier-forced same-process writer/checkpoint overlap with multiple live snapshots |
+ | `concurrent` | one-database multithreaded commits, unique contention, cursors, checkpoint, and rebuild |
+ | `transaction-gate` | modeled reader counts, retired owners, foreign releases, and exclusive admission |
+-| `transaction-interleavings` | forced concurrent actor schedules, callback dependencies, per-worker deadlines, exact cold transaction-state oracle; see [bounded explorer](../docs/audits/pr133-concurrency-explorer.md) |
+ | `cursor-handoff` | retired-thread cursor snapshots, independent foreign transactions, and overlapping checkpoints |
+ | `conflict` | barrier-forced writer/schema/drop/storage/rebuild conflicts with acknowledged-state checks |
+ | `power-loss` | volatile/durable device model cut at every internal WAL/checkpoint phase |
+@@ -286,10 +284,3 @@ including two torn recovery attempts. Full payload/index and untouched-data
+ oracles also check read-only byte preservation and successful root/WAL removal on
+ retry. The latest data/WAL images are saved before recovery checks. Keeping this
+ target separate preserves the existing retirement corpus input and trace hashes.
+-
+-## Shared lifecycle concurrency audit
+-
+-`shared-lifecycle` uses ten bounded process-death schedules and alternates encryption
+-every ten cases. Use at least 20 cases to cover every selected cut plain/encrypted.
+-It keeps the existing `shared` corpus unchanged; see the [boundary matrix, oracle,
+-replay and explicit limits](../docs/audits/pr133-multiprocess-campaign.md).
+diff --git a/LiteDB.Fuzz/Targets/SharedLifecycleChild.cs b/LiteDB.Fuzz/Targets/SharedLifecycleChild.cs
+deleted file mode 100644
+index 26b34d33c..000000000
+--- a/LiteDB.Fuzz/Targets/SharedLifecycleChild.cs
++++ /dev/null
+@@ -1,155 +0,0 @@
+-using System.Reflection;
+-using LiteDB.Engine;
+-
+-namespace LiteDB.Fuzz.Targets;
+-
+-internal static class SharedLifecycleChild
+-{
+-    internal static int Run(FuzzOptions options)
+-    {
+-        try
+-        {
+-            var settings = new EngineSettings
+-            {
+-                Filename = options.Database, Password = options.WorkerId == 1 ? "lifecycle-secret" : null,
+-                DurableCommits = true, TransactionPageLimit = 4, ReadTransform = (_, value) => value
+-            };
+-            var engine = new SharedEngine(settings);
+-            using var db = new LiteDatabase(engine);
+-            ILiteTransaction transaction = null;
+-            IBsonDataReader reader = null;
+-            object cached = null;
+-            SharedCheckpointCrashScope checkpointScope = null;
+-            var crashPhase = "";
+-            var waitObserved = 0;
+-            TransactionAdmission.Observe = stage =>
+-            {
+-                if (stage == "native-wait" && Interlocked.Exchange(ref waitObserved, 1) == 0)
+-                { Mark(stage); Say(stage); }
+-            };
+-            EngineState.SimulateProcessCrash = phase =>
+-            {
+-                if (phase != crashPhase) return;
+-                Boundary("hook:" + phase);
+-            };
+-            Say("ready");
+-            string command;
+-            while ((command = Console.ReadLine()) != null)
+-            {
+-                waitObserved = 0;
+-                switch (command)
+-                {
+-                    case "warm":
+-                        using (var warm = db.BeginTransaction()) warm.Rollback();
+-                        cached = Cached(engine);
+-                        if (cached == null) throw new InvalidOperationException("No cached Shared wrapper.");
+-                        Say("warmed");
+-                        break;
+-                    case "begin":
+-                        transaction = db.BeginTransaction();
+-                        if (cached != null && Cached(engine) != null)
+-                            throw new InvalidOperationException("Cached wrapper was not checked out.");
+-                        var rows = transaction.GetCollection("rows");
+-                        rows.Update(new BsonDocument { ["_id"] = 2, ["value"] = 202, ["payload"] = "changed" });
+-                        rows.Delete(3);
+-                        foreach (var id in new[] { 10, 11 }) rows.Insert(SharedLifecycleOracle.Document(id));
+-                        Say("begun");
+-                        break;
+-                    case "commit":
+-                        transaction.Commit(); transaction.Dispose(); transaction = null;
+-                        if (cached != null && !ReferenceEquals(cached, Cached(engine)))
+-                            throw new InvalidOperationException("Shared wrapper was not reused.");
+-                        Say("committed");
+-                        break;
+-                    case "refresh":
+-                        using (var refreshed = db.BeginTransaction())
+-                        {
+-                            if (refreshed.GetCollection("rows").FindById(20) == null ||
+-                                refreshed.GetCollection("rows").FindById(21) == null)
+-                                throw new InvalidOperationException("Reused wrapper missed the external commit.");
+-                            refreshed.Commit();
+-                        }
+-                        if (!ReferenceEquals(cached, Cached(engine)))
+-                            throw new InvalidOperationException("Refreshed handle did not reuse the wrapper.");
+-                        Say("refreshed"); break;
+-                    case "write":
+-                        using (var tx = db.BeginTransaction())
+-                        {
+-                            tx.GetCollection("rows").Insert(SharedLifecycleOracle.Document(20));
+-                            tx.GetCollection("rows").Insert(SharedLifecycleOracle.Document(21));
+-                            tx.Commit();
+-                        }
+-                        Say("written");
+-                        break;
+-                    case "snapshot":
+-                        reader = db.Execute("SELECT $ FROM rows");
+-                        AssertSnapshot(engine, reader);
+-                        if (!reader.Read() || reader.Current["_id"].AsInt32 != 1)
+-                            throw new InvalidOperationException("Snapshot sentinel missing.");
+-                        Say("snapshot-held");
+-                        break;
+-                    case "retire":
+-                        var original = new List<BsonDocument> { reader.Current.AsDocument };
+-                        while (reader.Read()) original.Add(reader.Current.AsDocument);
+-                        if (original.Count != 3 || original.OrderBy(row => row["_id"]).Select(row => row.ToString())
+-                            .SequenceEqual(new[] { 1, 2, 3 }.Select(id => SharedLifecycleOracle.Document(id).ToString())) == false)
+-                            throw new InvalidOperationException("Held snapshot changed across external commit.");
+-                        reader.Dispose(); reader = null; Say("retired"); break;
+-                    case "read":
+-                        if (db.GetCollection("sentinel").FindById(99)?["value"].AsInt32 != 999)
+-                            throw new InvalidOperationException("Sentinel changed.");
+-                        Say("read"); break;
+-                    case "reopen":
+-                        using (var peer = new LiteDatabase(new ConnectionString
+-                        { Filename = options.Database, Password = settings.Password, Connection = ConnectionType.Shared }))
+-                            if (peer.GetCollection("sentinel").Count() != 1) throw new InvalidOperationException("Open lost sentinel.");
+-                        Say("reopened"); break;
+-                    case "prepare-checkpoint":
+-                        checkpointScope = SharedCheckpointCrashScope.Create(engine, "checkpoint-before-data-flush");
+-                        db.BeginTrans();
+-                        db.GetCollection("rows").Insert(SharedLifecycleOracle.Document(20));
+-                        db.GetCollection("rows").Insert(SharedLifecycleOracle.Document(21));
+-                        db.Commit(); Say("written"); break;
+-                    case "checkpoint": db.Checkpoint(); Say("checkpointed"); break;
+-                    case "close": db.Dispose(); Say("disposed"); break;
+-                    case "exit": checkpointScope?.Dispose(); reader?.Dispose(); transaction?.Dispose(); db.Dispose(); Say("closed"); return 0;
+-                    default:
+-                        if (command.StartsWith("arm:")) { crashPhase = command[4..]; Say("armed"); }
+-                        else if (command.StartsWith("stop:")) Boundary(command);
+-                        else throw new InvalidOperationException("Unknown command " + command);
+-                        break;
+-                }
+-            }
+-            throw new InvalidOperationException("Parent closed the protocol without exit.");
+-
+-            void Mark(string phase)
+-            {
+-                using var stream = new FileStream(options.Ledger, FileMode.Create, FileAccess.Write, FileShare.Read);
+-                using var writer = new StreamWriter(stream);
+-                writer.Write(phase); writer.Flush(); stream.Flush(true);
+-            }
+-            void Boundary(string phase)
+-            {
+-                Mark(phase);
+-                Say(phase);
+-                Thread.Sleep(Timeout.Infinite);
+-            }
+-        }
+-        catch (Exception error) { Console.Error.WriteLine(error); return 2; }
+-    }
+-
+-    private static void AssertSnapshot(SharedEngine engine, IBsonDataReader reader)
+-    {
+-        var snapshot = reader.GetType().GetField("_ownedSnapshot", BindingFlags.NonPublic | BindingFlags.Instance);
+-        if (snapshot == null || snapshot.GetValue(reader) == null)
+-            throw new InvalidOperationException("Reader did not retain an independent snapshot.");
+-        var readers = (Dictionary<int, int>)typeof(SharedEngine)
+-            .GetField("_localReaders", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(engine);
+-        if (readers.Count != 1 || readers.Values.Single() != 1 || engine.MutexOwner.IsOwnedByCurrentThread)
+-            throw new InvalidOperationException("Snapshot lease publication/native release was not observed.");
+-    }
+-
+-    private static object Cached(SharedEngine engine) => typeof(SharedEngine)
+-        .GetField("_cachedTransactionChild", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(engine);
+-    private static void Say(string value) { Console.WriteLine(value); Console.Out.Flush(); }
+-}
+diff --git a/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs b/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs
+deleted file mode 100644
+index db1921c0e..000000000
+--- a/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs
++++ /dev/null
+@@ -1,195 +0,0 @@
+-using System.Text.Json;
+-
+-namespace LiteDB.Fuzz.Targets;
+-
+-/// <summary>Bounded process-death schedules; OS caches survive, unlike the power-loss target.</summary>
+-internal sealed class SharedLifecycleFuzzer : IFuzzTarget
+-{
+-    internal static readonly string[] Boundaries =
+-    {
+-        "native-waiter", "uncommitted", "wal-before-durable-flush", "wal-after-durable-flush",
+-        "after-commit-acknowledgement", "after-refreshed-wrapper-reuse", "before-reader-dispose", "before-session-dispose",
+-        "checkpoint-before-data-flush", "checkpoint-after-data-flush"
+-    };
+-    public string Name => "shared-lifecycle";
+-    public string Description => "Observed Shared handle, native waiter, snapshot and checkpoint process-death schedules.";
+-
+-    public async Task RunAsync(FuzzContext context)
+-    {
+-        var observed = new HashSet<string>();
+-        while (context.Next())
+-        {
+-            var boundary = Boundaries[(context.Steps - 1) % Boundaries.Length];
+-            // Every twenty cases covers every boundary in both encryption modes.
+-            var encrypted = ((context.Steps - 1) / Boundaries.Length + context.Seed) % 2 != 0;
+-            var alias = context.Random.Next(2) == 0;
+-            var competitorOrder = context.Random.Next(6);
+-            var path = context.StepFile("lifecycle.db");
+-            var password = encrypted ? "lifecycle-secret" : null;
+-            SharedLifecycleOracle.Seed(path, password);
+-            var directory = Path.Combine(context.DirectoryPath, "actors-" + context.Steps);
+-            Directory.CreateDirectory(directory);
+-            var actorPath = alias ? Path.Combine(Path.GetDirectoryName(path)!, ".", Path.GetFileName(path)) : path;
+-            context.Trace("schedule", new { boundary, encrypted, alias, competitorOrder });
+-            File.WriteAllText(Path.Combine(directory, "schedule.json"), System.Text.Json.JsonSerializer.Serialize(new
+-            { context.Seed, context.Steps, boundary, encrypted, alias, competitorOrder, database = path, actorPath }));
+-            var actors = new List<SharedLifecycleProcess>();
+-            bool? committed = false;
+-            bool? peerCommitted = false;
+-            var quiescent = true;
+-            Exception failure = null;
+-            try
+-            {
+-                var owner = Start("owner");
+-                var writer = Start("writer");
+-                var reader = Start("reader");
+-                var opener = Start("opener");
+-                var maintenance = Start("maintenance");
+-                var verifier = Start("surviving-reader");
+-                Task[] competitors;
+-                await Task.WhenAll(actors.Select(actor => actor.Expect("ready")));
+-                if (boundary.StartsWith("checkpoint-"))
+-                {
+-                    peerCommitted = null;
+-                    owner.Send("prepare-checkpoint"); await owner.Expect("written");
+-                    peerCommitted = true; Acknowledge("peer");
+-                    competitors = StartCompetitors();
+-                    owner.Send("arm:" + boundary); await owner.Expect("armed");
+-                    owner.Send("checkpoint"); await owner.Expect("hook:" + boundary);
+-                    VerifyMarker("owner", "hook:" + boundary);
+-                    await owner.Kill();
+-                }
+-                else
+-                {
+-                    reader.Send("snapshot"); await reader.Expect("snapshot-held");
+-                    owner.Send("warm"); await owner.Expect("warmed");
+-                    owner.Send("begin"); await owner.Expect("begun");
+-                    peerCommitted = null;
+-                    writer.Send("write"); await writer.Expect("native-wait"); VerifyMarker("writer", "native-wait"); await writer.AssertBlocked();
+-                    competitors = StartCompetitors();
+-                    if (boundary == "native-waiter")
+-                    {
+-                        await writer.Kill();
+-                        committed = null;
+-                        owner.Send("commit"); await owner.Expect("committed");
+-                        committed = true; Acknowledge("owner");
+-                        writer = Start("replacement-writer"); await writer.Expect("ready"); writer.Send("write");
+-                    }
+-                    else if (boundary.StartsWith("wal-"))
+-                    {
+-                        owner.Send("arm:" + boundary); await owner.Expect("armed");
+-                        committed = null;
+-                        owner.Send("commit"); await owner.Expect("hook:" + boundary);
+-                        VerifyMarker("owner", "hook:" + boundary);
+-                        // The after-flush hook proves the confirmation and preceding pages were
+-                        // flushed. Even without an API acknowledgement, recovery must expose them.
+-                        committed = boundary == "wal-after-durable-flush" ? true : null;
+-                        await owner.Kill();
+-                    }
+-                    else if (boundary == "uncommitted")
+-                    {
+-                        owner.Send("stop:uncommitted"); await owner.Expect("stop:uncommitted");
+-                        VerifyMarker("owner", "stop:uncommitted"); await owner.Kill();
+-                    }
+-                    else
+-                    {
+-                        committed = null;
+-                        owner.Send("commit"); await owner.Expect("committed");
+-                        committed = true; Acknowledge("owner");
+-                        if (boundary == "after-refreshed-wrapper-reuse")
+-                        {
+-                            await writer.Expect("written"); peerCommitted = true; Acknowledge("peer");
+-                            owner.Send("refresh"); await owner.Expect("refreshed");
+-                        }
+-                        if (boundary == "before-reader-dispose")
+-                        {
+-                            reader.Send("stop:before-reader-dispose"); await reader.Expect("stop:before-reader-dispose");
+-                            VerifyMarker("reader", "stop:before-reader-dispose"); await reader.Kill();
+-                        }
+-                        else
+-                        {
+-                            owner.Send("stop:" + boundary); await owner.Expect("stop:" + boundary);
+-                            VerifyMarker("owner", "stop:" + boundary); await owner.Kill();
+-                        }
+-                    }
+-                    if (peerCommitted != true)
+-                    { await writer.Expect("written"); peerCommitted = true; Acknowledge("peer"); }
+-                    if (boundary != "before-reader-dispose")
+-                    { reader.Send("retire"); await reader.Expect("retired"); }
+-                }
+-                await Task.WhenAll(competitors);
+-                foreach (var actor in actors.Where(actor => !actor.HasExited)) await actor.Finish();
+-                observed.Add(boundary);
+-                context.Trace("completed", new { boundary, committed, peerCommitted });
+-
+-                Task[] StartCompetitors()
+-                {
+-                    // Commands start while the native owner is alive. Each obligation has its own
+-                    // Send-based deadline; maintenance, opener and reader cannot mask one another.
+-                    var work = new[] { (Actor: opener, Command: "reopen", Done: "reopened"),
+-                        (Actor: maintenance, Command: "checkpoint", Done: "checkpointed"),
+-                        (Actor: verifier, Command: "read", Done: "read") };
+-                    var permutations = new[] { new[] { 0, 1, 2 }, new[] { 0, 2, 1 }, new[] { 1, 0, 2 },
+-                        new[] { 1, 2, 0 }, new[] { 2, 0, 1 }, new[] { 2, 1, 0 } };
+-                    return permutations[competitorOrder].Select(index =>
+-                    {
+-                        var item = work[index]; item.Actor.Send(item.Command); return item.Actor.Expect(item.Done);
+-                    }).ToArray();
+-                }
+-            }
+-            catch (Exception error) { failure = error; }
+-            finally
+-            {
+-                // Never copy/read the database while any actor may still mutate it.
+-                foreach (var actor in actors)
+-                {
+-                    try { await actor.DisposeAsync(); }
+-                    catch (Exception error) { failure = failure == null ? error : new AggregateException(failure, error); }
+-                    quiescent &= actor.Stopped;
+-                }
+-            }
+-            if (quiescent)
+-            {
+-                try
+-                {
+-                    var resolved = SharedLifecycleOracle.Verify(context, path, password, committed, peerCommitted);
+-                    SharedLifecycleOracle.Verify(context, path, password, resolved.Owner, resolved.Peer);
+-                    DatabaseIntegrityVerifier.Verify(context, path, password);
+-                }
+-                catch (Exception error) { failure = failure == null ? error : new AggregateException(failure, error); }
+-            }
+-            else
+-            {
+-                // The generic failure writer copies registered files. Suppress that copy if a kill failed.
+-                context.Files.Remove(path);
+-                failure = new AggregateException(failure ?? new InvalidOperationException("Live child"),
+-                    new InvalidOperationException("Fixture retained in place at " + path + "; unsafe to reopen/copy while a child is alive."));
+-            }
+-            if (failure != null) throw failure;
+-            context.ObserveNovelty("shared-lifecycle", boundary, encrypted, alias);
+-
+-            SharedLifecycleProcess Start(string name)
+-            {
+-                var selectedPath = name == "owner" ? path : actorPath;
+-                var actor = new SharedLifecycleProcess(selectedPath, directory, name, encrypted);
+-                actors.Add(actor); return actor;
+-            }
+-            void Acknowledge(string transaction)
+-            {
+-                // This ledger belongs to the supervisor, outside the killed process's failure domain.
+-                using var stream = new FileStream(Path.Combine(directory, "acknowledged.jsonl"), FileMode.Append,
+-                    FileAccess.Write, FileShare.Read);
+-                using var writer = new StreamWriter(stream);
+-                writer.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { transaction, boundary }));
+-                writer.Flush(); stream.Flush(true);
+-            }
+-            void VerifyMarker(string actor, string marker) => context.Check(
+-                File.ReadAllText(Path.Combine(directory, actor + ".boundary")) == marker,
+-                "The selected process-death boundary was not durably observed.");
+-        }
+-        if (context.Steps >= Boundaries.Length)
+-            context.Check(observed.Count == Boundaries.Length, "A required process-death boundary was not exercised.");
+-        context.Metrics["observedBoundaries"] = observed.Count;
+-        context.Metrics["coldReopens"] = context.Steps * 2;
+-    }
+-}
+diff --git a/LiteDB.Fuzz/Targets/SharedLifecycleOracle.cs b/LiteDB.Fuzz/Targets/SharedLifecycleOracle.cs
+deleted file mode 100644
+index e8d6621f5..000000000
+--- a/LiteDB.Fuzz/Targets/SharedLifecycleOracle.cs
++++ /dev/null
+@@ -1,67 +0,0 @@
+-namespace LiteDB.Fuzz.Targets;
+-
+-internal static class SharedLifecycleOracle
+-{
+-    internal static BsonDocument Document(int id) => new()
+-    { ["_id"] = id, ["value"] = id * 10, ["payload"] = "row-" + id };
+-
+-    internal static void Seed(string path, string password)
+-    {
+-        using var db = new LiteDatabase(new ConnectionString { Filename = path, Password = password });
+-        foreach (var id in new[] { 1, 2, 3 }) db.GetCollection("rows").Insert(Document(id));
+-        db.GetCollection("rows").EnsureIndex("value", true);
+-        db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 99, ["value"] = 999 });
+-        db.Checkpoint();
+-    }
+-
+-    internal static (bool Owner, bool Peer) Verify(FuzzContext context, string path, string password, bool? committed, bool? peer)
+-    {
+-        using var db = new LiteDatabase(new ConnectionString { Filename = path, Password = password });
+-        var actual = db.GetCollection("rows").FindAll().OrderBy(row => row["_id"]).ToArray();
+-        var permitted = (from ownerState in new[] { false, true }
+-            from peerState in new[] { false, true }
+-            where (!committed.HasValue || committed == ownerState) && (!peer.HasValue || peer == peerState)
+-            select (Owner: ownerState, Peer: peerState, Rows: Model(ownerState, peerState))).ToArray();
+-        var matching = permitted.Where(state => Equal(actual, state.Rows)).ToArray();
+-        context.Check(matching.Length == 1,
+-            "Cold state lost an acknowledgement, exposed a partial/forbidden transaction or changed a payload.");
+-        var resolved = matching.Single();
+-        var expected = resolved.Rows;
+-        context.Check(db.GetCollection("$indexes").FindOne("collection = 'rows' AND name = 'value'") != null,
+-            "The expected secondary index was dropped.");
+-        var query = db.GetCollection("rows").Query().Where("value >= 0");
+-        var plan = query.GetPlan()["index"];
+-        context.Check(plan["name"].AsString == "value" && plan["mode"].AsString.StartsWith("INDEX SCAN"),
+-            "The model comparison did not exercise the secondary index.");
+-        var indexed = query.ToArray().OrderBy(row => row["value"]).ToArray();
+-        context.Check(Equal(indexed, expected.OrderBy(row => row["value"]).ToArray()), "Secondary index disagrees with model.");
+-        foreach (var row in expected)
+-        {
+-            var seek = db.GetCollection("rows").Query().Where(Query.EQ("value", row["value"]));
+-            context.Check(seek.GetPlan()["index"]["name"] == "value" &&
+-                seek.GetPlan()["index"]["mode"].AsString.StartsWith("INDEX SEEK"), "Expected indexed seek was not used.");
+-            context.Check(Equal(seek.ToArray(), new[] { row }), "Secondary seek lost or changed a document.");
+-        }
+-        var sentinel = db.GetCollection("sentinel").FindAll().ToArray();
+-        context.Check(sentinel.Length == 1 && sentinel[0]["_id"] == 99 && sentinel[0]["value"] == 999,
+-            "Unrelated sentinel changed.");
+-        db.Checkpoint();
+-        return (resolved.Owner, resolved.Peer);
+-    }
+-
+-    private static BsonDocument[] Model(bool committed, bool peer)
+-    {
+-        var rows = new List<BsonDocument> { Document(1), Document(2), Document(3) };
+-        if (committed)
+-        {
+-            rows.RemoveAll(row => row["_id"] == 2 || row["_id"] == 3);
+-            rows.Add(new BsonDocument { ["_id"] = 2, ["value"] = 202, ["payload"] = "changed" });
+-            rows.Add(Document(10)); rows.Add(Document(11));
+-        }
+-        if (peer) { rows.Add(Document(20)); rows.Add(Document(21)); }
+-        return rows.OrderBy(row => row["_id"]).ToArray();
+-    }
+-
+-    private static bool Equal(BsonDocument[] actual, BsonDocument[] expected) => actual.Length == expected.Length &&
+-        actual.Zip(expected).All(pair => pair.First.ToString() == pair.Second.ToString());
+-}
+diff --git a/LiteDB.Fuzz/Targets/SharedLifecycleProcess.cs b/LiteDB.Fuzz/Targets/SharedLifecycleProcess.cs
+deleted file mode 100644
+index 45031363f..000000000
+--- a/LiteDB.Fuzz/Targets/SharedLifecycleProcess.cs
++++ /dev/null
+@@ -1,141 +0,0 @@
+-using System.Diagnostics;
+-using System.Reflection;
+-using System.Threading.Channels;
+-
+-namespace LiteDB.Fuzz.Targets;
+-
+-/// <summary>One independently watched actor using the fuzz runner's child-process entry point.</summary>
+-internal sealed class SharedLifecycleProcess : IAsyncDisposable
+-{
+-    private readonly Process _process;
+-    private readonly string _log;
+-    private readonly Task<string> _stderr;
+-    private Task<Observation> _line;
+-    private readonly Task _stdout;
+-    private readonly Channel<Observation> _events = Channel.CreateUnbounded<Observation>();
+-    private readonly object _logGate = new();
+-    private sealed record Observation(string Value, long At);
+-    private readonly string _actor;
+-    private int _completed;
+-    private long _invokedAt = Stopwatch.GetTimestamp();
+-    private long _lastCompletedAt = Stopwatch.GetTimestamp();
+-
+-    internal SharedLifecycleProcess(string database, string directory, string actor, bool encrypted)
+-    {
+-        _actor = actor;
+-        _log = Path.Combine(directory, actor + ".jsonl");
+-        var start = new ProcessStartInfo("dotnet")
+-        {
+-            RedirectStandardInput = true, RedirectStandardOutput = true,
+-            RedirectStandardError = true, UseShellExecute = false
+-        };
+-        start.ArgumentList.Add(Assembly.GetExecutingAssembly().Location);
+-        Add("--child", "shared-lifecycle"); Add("--database", database);
+-        Add("--ledger", Path.Combine(directory, actor + ".boundary"));
+-        Add("--worker-id", encrypted ? "1" : "0");
+-        _process = Process.Start(start) ?? throw new InvalidOperationException("Child did not start.");
+-        _stderr = _process.StandardError.ReadToEndAsync();
+-        _stdout = ReadOutput();
+-        Record("database", database);
+-        Record("spawn", _process.Id.ToString());
+-        void Add(string name, string value) { start.ArgumentList.Add(name); start.ArgumentList.Add(value); }
+-    }
+-
+-    internal void Send(string command)
+-    {
+-        _invokedAt = Stopwatch.GetTimestamp();
+-        Record("invoke", command);
+-        _process.StandardInput.WriteLine(command);
+-        _process.StandardInput.Flush();
+-    }
+-
+-    internal async Task Expect(string expected, TimeSpan? testDeadline = null)
+-    {
+-        // Each command has its own deadline. Peer progress never extends it.
+-        var deadline = testDeadline ?? TimeSpan.FromSeconds(20);
+-        while (true)
+-        {
+-            _line ??= _events.Reader.ReadAsync().AsTask();
+-            var remaining = deadline - Stopwatch.GetElapsedTime(_invokedAt);
+-            if (!_line.IsCompleted && (remaining <= TimeSpan.Zero || await Task.WhenAny(_line, Task.Delay(remaining)) != _line))
+-                throw Stalled();
+-            var observation = await _line;
+-            _line = null;
+-            if (TimeSpan.FromSeconds((observation.At - _invokedAt) / (double)Stopwatch.Frequency) > deadline)
+-                throw Stalled();
+-            var actual = observation.Value;
+-            if (actual == "native-wait" && expected != actual) continue;
+-            if (actual != expected)
+-                throw new FuzzFailureException("SHARED_LIFECYCLE_PROTOCOL",
+-                    $"Actor {_actor}: expected {expected}, received {actual ?? "EOF"}.");
+-            if (expected != "native-wait") { _completed++; _lastCompletedAt = observation.At; }
+-            return;
+-        }
+-        FuzzFailureException Stalled() => new("SHARED_LIFECYCLE_ACTOR_STALLED",
+-            $"Actor {_actor} failed to complete {expected}; completed commands={_completed}.");
+-    }
+-
+-    private async Task ReadOutput()
+-    {
+-        try
+-        {
+-            string value;
+-            while ((value = await _process.StandardOutput.ReadLineAsync()) != null)
+-            {
+-                var observation = new Observation(value, Stopwatch.GetTimestamp());
+-                Record("observed", value);
+-                _events.Writer.TryWrite(observation);
+-            }
+-            _events.Writer.TryWrite(new Observation(null, Stopwatch.GetTimestamp()));
+-            _events.Writer.TryComplete();
+-        }
+-        catch (Exception error) { _events.Writer.TryComplete(error); throw; }
+-    }
+-
+-    internal async Task AssertBlocked()
+-    {
+-        _line ??= _events.Reader.ReadAsync().AsTask();
+-        if (await Task.WhenAny(_line, Task.Delay(150)) == _line)
+-            throw new FuzzFailureException("SHARED_LIFECYCLE_OWNERSHIP_RELEASED", "Native waiter advanced while owner remained active.");
+-        Record("excluded", "native waiter remained blocked after observed admission");
+-    }
+-
+-    internal bool HasExited => _process.HasExited;
+-    internal bool Stopped { get; private set; }
+-
+-    internal async Task Kill()
+-    {
+-        if (!_process.HasExited) _process.Kill(entireProcessTree: true);
+-        await _process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(10));
+-        Stopped = true;
+-        Record("killed", _process.ExitCode.ToString());
+-    }
+-
+-    internal async Task Finish()
+-    {
+-        Send("exit");
+-        await Expect("closed");
+-        await _process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(20));
+-        Stopped = true;
+-        if (_process.ExitCode != 0) throw new FuzzFailureException("SHARED_LIFECYCLE_EXIT", _actor + " failed.");
+-    }
+-
+-    public async ValueTask DisposeAsync()
+-    {
+-        try
+-        {
+-            if (!_process.HasExited) await Kill();
+-            Stopped = true;
+-            await _stdout.WaitAsync(TimeSpan.FromSeconds(10));
+-            File.WriteAllText(_log + ".stderr", await _stderr.WaitAsync(TimeSpan.FromSeconds(10)));
+-        }
+-        finally { _process.Dispose(); }
+-    }
+-
+-    private void Record(string kind, string value)
+-    {
+-        lock (_logGate) File.AppendAllText(_log,
+-            System.Text.Json.JsonSerializer.Serialize(new { actor = _actor, kind, value, completed = _completed,
+-                invokedTicks = _invokedAt, lastCompletedTicks = _lastCompletedAt, time = DateTime.UtcNow }) + "\n");
+-    }
+-}
+diff --git a/LiteDB.Fuzz/Targets/TransactionInterleavingFuzzer.cs b/LiteDB.Fuzz/Targets/TransactionInterleavingFuzzer.cs
+deleted file mode 100644
+index dcac7f936..000000000
+--- a/LiteDB.Fuzz/Targets/TransactionInterleavingFuzzer.cs
++++ /dev/null
+@@ -1,43 +0,0 @@
+-using LiteDB.ConcurrencyTesting;
+-
+-namespace LiteDB.Fuzz.Targets;
+-
+-internal sealed class TransactionInterleavingFuzzer : IFuzzTarget
+-{
+-    public string Name => "transaction-interleavings";
+-    public string Description => "Systematic forced actor schedules with committed-state and progress oracles.";
+-
+-    public Task RunAsync(FuzzContext context)
+-    {
+-        while (context.Next())
+-        {
+-            // Enumerate the complete finite matrix, with the seed rotating its start.
+-            var index = (int)(((long)context.Steps - 1 + (context.Seed & int.MaxValue)) % (TransactionInterleavingExplorer.ScheduleCount * 8));
+-            var schedule = index / 8;
+-            var shared = (index & 1) != 0;
+-            var encrypted = (index / 2 & 1) != 0;
+-            var outcome = index / 4 % 2;
+-            var file = context.StepFile("interleaving-" + context.Steps + ".db");
+-            context.StepFile("interleaving-" + context.Steps + ".db.other");
+-            context.StepFile("interleaving-" + context.Steps + ".db.history");
+-            context.Trace("forced-schedule", new { schedule, shared, encrypted, outcome });
+-            try { TransactionInterleavingExplorer.Run(file, shared, encrypted, schedule, outcome); }
+-            catch (Exception error)
+-            {
+-                if (error.Data["ExplorerLiveWorker"] is true)
+-                {
+-                    // The existing artifact writer snapshots registered files immediately.
+-                    // Keep originals in this isolated child's directory, but never copy a
+-                    // database while a retained actor could still be mutating its files.
+-                    context.Files.Clear();
+-                    File.WriteAllText(Path.Combine(context.DirectoryPath, "live-worker-retention.txt"),
+-                        "Original fixtures retained in place. No state-* snapshot is safe before process exit. " + file);
+-                }
+-                throw;
+-            }
+-            context.ObserveNovelty("interleaving", schedule, shared, encrypted, outcome);
+-            context.Metrics["completedActorSchedules"] = context.Steps;
+-        }
+-        return Task.CompletedTask;
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerCollectionCycle.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerCollectionCycle.cs
+deleted file mode 100644
+index 15d3c8e9e..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerCollectionCycle.cs
++++ /dev/null
+@@ -1,75 +0,0 @@
+-using System;
+-using System.Collections.Concurrent;
+-using System.Collections.Generic;
+-using System.Reflection;
+-using LiteDB.Client.Direct;
+-using LiteDB.Engine;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    internal static class ExplorerCollectionCycle
+-    {
+-        private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
+-        internal static void Run(ExplorerSchedule schedule, ExplorerDatabase model, List<IDisposable> resources,
+-            ExplorerSchedule.Actor a, ExplorerSchedule.Actor b, bool reverse)
+-        {
+-            // Some pragma consumers retain their opening generation. Persist and reopen
+-            // the fixture before measuring its one-second collection-lock contract.
+-            using (var setup = model.Open()) { setup.Timeout = TimeSpan.FromSeconds(1); setup.Checkpoint(); }
+-            var db = new LiteDatabase(model.Connection); resources.Add(db);
+-            ExplorerDatabase.Require(db.Timeout == TimeSpan.FromSeconds(1), "C04 timeout fixture not persisted");
+-            ILiteTransaction first = null, second = null;
+-            a.Run("C04 begin A", () => first = db.BeginTransaction());
+-            b.Run("C04 begin B", () => second = db.BeginTransaction());
+-            resources.Add(first); resources.Add(second);
+-            a.Run("C04 hold rows", () => first.GetCollection("rows").Insert(ExplorerDatabase.Row(2, 20)));
+-            b.Run("C04 hold other", () => second.GetCollection("other").Insert(ExplorerDatabase.Row(4, 40)));
+-            var lease = (DirectEngineLease)typeof(LiteDatabase).GetField("_engine", Fields).GetValue(db);
+-            var locker = typeof(LiteEngine).GetField("_locker", Fields).GetValue(lease.Engine);
+-            var effective = (EnginePragmas)typeof(LockService).GetField("_pragmas", Fields).GetValue(locker);
+-            ExplorerDatabase.Require(effective.Timeout == TimeSpan.FromSeconds(1), "C04 effective lock timeout differs from fixture");
+-            var locks = (ConcurrentDictionary<string, CollectionLock>)typeof(LockService).GetField("_collections", Fields).GetValue(locker);
+-            var waitsRows = schedule.NewBoundary("C04 actual wait rows held by A");
+-            var waitsOther = schedule.NewBoundary("C04 actual wait other held by B");
+-            locks["rows"].BeforeWait = waitsRows.Observe;
+-            locks["other"].BeforeWait = waitsOther.Observe;
+-            var failures = new LiteException[2];
+-            Action<ILiteTransaction, string, int, int> cross = (tx, collection, id, owner) =>
+-            {
+-                try { tx.GetCollection(collection).Insert(ExplorerDatabase.Row(id, 30)); }
+-                catch (LiteException error)
+-                {
+-                    ExplorerDatabase.Require(error.ErrorCode == LiteException.LOCK_TIMEOUT, "unexpected C04 error " + error);
+-                    failures[owner] = error;
+-                }
+-            };
+-            ExplorerSchedule.Work aw, bw;
+-            if (reverse)
+-            {
+-                bw = b.Invoke("C04 B waits rows", () => cross(second, "rows", 5, 1));
+-                aw = a.Invoke("C04 A waits other", () => cross(first, "other", 3, 0));
+-            }
+-            else
+-            {
+-                aw = a.Invoke("C04 A waits other", () => cross(first, "other", 3, 0));
+-                bw = b.Invoke("C04 B waits rows", () => cross(second, "rows", 5, 1));
+-            }
+-            waitsRows.Wait(); waitsOther.Wait();
+-            a.Complete(aw); b.Complete(bw);
+-            ExplorerDatabase.Require(failures[0] != null || failures[1] != null, "cyclic writers both escaped without contention outcome");
+-            if (failures[0] == null)
+-            {
+-                a.Run("C04 commit A", first.Commit);
+-                model.Acknowledge("rows", 2, 20); model.Acknowledge("other", 3, 30);
+-            }
+-            else ExplorerDatabase.Require(first.State == LiteTransactionState.Failed, "losing A transaction not aborted");
+-            if (failures[1] == null)
+-            {
+-                b.Run("C04 commit B", second.Commit);
+-                model.Acknowledge("other", 4, 40); model.Acknowledge("rows", 5, 30);
+-            }
+-            else ExplorerDatabase.Require(second.State == LiteTransactionState.Failed, "losing B transaction not aborted");
+-            locks["rows"].BeforeWait = null; locks["other"].BeforeWait = null;
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerDatabase.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerDatabase.cs
+deleted file mode 100644
+index 78a62c851..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerDatabase.cs
++++ /dev/null
+@@ -1,89 +0,0 @@
+-using System;
+-using System.Collections.Generic;
+-using System.Linq;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    /// <summary>Independent acknowledged-state model; no implementation snapshot assumptions.</summary>
+-    internal sealed class ExplorerDatabase
+-    {
+-        internal readonly ConnectionString Connection;
+-        private readonly Dictionary<string, Dictionary<int, int>> _committed = new Dictionary<string, Dictionary<int, int>>();
+-        internal ExplorerDatabase(string path, bool shared, bool encrypted)
+-        {
+-            Connection = new ConnectionString { Filename = path, Password = encrypted ? "explorer-password" : null,
+-                Connection = shared ? ConnectionType.Shared : ConnectionType.Direct, TransactionPageLimit = 1 };
+-            using var db = Open();
+-            foreach (var collection in new[] { "rows", "other" })
+-            {
+-                db.GetCollection(collection).EnsureIndex("value");
+-                db.GetCollection(collection).Insert(Row(1, 10));
+-                _committed.Add(collection, new Dictionary<int, int> { [1] = 10 });
+-            }
+-            db.GetCollection("sentinel").Insert(Row(42, 900));
+-        }
+-
+-        internal LiteDatabase Open()
+-        {
+-            var db = new LiteDatabase(Connection);
+-            db.Timeout = TimeSpan.FromSeconds(5);
+-            db.CheckpointSize = 0;
+-            return db;
+-        }
+-
+-        internal static BsonDocument Row(int id, int value) => new BsonDocument
+-        { ["_id"] = id, ["value"] = value, ["payload"] = new string('x', 8192) };
+-
+-        internal void Acknowledge(string collection, int id, int value) => _committed[collection][id] = value;
+-        internal void Deleted(string collection, int id) => _committed[collection].Remove(id);
+-        internal static void Require(bool condition, string message)
+-        { if (!condition) throw new InvalidOperationException("Oracle: " + message); }
+-
+-        internal void VerifyCold()
+-        {
+-            // Two opens ensure that verification itself did not mask a recovery/reopen defect.
+-            for (var reopen = 0; reopen < 2; reopen++)
+-            {
+-                using var db = new LiteDatabase(Connection);
+-                foreach (var entry in _committed)
+-                {
+-                    var rows = db.GetCollection(entry.Key);
+-                    Require(rows.FindAll().OrderBy(x => x["_id"].AsInt32).Select(Key)
+-                        .SequenceEqual(entry.Value.OrderBy(x => x.Key).Select(x => x.Key + ":" + x.Value)), "cold exact state " + entry.Key);
+-                    foreach (var row in entry.Value)
+-                        Require(BsonSerializer.Serialize(rows.FindById(row.Key)).SequenceEqual(
+-                            BsonSerializer.Serialize(Row(row.Key, row.Value))), "cold exact payload " + entry.Key + "/" + row.Key);
+-                    using var indexes = db.Execute("select name from $indexes where collection = @0", new BsonValue[] { entry.Key });
+-                    var names = new List<string>();
+-                    while (indexes.Read()) names.Add(indexes.Current["name"].AsString);
+-                    Require(names.OrderBy(x => x).SequenceEqual(new[] { "_id", "value" }), "exact index catalog " + entry.Key);
+-                    foreach (var value in new[] { 10, 20, 30, 40, 50, 60 })
+-                    {
+-                        var query = rows.Query().Where(Query.EQ("value", value));
+-                        var plan = query.GetPlan()["index"];
+-                        Require(plan["name"] == "value" && plan["mode"].AsString.StartsWith("INDEX SEEK", StringComparison.Ordinal),
+-                            "cold value query did not exercise its index " + entry.Key);
+-                        Require(query.ToEnumerable().Select(x => x["_id"].AsInt32).OrderBy(x => x)
+-                            .SequenceEqual(entry.Value.Where(x => x.Value == value).Select(x => x.Key).OrderBy(x => x)), "cold indexed state " + entry.Key);
+-                    }
+-                }
+-                var sentinels = db.GetCollection("sentinel").FindAll().ToArray();
+-                Require(sentinels.Length == 1 && BsonSerializer.Serialize(sentinels[0]).SequenceEqual(
+-                    BsonSerializer.Serialize(Row(42, 900))), "exact sentinel state");
+-            }
+-        }
+-        private static string Key(BsonDocument row) => row["_id"].AsInt32 + ":" + row["value"].AsInt32;
+-
+-        internal const string OverlapRefusal = "Overlapping or reentrant transaction handle use is not supported.";
+-        internal const string ReaderRefusal = "Close transaction-bound readers before committing.";
+-        internal const string SharedCallbackRefusal = "Cannot wait for shared writer ownership from inside a transaction handle callback for the same database.";
+-        internal const string OrdinaryCallbackRefusal = "Cannot wait for shared writer ownership from inside an ordinary callback for the same database.";
+-
+-        internal static void Refused(Action action, string expected = OverlapRefusal)
+-        {
+-            try { action(); }
+-            catch (InvalidOperationException error) when (error.GetType() == typeof(InvalidOperationException) && error.Message == expected) { return; }
+-            throw new InvalidOperationException("Expected immediate InvalidOperationException was not raised");
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerLifecycle.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerLifecycle.cs
+deleted file mode 100644
+index fd19ce32b..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerLifecycle.cs
++++ /dev/null
+@@ -1,79 +0,0 @@
+-using System;
+-using System.Collections.Generic;
+-using System.Reflection;
+-using LiteDB.Client.Direct;
+-using LiteDB.Engine;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    internal sealed class ExplorerLifecycle
+-    {
+-        private readonly ExplorerSchedule _schedule;
+-        private readonly ExplorerDatabase _model;
+-        private readonly List<IDisposable> _resources;
+-        private readonly ExplorerSchedule.Actor _a, _b, _c;
+-        private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
+-
+-        internal ExplorerLifecycle(ExplorerSchedule schedule, ExplorerDatabase model, List<IDisposable> resources,
+-            ExplorerSchedule.Actor a, ExplorerSchedule.Actor b, ExplorerSchedule.Actor c)
+-        { _schedule = schedule; _model = model; _resources = resources; _a = a; _b = b; _c = c; }
+-        private T Keep<T>(T value) where T : IDisposable { _resources.Add(value); return value; }
+-        private static object Field(object instance, string name) => instance.GetType().GetField(name, Fields)?.GetValue(instance)
+-            ?? throw new InvalidOperationException("Missing observation field " + name);
+-        private static IEnumerable<BsonDocument> Input(ExplorerSchedule.Boundary hold)
+-        { yield return ExplorerDatabase.Row(2, 20); hold.Hit(); yield return ExplorerDatabase.Row(3, 30); }
+-
+-        internal void CloseActive(bool releaseCallbackFirst)
+-        {
+-            var db = Keep(_model.Open());
+-            ILiteTransaction tx = null;
+-            _a.Run("begin-close-owner", () => tx = db.BeginTransaction());
+-            Keep(tx);
+-            var input = _schedule.NewBoundary("active callback before close");
+-            var closing = _schedule.NewBoundary("session closing published before dispatch");
+-            var session = (SessionLifetime)Field(db, "_lifetime");
+-            session.BeforeCloseDispatch = closing.Hit;
+-            var active = _a.Invoke("active-insert", () => tx.GetCollection("rows").Insert(Input(input)));
+-            input.Wait();
+-            var close = _b.Invoke("dispose-active-session", db.Dispose);
+-            closing.Wait();
+-            _c.Run("overlap-during-close", () =>
+-            {
+-                ExplorerDatabase.Refused(tx.Commit);
+-                ExplorerDatabase.Require(tx.State == LiteTransactionState.Active, "overlap during close changed active transaction outcome");
+-            });
+-            if (releaseCallbackFirst) { input.Release(); closing.Release(); }
+-            else { closing.Release(); input.Release(); }
+-            _a.Complete(active); _b.Complete(close);
+-            session.BeforeCloseDispatch = null;
+-            ExplorerDatabase.Require(tx.State == LiteTransactionState.RolledBack, "close did not roll back active handle");
+-        }
+-
+-        internal void Maintenance(bool checkpoint)
+-        {
+-            var db = Keep(_model.Open());
+-            var lease = (DirectEngineLease)Field(db, "_engine");
+-            var operations = (OperationLifetime)Field(lease.Engine, "_operations");
+-            var inside = _schedule.NewBoundary("ordinary write callback under operation lease");
+-            var fenced = _schedule.NewBoundary("late ordinary operation fenced by maintenance");
+-            var active = _a.Invoke("ordinary-insert", () => db.GetCollection("rows").Insert(Input(inside)));
+-            inside.Wait();
+-            operations.WaitingForMaintenance = fenced.Observe;
+-            var maintenance = _b.Invoke("rebuild", () => db.Rebuild());
+-            _schedule.Until(() =>
+-            {
+-                lock (Field(operations, "_gate")) return (int)Field(operations, "_waitingExclusive") != 0;
+-            }, "maintenance registered while callback holds engine lease");
+-            var late = _c.Invoke("late-read", () => ExplorerDatabase.Require(
+-                db.GetCollection("rows").Count() == 3, "late reader saw incomplete ordinary commit"));
+-            fenced.Wait();
+-            ExplorerDatabase.Require(!active.Done.IsSet && !maintenance.Done.IsSet && !late.Done.IsSet,
+-                "maintenance did not fence the observed active/queued operations");
+-            inside.Release();
+-            _a.Complete(active); _b.Complete(maintenance); _c.Complete(late);
+-            operations.WaitingForMaintenance = null;
+-            _model.Acknowledge("rows", 2, 20); _model.Acknowledge("rows", 3, 30);
+-            if (checkpoint) _b.Run("checkpoint-after-rebuild", () => db.Checkpoint());
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs
+deleted file mode 100644
+index d92f344bc..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs
++++ /dev/null
+@@ -1,83 +0,0 @@
+-using System;
+-using System.Collections.Generic;
+-using System.Reflection;
+-using System.Threading;
+-using LiteDB.Engine;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    /// <summary>Bounded diagnostic of ordinary callback ownership cycles. A detected wait is a failure.</summary>
+-    internal static class ExplorerOrdinaryCallbacks
+-    {
+-        private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
+-        private static object Field(object value, string name) => value.GetType().GetField(name, Fields)?.GetValue(value)
+-            ?? throw new InvalidOperationException("Missing observation field " + name);
+-
+-        internal static void Run(ExplorerSchedule schedule, ExplorerDatabase model, ExplorerDatabase other,
+-            List<IDisposable> resources, ExplorerSchedule.Actor actor, ExplorerSchedule.Actor cleanup, int variant)
+-        {
+-            var settings = new EngineSettings { Filename = model.Connection.Filename, Password = model.Connection.Password,
+-                ReadTransform = (_, value) => value };
+-            var shared = new SharedEngine(settings);
+-            var db = new LiteDatabase(shared);
+-            resources.Add(db);
+-            var destination = variant == 2 ? other : model;
+-            var peer = variant == 0 ? db : destination.Open();
+-            if (peer != db) resources.Add(peer);
+-            var peerEngine = (SharedEngine)Field(peer, "_engine");
+-            IBsonDataReader anchor = null;
+-            if (variant != 3)
+-            {
+-                actor.Run("ordinary leased anchor on future writer thread", () =>
+-                {
+-                    anchor = shared.Query("rows", new Query());
+-                    ExplorerDatabase.Require(anchor.Read(), "ordinary callback anchor empty");
+-                    ExplorerDatabase.Require(((System.Collections.IDictionary)Field(shared, "_localReaders")).Count > 0, "anchor did not establish leased path");
+-                });
+-                resources.Add(anchor);
+-            }
+-            var entered = schedule.NewBoundary("ordinary input callback executing with writer ownership");
+-            var finished = new ManualResetEventSlim();
+-            var emergency = 0;
+-            var refused = false;
+-            IEnumerable<BsonDocument> Input()
+-            {
+-                yield return ExplorerDatabase.Row(2, 20);
+-                if (variant != 3)
+-                {
+-                    var pin = Field(shared, "_pin");
+-                    ExplorerDatabase.Require((int)Field(pin, "_operations") > 0 && (int)Field(pin, "_holds") == 0,
+-                        "callback did not hold expected pin operation");
+-                }
+-                entered.Observe();
+-                try { peer.GetCollection("other").Insert(ExplorerDatabase.Row(2, 50)); }
+-                catch (InvalidOperationException error) when ((variant == 1 || variant == 3) &&
+-                    error.GetType() == typeof(InvalidOperationException) && error.Message == ExplorerDatabase.OrdinaryCallbackRefusal)
+-                { refused = true; }
+-                catch (OperationCanceledException error) when (Volatile.Read(ref emergency) != 0 && error.CancellationToken.IsCancellationRequested) { }
+-                finally { finished.Set(); }
+-                yield return ExplorerDatabase.Row(3, 30);
+-            }
+-            var work = actor.Invoke("ordinary-input-callback", () => shared.Insert("rows", Input(), BsonAutoId.Int32));
+-            entered.Wait();
+-            var sameFilePeer = variant == 1 || variant == 3;
+-            schedule.Until(() => finished.IsSet || (sameFilePeer && (int)Field(peerEngine, "_mutexWaiters") > 0),
+-                "callback must complete/refuse or expose native ownership wait");
+-            var cycle = !finished.IsSet;
+-            if (cycle)
+-            {
+-                // Release only the waiting facade to bound the diagnostic. This is NOT a
+-                // successful deadlock prevention result; the exact reached cycle fails below.
+-                schedule.Event("DEFECT ordinary callback waits native ownership retained by its caller");
+-                Interlocked.Exchange(ref emergency, 1);
+-                cleanup.Run("cancel-known-deadlock-waiter", peer.Dispose);
+-            }
+-            actor.Complete(work);
+-            anchor?.Dispose();
+-            model.Acknowledge("rows", 2, 20); model.Acknowledge("rows", 3, 30);
+-            if (variant == 0 || variant == 2) destination.Acknowledge("other", 2, 50);
+-            ExplorerDatabase.Require(!cycle, "ordinary same-file callback entered native self-wait (candidate merge blocker)");
+-            if (variant == 1 || variant == 3) ExplorerDatabase.Require(refused, "same-file callback did not refuse ownership dependency");
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs
+deleted file mode 100644
+index 8b9e682fe..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs
++++ /dev/null
+@@ -1,165 +0,0 @@
+-using System;
+-using System.Collections.Concurrent;
+-using System.Collections.Generic;
+-using System.Diagnostics;
+-using System.IO;
+-using System.Linq;
+-using System.Threading;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    /// <summary>Dedicated actors, forced boundaries and independent operation deadlines.</summary>
+-    internal sealed class ExplorerSchedule : IDisposable
+-    {
+-        private readonly List<Actor> _actors = new List<Actor>();
+-        private readonly List<Boundary> _boundaries = new List<Boundary>();
+-        private readonly object _logGate = new object();
+-        private readonly StreamWriter _log;
+-        private int _sequence;
+-        internal static readonly TimeSpan Deadline = TimeSpan.FromSeconds(15);
+-
+-        internal ExplorerSchedule(string path, string configuration)
+-        {
+-            _log = new StreamWriter(path) { AutoFlush = true };
+-            Event("configuration " + configuration);
+-        }
+-
+-        internal void Event(string value)
+-        {
+-            lock (_logGate) _log.WriteLine(++_sequence + " " + Stopwatch.GetTimestamp() + " " + value);
+-        }
+-
+-        internal Actor NewActor(string name)
+-        {
+-            var actor = new Actor(this, name);
+-            _actors.Add(actor);
+-            return actor;
+-        }
+-
+-        internal Boundary NewBoundary(string name)
+-        {
+-            var boundary = new Boundary(this, name);
+-            _boundaries.Add(boundary);
+-            return boundary;
+-        }
+-
+-        internal void Until(Func<bool> condition, string reason)
+-        {
+-            var started = Stopwatch.StartNew();
+-            while (!condition())
+-            {
+-                CheckActors();
+-                if (started.Elapsed >= Deadline) throw new TimeoutException("Boundary not reached: " + reason);
+-                Thread.Sleep(1);
+-            }
+-            CheckActors();
+-        }
+-
+-        internal void CheckActors()
+-        {
+-            foreach (var actor in _actors)
+-            {
+-                var work = actor.Current;
+-                if (work == null) continue;
+-                if (work.Failure != null) throw new InvalidOperationException(actor.Name + ": " + work.Name, work.Failure);
+-                var completed = Interlocked.Read(ref work.Completed);
+-                if ((completed == 0 ? Stopwatch.GetTimestamp() : completed) - work.Started > Deadline.TotalSeconds * Stopwatch.Frequency)
+-                    throw new TimeoutException("Worker stalled: " + actor.Name + "/" + work.Name);
+-            }
+-        }
+-
+-        internal bool Stop()
+-        {
+-            foreach (var boundary in _boundaries) boundary.Release();
+-            foreach (var actor in _actors) actor.Stop();
+-            var stopped = true;
+-            foreach (var actor in _actors) stopped &= actor.Join();
+-            Event(stopped ? "all-workers-joined" : "LIVE-WORKER fixture retained; no cleanup or cold inspection");
+-            return stopped;
+-        }
+-
+-        public void Dispose()
+-        {
+-            // The caller must not close this log while a live actor can still report.
+-            _log.Dispose();
+-        }
+-
+-        internal sealed class Work
+-        {
+-            internal readonly string Name;
+-            internal readonly long Started = Stopwatch.GetTimestamp();
+-            internal readonly ManualResetEventSlim Done = new ManualResetEventSlim();
+-            internal Exception Failure;
+-            internal long Completed;
+-            internal Work(string name) { Name = name; }
+-        }
+-
+-        internal sealed class Actor
+-        {
+-            private readonly ExplorerSchedule _schedule;
+-            private readonly BlockingCollection<Action> _queue = new BlockingCollection<Action>();
+-            private readonly Thread _thread;
+-            internal readonly string Name;
+-            internal volatile Work Current;
+-
+-            internal Actor(ExplorerSchedule schedule, string name)
+-            {
+-                _schedule = schedule;
+-                Name = name;
+-                _thread = new Thread(() =>
+-                {
+-                    foreach (var action in _queue.GetConsumingEnumerable()) action();
+-                }) { IsBackground = true, Name = "concurrency-explorer-" + name };
+-                _thread.Start();
+-            }
+-
+-            internal Work Invoke(string name, Action action)
+-            {
+-                _schedule.CheckActors();
+-                if (Current != null && !Current.Done.IsSet) throw new InvalidOperationException("Actor already busy: " + Name);
+-                if (Current?.Failure != null) throw new InvalidOperationException("Previous actor failure", Current.Failure);
+-                var work = Current = new Work(name);
+-                _schedule.Event(Name + " invoke " + name);
+-                _queue.Add(() =>
+-                {
+-                    try { action(); _schedule.Event(Name + " complete " + name); }
+-                    catch (Exception error)
+-                    {
+-                        work.Failure = error;
+-                        _schedule.Event(Name + " error " + name + " " + error);
+-                    }
+-                    finally { Interlocked.Exchange(ref work.Completed, Stopwatch.GetTimestamp()); work.Done.Set(); }
+-                });
+-                return work;
+-            }
+-
+-            internal void Complete(Work work) => _schedule.Until(() => work.Done.IsSet, Name + "/" + work.Name);
+-            internal void Run(string name, Action action) => Complete(Invoke(name, action));
+-            internal void Stop() => _queue.CompleteAdding();
+-            internal bool Join() => _thread.Join(Deadline);
+-        }
+-
+-        internal sealed class Boundary
+-        {
+-            private readonly ExplorerSchedule _schedule;
+-            private readonly string _name;
+-            private readonly ManualResetEventSlim _reached = new ManualResetEventSlim();
+-            private readonly ManualResetEventSlim _release = new ManualResetEventSlim();
+-            private int _released;
+-            internal Boundary(ExplorerSchedule schedule, string name) { _schedule = schedule; _name = name; }
+-            internal void Hit()
+-            {
+-                _schedule.Event("boundary " + _name);
+-                _reached.Set();
+-                if (!_release.Wait(Deadline)) throw new TimeoutException("Unreleased boundary " + _name);
+-            }
+-            internal void Observe() { _schedule.Event("observed " + _name); _reached.Set(); }
+-            internal void Wait() => _schedule.Until(() => _reached.IsSet, _name);
+-            internal void Release()
+-            {
+-                if (Interlocked.Exchange(ref _released, 1) != 0) return;
+-                _schedule.Event("release " + _name); _release.Set();
+-            }
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs b/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs
+deleted file mode 100644
+index cf10d603a..000000000
+--- a/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs
++++ /dev/null
+@@ -1,291 +0,0 @@
+-using System;
+-using System.Collections.Generic;
+-using System.IO;
+-using System.Runtime.ExceptionServices;
+-using System.Threading;
+-
+-namespace LiteDB.ConcurrencyTesting
+-{
+-    /// <summary>Bounded schedules, shared by xUnit and the isolated fuzz runner.</summary>
+-    internal sealed class TransactionInterleavingExplorer
+-    {
+-        internal const int ScheduleCount = 34;
+-        private readonly ExplorerSchedule _schedule;
+-        private readonly ExplorerDatabase _model;
+-        private ExplorerDatabase _otherModel;
+-        private readonly List<IDisposable> _resources = new List<IDisposable>();
+-        private readonly bool _shared, _peer;
+-        private readonly int _order;
+-        private readonly ExplorerSchedule.Actor _a, _b, _c;
+-
+-        private TransactionInterleavingExplorer(string file, bool shared, bool encrypted, int schedule, int seed)
+-        {
+-            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(file)));
+-            _schedule = new ExplorerSchedule(file + ".history", "seed=" + seed + " schedule=" + schedule +
+-                " shared=" + shared + " encrypted=" + encrypted);
+-            _shared = shared;
+-            _peer = (schedule & 1) != 0;
+-            _order = (schedule / 2) % 6;
+-            _model = new ExplorerDatabase(file, shared, encrypted);
+-            _a = _schedule.NewActor("A"); _b = _schedule.NewActor("B"); _c = _schedule.NewActor("C");
+-        }
+-
+-        internal static void Run(string file, bool shared, bool encrypted, int schedule, int seed)
+-        {
+-            if (schedule < 0 || schedule >= ScheduleCount) throw new ArgumentOutOfRangeException(nameof(schedule));
+-            var run = new TransactionInterleavingExplorer(file, shared, encrypted, schedule, seed);
+-            Exception failure = null;
+-            try
+-            {
+-                if (schedule < 12) run.OverlapAndReaderTransfer(seed);
+-                else if (schedule < 24)
+-                {
+-                    if (shared) run.SharedAdmission(schedule % 6);
+-                    else run.IndependentHandles(schedule % 6);
+-                }
+-                else if (!shared && schedule >= 32)
+-                    ExplorerCollectionCycle.Run(run._schedule, run._model, run._resources, run._a, run._b, (schedule & 1) != 0);
+-                else if (shared && schedule >= 28 && schedule < 32)
+-                {
+-                    if (schedule == 30) run._otherModel = new ExplorerDatabase(file + ".other", true, encrypted);
+-                    ExplorerOrdinaryCallbacks.Run(run._schedule, run._model, run._otherModel, run._resources, run._a, run._c, schedule - 28);
+-                }
+-                else
+-                {
+-                    var lifecycle = new ExplorerLifecycle(run._schedule, run._model, run._resources, run._a, run._b, run._c);
+-                    if (!shared && schedule < 26) lifecycle.Maintenance(schedule == 25);
+-                    else lifecycle.CloseActive((schedule & 1) != 0);
+-                }
+-                run._schedule.CheckActors();
+-            }
+-            catch (Exception error)
+-            {
+-                failure = error; error.Data["ExplorerFixture"] = file;
+-                error.Data["ExplorerSchedule"] = schedule; error.Data["ExplorerSeed"] = seed;
+-                run._schedule.Event("FAIL " + error);
+-            }
+-            finally
+-            {
+-                TransactionAdmission.Observe = null;
+-                var stopped = run._schedule.Stop();
+-                if (!stopped)
+-                {
+-                    if (failure == null) failure = new TimeoutException("A worker did not terminate; retained " + file);
+-                    failure.Data["ExplorerLiveWorker"] = true;
+-                }
+-                if (stopped)
+-                {
+-                    for (var i = run._resources.Count - 1; i >= 0; i--)
+-                    {
+-                        try { run._resources[i].Dispose(); }
+-                        catch (Exception error)
+-                        {
+-                            if (failure == null) failure = error;
+-                            else failure.Data["ExplorerCleanup" + i] = error;
+-                        }
+-                    }
+-                    // Cleanup failure must not suppress the independent persisted-state check.
+-                    run._schedule.Event("cold-verification-start");
+-                    try { run._model.VerifyCold(); run._otherModel?.VerifyCold(); }
+-                    catch (Exception error)
+-                    {
+-                        if (failure == null) failure = error;
+-                        else failure.Data["ExplorerColdOracle"] = error;
+-                    }
+-                    run._schedule.Event(failure == null ? "PASS cold-state-verified" : "FAIL retained " + file);
+-                    run._schedule.Dispose();
+-                }
+-            }
+-            if (failure != null) ExceptionDispatchInfo.Capture(failure).Throw();
+-        }
+-
+-        private T Keep<T>(T resource) where T : IDisposable { _resources.Add(resource); return resource; }
+-        private LiteDatabase Open() => Keep(_model.Open());
+-        private static IEnumerable<BsonDocument> Input(ExplorerSchedule.Boundary boundary, int id, int value, Action callback = null)
+-        { callback?.Invoke(); boundary.Hit(); yield return ExplorerDatabase.Row(id, value); }
+-
+-        private void OverlapAndReaderTransfer(int seed)
+-        {
+-            var db = Open();
+-            var peer = _peer ? Open() : db;
+-            _otherModel = new ExplorerDatabase(_model.Connection.Filename + ".other", _shared, _model.Connection.Password != null);
+-            var otherDatabase = Keep(_otherModel.Open());
+-            ILiteTransaction tx = null;
+-            _a.Run("begin", () => tx = db.BeginTransaction());
+-            Keep(tx);
+-            var rows = tx.GetCollection("rows");
+-            var inside = _schedule.NewBoundary("A inside bound input callback");
+-            var writing = _a.Invoke("insert-callback", () => rows.Insert(Input(inside, 2, 20, () =>
+-            {
+-                // An ordinary call never silently enlists in the handle. Shared must
+-                // refuse its native dependency, while Direct unrelated writes are legal.
+-                Action ordinary = () => peer.GetCollection("other").Insert(ExplorerDatabase.Row(2, 50));
+-                if (_shared) ExplorerDatabase.Refused(ordinary, ExplorerDatabase.SharedCallbackRefusal);
+-                else { ordinary(); _model.Acknowledge("other", 2, 50); }
+-                otherDatabase.GetCollection("rows").Insert(ExplorerDatabase.Row(2, 60));
+-                _otherModel.Acknowledge("rows", 2, 60);
+-                _schedule.Event("callback same-file policy and other-database positive control reached");
+-            })));
+-            inside.Wait();
+-            // Every permutation explores a different order of three enabled contenders while
+-            // A is verifiably executing the same handle. Timeouts are never accepted refusals.
+-            var actions = new Action[]
+-            {
+-                () => ExplorerDatabase.Refused(() => rows.FindById(1)),
+-                () => ExplorerDatabase.Refused(tx.Commit),
+-                () => ExplorerDatabase.Refused(tx.Rollback)
+-            };
+-            var permutations = new[] { new[] { 0, 1, 2 }, new[] { 0, 2, 1 }, new[] { 1, 0, 2 },
+-                new[] { 1, 2, 0 }, new[] { 2, 0, 1 }, new[] { 2, 1, 0 } };
+-            foreach (var operation in permutations[_order])
+-                _b.Run("overlap-" + operation, () =>
+-                {
+-                    actions[operation]();
+-                    ExplorerDatabase.Require(tx.State == LiteTransactionState.Active, "individual overlap refusal changed transaction outcome");
+-                });
+-            ExplorerDatabase.Require(tx.State == LiteTransactionState.Active, "overlap aborted legitimate writer");
+-            inside.Release(); _a.Complete(writing);
+-
+-            IEnumerator<BsonDocument> cursor = null;
+-            _a.Run("open-bound-cursor", () =>
+-            {
+-                cursor = rows.FindAll().GetEnumerator();
+-                ExplorerDatabase.Require(cursor.MoveNext(), "bound cursor empty");
+-            });
+-            Keep(cursor);
+-            _b.Run("commit-with-reader", () =>
+-            {
+-                ExplorerDatabase.Refused(tx.Commit, ExplorerDatabase.ReaderRefusal);
+-                ExplorerDatabase.Require(tx.State == LiteTransactionState.Active, "reader refusal changed transaction outcome");
+-            });
+-            _c.Run("transfer-read-dispose", () =>
+-            {
+-                var ids = new List<int> { cursor.Current["_id"].AsInt32 };
+-                while (cursor.MoveNext()) ids.Add(cursor.Current["_id"].AsInt32);
+-                ids.Sort();
+-                ExplorerDatabase.Require(string.Join(",", ids) == "1,2", "bound reader transaction contents");
+-                cursor.Dispose();
+-            });
+-            if ((seed & 1) == 0)
+-            {
+-                _b.Run("commit-transferred", tx.Commit);
+-                _model.Acknowledge("rows", 2, 20);
+-            }
+-            else _b.Run("rollback-transferred", tx.Rollback);
+-            _c.Run("ordinary-read-after-owner-release", () => ExplorerDatabase.Require(
+-                peer.GetCollection("sentinel").FindById(42)["value"] == 900, "independent read"));
+-            _c.Run("disposed-reader-refusal", () =>
+-            {
+-                try { cursor.MoveNext(); }
+-                catch (ObjectDisposedException) { return; }
+-                throw new InvalidOperationException("Disposed reader accepted use");
+-            });
+-        }
+-
+-        private void IndependentHandles(int variant)
+-        {
+-            var db = Open(); var peer = _peer ? Open() : db;
+-            ILiteTransaction first = null, second = null;
+-            _a.Run("begin-independent-A", () => first = db.BeginTransaction());
+-            _b.Run("begin-independent-B", () => second = peer.BeginTransaction());
+-            Keep(first); Keep(second);
+-            var firstInside = _schedule.NewBoundary("A pending writes");
+-            var secondInside = _schedule.NewBoundary("B pending writes");
+-            Action<ILiteTransaction, string> change = (tx, name) =>
+-            {
+-                var rows = tx.GetCollection(name);
+-                ExplorerDatabase.Require(rows.Update(ExplorerDatabase.Row(1, 30)), "update missed existing row");
+-                rows.Insert(ExplorerDatabase.Row(3, 40));
+-                ExplorerDatabase.Require(rows.Delete(3), "delete missed pending row");
+-            };
+-            _a.Run("update-delete-A", () => change(first, "rows"));
+-            _b.Run("update-delete-B", () => change(second, "other"));
+-            var aw = _a.Invoke("insert-A", () => first.GetCollection("rows").Insert(Input(firstInside, 2, 20)));
+-            firstInside.Wait();
+-            var bw = _b.Invoke("insert-B", () => second.GetCollection("other").Insert(Input(secondInside, 2, 20)));
+-            secondInside.Wait();
+-            _c.Run("no-uncommitted-visibility", () =>
+-            {
+-                foreach (var name in new[] { "rows", "other" })
+-                {
+-                    var rows = db.GetCollection(name);
+-                    ExplorerDatabase.Require(rows.FindById(1)["value"] == 10, "dirty updated value");
+-                    ExplorerDatabase.Require(rows.FindById(2) == null && rows.FindById(3) == null, "dirty insert");
+-                }
+-            });
+-            var reverse = variant % 2 != 0;
+-            var rollback = variant / 2;
+-            Action finishA = () =>
+-            {
+-                firstInside.Release(); _a.Complete(aw);
+-                _a.Run("finish-A", rollback == 1 ? (Action)first.Rollback : first.Commit);
+-                if (rollback != 1) { _model.Acknowledge("rows", 1, 30); _model.Acknowledge("rows", 2, 20); }
+-            };
+-            Action finishB = () =>
+-            {
+-                secondInside.Release(); _b.Complete(bw);
+-                _b.Run("finish-B", rollback == 2 ? (Action)second.Rollback : second.Commit);
+-                if (rollback != 2) { _model.Acknowledge("other", 1, 30); _model.Acknowledge("other", 2, 20); }
+-            };
+-            if (reverse) { finishB(); finishA(); } else { finishA(); finishB(); }
+-        }
+-
+-        private void SharedAdmission(int variant)
+-        {
+-            var owner = Open(); var waiter = _peer ? Open() : owner;
+-            var legacy = variant >= 3;
+-            ILiteTransaction tx = null;
+-            _a.Run("owner-begin-write", () =>
+-            {
+-                if (legacy)
+-                {
+-                    ExplorerDatabase.Require(owner.BeginTrans(), "legacy begin failed");
+-                    owner.GetCollection("rows").Insert(ExplorerDatabase.Row(2, 20));
+-                }
+-                else { tx = owner.BeginTransaction(); tx.GetCollection("rows").Insert(ExplorerDatabase.Row(2, 20)); }
+-            });
+-            if (tx != null) Keep(tx);
+-            var wait = _schedule.NewBoundary(legacy ? "native-wait" : "local-wait");
+-            var stage = legacy ? "native-wait" : "local-wait";
+-            TransactionAdmission.Observe = value => { if (value == stage) wait.Observe(); };
+-            using var cancel = new CancellationTokenSource();
+-            var disposition = variant % 3; // cancellation, committed predecessor, closing waiter
+-            var pending = _b.Invoke("contended-begin", () =>
+-            {
+-                try
+-                {
+-                    using var next = waiter.BeginTransaction(Timeout.InfiniteTimeSpan, cancel.Token);
+-                    ExplorerDatabase.Require(disposition == 1, "cancelled/closing admission succeeded");
+-                    next.GetCollection("other").Insert(ExplorerDatabase.Row(2, 20));
+-                    next.Commit();
+-                }
+-                catch (OperationCanceledException error)
+-                {
+-                    ExplorerDatabase.Require(disposition != 1, "legitimate waiter cancelled");
+-                    if (disposition == 0) ExplorerDatabase.Require(error.CancellationToken == cancel.Token, "wrong cancellation token");
+-                }
+-            });
+-            wait.Wait();
+-            ExplorerDatabase.Require(!pending.Done.IsSet, "contended begin already finished");
+-            if (disposition == 0) { cancel.Cancel(); _b.Complete(pending); }
+-            if (disposition == 2 && !ReferenceEquals(owner, waiter))
+-                _c.Run("close-waiter", waiter.Dispose);
+-            // Closing the owner's facade must cancel the pending begin and roll back its owner.
+-            if (disposition == 2 && ReferenceEquals(owner, waiter))
+-            {
+-                _c.Run("close-owner-session", owner.Dispose);
+-                _b.Complete(pending);
+-            }
+-            else
+-            {
+-                _a.Run("owner-commit", () =>
+-                {
+-                    if (legacy) ExplorerDatabase.Require(owner.Commit(), "legacy commit failed"); else tx.Commit();
+-                });
+-                _model.Acknowledge("rows", 2, 20);
+-                _b.Complete(pending);
+-                if (disposition == 1) _model.Acknowledge("other", 2, 20);
+-            }
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleCrossDatabaseCycle_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleCrossDatabaseCycle_Tests.cs
+deleted file mode 100644
+index 4fe7a89aa..000000000
+--- a/LiteDB.Tests/Engine/TransactionHandleCrossDatabaseCycle_Tests.cs
++++ /dev/null
+@@ -1,201 +0,0 @@
+-using System;
+-using System.Collections.Concurrent;
+-using System.Collections.Generic;
+-using System.Linq;
+-using System.Threading;
+-using Xunit;
+-using Xunit.Abstractions;
+-
+-namespace LiteDB.Tests.Engine
+-{
+-    public class TransactionHandleCrossDatabaseCycle_Tests
+-    {
+-        private static readonly ConcurrentBag<object> Retained = new ConcurrentBag<object>();
+-        private readonly ITestOutputHelper _output;
+-        public TransactionHandleCrossDatabaseCycle_Tests(ITestOutputHelper output) { _output = output; }
+-
+-        public sealed class CallbackRow
+-        {
+-            [BsonIgnore] public Action Callback;
+-            public int Id { get; set; }
+-            public int Value { get { Callback?.Invoke(); return Id * 10; } set { } }
+-        }
+-
+-        [Theory]
+-        [InlineData(null)]
+-        [InlineData("secret")]
+-        public void Opposed_database_callback_admission_is_cancellable_without_partial_transactions(string password)
+-        {
+-            var files = new[] { new TempFile(), new TempFile() };
+-            var databases = new LiteDatabase[2];
+-            var handles = new ILiteTransaction[2];
+-            var workers = new Thread[2];
+-            var cancellations = new[] { new CancellationTokenSource(), new CancellationTokenSource() };
+-            var waiting = new[] { new ManualResetEventSlim(), new ManualResetEventSlim() };
+-            var finished = new[] { new ManualResetEventSlim(), new ManualResetEventSlim() };
+-            var start = new ManualResetEventSlim();
+-            var history = new ConcurrentQueue<string>();
+-            var errors = new Exception[2];
+-            var callbackCounts = new int[2];
+-            var refused = new int[2];
+-            var originalObserver = TransactionAdmission.Observe;
+-            Exception failure = null;
+-            var verified = false;
+-            try
+-            {
+-                for (var i = 0; i < 2; i++)
+-                {
+-                    databases[i] = new LiteDatabase(Settings(files[i], password));
+-                    databases[i].GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1, ["Value"] = 10 });
+-                    databases[i].GetCollection("rows").EnsureIndex("Value");
+-                    databases[i].GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9, ["value"] = 90 + i });
+-                    handles[i] = databases[i].BeginTransaction();
+-                }
+-                TransactionAdmission.Observe = stage =>
+-                {
+-                    if (stage != "local-wait") return;
+-                    for (var actor = 0; actor < 2; actor++)
+-                        if (ReferenceEquals(Thread.CurrentThread, workers[actor]))
+-                        {
+-                            history.Enqueue(actor + ":local-admission-boundary");
+-                            waiting[actor].Set();
+-                        }
+-                };
+-                for (var i = 0; i < 2; i++)
+-                {
+-                    var actor = i;
+-                    workers[i] = new Thread(() =>
+-                    {
+-                        try
+-                        {
+-                            Assert.True(start.Wait(TimeSpan.FromSeconds(10)));
+-                            handles[actor].GetCollection<CallbackRow>("rows").Insert(new CallbackRow
+-                            {
+-                                Id = 2,
+-                                Callback = () =>
+-                                {
+-                                    Interlocked.Increment(ref callbackCounts[actor]);
+-                                    history.Enqueue(actor + ":callback-entered");
+-                                    var error = Assert.Throws<OperationCanceledException>(() =>
+-                                        databases[1 - actor].BeginTransaction(Timeout.InfiniteTimeSpan, cancellations[actor].Token));
+-                                    Assert.Equal(cancellations[actor].Token, error.CancellationToken);
+-                                    Interlocked.Increment(ref refused[actor]);
+-                                    history.Enqueue(actor + ":admission-cancelled");
+-                                }
+-                            });
+-                            history.Enqueue(actor + ":write-completed");
+-                        }
+-                        catch (Exception error) { errors[actor] = error; }
+-                        finally { finished[actor].Set(); }
+-                    }) { IsBackground = true };
+-                    workers[i].Start();
+-                }
+-                start.Set();
+-                Assert.True(waiting[0].Wait(TimeSpan.FromSeconds(10)));
+-                Assert.True(waiting[1].Wait(TimeSpan.FromSeconds(10)));
+-                // Both destination gates are occupied by still-active source handles.
+-                // No scheduler timeout or peer's progress counts as cancellation success.
+-                Assert.Equal(LiteTransactionState.Active, handles[0].State);
+-                Assert.Equal(LiteTransactionState.Active, handles[1].State);
+-                Assert.False(finished[0].IsSet);
+-                Assert.False(finished[1].IsSet);
+-                history.Enqueue("controller:cancel-both");
+-                cancellations[0].Cancel();
+-                cancellations[1].Cancel();
+-                for (var i = 0; i < 2; i++)
+-                {
+-                    Assert.True(finished[i].Wait(TimeSpan.FromSeconds(10)), "Individual actor " + i + " did not finish.");
+-                    Assert.True(workers[i].Join(TimeSpan.FromSeconds(5)));
+-                    Assert.Null(errors[i]);
+-                    Assert.Equal(1, callbackCounts[i]);
+-                    Assert.Equal(1, refused[i]);
+-                    Assert.Equal(LiteTransactionState.Active, handles[i].State);
+-                }
+-                handles[0].Commit();
+-                handles[1].Rollback();
+-                for (var i = 0; i < 2; i++) { handles[i].Dispose(); handles[i] = null; }
+-
+-                // Positive control: only A has an owner, so A -> B must be accepted.
+-                using (var outer = databases[0].BeginTransaction())
+-                {
+-                    var entered = false;
+-                    outer.GetCollection<CallbackRow>("rows").Insert(new CallbackRow
+-                    {
+-                        Id = 4,
+-                        Callback = () =>
+-                        {
+-                            using var independent = databases[1].BeginTransaction(TimeSpan.FromSeconds(5));
+-                            independent.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 3, ["Value"] = 30 });
+-                            independent.Commit();
+-                            entered = true;
+-                        }
+-                    });
+-                    Assert.True(entered);
+-                    outer.Rollback();
+-                }
+-                for (var i = 0; i < 2; i++) { databases[i].Dispose(); databases[i] = null; }
+-                for (var reopen = 0; reopen < 2; reopen++)
+-                    for (var i = 0; i < 2; i++)
+-                    {
+-                        using var cold = new LiteDatabase(Settings(files[i], password));
+-                        var expected = i == 0 ? new[] { 1, 2 } : new[] { 1, 3 };
+-                        var query = cold.GetCollection("rows").Query().Where(Query.GTE("Value", 10));
+-                        Assert.Equal("Value", query.GetPlan()["index"]["name"].AsString);
+-                        Assert.Equal(expected, query.ToArray().Select(row => row["_id"].AsInt32).OrderBy(id => id));
+-                        Assert.Equal(expected.Length, cold.GetCollection("rows").Count());
+-                        Assert.Equal(90 + i, cold.GetCollection("sentinel").FindById(9)["value"].AsInt32);
+-                    }
+-                verified = true;
+-            }
+-            catch (Exception error) { failure = error; throw; }
+-            finally
+-            {
+-                var cleanupErrors = new List<Exception>();
+-                void Cleanup(Action action)
+-                {
+-                    try { action(); }
+-                    catch (Exception error) { cleanupErrors.Add(error); }
+-                }
+-                start.Set();
+-                foreach (var cancellation in cancellations) Cleanup(cancellation.Cancel);
+-                foreach (var worker in workers) if (worker?.IsAlive == true) worker.Join(TimeSpan.FromSeconds(2));
+-                TransactionAdmission.Observe = originalObserver;
+-                _output.WriteLine("Schedule C22/1; fixtures=" + string.Join(",", files.Select(file => file.Filename)) + "; " + string.Join(" -> ", history));
+-                if (workers.Any(worker => worker?.IsAlive == true))
+-                {
+-                    Retained.Add(new object[] { files, databases, handles, workers, cancellations, waiting, finished, start });
+-                    _output.WriteLine("Live actor: original fixtures and owner graphs retained; cold reopen not attempted.");
+-                }
+-                else
+-                {
+-                    for (var i = 0; i < 2; i++)
+-                    {
+-                        var actor = i;
+-                        Cleanup(() => handles[actor]?.Dispose());
+-                        Cleanup(() => databases[actor]?.Dispose());
+-                        Cleanup(cancellations[actor].Dispose); Cleanup(waiting[actor].Dispose); Cleanup(finished[actor].Dispose);
+-                    }
+-                    Cleanup(start.Dispose);
+-                    if (failure == null && verified && cleanupErrors.Count == 0)
+-                        foreach (var file in files) Cleanup(file.Dispose);
+-                    else
+-                    {
+-                        foreach (var file in files) GC.SuppressFinalize(file); // TempFile finalization deletes files too.
+-                        _output.WriteLine("Failed scenario: original fixtures retained; cold verification completed=" + verified +
+-                            ". Cleanup errors may leave admission unavailable; no reopen is attempted while ownership is uncertain.");
+-                    }
+-                }
+-                if (cleanupErrors.Count != 0)
+-                {
+-                    var cleanup = new AggregateException("Concurrency scenario cleanup failed; original fixtures retained.", cleanupErrors);
+-                    _output.WriteLine(cleanup.ToString());
+-                    if (failure != null) failure.Data["LiteDB.AuditCleanup"] = cleanup;
+-                    else throw cleanup;
+-                }
+-            }
+-        }
+-
+-        private static ConnectionString Settings(TempFile file, string password) =>
+-            new ConnectionString { Filename = file, Password = password, Connection = ConnectionType.Shared };
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleInterleaving_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleInterleaving_Tests.cs
+deleted file mode 100644
+index d2aca2284..000000000
+--- a/LiteDB.Tests/Engine/TransactionHandleInterleaving_Tests.cs
++++ /dev/null
+@@ -1,36 +0,0 @@
+-using System;
+-using System.Collections.Generic;
+-using System.IO;
+-using LiteDB.ConcurrencyTesting;
+-using LiteDB.Tests.Issues;
+-using Xunit;
+-
+-namespace LiteDB.Tests.Engine
+-{
+-    [Collection(NativeFileSyncCollection.Name)]
+-    public class TransactionHandleInterleaving_Tests
+-    {
+-        public static IEnumerable<object[]> Cases()
+-        {
+-            // PR subset keeps every vector and mode; opt in to the full Cartesian audit.
+-            var full = Environment.GetEnvironmentVariable("LITEDB_EXPLORER_FULL") == "1";
+-            for (var schedule = 0; schedule < TransactionInterleavingExplorer.ScheduleCount; schedule++)
+-                foreach (var shared in new[] { false, true })
+-                    foreach (var encrypted in new[] { false, true })
+-                        foreach (var outcome in new[] { 0, 1 })
+-                            if (full || (encrypted == ((schedule & 2) != 0) && outcome == (schedule & 1)))
+-                                yield return new object[] { shared, encrypted, schedule, outcome };
+-        }
+-
+-        [Theory]
+-        [MemberData(nameof(Cases))]
+-        public void Forced_concurrent_histories_preserve_transaction_contracts(bool shared, bool encrypted, int schedule, int seed)
+-        {
+-            var directory = Path.Combine(Path.GetTempPath(), "litedb-interleavings-" + Guid.NewGuid().ToString("N"));
+-            var file = Path.Combine(directory, "state.db");
+-            // Failure paths deliberately retain originals, WAL and flushed actor history.
+-            TransactionInterleavingExplorer.Run(file, shared, encrypted, schedule, seed);
+-            Directory.Delete(directory, true);
+-        }
+-    }
+-}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleMaintenanceCycle_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleMaintenanceCycle_Tests.cs
+deleted file mode 100644
+index 28af23420..000000000
+--- a/LiteDB.Tests/Engine/TransactionHandleMaintenanceCycle_Tests.cs
++++ /dev/null
+@@ -1,180 +0,0 @@
+-using System;
+-using System.Collections.Concurrent;
+-using System.Collections.Generic;
+-using System.Linq;
+-using System.Reflection;
+-using System.Threading;
+-using LiteDB.Engine;
+-using Xunit;
+-using Xunit.Abstractions;
+-
+-namespace LiteDB.Tests.Engine
+-{
+-    public class TransactionHandleMaintenanceCycle_Tests
+-    {
+-        private static readonly ConcurrentBag<object> Retained = new ConcurrentBag<object>();
+-        private readonly ITestOutputHelper _output;
+-        public TransactionHandleMaintenanceCycle_Tests(ITestOutputHelper output) { _output = output; }
+-
+-        [Theory]
+-        [InlineData(null)]
+-        [InlineData("secret")]
+-        public void Rebuild_callback_dependency_ends_at_maintenance_deadline_and_preserves_state(string password)
+-        {
+-            var file = new TempFile();
+-            var callbackEntered = new ManualResetEventSlim();
+-            var startDependency = new ManualResetEventSlim();
+-            var freshBlocked = new ManualResetEventSlim();
+-            var allowWait = new ManualResetEventSlim();
+-            var freshDone = new ManualResetEventSlim();
+-            var history = new ConcurrentQueue<string>();
+-            var workers = new List<Thread>();
+-            Exception readError = null, freshError = null, rebuildError = null;
+-            LiteDatabase db = null;
+-            LiteEngine engine = null;
+-            var armed = false;
+-            Exception failure = null;
+-            var verified = false;
+-            try
+-            {
+-                engine = new LiteEngine(new EngineSettings
+-                {
+-                    Filename = file,
+-                    Password = password,
+-                    ReadTransform = (collection, value) =>
+-                    {
+-                        if (collection != "rows" || !armed) return value;
+-                        history.Enqueue("callback-entered");
+-                        callbackEntered.Set();
+-                        Assert.True(startDependency.Wait(TimeSpan.FromSeconds(10)));
+-                        var fresh = new Thread(() =>
+-                        {
+-                            try
+-                            {
+-                                history.Enqueue("fresh-invoked");
+-                                Assert.Equal(1, db.GetCollection("sentinel").Count());
+-                                history.Enqueue("fresh-completed");
+-                            }
+-                            catch (Exception error) { freshError = error; }
+-                            finally { freshDone.Set(); }
+-                        }) { IsBackground = true };
+-                        lock (workers) workers.Add(fresh);
+-                        fresh.Start();
+-                        Assert.True(freshDone.Wait(TimeSpan.FromSeconds(15)), "Fresh worker did not finish after the maintenance deadline.");
+-                        history.Enqueue("callback-returned");
+-                        return value;
+-                    }
+-                });
+-                db = new LiteDatabase(engine, disposeOnClose: false);
+-                db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
+-                db.GetCollection("rows").EnsureIndex("value");
+-                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9, ["value"] = 90 });
+-                // A new fixture's explicit maintenance budget; no existing test timeout changes.
+-                db.Timeout = TimeSpan.FromSeconds(2);
+-                const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+-                var operations = (OperationLifetime)typeof(LiteEngine).GetField("_operations", flags).GetValue(engine);
+-                var pending = typeof(OperationLifetime).GetField("_waitingExclusive", flags);
+-                operations.WaitingForMaintenance = () =>
+-                {
+-                    history.Enqueue("fresh-at-maintenance-fence");
+-                    freshBlocked.Set();
+-                    Assert.True(allowWait.Wait(TimeSpan.FromSeconds(10)));
+-                };
+-                armed = true;
+-                var read = new Thread(() =>
+-                {
+-                    try { Assert.NotNull(db.GetCollection("rows").FindById(1)); }
+-                    catch (Exception error) { readError = error; }
+-                }) { IsBackground = true };
+-                workers.Add(read);
+-                read.Start();
+-                Assert.True(callbackEntered.Wait(TimeSpan.FromSeconds(10)));
+-                var rebuild = new Thread(() =>
+-                {
+-                    history.Enqueue("rebuild-invoked");
+-                    rebuildError = Record.Exception(() => engine.Rebuild());
+-                    history.Enqueue("rebuild-returned");
+-                }) { IsBackground = true };
+-                workers.Add(rebuild);
+-                rebuild.Start();
+-                Assert.True(SpinWait.SpinUntil(() => (int)pending.GetValue(operations) == 1,
+-                    TimeSpan.FromSeconds(10)), "Rebuild did not publish its maintenance reservation.");
+-                history.Enqueue("maintenance-reserved");
+-                startDependency.Set();
+-                Assert.True(freshBlocked.Wait(TimeSpan.FromSeconds(10)), "The fresh actor must reach the actual maintenance admission boundary.");
+-                Assert.False(freshDone.IsSet);
+-                Assert.True(read.IsAlive);
+-                allowWait.Set();
+-                Assert.True(rebuild.Join(TimeSpan.FromSeconds(10)));
+-                var timeout = Assert.IsType<LiteException>(rebuildError);
+-                Assert.Equal(LiteException.LOCK_TIMEOUT, timeout.ErrorCode);
+-                Assert.Contains("operation/maintenance", timeout.Message);
+-                Assert.True(read.Join(TimeSpan.FromSeconds(10)));
+-                Assert.True(freshDone.Wait(TimeSpan.FromSeconds(10)));
+-                Thread[] all;
+-                lock (workers) all = workers.ToArray();
+-                foreach (var worker in all) Assert.True(worker.Join(TimeSpan.FromSeconds(5)));
+-                Assert.Null(readError);
+-                Assert.Null(freshError);
+-                Assert.Equal(0, (int)pending.GetValue(operations));
+-                armed = false;
+-                operations.WaitingForMaintenance = null;
+-                engine.Rebuild(); // The failed reservation must not poison a later attempt.
+-                db.Dispose(); db = null;
+-                engine.Dispose(); engine = null;
+-                for (var reopen = 0; reopen < 2; reopen++)
+-                {
+-                    using var cold = new LiteDatabase(new ConnectionString { Filename = file, Password = password });
+-                    var query = cold.GetCollection("rows").Query().Where(Query.EQ("value", 10));
+-                    Assert.Equal("value", query.GetPlan()["index"]["name"].AsString);
+-                    Assert.Equal(new[] { 1 }, query.ToArray().Select(row => row["_id"].AsInt32));
+-                    Assert.Equal(1, cold.GetCollection("rows").Count());
+-                    Assert.Equal(90, cold.GetCollection("sentinel").FindById(9)["value"].AsInt32);
+-                }
+-                verified = true;
+-            }
+-            catch (Exception error) { failure = error; throw; }
+-            finally
+-            {
+-                var cleanupErrors = new List<Exception>();
+-                void Cleanup(Action action)
+-                {
+-                    try { action(); }
+-                    catch (Exception error) { cleanupErrors.Add(error); }
+-                }
+-                startDependency.Set();
+-                allowWait.Set();
+-                Thread[] all;
+-                lock (workers) all = workers.ToArray();
+-                foreach (var worker in all) if (worker.IsAlive) worker.Join(TimeSpan.FromSeconds(2));
+-                _output.WriteLine("Schedule C06/1; fixture=" + file.Filename + "; " + string.Join(" -> ", history));
+-                if (all.Any(worker => worker.IsAlive))
+-                {
+-                    Retained.Add(new object[] { file, db, engine, workers, callbackEntered, startDependency, freshBlocked, allowWait, freshDone });
+-                    _output.WriteLine("Live worker: original fixture and owner graph retained; cold reopen not attempted.");
+-                }
+-                else
+-                {
+-                    Cleanup(() => db?.Dispose());
+-                    Cleanup(() => engine?.Dispose());
+-                    Cleanup(callbackEntered.Dispose); Cleanup(startDependency.Dispose); Cleanup(freshBlocked.Dispose);
+-                    Cleanup(allowWait.Dispose); Cleanup(freshDone.Dispose);
+-                    if (failure == null && verified && cleanupErrors.Count == 0) Cleanup(file.Dispose);
+-                    else
+-                    {
+-                        GC.SuppressFinalize(file); // TempFile's finalizer also deletes the original fixture.
+-                        _output.WriteLine("Failed scenario: original fixture retained at " + file.Filename +
+-                            "; cold verification completed=" + verified + ". Cleanup errors may leave admission unavailable; no reopen is attempted while ownership is uncertain.");
+-                    }
+-                }
+-                if (cleanupErrors.Count != 0)
+-                {
+-                    var cleanup = new AggregateException("Concurrency scenario cleanup failed; fixture retained at " + file.Filename, cleanupErrors);
+-                    _output.WriteLine(cleanup.ToString());
+-                    if (failure != null) failure.Data["LiteDB.AuditCleanup"] = cleanup;
+-                    else throw cleanup;
+-                }
+-            }
+-        }
+-    }
+-}
+diff --git a/docs/audits/pr133-concurrency-audit.md b/docs/audits/pr133-concurrency-audit.md
+deleted file mode 100644
+index 201b19d94..000000000
+--- a/docs/audits/pr133-concurrency-audit.md
++++ /dev/null
+@@ -1,52 +0,0 @@
+-# PR #133 concurrency audit
+-
+-## Frozen baseline and finite gate
+-
+-The starting PR head is `98a10086c2a296040a345e62ea987d59fc2ab487`,
+-stacked on PR #132, with base `5dd942a7367c361fadd600be4ce10aace2768b27`.
+-The baseline production tree is `4c82e64ec435862987ccb0d1061dc6eadc34510f`.
+-Its full CI and Safety aggregate passed before this audit. Those results do not
+-establish coverage of the new schedules or qualify later audit commits.
+-
+-This audit is bounded to transaction/session/reader ownership, Shared native
+-admission and retirement, callbacks, maintenance and process death. It does not
+-attempt arbitrary application-level wait graphs or physical device power loss.
+-The existing modeled persistence-fault targets remain separate evidence.
+-
+-The gate consists of:
+-
+-1. An acquisition-site inventory and resource dependency graph for the affected
+-   lifecycle, with each identified feasible cycle tied to a deterministic case
+-   or a concrete justification that the cycle cannot occur.
+-2. A reusable deterministic actor explorer in the existing test/fuzz infrastructure,
+-   covering selected pairwise and three-actor interleavings across Direct/Shared,
+-   plain/encrypted and same/peer facades. Recorded schedules must establish actual
+-   overlap and support replay, with an independent committed-state oracle.
+-3. A multiprocess campaign in the existing fuzz runner, with observed ownership
+-   and persistence boundaries, parent-recorded acknowledgements, independent
+-   progress watchdogs, and complete permitted cold-recovery outcomes.
+-4. An adversarial oracle review with deliberate faults and relevant pinned bad
+-   revisions where available. Mutants validate oracles; they do not establish
+-   historical production regressions.
+-5. A small deterministic PR selection, a larger recorded local campaign and an
+-   extended scheduled configuration. Counts, seeds, exact source/runtime identity
+-   and outcomes are recorded after execution, not inferred from configuration.
+-
+-No production functionality or performance optimization is part of this audit.
+-A confirmed production defect retains a minimal failing reproducer and a separate
+-correction proposal. Such a defect blocks the affected merge decision until fixed
+-and revalidated; it must not be converted into passing coverage by accepting an
+-unexpected timeout, exception or partial outcome.
+-
+-## Reports
+-
+-- [Acquisition inventory and dependency graph](pr133-concurrency-dependencies.md)
+-- [Independent oracle review](pr133-concurrency-oracle-review.md)
+-- [Coverage matrix](pr133-concurrency-matrix.md)
+-
+-## Current result
+-
+-In progress. No merge recommendation is made until the selected campaign and
+-independent review are complete. Remaining states and platform limits will be
+-listed explicitly; absence of a discovered bug is finite evidence, not proof of
+-universal freedom from deadlock.
+diff --git a/docs/audits/pr133-concurrency-dependencies.md b/docs/audits/pr133-concurrency-dependencies.md
+deleted file mode 100644
+index ed2a407dc..000000000
+--- a/docs/audits/pr133-concurrency-dependencies.md
++++ /dev/null
+@@ -1,307 +0,0 @@
+-# PR #133 concurrency dependency audit
+-
+-Audited baseline: `98a10086c2a296040a345e62ea987d59fc2ab487`, stacked on PR #132.
+-This is a source inventory and bounded-test coverage argument, not a claim of
+-exhaustively enumerating arbitrary application callbacks. Production code was not
+-changed by this audit. Findings, executable evidence and the final merge decision
+-are coordinated with the independent explorer, process campaign and oracle review.
+-
+-## Resource vocabulary
+-
+-| ID | Resource / owner | Lifetime |
+-| --- | --- | --- |
+-| S | Session admission count and close cancellation | Public call or pending begin; close waits for calls and registered handles |
+-| H | Handle execution owner | Exactly one public bound call; overlaps refuse rather than wait |
+-| D | Direct pool slot, entry/context references | Opening/closing reservation; facade, operation, reader or handle retains core |
+-| E | Core operation lifetime / maintenance reservation | Ordinary call or reader step; exclusive close/rebuild drains calls |
+-| T | Core transaction admission gate | Transaction or cursor transaction until completion; checkpoint/rebuild exclusive |
+-| C[n] | Collection writer ownership | Transaction snapshot, possibly multiple collection names |
+-| G | Shared handle admission semaphore | One local handle holder per native namespace until complete teardown |
+-| O | Shared logical owner gate and holder command | Facade logical thread identity/generation, possibly a separate native holder |
+-| Q | Native turnstile mutex | Held while waiting for N; released immediately after N acquired |
+-| N | Native writer mutex | Operation, ordinary mutex reader, legacy transaction, pin or explicit handle |
+-| P | Pin operation/hold count | Native holder cannot end until operations/holds drain, subject to force rules |
+-| U | Shared useLock and closingCore publication | Short metadata critical sections; closingCore can impose a drain wait |
+-| R | Reader leases / reader slot locks / snapshot version pins | Cursor or snapshot lifetime; external readers constrain checkpoint |
+-| K | Shared cached snapshot gate and coordination page write lock | Short publication/retirement sections; no coherent core retained by handle reuse |
+-| A | Mode admission registry, physical-file and path-family OS locks | File stream / family compatibility / replacement ownership |
+-| B | Header commit and header publication monitors | Serialize commit and schema/page publication |
+-| I | WAL index reader/writer lock | Version lookup, snapshot pinning, commit publication, checkpoint |
+-| W | WAL writer / stream monitor | Write, flush, checkpoint and stream finalization |
+-| M | Cache monitor / loading-page publication | Pinned frame ownership and wait for first loader |
+-| J | Worker dispatch / opened / completed events | Holder and independent close-job handshakes |
+-
+-## Acquisition inventory
+-
+-| Site | Resources already held | Wait / transition | Protection / remaining question |
+-| --- | --- | --- | --- |
+-| SessionLifetime.Enter / Close / TryFinish | H may precede S for bound calls; caller may own legacy N or C | S publication, cancel pending begins, drain S/handles, release facade | S monitor not held during actual release; self-close checks thread and holder dependency; cancellation must reach all native/local wait paths |
+-| LiteTransaction.Enter / EnterCleanup / Dispatch | S, independent caller-owned resources possible | H then S; core context and transaction binding | H overlaps reject; child misuse validates outside statement failure; close cleanup must remain idempotent |
+-| DirectEnginePool.Open / Entry.Release | Caller resources; global pool monitor then entry monitor | D opening/closing reservation; final core close | 5 s bound on another opener/closer; recursive same-thread open rejects; final close occurs outside pool monitors |
+-| OperationLifetime.Enter / Exclusive / Stop | S/H and sometimes T/C/N/R | E reservation drains active E and rebuild T; new entries queue | Current owner and continuations can drain; closing rejects fresh work; cross-thread callback work during rebuild is a candidate timeout cycle |
+-| TransactionMonitor.GetTransaction / release | E, sometimes N | T read before WAL ID/registration; transaction release tail before T exit | Publication after gate; disposed registration rolls back; registry close has late-publisher recovery |
+-| CollectionLock.TryEnter | E,T and zero or more other C locks | Wait C[n] | Same executing thread/handle owner refuses immediately; cross-collection inversion breaks at configured timeout, not global deadlock detection |
+-| SharedEngine.OpenTransactionResources | S; possibly callback-owned E/T/C/N/P | Guard then G; detached settings; child checkout; holder job | Same namespace executing handle and ordinary callback ownership guards; idle handle on another thread must remain waitable |
+-| TransactionHolder.Open / Acquire / Release | G, then O/Q/N/A; application holds H during execution | J opened; storage admitted; close event; done join; cached-wrapper publication | Native released before G and done; child/core never retained together while idle; I/O/cleanup outside begin timeout guarantee |
+-| WriteDatabase / StartPin | S; may be E/T/C/N inside callbacks; local leased R | Existing P or pin J -> Q -> N | Executing handle guard precedes pin selection; ordinary peer-facade callback acquisition lacks equivalent check (candidate) |
+-| OpenDatabase / QueryCore / EnterOwner | S; R and arbitrary caller locks possible | O -> Q -> N, then U/core open/A | Handle dependency guard covers direct, query and pin branches; same-facade foreign reader rejects; peer ordinary callback candidate remains |
+-| SharedMutexOwner.Enter / Send / Exit / ReleaseAll | O; send/sync monitor; N held by direct or worker owner | O semaphore; holder J; native Q/N; posted release generation | Owner recursion; exited-owner cleanup invalidates generation before release; no native release on foreign OS thread |
+-| SharedMutexPin.Acquire / WaitForEnd / WaitReleased | Caller R; worker Q/N; P operations or holds | J acquired/released; wait for P drain; external waiter probe | CanWaitFrom excludes owner in active pin operation; force cannot interrupt live operation; transferred core callback must be considered separately |
+-| CloseDatabase / CloseOwnedCores / AdmitLocked | N or owner generation; U around metadata only | Publish closingCore, drain E outside U, retire engine, release N | Reentry of closing core refuses; publication must persist until drain completes |
+-| Shared reader disposal / RemoveLocalReader | Reader R, possibly executing E callback on transferred thread | End cursor, snapshot, pin and optional checkpoint | Owned-snapshot self-dispose refuses; native-backed callback skips holder join/optional checkpoint; peer variants need independent coverage |
+-| WalIndexService.TryCheckpointCore | E; optional T exclusive, sometimes N | B -> I -> W; R scan before I | Acquires T before I; scans cross-process R before I; never infer no readers from T alone |
+-| TransactionService.Commit | E,T,C,N as applicable | B -> header publication / W -> I publication | Audit stream callbacks and checkpoint inverse orders, including failure cleanup |
+-| SharedCoordination / cached read admission | K then U, N may be absent for coherent protected readers | Register R, validate epoch/version, retain snapshot | Writer retirement occurs before U; EndWriterPressure avoids taking K under U |
+-| Native admission / replacement | A registry monitor and native admission mutex | Nonblocking OS region locks; bounded admission mutex; replacement transfer | File aliases require coordination family equivalence; kernel release on process death must be demonstrated |
+-
+-## Cycles and required disposition
+-
+-1. **Confirmed ordinary same-file peer callback:** outer facade owns N through its worker;
+-   its input/read callback calls an ordinary peer facade operation; peer O/Q waits
+-   for N; N release waits for the original callback. `ThrowIfCallbackOwnershipWait`
+-   currently guards handle begin, not ordinary peer calls. The independent oracle
+-   reviewer reproduced it on this head and the actual parent `49c327cf1` / upstream
+-   `dev` `5dd942a73`, plain and encrypted. It is pre-existing but remains an
+-   in-scope merge blocker for the requested callback-liveness contract.
+-2. **Maintenance + cross-thread callback:** active E callback waits synchronously
+-   for another thread's fresh operation; rebuild has reserved exclusive E and
+-   waits for that callback; fresh operation waits behind maintenance. Rebuild's
+-   configured deadline breaks this cycle. Classify documented contention versus
+-   additional rejection requirement; do not call the timeout successful prevention.
+-3. **Opposite collection order:** independent Direct handles hold C[a]/C[b], then
+-   request C[b]/C[a]. Collection timeout releases a failing handle's work; retain
+-   no-partial-commit and unrelated-state oracle. Global resource ordering is not
+-   currently guaranteed by the API.
+-4. **Two databases and callbacks:** A holds N[x]/C[x], B holds N[y]/C[y], and their
+-   callbacks synchronously request the opposite database. Local namespace guards
+-   cannot derive arbitrary application dependencies. Document an application-level
+-   ordering requirement and demonstrate supported single-direction cross-database
+-   calls are not blanket-rejected.
+-
+-## Resource ordering and wait-for graphs
+-
+-Arrows below mean "can request while retaining", not that the resource on the
+-left is always a monitor held across the request. Lifetime counts and native
+-ownership are equally important edges. In particular, returning from `BeginTrans`
+-does not remove its T/C/N edges, and returning a cursor does not remove its R/T
+-or fallback N edges.
+-
+-```mermaid
+-flowchart LR
+-    S[Session S] --> H[Handle H]
+-    H --> E[Core operation E]
+-    S --> G[Shared handle G]
+-    G --> J[Holder job J]
+-    J --> O[Logical owner O]
+-    O --> Q[Turnstile Q]
+-    Q --> N[Native writer N]
+-    N --> A[Storage admission A]
+-    N --> E
+-    E --> T[Transaction T]
+-    T --> C[Collection C]
+-    C --> B[Header commit B]
+-    B --> I[WAL index I]
+-    B --> W[WAL stream W]
+-    I --> W
+-    W --> M[Cache M]
+-```
+-
+-The actual H admission briefly takes the H monitor before S; ordinary public
+-calls take S without H. Neither monitor is held while the public action runs.
+-Session close snapshots handles under S, then invokes their close requests
+-outside S, so the apparent S/H monitor inversion does not itself create a cycle.
+-Similarly, Q is released after N acquisition; native release never takes Q.
+-`HasWaiter` uses a zero-time probe, so N -> Q is not a blocking reverse edge.
+-
+-Commit releases W before publishing to I. Checkpoint holds B then I then W.
+-Thus a diagram that merges successive acquisitions into simultaneous ownership
+-would invent a W -> I inversion on ordinary commit. Transaction-ID reservation
+-inside W uses `Interlocked.Increment`, not I. Fatal flush publication inside W
+-marks unavailable state, and physical teardown runs after W is released; see
+-[WAL durable flush](../../LiteDB/Engine/Disk/DiskService.WalWrite.cs) and
+-[durability tests](../../LiteDB.Tests/Internals/WalDurability_Tests.cs).
+-
+-```mermaid
+-flowchart LR
+-    CA[Ordinary callback A] -->|synchronous peer operation| PB[Peer facade B]
+-    PB -->|owner / turnstile wait| N[Native mutex]
+-    N -->|held by A holder| HA[Holder A]
+-    HA -->|cannot release before A returns| CA
+-```
+-
+-This second graph is the confirmed ordinary cross-facade defect, not the already
+-protected explicit-handle callback graph. The waiter's facade has neither the
+-outer facade's pin nor its core, so checking only its own `_owner`, `_pin`, or
+-`IsExecutingOwnedCoreOnCurrentThread` cannot find the edge.
+-
+-```mermaid
+-flowchart LR
+-    R[Rebuild reservation] -->|drain| E[Existing callback]
+-    E -->|application waits| F[Fresh operation on another thread]
+-    F -->|new admission fenced| R
+-    R -->|configured timeout cancels reservation| X[Fresh operation can then proceed]
+-```
+-
+-This third graph is a documented bounded contention outcome: maintenance fences
+-new independent calls, and rebuild has a deadline. It is not an unbounded close
+-cycle. Raw close sets `_closingRequested`, wakes queued independent work and
+-rejects it, while allowing existing transaction/cursor continuations to drain.
+-The application's synchronous wait is not propagated as a transaction binding.
+-The existing [raw close dependency tests](../../LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs)
+-exercise this distinction. The [maintenance progress tests](../../LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs)
+-assert timeout removes the reservation and existing owners can finish. No claim
+-is made that rebuild must succeed while an application retains a dependency it
+-needs to drain.
+-
+-## Detailed site and transition references
+-
+-This is the inventory of synchronization families in the affected lifecycle.
+-Each row includes acquire, publication and release/error paths; it is not merely
+-a list of successful public methods.
+-
+-| Family | Concrete acquisition / publication / retirement sites | Boundary and invariant |
+-| --- | --- | --- |
+-| Session | [SessionLifetime](../../LiteDB/Client/Transactions/SessionLifetime.cs): `Enter`, `Register`, `Completed`, `Exit`, `Close`, `RequestClose`, `TryFinish` | S metadata is protected by `_gate`; cancellation and handle cleanup occur outside it. Close's 10 s observation deadline does not cancel admitted storage I/O. Registration after close must refuse and roll back the unpublished handle. |
+-| Bound ownership | [LiteTransaction](../../LiteDB/Client/Transactions/LiteTransaction.cs): `Enter`, `Exit`, `RunCore`, `Dispatch`, `EnterCleanup`, `RequestClose`, `ReleaseResources`; [bound objects](../../LiteDB/Client/Transactions/TransactionEnumerable.cs) | H owns one synchronous action, including mapping/enumeration/cleanup. Scope restoration must finish before H is published free. Completed/abandoned resources must not retain the session through a reusable worker. |
+-| Context | [EngineContext](../../LiteDB/Engine/EngineContext.cs), [TransactionContext](../../LiteDB/Engine/TransactionContext.cs), [core context release](../../LiteDB/Engine/Engine/Context.cs) | Reference release enters E as continuation; thread-local binding is separate from synchronous dependency. Finalizer queues abandonment instead of waiting or doing storage I/O. |
+-| Direct pool | [pool](../../LiteDB/Client/Direct/DirectEnginePool.cs), [lease](../../LiteDB/Client/Direct/DirectEngineLease.cs), [reader](../../LiteDB/Client/Direct/DirectEngineReader.cs) | Pool Gate -> Entry.Gate is short; final core close and pool-slot removal are separated. Reader iteration runs outside reader monitor; concurrent disposal latches closure and active Read performs cleanup. |
+-| Core maintenance | [OperationLifetime](../../LiteDB/Engine/Services/OperationLifetime.cs), [LiteEngine.Close](../../LiteDB/Engine/LiteEngine.cs), [Rebuild](../../LiteDB/Engine/Engine/Rebuild.cs) | E reservation prevents reader starvation, T dependencies must drain before rebuild. Close wakes C waiters before E drain. Deferred fatal close executes after the final active operation. |
+-| Transaction gate | [TransactionGate](../../LiteDB/Engine/Services/TransactionGate.cs), [LockService](../../LiteDB/Engine/Services/LockService.cs), [monitor](../../LiteDB/Engine/Services/TransactionMonitor.cs), [registry](../../LiteDB/Engine/Services/TransactionRegistry.cs) | Writer reservation fences fresh T readers, same owner may recurse, exclusive-under-own-T refuses. T is acquired before transaction ID and registration. Late close/publication cannot leave a slot rooted. CAS registry loops are lock-free capacity/publication loops, not blocking waits. |
+-| Collection locks | [CollectionLock](../../LiteDB/Engine/Services/CollectionLock.cs), [Snapshot](../../LiteDB/Engine/Services/SnapShot.cs) | T -> C; creating/upgrading snapshot acquires C before publishing it. C remains held through explicit transaction completion. Same-thread or executing-handle dependency returns immediate configured lock error; other threads may wait up to TIMEOUT. |
+-| Snapshot lifetime | [snapshot disposal](../../LiteDB/Engine/Services/Snapshot.Lifetime.cs), [WAL snapshot](../../LiteDB/Engine/Services/WalIndexService.Snapshot.cs), [checkpoint](../../LiteDB/Engine/Services/WalIndexService.Checkpoint.cs) | Dispose releases C and I version pin exactly once. T exclusive alone does not establish no live R snapshots; shared registry may be unknown, in which case checkpoint skips mutation. |
+-| Shared handle ownership | [SharedEngine.Transactions](../../LiteDB/Client/Shared/SharedEngine.Transactions.cs), [TransactionAdmission](../../LiteDB/Client/Transactions/TransactionAdmission.cs) | Guards precede G; one admission budget spans G and native polling. J opened signal publishes core only after native/storage admission. Release waits job completion, not reusable worker exit. Child is cached only after core, file handles and mode admission release. |
+-| Shared workers | [holder scheduler](../../LiteDB/Client/Transactions/SharedHolderScheduler.cs), [close scheduler](../../LiteDB/Client/Transactions/SessionCloseScheduler.cs), [holder context](../../LiteDB/Client/Shared/TransactionHolderContext.cs), [close dependency](../../LiteDB/Client/Transactions/SessionCloseDependency.cs) | Scheduler monitor protects idle queue/pending job only. Work frame and execution context return before idle publication. Busy worker does not prevent creating a worker for another database. Holder/cancellation callback cannot synchronously join its own session-close dependency. |
+-| Shared owner | [SharedMutexOwner](../../LiteDB/Client/Shared/SharedMutexOwner.cs): `Enter`, `TryEnter`, `TakeGate`, `Send`, `Post`, `Exit`, `ReleaseAll`, `ReleaseIfOwnerExited`, `ReleaseExitedOwner` | O semaphore precedes `_send` command join and Q/N. `_sync` is released before command waits. Generation invalidation precedes posted release; O reopens after native release. `TryEnter` may join its own previously posted release/owner-exit cleanup, so it is not universally nonblocking. |
+-| Native turnstile | [SharedMutexTurnstile](../../LiteDB/Client/Shared/SharedMutexTurnstile.cs), [SharedMutexScope](../../LiteDB/Client/Shared/SharedMutexScope.cs) | Q -> N, never N -> blocking Q on release. Windows wait-any cancellation and Unix timed native polling differ. The thread that acquired N releases it. Abandonment means ownership was acquired, not failed. |
+-| Pins | [SharedMutexPin](../../LiteDB/Client/Shared/SharedMutexPin.cs): `Acquire`, `MarkReady`, `TryEnter`, `ToHold`, `Exit`, `RequestRelease`, `CanWaitFrom`, `WaitForEnd`, `WaitReleased`; [SharedEngine.Readers](../../LiteDB/Client/Shared/SharedEngine.Readers.cs) | P operations and holds prevent ordinary release. Forced release ignores idle holds but never active P operations. Pin publishes only after open/count, ordered with Dispose by U. Starting pin waits existing facade mutex waiters to prevent barging. |
+-| Shared operation admission | [Calls](../../LiteDB/Client/Shared/SharedEngine.Calls.cs), [Waiters](../../LiteDB/Client/Shared/SharedEngine.Waiters.cs), [core open/close](../../LiteDB/Client/Shared/SharedEngine.cs), [disposal](../../LiteDB/Client/Shared/SharedEngine.Disposal.cs) | Count admitted calls only after N/disposed checks; WaitForAdmittedCalls is bounded. U is not held while E drains; core remains published for callback dependency checks. Closing error must not release N over an executing core. |
+-| Query ownership alternatives | [Query](../../LiteDB/Client/Shared/SharedEngine.Query.cs), [SharedDataReader](../../LiteDB/Client/Shared/SharedDataReader.cs), [Readers](../../LiteDB/Client/Shared/SharedEngine.Readers.cs) | Small result buffers; larger results lease snapshot if registry accepts; fallback / FOR UPDATE retain N. Independent leased snapshot and native-backed transferred reader require different guards. Reader Dispose admission is atomic. |
+-| Mapped read coordination | [CoordinatedReads](../../LiteDB/Client/Shared/SharedEngine.CoordinatedReads.cs), [Coordination](../../LiteDB/Client/Shared/SharedEngine.Coordination.cs), [coordination page](../../LiteDB/Client/Shared/SharedCoordinationPage.cs) | K snapshot gate -> R registration -> U admit, with epoch revalidation. Writer retirement takes K before U; EndWriterPressure avoids reverse U -> K. Retired cached engine closes only after cached Readers count reaches zero. Its read path has no custom ReadTransform/caller streams (`CanScope`). |
+-| External reader registry | [SharedReaderRegistry](../../LiteDB/Client/Shared/SharedReaderRegistry.cs), [SharedReaderSlots](../../LiteDB/Client/Shared/SharedReaderSlots.cs) | Registry gate -> slot gate; native file-sharing lease spans process lifetime/readers. Version scan happens under writer ownership but outside I. Unknown/malformed live registry prevents checkpoint, rather than inventing an empty reader set. |
+-| Mode admission | [SharedModeAdmission](../../LiteDB/Client/Shared/SharedModeAdmission.cs), [registry](../../LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs), [file lock](../../LiteDB/Client/Shared/DatabaseFileLock.cs), [path lock](../../LiteDB/Client/Shared/DatabasePathLock.cs), [replacement](../../LiteDB/Client/Shared/DatabaseReplacementLease.cs) | Path admission mutex -> registry Gate -> identity mutex -> nonblocking OS region probes/conversions. Admission mutex is bounded at 5 s; compatibility conflicts fail closed. Replacement retains both identities and restores/retains correct family on failure. |
+-| Commit / WAL | [TransactionService](../../LiteDB/Engine/Services/TransactionService.cs), [WAL index](../../LiteDB/Engine/Services/WalIndexService.cs), [checkpoint](../../LiteDB/Engine/Services/WalIndexService.Checkpoint.cs), [WAL write](../../LiteDB/Engine/Disk/DiskService.WalWrite.cs) | C -> B -> W, then I after W release; checkpoint B -> I -> W. Header publication monitor is nested under B only for schema callbacks. Rollback can acquire B/W to return allocated pages, so cleanup is not a lock-free operation. |
+-| Cache / buffers | [MemoryCache](../../LiteDB/Engine/Disk/MemoryCache.cs), [writable cache](../../LiteDB/Engine/Disk/MemoryCache.Writable.cs), [SharedPageReads](../../LiteDB/Engine/Disk/SharedPageReads.cs) | First loader publishes Loading under M, does I/O outside M, then publishes Readable or failed/free and pulses waiters. Atomic extra-pin loops do not hold M; final release/reuse remains synchronized. A caller stream callback can introduce an application-owned reverse edge; no blanket no-reentry guarantee is inferred. |
+-| Stream lifetime | [StreamPool](../../LiteDB/Engine/Disk/StreamFactory/StreamPool.cs), [StreamFactory](../../LiteDB/Engine/Disk/StreamFactory/StreamFactory.cs), [ConcurrentStream](../../LiteDB/Engine/Disk/Streams/ConcurrentStream.cs), [SharedFileHandles](../../LiteDB/Engine/Disk/StreamFactory/SharedFileHandles.cs) | Lazy writer creation has runtime synchronization; publication uses a separate created-writer field before Lazy reports completion. Return/Dispose use exactly-once bag transfer. File buffers finalize before native admission release. Custom stream methods can block independently of LiteDB's lock deadlines. |
+-
+-Other short monitors in this surface protect header collection dictionaries,
+-schema cache, diagnostics counters, checkpoint backoff and random vector-level
+-selection. They do not wait for an external owner or execute a production user
+-callback while held. File I/O, OS scheduling, runtime `Lazy<T>` initialization,
+-GC and user delegates can block without an explicit `Wait` call; these remain
+-part of the dependency model. Instrumentation hooks intentionally execute inside
+-some protected boundaries, but only in DEBUG/TESTING and are not evidence of a
+-production callback edge by themselves.
+-
+-## Error and cleanup dependency audit
+-
+-| Trigger | Required ordering | Existing discriminating coverage |
+-| --- | --- | --- |
+-| Begin cancelled before/after G, native acquisition or storage open | Preserve caller token; release only acquired ownership; close unpublished child before G returns; no admitted handle after session close | [admission lifetime](../../LiteDB.Tests/Engine/TransactionHandleAdmissionLifetime_Tests.cs), [admission](../../LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs), [Shared admission](../../LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs) |
+-| Ordinary native waiter when session closes while legacy owner remains live | Close cancellation releases O/Q waiter so S can drain; final engine cleanup can then release legacy N | [close cleanup](../../LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs), [pin cancellation](../../LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs), [turnstile cancellation](../../LiteDB.Tests/Engine/TransactionHandleTurnstileCancellation_Tests.cs) |
+-| Input/read callback throws after writes | Roll back transaction whose statement failed; retain unrelated committed data; do not let cleanup replace original failure | [bound dispose race](../../LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs), [ordinary callback controls](../../LiteDB.Tests/Engine/TransactionHandleOrdinaryCallbackControl_Tests.cs), [failure tests](../../LiteDB.Tests/Engine/TransactionHandleFailure_Tests.cs) |
+-| Dispose races admitted bound operation or session-owned rollback | Child Dispose either belongs to admitted operation or becomes idempotent; don't release inner while operation holds it | [child close race](../../LiteDB.Tests/Engine/TransactionHandleChildCloseRace_Tests.cs), [dispose safety](../../LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs) |
+-| WAL I/O failure while another handle exists | Publish fatal state before allowing further writes; deferred cleanup drains E; healthy handle disposal must not repeat another owner's error | [fatal cleanup race](../../LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs), [dispose safety](../../LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs), [WAL durability](../../LiteDB.Tests/Internals/WalDurability_Tests.cs) |
+-| Last ordinary reader closes during another reader callback | Preserve U/core publication while E drains; refuse self-dependent close; do not join owner retirement from callback | [late reader close](../../LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs), [reader retirement](../../LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs), [late callback close](../../LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs) |
+-| Owner thread exits while transferred reader is active | Invalidate old generation once; drain callback without releasing native ownership early; later reader cleanup cannot release new generation | [owner exit](../../LiteDB.Tests/Engine/SharedMutexOwnerExit_Tests.cs), [late reader close](../../LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs), [posted release](../../LiteDB.Tests/Engine/TransactionHandlePostedRelease_Tests.cs) |
+-| Child core open/close fails | Discard failed reusable wrapper; clean acquired admission/handles; preserve error and committed indexed sentinel | [child lifetime](../../LiteDB.Tests/Engine/TransactionHandleChildLifetime_Tests.cs), [Shared cleanup](../../LiteDB.Tests/Engine/TransactionHandleSharedCleanup_Tests.cs) |
+-| Handle/session abandoned, worker becomes idle | Native holder must not root application callback/AsyncLocal graph; finalization signals cleanup; idle worker returns work frame before publication | [abandonment](../../LiteDB.Tests/Engine/TransactionHandleAbandonment_Tests.cs), [child lifetime](../../LiteDB.Tests/Engine/TransactionHandleChildLifetime_Tests.cs), [scope retention](../../LiteDB.Tests/Engine/TransactionHandleCallbackScopeRetention_Tests.cs), [holder scheduler](../../LiteDB.Tests/Engine/TransactionHandleHolderScheduler_Tests.cs) |
+-
+-## Coverage matrix and finite dispositions
+-
+-"Covered" identifies an existing discriminating test, not a claim that this audit
+-reran it or that arbitrary combinations are proved. The orchestration report
+-records exact executed commits, results and added explorer/process scenarios.
+-
+-| ID / blocking boundary | Held resources / competing operation | Expected behavior | Test / disposition |
+-| --- | --- | --- | --- |
+-| C01: H | Same handle call already executing, second read/write/commit or mapper reentry | Immediate overlap refusal; original operation remains valid | [binding](../../LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs), [callback handoff](../../LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs); explorer must use genuinely overlapping actor intervals |
+-| C02: C[n] | Executing handle owns C[n], same-thread ordinary callback writes same collection through facade | Immediate lock error without independent work enlisting | [callback lock](../../LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs) |
+-| C03: C[n] | Idle handle owns C[n], ordinary caller waits while different thread completes handle | Legitimate wait then progress; must not reject only because handle was created on caller thread | `Original_thread_may_wait_for_idle_handle_completed_by_another_thread` in [callback lock](../../LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs) |
+-| C04: C[a] -> C[b] | Two independent Direct transactions take opposite collections | Bounded contention via configured lock timeout, no partial losing transaction | Feasible cycle, not unreachable. Existing timeout contract is escape; new explorer exercises acquisition orders and cold-state oracle. No blanket all-success expectation. |
+-| C05: E | Active read plus waiting rebuild plus fresh read | Existing read drains; new read held; rebuild progresses | [maintenance progress](../../LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs) |
+-| C06: E | Active callback waits fresh cross-thread work while rebuild waits callback | Rebuild may time out; reservation then retires and fresh work progresses | Feasible but bounded and permitted by documented maintenance fence; combined actual-engine scenario added in `TransactionHandleMaintenanceCycle_Tests` (C06/1), plus maintenance timeout component test. |
+-| C07: E | Same callback dependency while raw close waits callback | Fresh work refuses ENGINE_DISPOSED before callback returns | [raw close dependency](../../LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs) |
+-| C08: S | Closing session, legacy Shared owner and peer native waiter | Cancel peer admission, drain, rollback/dispose legacy owner | [close cleanup](../../LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs); actual native-wait/turnstile marker required |
+-| C09: G / N | Executing handle callback through same or peer facade attempts ordinary same namespace op | Immediate refusal before pin/local/native acquisition; caught refusal preserves handle | [Shared callback](../../LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs), [pin callback](../../LiteDB.Tests/Engine/TransactionHandleSharedPinCallback_Tests.cs) |
+-| C10: G / N | Ordinary active pin, FOR UPDATE or fallback reader callback begins handle, same or peer facade | Immediate refusal before local wait, including transferred reader | [ordinary callback begin](../../LiteDB.Tests/Engine/TransactionHandleOrdinaryCallbackBegin_Tests.cs), [initial query callback](../../LiteDB.Tests/Engine/TransactionHandleOrdinaryCallbackControl_Tests.cs) |
+-| C11: G / N | Independent leased snapshot callback begins handle; idle owner completed by peer | Valid operation progresses; dependency checks must not reject all reader callbacks | `Independent_leased_reader_callback_can_begin_handle` and idle-handle [pin callback control](../../LiteDB.Tests/Engine/TransactionHandleSharedPinCallback_Tests.cs) |
+-| C12: O / Q / N | Ordinary native-owning callback invokes ordinary same-file peer operation | Must not wait indefinitely on caller's own ownership | **Confirmed defect at audited head.** Missing ordinary cross-facade preflight; independent oracle report supplies pinned reproduction and negative control. Separate production correction required. |
+-| C13: P / J | Last-reader disposal while forced pin holder waits transferred callback | Dispose must not join that holder from dependency callback | [reader retirement](../../LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs), [late reader close](../../LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs) |
+-| C14: U / E | Last reader publishes closingCore while fresh operation arrives | Fresh call waits for retirement; callback self-reentry refuses; no replacement core published early | `Last_reader_close_fences_fresh_operation_until_core_retired` in [late reader close](../../LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs) |
+-| C15: Q / N | Competing process queued; pin wants to restart; cancel or kill waiter | No release of another owner's N; waiter eventually precedes re-pin under cooperating protocol | [turnstile cancellation](../../LiteDB.Tests/Engine/TransactionHandleTurnstileCancellation_Tests.cs), [pin progress](../../LiteDB.Tests/Engine/SharedPinProgress_Tests.cs), process campaign |
+-| C16: G / J publication | Complete child job, external process commits, next handle reuses wrapper | Same wrapper/worker can be reused, but N/A/core must release; reopened core observes external commit | [child reuse](../../LiteDB.Tests/Engine/TransactionHandleChildReuse_Tests.cs), [child runtime](../../LiteDB.Tests/Engine/TransactionHandleChildRuntime_Tests.cs) |
+-| C17: I / W | Partial checkpoint plus commit/safepoint or fatal flush | Correct ordering, no teardown under W waiting reverse I, acknowledged state preserved | [MVCC checkpoint](../../LiteDB.Tests/Internals/MvccCheckpoint_Tests.cs), [recovered commit lock](../../LiteDB.Tests/Internals/MvccRecoveredCommitLock_Tests.cs), [WAL durability](../../LiteDB.Tests/Internals/WalDurability_Tests.cs) |
+-| C18: K / R | Reader registers between version check and writer structural mutation | Recheck rejects stale snapshot; do not overwrite frames visible to live R | [coordination publication](../../LiteDB.Tests/Engine/SharedCoordinationPublication_Tests.cs), [WAL reuse publication](../../LiteDB.Tests/Engine/SharedWalReusePublication_Tests.cs), [slot generations](../../LiteDB.Tests/Internals/SharedSlotGenerations_Tests.cs) |
+-| C19: A | Same physical database via conflicting path/family or replacement | Refuse incompatible admission before writes; process death releases native ownership | [native admission](../../LiteDB.Tests/Engine/NativeAdmission_Tests.cs), process alias and crash scenarios; platform qualification remains required |
+-| C20: D / E | Final Direct lease closes while another facade opens / retained reader completes | Retained refs prevent premature core disposal; opener waits bounded close or receives admission conflict | Direct pool/lifetime tests and explorer close/read scenarios; no blanket assumption a disposed facade invalidates its independent reader |
+-| C21: M | First page loader blocked; peer waits for same Loading entry; close/failure | Loader publishes readable or failed/free, waiter wakes; cleanup must not reuse pinned frames | Memory cache loading/lifecycle and disposal regressions; arbitrary custom stream callbacks can create external cycles and are not proved safe here |
+-| C22: application cross-database edge | A owns database X, B owns Y, each callback synchronously requests other | Application must impose consistent ordering or use finite/cancellable admission; no global cross-database cycle detector | Feasible external protocol cycle, outside promised local dependency detection. `TransactionHandleCrossDatabaseCycle_Tests` (C22/1) forces opposed admission and cancels both, then verifies one-way other-database positive control. |
+-
+-## Reproducer recipes and adversarial controls
+-
+-For each test, observe an acquisition boundary, not just "started" output. A
+-worker that has not been scheduled can look indistinguishable from a correctly
+-blocked one. Expected refusal means the documented immediate exception, never
+-an admission or watchdog timeout.
+-
+-- **C12, ordinary peer callback:** seed indexed rows and sentinel; open two Shared
+-  facades to one absolute file; execute lazy `InsertBulk` on A so its enumerable
+-  callback runs after A owns N; callback calls ordinary `Insert` on B. Observe B's
+-  `_mutexWaiters > 0` / contended turnstile and independently prove N exclusion.
+-  A remains in its callback while B cannot finish. Repeat plain/encrypted, and
+-  make B point at a different database as a successful control. A must not keep
+-  a snapshot/core after its native ownership is released. Preserve fixture and
+-  process history if either worker cannot terminate; never dispose a live graph
+-  just to clean up the test directory. The independent reviewer owns the minimal
+-  runnable repro and affected-base comparison.
+-- **C04, opposite collection order:** create both collections before transactions
+-  start; each actor inserts an independently modeled row, synchronize after C[a]
+-  and C[b] are acquired, then each requests the other's collection. Record the
+-  exact configured timeout error and rolled-back state. Permit either actor to
+-  lose; cold reopen must contain only acknowledged complete transactions and the
+-  untouched indexed sentinel. A scheduler-release or watchdog timeout is failure,
+-  not the database's expected lock-timeout outcome.
+-- **C06/C07, maintenance fence:** park ReadTransform while E is active, start
+-  rebuild or raw close, prove `_waitingExclusive` is published, then create a
+-  separate fresh-operation worker synchronously awaited by the callback. For
+-  rebuild expect its configured deadline to unwind the reservation; for close
+-  expect immediate ENGINE_DISPOSED in the fresh worker. Release callbacks and
+-  check each worker separately before cold reopen.
+-- **C13/C14, reader cleanup:** use a result larger than the buffering threshold,
+-  force reader-registry fallback or FOR UPDATE when N retention is required,
+-  transfer the reader, park a late transform, and trigger owner exit / last-reader
+-  disposal / facade close. Prove the actual core and owner remain published until
+-  callback return; a merely leased independent snapshot is a different scenario.
+-- **C15/C16, processes:** retain an admitted writer, wait for peer's actual native
+-  marker, kill either owner or waiter, then require survivor progress. Complete a
+-  durable handle, end its native ownership, let external writer commit, reuse
+-  wrapper, and cold reopen twice. Killed-before-confirmation and indeterminate
+-  confirmation cases have different allowed state sets from acknowledged commit.
+-
+-False-positive controls already demanded by this surface: a different database,
+-a different Direct collection, an independently leased Shared snapshot, idle
+-handle ownership completed elsewhere, normal same-facade ordinary recursion,
+-restoration after nested callback exceptions, and a cancelled begin followed by a
+-successful retry. Each rules out a tempting but incorrect "reject everything"
+-fix. Alias acceptance is governed by physical-file/family admission, not by
+-assuming different spellings mean independent databases.
+-
+-## Limits and merge decision
+-
+-The confirmed C12 cycle requires a separate correction before claiming same-file
+-Shared callback liveness. It remains in the audited production baseline; this
+-report does not silently fix it or count a known-bad reproduction as a passing
+-regression guard. A correction should identify ordinary callback dependencies
+-before any O/Q/N/pin wait without forbidding supported same-facade recursion,
+-independent leased snapshots, idle owners or other databases.
+-
+-This finite audit does not establish unrestricted linearizability, transaction-wide
+-snapshot isolation, fairness against noncooperating historical processes, bounded
+-user callbacks/custom I/O, distributed filesystem lock correctness, or arbitrary
+-application-created cross-database deadlock freedom. Timeout-broken cycles C04/C06
+-are feasible and explicitly classified, not asserted unreachable. The C04 explorer and focused C06/C22 tests record representative deterministic
+-schedules; they do not enumerate arbitrary user-defined callback programs.
+-Native OS qualification and modeled-power-loss evidence remain distinct from
+-actual process termination. Read-only source review is not a replacement for the
+-recorded execution and mutation results in the companion audit reports.
+-
+diff --git a/docs/audits/pr133-concurrency-explorer.md b/docs/audits/pr133-concurrency-explorer.md
+deleted file mode 100644
+index 5d2accea1..000000000
+--- a/docs/audits/pr133-concurrency-explorer.md
++++ /dev/null
+@@ -1,101 +0,0 @@
+-# PR #133 bounded concurrency explorer
+-
+-The explorer runs real dedicated actors inside the existing xUnit suite and the
+-isolated `LiteDB.Fuzz` runner. It does not replace the process runner, timeout,
+-retention or replay infrastructure. Production code and production hooks are
+-unchanged. The source baseline is `98a10086c`; execution results belong in the
+-integrated audit report, including failures. A green old PR build does not qualify
+-these newly covered schedules.
+-
+-## Finite gate
+-
+-`TransactionHandleInterleaving_Tests` defaults to **68 representative cases**: all
+-34 vectors × Direct/Shared, with encryption and completion parity chosen from the
+-vector bits. These configuration choices are correlated, not a full Cartesian
+-claim. Both pinned/plain and unanchored/encrypted known-defect paths still fail.
+-Set `LITEDB_EXPLORER_FULL=1` to enumerate all 34 vectors × Direct/Shared ×
+-plain/encrypted × commit/rollback parity: **272 independent cases per runtime**. Cases continue after a different theory case fails. Fuzz
+-`transaction-interleavings --count 272` enumerates the same configuration space,
+-rotating its starting index by the recorded seed; like other fuzz targets it stops
+-at the first failure. That prefix is not a completed 272-case campaign.
+-
+-The vector chooses an explicit sequence of enabled controller actions. Actors
+-execute database calls concurrently between observed boundaries; this is bounded
+-schedule exploration, not exhaustive enumeration of every instruction or every
+-application program. The permutations of overlap refusals are deliberately named
+-as contender-order permutations, not independent internal engine schedules.
+-
+-| Vectors | Forced boundary and competing work | Oracle |
+-| --- | --- | --- |
+-| 0–11 | A executing bound bulk-input callback; B attempts read/commit/rollback in all six orders; same/peer facade; callback performs ordinary same-file/other-file work | Overlap refuses without aborting A; Shared ownership dependency refuses; Direct unrelated ordinary write and other-file write commit independently; transferred reader sees its transaction; open reader prevents commit; disposed reader refuses; commit/rollback cold state |
+-| 12–23 Direct | Two handles hold different collections and are simultaneously inside input callbacks; C reads committed state; reverse completion order and either/both commit | No dirty updates/inserts; update/delete/insert compose atomically; independent rollback; exact acknowledged state |
+-| 12–23 Shared | Handle/legacy owner; second begin reaches actual local/native admission hook; controller cancels, completes owner or closes waiting/owning session | Global same-file handle semaphore is respected across facades; cancellation token identity; legitimate waiter progresses after release; close rolls back owner; no timeout accepted as successful cancellation |
+-| 24–25 Direct | Ordinary write paused under operation lease; rebuild has registered exclusive wait; C positively hits maintenance fence | Existing work drains, maintenance completes, new read sees complete commit; optional subsequent checkpoint |
+-| 24–27 Shared; 26–27 Direct | Bound callback active; session close paused after Closing publication before dispatch; overlapping commit; both gate-release orders | Admission refusal, active call drains, session close rolls back, cold state remains unchanged |
+-| 28–31 Shared | Ordinary input callback under pin/native ownership; same-facade, same-file peer, other-file controls | Existing same-facade recursion/other-file operation remain usable; same-file peer must not enter an impossible native wait. Actual wait counter is a failure, never a passing timeout |
+-| 32–33 Direct | A holds rows, B holds other; both positively hit opposite `CollectionLock.BeforeWait`; invocation order reversed | At least one configured collection timeout aborts its whole handle. Any survivor commits both effects; no loser effect survives |
+-| Remaining Direct/Shared counterparts | Active-close vector as above | Same close invariant, additional configuration repetitions |
+-
+-The independent model stores acknowledged document ids and values and constructs
+-expected payloads itself. Each successful run stops all actors, disposes resources,
+-and cold opens twice. It compares every document's serialized contents, exact
+-sentinel contents, both collections' index catalogs, and indexed queries against
+-the model. It does not infer correctness from engine snapshots or acknowledge an
+-operation merely because it was invoked.
+-
+-The oracle follows `docs/transaction-handles.md`: separate handles, no implicit
+-ordinary-call enlistment, overlap refusal, bound-object lifetime, whole-transaction
+-rollback and committed state. It asserts no unrestricted linearizability or new
+-snapshot-isolation contract. The opposite-lock cycle permits either/both timeout
+-victims; only complete outcomes corresponding to actual successful commits are
+-accepted. No injected I/O failure occurs here; an unexpected indeterminate result
+-fails this target rather than being silently classified as committed/aborted.
+-
+-## Progress, failure retention and replay
+-
+-Each actor's current operation has its own immutable start timestamp and completion
+-timestamp. Every controller wait checks all actors, and only that operation's
+-completion ends its 15-second deadline. Peer activity and stage logging cannot
+-refresh it. Hook arrival alone never completes an operation. The diagnostic log
+-flushes actor invocation, completion, exception, acquisition and release events
+-with monotonic sequence/timestamp into `<database>.history`.
+-
+-On failure the runner releases only its explicit test barriers, then joins every
+-actor. It does not dispose/reopen/copy a database with a live worker. Original
+-fixtures and history remain. Cleanup errors are attached without replacing the
+-first failure; when all workers stopped, cleanup errors do not skip the cold
+-oracle. A native self-wait discovered in the ordinary-callback diagnostic is
+-released by closing only its waiting facade, then still reported as a **failure**.
+-This bounded diagnostic does not claim the application would recover unaided.
+-
+-Examples (build with `TestingEnabled=true` consistently):
+-
+-```bash
+-LITEDB_EXPLORER_FULL=1 dotnet test LiteDB.Tests -c Release -f net8.0 -p:TestingEnabled=true \
+-  --settings tests.runsettings --filter FullyQualifiedName~TransactionHandleInterleaving
+-
+-dotnet run --project LiteDB.Fuzz -c Release -f net8.0 -- \
+-  --target transaction-interleavings --seed 133098 --count 272 \
+-  --artifact-dir artifacts_temp/concurrency-explorer
+-
+-dotnet run --project LiteDB.Fuzz -c Release -f net8.0 --no-build -- \
+-  --replay <retained-run>/replay.json --artifact-dir artifacts_temp/concurrency-replay
+-```
+-
+-xUnit failure fixtures remain at their original temporary directory; failure
+-exception data names `ExplorerFixture`, `ExplorerSchedule` and `ExplorerSeed`.
+-Fuzz uses its recorded seed, deterministic vector and input/replay metadata;
+-actual histories are supplementary diagnostics and not forced byte-identical
+-thread timestamps. The bounded vector reproduces its synchronization edges, not
+-unconstrained OS scheduling of completion after those edges.
+-
+-## Explicit limits
+-
+-No device/power-loss claim, scheduler fairness proof, arbitrary lock-graph model
+-checker, GC/abandonment campaign, arbitrary callback graph or platform alias claim
+-is made. This target does not inject indeterminate commit failures; the process
+-and existing modeled-power-loss targets own those protocols. Native cross-process
+-exclusion is covered by the multiprocess campaign, not inferred from this
+-same-process wait counter. The initial 272-case matrix contains repeated close
+-controls by design. Sustained starvation under unbounded arrivals and arbitrary
+-higher-actor combinations remain outside this finite gate.
+diff --git a/docs/audits/pr133-concurrency-matrix.md b/docs/audits/pr133-concurrency-matrix.md
+deleted file mode 100644
+index e892e1b03..000000000
+--- a/docs/audits/pr133-concurrency-matrix.md
++++ /dev/null
+@@ -1,46 +0,0 @@
+-# PR #133 concurrency coverage matrix
+-
+-Baseline: `98a10086c2a296040a345e62ea987d59fc2ab487`. Resources and source
+-acquisition sites are defined in the [dependency inventory](pr133-concurrency-dependencies.md).
+-
+-New schedules use the existing callback, admission, lock and publication observers;
+-no new production hook or runtime behavior was introduced. The inventory is a
+-bounded source audit, not exhaustive enumeration of arbitrary application code.
+-
+-| Boundary | Held resources/state | Competing operation | Required behavior | Existing/new deterministic evidence | Disposition |
+-| --- | --- | --- | --- | --- | --- |
+-| C01 H | executing handle callback | second bound read/commit/rollback | Immediate exact refusal; Active preserved | Explorer00–11; existing binding/handoff tests | Final integrated results pending; baseline guards green |
+-| C02 C[n] | executing handle owns collection | ordinary same-collection callback write | Immediate lock refusal; ordinary objects remain independent | TransactionHandleCallbackLock_Tests | 98a baseline CI |
+-| C03 C[n] | idle handle owns collection | ordinary write while peer completes handle | Legitimate wait then progress | Original_thread_may_wait_for_idle_handle_completed_by_another_thread | 98a baseline CI |
+-| C04 C[a]/C[b] | two Direct writers own opposite collections | each writes the other collection | Configured timeout breaks cycle; full losing transaction rolls back | Explorer32–33; actual BeforeWait markers on both collection locks | Included in full272 and representative68 |
+-| C05 E | active ordinary call | queued rebuild and late ordinary reader | Drain current work; fence fresh entry until exclusive retires | Explorer24–25 Direct; TransactionHandleMaintenanceProgress_Tests | Positive maintenance reservation/fence observations |
+-| C06 E | ordinary callback awaiting fresh actor | rebuild fence blocks awaited actor | Permitted configured maintenance timeout; eventual successful retry | TransactionHandleMaintenanceCycle_Tests | 4 focused C06/C22 rows pass net8/net10 before retention-only correction |
+-| C07 E | callback awaiting fresh actor | raw close awaits callback | Fresh call refuses ENGINE_DISPOSED; drain completes | TransactionHandleRawCloseDependency_Tests | 98a baseline CI |
+-| C08 S | legacy owner and blocked peer | session close | Cancel admission then drain/rollback | TransactionHandleCloseCleanup_Tests; explorer Shared admission | Observed local/native wait and close publication |
+-| C09 G/N | executing explicit handle | same-file ordinary callback work | Reject self-dependent acquisition before pin/native wait | Explorer bound callback controls; TransactionHandleSharedPinCallback_Tests | Pinned historical production proofs plus baseline CI |
+-| C10 G/N | ordinary pin or mutex-backed reader callback | begin handle through same/peer facade | Reject before local/native admission | TransactionHandleOrdinaryCallbackBegin_Tests and Control_Tests | 98a production proofs and CI |
+-| C11 G/N | independent leased reader; independently completable idle owner | begin handle | Valid admission; do not blanket-reject callbacks | Independent_leased_reader_callback_can_begin_handle; idle controls | 98a baseline CI |
+-| C12 O/Q/N | ordinary native-owning callback | ordinary same-file peer write | Refuse impossible synchronous dependency; preserve outer operation | Explorer29 pinned and31 unanchored; independent production repro | CONFIRMED DEFECT on98a,parent49c,dev5dd; plain/encrypted |
+-| C13 P/J | reader callback retains draining core | last-reader disposal | No join on holder awaiting this callback | SharedReaderRetirement_Tests; SharedLateReaderClose_Tests | 98a baseline CI |
+-| C14 U/E | closingCore published | fresh ordinary operation | No premature replacement core; refuse self-reentry | Last_reader_close_fences_fresh_operation_until_core_retired | 98a baseline CI |
+-| C15 Q/N | live native owner and waiter | owner/waiter process death or cancellation | Correct ownership release; survivor completes | shared-lifecycle native-waiter and owner cuts; turnstile/pin tests | Observed admission and per-command completion, not startup timing alone |
+-| C16 G/J | returned child wrapper | external writer then next handle | Core/native ownership retired; wrapper reused and refreshed | shared-lifecycle after-refreshed-wrapper-reuse; child reuse tests | Actual wrapper reference and external data observed |
+-| C17 B/I/W | commit/checkpoint ownership | WAL or checkpoint process death | Acknowledged/flush-proven effects survive; unknown outcome complete | shared-lifecycle four WAL/checkpoint cuts; existing modeled-power-loss targets | Process death only in new target; established lock order from source |
+-| C18 K/R | live reader lease | external writer/checkpoint | Original admitted snapshot contents preserved | shared-lifecycle held reader and existing coordination publication tests | Snapshot lease witness plus full original documents |
+-| C19 A | native mode/file admission | alias opener or killed process | Compatible lexical aliases coordinate; incompatible mode refuses | shared-lifecycle mixed canonical/./ paths; NativeAdmission_Tests | Physical aliases and platform fallback remain inherited coverage/gaps |
+-| C20 D/E | Direct facade/handle/cursor refs | close plus fresh/continued work | No premature disposal; correct close refusal/drain | Explorer26–27; Direct pool/lifetime guards | Actual closing publication and callback handoff |
+-| C21 M | page first-loader owns Loading entry | peer load/close/failure | Publish success/failure; no premature pinned-frame reuse | Existing cache loading/lifecycle and disposal regressions | Source inventory +98a CI; arbitrary custom-stream callback graph outside gate |
+-| C22 cross-database | A ownsX, B ownsY | callbacks each begin other database | Cancellable admission escapes application ordering cycle; one-way valid | TransactionHandleCrossDatabaseCycle_Tests | Opposed observed gates, both cancellation outcomes, cold indexed models |
+-
+-The confirmed C12 cycle is preserved as a failing assertion, not an allowed timeout.
+-C04, C06 and C22 are feasible bounded/application cycles with deterministic tests;
+-they are not described as unreachable. Other internal inverse-order candidates are
+-rejected by the specific order/publication arguments in the inventory, backed by
+-the linked existing tests. Source arguments do not establish safety of arbitrary
+-custom stream callbacks or application-created cross-thread waits.
+-
+-New process cuts before reader/session disposal are API-boundary cuts, not evidence
+-of interruption inside internal cleanup. Cross-process persistence here is process
+-death with OS caches surviving. Existing modeled-power-loss campaigns remain
+-separate. Final exact source, local outcomes and CI links are recorded in the
+-[combined report](pr133-concurrency-audit.md).
+diff --git a/docs/audits/pr133-multiprocess-campaign.md b/docs/audits/pr133-multiprocess-campaign.md
+deleted file mode 100644
+index 928e9bc7e..000000000
+--- a/docs/audits/pr133-multiprocess-campaign.md
++++ /dev/null
+@@ -1,103 +0,0 @@
+-# PR #133 multiprocess concurrency campaign
+-
+-`shared-lifecycle` extends `LiteDB.Fuzz`, retaining its input recording, replay,
+-epoch supervision and failure artifacts. It does not change the existing `shared`
+-corpus. Production baseline: `98a10086c`. No production behavior or hook was added.
+-
+-## Finite boundary matrix
+-
+-Every ten-case block executes the following cuts; alternating blocks switch plain
+-and encrypted files. Twenty cases therefore cover every cut in both modes.
+-Recorded input chooses lexical `./` aliases and one of six invocation orders for
+-three competing processes.
+-
+-| Observed cut | Killed actor | Required state |
+-| --- | --- | --- |
+-| `native-waiter` | Handle writer after actual admission observer and exclusion window | Owner commits and replacement writer progresses |
+-| `uncommitted` | Reused-handle owner after update/delete/inserts, before commit request | Owner group absent |
+-| `wal-before-durable-flush` | Reused-handle owner inside existing crash hook | Complete old or new outcome |
+-| `wal-after-durable-flush` | Same, after sync but before public acknowledgement | Complete new outcome: confirmation and preceding pages were flushed |
+-| `after-commit-acknowledgement` | Idle owner after parent receives commit acknowledgement | Owner group survives |
+-| `after-refreshed-wrapper-reuse` | Owner after reused handle observes another process's commit | Owner and peer survive, same wrapper reference |
+-| `before-reader-dispose` | Process with observed live independent snapshot | Surviving processes progress, acknowledged state survives |
+-| `before-session-dispose` | Idle session after completed handle cleanup | Surviving processes progress, acknowledged state survives |
+-| `checkpoint-before-data-flush` | Legacy owner inside checkpoint hook | Acknowledged transaction survives |
+-| `checkpoint-after-data-flush` | Same, after data sync | Acknowledged transaction survives |
+-
+-Checkpoint cases use the existing `SharedCheckpointCrashScope` so peers cannot
+-empty the WAL before the hook. These cases exercise legacy ownership. Reader and
+-session disposal cuts are **API boundaries before cleanup**, not interruption
+-inside an internal release implementation.
+-
+-Non-checkpoint cases keep an independent process's real leased snapshot across
+-writes. Identity `ReadTransform` prevents buffering tiny results. Before publishing
+-`snapshot-held`, the child requires an owned snapshot, one registered local lease,
+-and released native writer ownership. Surviving snapshots are drained after the
+-writers finish and compared with the complete original documents. The killed
+-reader cannot subsequently enumerate; that case checks reclamation and recovery.
+-
+-A writer reaches native handle admission while the owner is live. A 150 ms
+-exclusion window starts only after the observer marker. Opener/disposer, ordinary
+-reader and maintenance actors receive commands while the native owner is alive.
+-Each command has a 20-second monotonic invocation deadline. Intermediate wait
+-markers and peer progress cannot reset it. A background output pump timestamps
+-completion, so consuming an already-completed response later is not a timeout.
+-
+-## Independent state and progress checks
+-
+-The supervisor models an owner group containing an update, delete and two inserts,
+-plus a peer group containing two inserts. It records received acknowledgements in
+-a durable ledger outside the killed process. Requested but unacknowledged commits
+-allow only complete before/after groups until a flush-completed hook proves the
+-confirmation recoverable; that observed cut requires the complete new state.
+-Known uncommitted groups must be absent.
+-Acknowledged groups must survive even if subsequent ledger I/O fails.
+-
+-Two cold reopens compare exact BSON documents, sentinel, index catalog, actual
+-secondary `INDEX SCAN` and per-value `INDEX SEEK` results. The existing independent
+-raw-file integrity verifier then checks structural and semantic index integrity.
+-
+-Every child is stopped and joined before reading/copying the original fixture.
+-Cold verification still runs after an actor failure once quiescence is established;
+-its error is preserved alongside the original failure. If process termination
+-fails, the original path is retained and cold verification/registered-file copying
+-are blocked. Successful survivors also exercise graceful close. Pipe drains are
+-bounded. Actor JSONL contains invocation/completion timestamps and PIDs; durable
+-boundary markers, parent acknowledgements, stderr, schedule, seed/input and replay
+-metadata remain with the run.
+-
+-The generic runner's artifact-budget failure path can delete databases. Use
+-`--max-artifact-mb 0` for investigations requiring every failure fixture. The new concurrency CI shard passes `--max-artifact-mb 0` explicitly; successful
+-nightly epochs retain existing compaction. Other shards keep their prior budget.
+-
+-`SharedLifecycleOracle_Tests` rejects seven controlled bad states: acknowledged
+-loss, partial insert/update/delete/peer groups, missing sentinel and missing index.
+-Two positive controls accept complete unknown outcomes. `SharedLifecycleProgress_Tests`
+-checks one stalled worker despite peer progress, delayed waiting without resetting
+-the invocation deadline, and a missing native marker. Mutants validate the oracle;
+-they are not historical regression proofs.
+-
+-## Replay and limits
+-
+-```bash
+-dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -p:TestingEnabled=true
+-dotnet LiteDB.Fuzz/bin/Release/net8.0/LiteDB.Fuzz.dll \
+-  --target shared-lifecycle --seed 133098 --count 40 --determinism-check \
+-  --artifact-dir artifacts_temp/shared-lifecycle --max-artifact-mb 0
+-dotnet test LiteDB.Fuzz.Tests/LiteDB.Fuzz.Tests.csproj -c Release \
+-  -p:TestingEnabled=true --filter FullyQualifiedName~SharedLifecycle
+-# Extended campaign uses existing epoch/replay machinery:
+-dotnet LiteDB.Fuzz/bin/Release/net10.0/LiteDB.Fuzz.dll \
+-  --target shared-lifecycle --seed 233098 --duration 30m --workers 2 \
+-  --artifact-dir artifacts_temp/shared-lifecycle-nightly
+-```
+-
+-These are process deaths with surviving OS caches, **not power loss**. Existing
+-`power-loss`, checksum and MVCC targets keep their modeled durable/volatile tests.
+-Physical hardlink/symlink aliases, Direct pooling, platform admission fallback,
+-internal cleanup publication windows and device failure are outside this target.
+-It does not claim unrestricted linearizability, arbitrary snapshot isolation,
+-scheduler exhaustiveness or starvation freedom. A missed progress deadline needs
+-triage rather than automatically proving a product deadlock. Linux execution does
+-not establish Windows/macOS behavior. Exact final commit and hosted results belong
+-in the combined audit report.

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "failed",
+  "target": "transaction-interleavings",
+  "seed": 233098,
+  "count": 272,
+  "steps": 240,
+  "startedUtc": "2026-09-30T19:54:06.4164865+00:00",
+  "finishedUtc": "2026-09-30T19:55:47.1746239+00:00",
+  "durationSeconds": 100.7581374,
+  "gitSha": "f9487f81421a378cd50e8cae9b6112b5fd3be291",
+  "workingTreeDirty": true,
+  "os": "Microsoft Windows 10.0.26100",
+  "runtime": ".NET 10.0.12",
+  "architecture": "X64",
+  "culture": "en-US",
+  "timezone": "UTC",
+  "globalizationInvariant": false,
+  "durationBound": false,
+  "requestedDurationSeconds": null,
+  "inputHash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+  "traceHash": "86A3EA369DD0E8BF868171166E088CBCE6B4672A1A9ED4141888C189777F1EAE",
+  "failureId": "System.InvalidOperationException",
+  "minimizedCount": null,
+  "metrics": {
+    "novelStates": 239,
+    "completedActorSchedules": 239
+  },
+  "error": "System.InvalidOperationException: Oracle: ordinary same-file callback entered native self-wait (candidate merge blocker)\r\n   at LiteDB.ConcurrencyTesting.ExplorerDatabase.Require(Boolean condition, String message) in __CI_WORKSPACE__\\LiteDB.Tests\\Engine\\ConcurrencyExplorer\\ExplorerDatabase.cs:line 40\r\n   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.Run(ExplorerSchedule schedule, ExplorerDatabase model, ExplorerDatabase other, List\u00601 resources, Actor actor, Actor cleanup, Int32 variant) in __CI_WORKSPACE__\\LiteDB.Tests\\Engine\\ConcurrencyExplorer\\ExplorerOrdinaryCallbacks.cs:line 78\r\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __CI_WORKSPACE__\\LiteDB.Tests\\Engine\\ConcurrencyExplorer\\TransactionInterleavingExplorer.cs:line 51\r\n--- End of stack trace from previous location ---\r\n   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __CI_WORKSPACE__\\LiteDB.Tests\\Engine\\ConcurrencyExplorer\\TransactionInterleavingExplorer.cs:line 99\r\n   at LiteDB.Fuzz.Targets.TransactionInterleavingFuzzer.RunAsync(FuzzContext context) in __CI_WORKSPACE__\\LiteDB.Fuzz\\Targets\\TransactionInterleavingFuzzer.cs:line 24\r\n   at LiteDB.Fuzz.Program.\u003C\u003Ec__DisplayClass2_0.\u003CRunAsync\u003Eb__0() in __CI_WORKSPACE__\\LiteDB.Fuzz\\Program.cs:line 124\r\n   at System.Threading.Tasks.Task\u00601.InnerInvoke()\r\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\r\n--- End of stack trace from previous location ---\r\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\r\n   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task\u0026 currentTaskSlot, Thread threadPoolThread)\r\n--- End of stack trace from previous location ---\r\n   at LiteDB.Fuzz.Program.RunAsync(IFuzzTarget target, FuzzOptions options, Int32 worker) in __CI_WORKSPACE__\\LiteDB.Fuzz\\Program.cs:line 124"
+}

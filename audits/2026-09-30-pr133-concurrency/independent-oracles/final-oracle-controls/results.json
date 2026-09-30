@@ -1,0 +1,41 @@
+[
+  {
+    "mode": "strict-refusal",
+    "command": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/bin/Release/net8.0/controls.dll",
+      "strict-refusal",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/strict-refusal.history"
+    ],
+    "exit": 0,
+    "seconds": 0.046917972969822586,
+    "stdout": "PASS exact refusal accepted; unrelated and derived refusals rejected\n",
+    "stderr": ""
+  },
+  {
+    "mode": "completed-idle",
+    "command": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/bin/Release/net8.0/controls.dll",
+      "completed-idle",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/completed-idle.history"
+    ],
+    "exit": 0,
+    "seconds": 16.075704962015152,
+    "stdout": "PASS completed actor remains healthy after deadline idle time\n",
+    "stderr": ""
+  },
+  {
+    "mode": "stalled-peer",
+    "command": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/bin/Release/net8.0/controls.dll",
+      "stalled-peer",
+      "__WORKSPACE__/artifacts_temp/audit-oracles/artifacts_temp/final-oracle-controls/stalled-peer.history"
+    ],
+    "exit": 0,
+    "seconds": 15.052929801051505,
+    "stdout": "PASS stalled actor detected despite peer completions after 15.0014585\n",
+    "stderr": ""
+  }
+]

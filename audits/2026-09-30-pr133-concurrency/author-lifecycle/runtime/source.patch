@@ -1,0 +1,40 @@
+diff --git a/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs b/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs
+index 8d4a24a33..db1921c0e 100644
+--- a/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs
++++ b/LiteDB.Fuzz/Targets/SharedLifecycleFuzzer.cs
+@@ -81,7 +81,10 @@ internal sealed class SharedLifecycleFuzzer : IFuzzTarget
+                         committed = null;
+                         owner.Send("commit"); await owner.Expect("hook:" + boundary);
+                         VerifyMarker("owner", "hook:" + boundary);
+-                        committed = null; await owner.Kill();
++                        // The after-flush hook proves the confirmation and preceding pages were
++                        // flushed. Even without an API acknowledgement, recovery must expose them.
++                        committed = boundary == "wal-after-durable-flush" ? true : null;
++                        await owner.Kill();
+                     }
+                     else if (boundary == "uncommitted")
+                     {
+diff --git a/docs/audits/pr133-multiprocess-campaign.md b/docs/audits/pr133-multiprocess-campaign.md
+index b7cf58ae5..fd96e262e 100644
+--- a/docs/audits/pr133-multiprocess-campaign.md
++++ b/docs/audits/pr133-multiprocess-campaign.md
+@@ -16,7 +16,7 @@ three competing processes.
+ | `native-waiter` | Handle writer after actual admission observer and exclusion window | Owner commits and replacement writer progresses |
+ | `uncommitted` | Reused-handle owner after update/delete/inserts, before commit request | Owner group absent |
+ | `wal-before-durable-flush` | Reused-handle owner inside existing crash hook | Complete old or new outcome |
+-| `wal-after-durable-flush` | Same, after sync but before public acknowledgement | Complete old or new outcome |
++| `wal-after-durable-flush` | Same, after sync but before public acknowledgement | Complete new outcome: confirmation and preceding pages were flushed |
+ | `after-commit-acknowledgement` | Idle owner after parent receives commit acknowledgement | Owner group survives |
+ | `after-refreshed-wrapper-reuse` | Owner after reused handle observes another process's commit | Owner and peer survive, same wrapper reference |
+ | `before-reader-dispose` | Process with observed live independent snapshot | Surviving processes progress, acknowledged state survives |
+@@ -48,7 +48,9 @@ completion, so consuming an already-completed response later is not a timeout.
+ The supervisor models an owner group containing an update, delete and two inserts,
+ plus a peer group containing two inserts. It records received acknowledgements in
+ a durable ledger outside the killed process. Requested but unacknowledged commits
+-allow only complete before/after groups. Known uncommitted groups must be absent.
++allow only complete before/after groups until a flush-completed hook proves the
++confirmation recoverable; that observed cut requires the complete new state.
++Known uncommitted groups must be absent.
+ Acknowledged groups must survive even if subsequent ledger I/O fails.
+ 
+ Two cold reopens compare exact BSON documents, sentinel, index catalog, actual

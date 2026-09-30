@@ -1,0 +1,42 @@
+[
+  {
+    "name": "csharp-size",
+    "command": [
+      "python3",
+      "scripts/check-csharp-size.py",
+      "--base",
+      "98a10086c"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "coverage",
+    "command": [
+      "python3",
+      ".github/scripts/check_coverage_regression.py",
+      "--base",
+      "98a10086c"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "fault-points",
+    "command": [
+      "python3",
+      ".github/scripts/check_fault_points.py",
+      "--base",
+      "98a10086c"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "contracts",
+    "command": [
+      "python3",
+      ".github/scripts/check_contracts.py",
+      "--base",
+      "98a10086c"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,23 @@
+1 873373968393284 configuration seed=0 schedule=33 shared=False encrypted=False
+2 873374019116607 A invoke C04 begin A
+3 873374019157884 A complete C04 begin A
+4 873374020198945 B invoke C04 begin B
+5 873374020236335 B complete C04 begin B
+6 873374021269050 A invoke C04 hold rows
+7 873374021340864 A complete C04 hold rows
+8 873374022337692 B invoke C04 hold other
+9 873374022545219 B complete C04 hold other
+10 873374023454635 B invoke C04 B waits rows
+11 873374023466447 A invoke C04 A waits other
+12 873374023630893 observed C04 actual wait other held by B
+13 873374023634480 observed C04 actual wait rows held by A
+14 873389024401577 FAIL System.TimeoutException: Worker stalled: A/C04 A waits other
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 66
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 51
+   at LiteDB.ConcurrencyTesting.ExplorerCollectionCycle.Run(ExplorerSchedule schedule, ExplorerDatabase model, List`1 resources, Actor a, Actor b, Boolean reverse) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerCollectionCycle.cs:line 54
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 47
+15 873389024461268 release C04 actual wait rows held by A
+16 873389024466267 release C04 actual wait other held by B
+17 873419024651114 LIVE-WORKER fixture retained; no cleanup or cold inspection
+18 873434035417953 B complete C04 B waits rows
+19 873434035428543 A complete C04 A waits other

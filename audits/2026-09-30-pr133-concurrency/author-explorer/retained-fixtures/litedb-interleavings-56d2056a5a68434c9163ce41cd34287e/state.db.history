@@ -1,0 +1,42 @@
+1 872460021930830 configuration seed=3034133 schedule=0 shared=True encrypted=False
+2 872460115049588 A invoke begin
+3 872460119643317 A complete begin
+4 872460120356088 A invoke insert-callback
+5 872460120410300 boundary A inside bound input callback
+6 872460121422139 B invoke overlap-0
+7 872460121491178 B complete overlap-0
+8 872460122486076 B invoke overlap-1
+9 872460122516854 B complete overlap-1
+10 872460123555313 B invoke overlap-2
+11 872460123582945 B complete overlap-2
+12 872460124625872 C invoke ordinary-read
+13 872475123637091 C complete ordinary-read
+14 872475126615383 FAIL System.TimeoutException: Worker stalled: A/insert-callback
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.CheckActors() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 66
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Until(Func`1 condition, String reason) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 51
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Actor.Complete(Work work) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 133
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Actor.Run(String name, Action action) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 134
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.OverlapAndReaderTransfer(Int32 seed) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 102
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 39
+15 872475127245039 A error insert-callback System.TimeoutException: Unreleased boundary A inside bound input callback
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Boundary.Hit() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 150
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Input(Boundary boundary, Int32 id, Int32 value)+MoveNext() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 78
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass34_0.<Insert>b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.<>c__DisplayClass11_0.<Insert>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.<>c__DisplayClass22_0.<Insert>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.<>c__DisplayClass15_0.<OverlapAndReaderTransfer>b__1() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 89
+   at LiteDB.ConcurrencyTesting.ExplorerSchedule.Actor.<>c__DisplayClass6_0.<Invoke>b__0() in __WORKSPACE__/artifacts_temp/audit-explorer/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerSchedule.cs:line 122
+16 872475127348301 all-workers-joined
+17 872475195096137 FAIL retained __WORKSPACE__/temporary/litedb-interleavings-56d2056a5a68434c9163ce41cd34287e/state.db

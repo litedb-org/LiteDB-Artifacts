@@ -1,0 +1,16 @@
+## Safety contracts: passed
+
+
+Implicated contracts: name each id in the PR's safety section with its evidence, or explain why the change cannot affect it.
+
+None of the changed paths map to a contract.
+Evidence by failure model (a `-` is an unclaimed model, not a pass):
+
+| Contract | exception | process-death | modeled-power-loss | device | corrupt-input |
+| --- | --- | --- | --- | --- | --- |
+| `durable-ack` | yes | yes | yes | - | - |
+| `recovery-generation` | yes | - | yes | - | - |
+| `reader-snapshot` | yes | yes | - | - | - |
+| `historical-input` | yes | - | yes | - | yes |
+| `query-meaning` | - | - | - | - | - |
+

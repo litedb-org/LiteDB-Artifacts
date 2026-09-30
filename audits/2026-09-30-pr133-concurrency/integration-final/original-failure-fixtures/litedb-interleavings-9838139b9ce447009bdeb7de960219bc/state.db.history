@@ -1,0 +1,15 @@
+1 875458125075132 configuration seed=1 schedule=31 shared=True encrypted=False
+2 875458198235141 A invoke ordinary-input-callback
+3 875458204278459 observed ordinary input callback executing with writer ownership
+4 875458204649793 DEFECT ordinary callback waits native ownership retained by its caller
+5 875458204656185 C invoke cancel-known-deadlock-waiter
+6 875460219334148 C complete cancel-known-deadlock-waiter
+7 875460227209932 A complete ordinary-input-callback
+8 875460227563062 FAIL System.InvalidOperationException: Oracle: ordinary same-file callback entered native self-wait (candidate merge blocker)
+   at LiteDB.ConcurrencyTesting.ExplorerDatabase.Require(Boolean condition, String message) in __WORKSPACE__/artifacts_temp/concurrency-audit/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerDatabase.cs:line 40
+   at LiteDB.ConcurrencyTesting.ExplorerOrdinaryCallbacks.Run(ExplorerSchedule schedule, ExplorerDatabase model, ExplorerDatabase other, List`1 resources, Actor actor, Actor cleanup, Int32 variant) in __WORKSPACE__/artifacts_temp/concurrency-audit/LiteDB.Tests/Engine/ConcurrencyExplorer/ExplorerOrdinaryCallbacks.cs:line 79
+   at LiteDB.ConcurrencyTesting.TransactionInterleavingExplorer.Run(String file, Boolean shared, Boolean encrypted, Int32 schedule, Int32 seed) in __WORKSPACE__/artifacts_temp/concurrency-audit/LiteDB.Tests/Engine/ConcurrencyExplorer/TransactionInterleavingExplorer.cs:line 51
+9 875460227579002 release ordinary input callback executing with writer ownership
+10 875460227760341 all-workers-joined
+11 875460228512658 cold-verification-start
+12 875460264301067 FAIL retained __WORKSPACE__/temporary/litedb-interleavings-9838139b9ce447009bdeb7de960219bc/state.db
