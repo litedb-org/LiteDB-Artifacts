@@ -1,0 +1,122 @@
+[
+  {
+    "name": "reuse-handles-net8.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~TransactionCompletion|FullyQualifiedName~PageBufferAbandonment",
+      "--logger",
+      "trx;LogFileName=reuse-handles-net8.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-shared-engine-net8.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~LiteDB.Tests.Engine.Shared|FullyQualifiedName~CrossProcess_Shared",
+      "--logger",
+      "trx;LogFileName=reuse-shared-engine-net8.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-shared-native-net8.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "(FullyQualifiedName~Shared&FullyQualifiedName!~LiteDB.Tests.Engine.Shared&FullyQualifiedName!~CrossProcess_Shared&FullyQualifiedName!~TransactionHandle)|FullyQualifiedName~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=reuse-shared-native-net8.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-handles-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~TransactionCompletion|FullyQualifiedName~PageBufferAbandonment",
+      "--logger",
+      "trx;LogFileName=reuse-handles-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-shared-engine-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~LiteDB.Tests.Engine.Shared|FullyQualifiedName~CrossProcess_Shared",
+      "--logger",
+      "trx;LogFileName=reuse-shared-engine-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-shared-native-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "(FullyQualifiedName~Shared&FullyQualifiedName!~LiteDB.Tests.Engine.Shared&FullyQualifiedName!~CrossProcess_Shared&FullyQualifiedName!~TransactionHandle)|FullyQualifiedName~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=reuse-shared-native-net10.0.trx"
+    ],
+    "exit": 0
+  }
+]

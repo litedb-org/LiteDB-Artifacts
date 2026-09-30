@@ -1,0 +1,82 @@
+[
+  {
+    "name": "reuse-release-handles-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~TransactionCompletion|FullyQualifiedName~PageBufferAbandonment",
+      "--logger",
+      "trx;LogFileName=reuse-release-handles-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-release-shared-engine-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~LiteDB.Tests.Engine.Shared|FullyQualifiedName~CrossProcess_Shared",
+      "--logger",
+      "trx;LogFileName=reuse-release-shared-engine-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-release-native-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=reuse-release-native-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-release-shared-process-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~Shared&FullyQualifiedName!~LiteDB.Tests.Engine.Shared&FullyQualifiedName!~CrossProcess_Shared&FullyQualifiedName!~TransactionHandle&FullyQualifiedName!~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=reuse-release-shared-process-net10.0.trx"
+    ],
+    "exit": 0
+  }
+]

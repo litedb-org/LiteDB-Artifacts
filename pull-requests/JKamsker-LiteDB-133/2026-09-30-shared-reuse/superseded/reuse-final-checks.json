@@ -1,0 +1,70 @@
+[
+  {
+    "name": "reuse-child-final-net8.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleChild",
+      "--logger",
+      "trx;LogFileName=reuse-child-final-net8.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-child-final-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleChild",
+      "--logger",
+      "trx;LogFileName=reuse-child-final-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-build-net462",
+    "command": [
+      "dotnet",
+      "build",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net462",
+      "-p:TestingEnabled=true"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "reuse-build-net481",
+    "command": [
+      "dotnet",
+      "build",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net481",
+      "-p:TestingEnabled=true"
+    ],
+    "exit": 0
+  }
+]

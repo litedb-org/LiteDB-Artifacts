@@ -1,0 +1,319 @@
+{
+  "configuration": {
+    "versions": {
+      "head": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9"
+      },
+      "reuse": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "revision": "40d6a18749b4e28eb83e3fc472a99313a9fb940e"
+      }
+    },
+    "groups": [
+      {
+        "name": "shared-reuse",
+        "versions": [
+          "head",
+          "reuse"
+        ],
+        "rounds": 4,
+        "warmup": 5,
+        "windows": 5,
+        "cases": [
+          [
+            "shared",
+            "handle",
+            "read",
+            0
+          ],
+          [
+            "shared",
+            "handle",
+            "read",
+            1
+          ],
+          [
+            "shared",
+            "handle",
+            "read",
+            10
+          ]
+        ]
+      }
+    ]
+  },
+  "driver_sha256": "89f9f41b8c2bae83410f6e5518f8bcd187c15ba5f72b6e8bc5725065a3a11c81",
+  "runs": [
+    {
+      "name": "shared-reuse-shared-handle-read-0-0-0-head",
+      "started": "2026-09-30T05:12:21.889057+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-0-1-reuse",
+      "started": "2026-09-30T05:12:33.284661+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-1-0-reuse",
+      "started": "2026-09-30T05:12:44.883601+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-1-1-head",
+      "started": "2026-09-30T05:12:56.349802+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-2-0-head",
+      "started": "2026-09-30T05:13:07.734386+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-2-1-reuse",
+      "started": "2026-09-30T05:13:19.096184+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-3-0-reuse",
+      "started": "2026-09-30T05:13:30.610176+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-0-3-1-head",
+      "started": "2026-09-30T05:13:42.127492+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "0",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-0-0-head",
+      "started": "2026-09-30T05:13:53.478313+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-0-1-reuse",
+      "started": "2026-09-30T05:14:04.877483+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-1-0-reuse",
+      "started": "2026-09-30T05:14:16.310404+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-1-1-head",
+      "started": "2026-09-30T05:14:27.795929+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-2-0-head",
+      "started": "2026-09-30T05:14:39.172964+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+        "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-2-1-reuse",
+      "started": "2026-09-30T05:14:50.519426+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "shared-reuse-shared-handle-read-1-3-0-reuse",
+      "started": "2026-09-30T05:15:02.044306+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-reuse/TransactionHandleBenchmarks.dll",
+        "40d6a18749b4e28eb83e3fc472a99313a9fb940e",
+        "steady",
+        "shared",
+        "handle",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    }
+  ]
+}

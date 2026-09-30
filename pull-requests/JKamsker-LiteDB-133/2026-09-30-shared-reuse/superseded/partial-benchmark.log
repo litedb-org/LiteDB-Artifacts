@@ -1,0 +1,32 @@
+shared-reuse-shared-handle-read-0-0-0-head: 1450.6 ops/s, verified
+shared-reuse-shared-handle-read-0-0-1-reuse: 8878.4 ops/s, verified
+shared-reuse-shared-handle-read-0-1-0-reuse: 8947.5 ops/s, verified
+shared-reuse-shared-handle-read-0-1-1-head: 1431.8 ops/s, verified
+shared-reuse-shared-handle-read-0-2-0-head: 1443.2 ops/s, verified
+shared-reuse-shared-handle-read-0-2-1-reuse: 8538.4 ops/s, verified
+shared-reuse-shared-handle-read-0-3-0-reuse: 9178.6 ops/s, verified
+shared-reuse-shared-handle-read-0-3-1-head: 1445.5 ops/s, verified
+shared-reuse-shared-handle-read-1-0-0-head: 1311.7 ops/s, verified
+shared-reuse-shared-handle-read-1-0-1-reuse: 6273.5 ops/s, verified
+shared-reuse-shared-handle-read-1-1-0-reuse: 6825.3 ops/s, verified
+shared-reuse-shared-handle-read-1-1-1-head: 1300.8 ops/s, verified
+shared-reuse-shared-handle-read-1-2-0-head: 1303.3 ops/s, verified
+shared-reuse-shared-handle-read-1-2-1-reuse: 6359.0 ops/s, verified
+shared-reuse-shared-handle-read-1-3-0-reuse: 6118.5 ops/s, verified
+Traceback (most recent call last):
+  File "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/scripts/benchmark-transaction-handle-steady.py", line 38, in <module>
+    result = subprocess.run(command, env=environment, capture_output=True, text=True,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2115, in _communicate
+    ready = selector.select(timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
