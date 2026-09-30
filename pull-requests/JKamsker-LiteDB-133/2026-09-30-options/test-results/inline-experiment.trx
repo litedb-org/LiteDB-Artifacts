@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="19f94bde-c578-402b-8c74-23ccb35fb775" name="@dev-build-server 2026-09-30 00:39:48" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T00:39:48.7261427+00:00" queuing="2026-09-30T00:39:48.7261427+00:00" start="2026-09-30T00:39:37.4079323+00:00" finish="2026-09-30T00:39:48.7336489+00:00" />
+  <TestSettings name="default" id="8d651530-c32e-48ad-b9c8-d056f219c1e3">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_00_39_48" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="df2bc2d8-0917-4b55-807e-62bc04ca3b3b" testId="b2abd1d1-e2db-1782-c5be-ae12dcf37b4b" testName="LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.Idle_final_release_is_bounded_and_does_not_block_other_sessions" computerName="dev-build-server" duration="00:00:10.1568967" startTime="2026-09-30T00:39:48.6617857+00:00" endTime="2026-09-30T00:39:48.6618017+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df2bc2d8-0917-4b55-807e-62bc04ca3b3b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.TimeoutException)
+Actual:   typeof(Xunit.Sdk.TrueException)
+---- Assert.True() Failure
+Expected: True
+Actual:   False</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.Idle_final_release_is_bounded_and_does_not_block_other_sessions() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Idle_final_release_is_bounded_and_does_not_block_other_sessions&gt;b__0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs:line 51
+   at LiteDB.SessionLifetime.TryFinish() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB/Client/Transactions/SessionLifetime.cs:line 166
+--- End of stack trace from previous location ---
+   at LiteDB.SessionLifetime.Close(Action release, Nullable`1 wait) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB/Client/Transactions/SessionLifetime.cs:line 136
+   at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Idle_final_release_is_bounded_and_does_not_block_other_sessions&gt;b__1() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs:line 56</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.Idle_final_release_is_bounded_and_does_not_block_other_sessions" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/inline/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b2abd1d1-e2db-1782-c5be-ae12dcf37b4b">
+      <Execution id="df2bc2d8-0917-4b55-807e-62bc04ca3b3b" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests" name="Idle_final_release_is_bounded_and_does_not_block_other_sessions" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="b2abd1d1-e2db-1782-c5be-ae12dcf37b4b" executionId="df2bc2d8-0917-4b55-807e-62bc04ca3b3b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.16]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.73]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.75]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:10.94]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:10.94]       Expected: typeof(System.TimeoutException)
+[xUnit.net 00:00:10.94]       Actual:   typeof(Xunit.Sdk.TrueException)
+[xUnit.net 00:00:10.94]       ---- Assert.True() Failure
+[xUnit.net 00:00:10.94]       Expected: True
+[xUnit.net 00:00:10.94]       Actual:   False
+[xUnit.net 00:00:10.94]       Stack Trace:
+[xUnit.net 00:00:10.94]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs(56,0): at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.Idle_final_release_is_bounded_and_does_not_block_other_sessions()
+[xUnit.net 00:00:10.94]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:10.94]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:10.94]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:10.94]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs(51,0): at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Idle_final_release_is_bounded_and_does_not_block_other_sessions&gt;b__0()
+[xUnit.net 00:00:10.94]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB/Client/Transactions/SessionLifetime.cs(166,0): at LiteDB.SessionLifetime.TryFinish()
+[xUnit.net 00:00:10.94]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:10.94]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB/Client/Transactions/SessionLifetime.cs(136,0): at LiteDB.SessionLifetime.Close(Action release, Nullable`1 wait)
+[xUnit.net 00:00:10.94]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/inline/LiteDB.Tests/Engine/TransactionHandleCloseCleanup_Tests.cs(56,0): at LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Idle_final_release_is_bounded_and_does_not_block_other_sessions&gt;b__1()
+[xUnit.net 00:00:10.95]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T00:39:48.6602283+00:00">
+        <Text>[xUnit.net 00:00:10.94]     LiteDB.Tests.Engine.TransactionHandleCloseCleanup_Tests.Idle_final_release_is_bounded_and_does_not_block_other_sessions [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

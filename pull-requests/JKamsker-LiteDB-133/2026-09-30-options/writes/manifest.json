@@ -1,0 +1,1844 @@
+{
+  "configuration": {
+    "versions": {
+      "head": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9"
+      },
+      "dev": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "revision": "5dd942a7367c361fadd600be4ce10aace2768b27"
+      }
+    },
+    "groups": [
+      {
+        "name": "write-baseline",
+        "callers": [
+          1,
+          16
+        ],
+        "rounds": 4,
+        "warmup": 3,
+        "seconds": 5,
+        "cases": [
+          [
+            "dev",
+            "direct",
+            1,
+            0
+          ],
+          [
+            "head",
+            "direct",
+            1,
+            0
+          ],
+          [
+            "dev",
+            "shared",
+            1,
+            0
+          ],
+          [
+            "head",
+            "shared",
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "name": "strategies",
+        "callers": [
+          1,
+          16
+        ],
+        "rounds": 4,
+        "warmup": 3,
+        "seconds": 5,
+        "cases": [
+          [
+            "head",
+            "direct",
+            1,
+            0
+          ],
+          [
+            "head",
+            "shared",
+            1,
+            0
+          ],
+          [
+            "head",
+            "existing",
+            1,
+            0
+          ],
+          [
+            "head",
+            "queue",
+            1,
+            0
+          ],
+          [
+            "head",
+            "queue",
+            32,
+            0
+          ],
+          [
+            "head",
+            "queue",
+            32,
+            1
+          ],
+          [
+            "head",
+            "ipc",
+            1,
+            0
+          ],
+          [
+            "head",
+            "ipc",
+            32,
+            1
+          ]
+        ]
+      }
+    ],
+    "harnessRevision": "24c8e88dc393ddfe33f97d4f9c0c58f5783db2c2"
+  },
+  "driver_sha256": "34c2fb3d72c408b5f6e89dd8890c29f756158a2b97673d92e311aded259e05c8",
+  "runs": [
+    {
+      "name": "write-baseline-1-0-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:02:27.334307+00:00"
+    },
+    {
+      "name": "write-baseline-1-0-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:02:35.916094+00:00"
+    },
+    {
+      "name": "write-baseline-1-0-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:02:44.405212+00:00"
+    },
+    {
+      "name": "write-baseline-1-0-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:02:52.958660+00:00"
+    },
+    {
+      "name": "write-baseline-1-1-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:03:01.533333+00:00"
+    },
+    {
+      "name": "write-baseline-1-1-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:03:10.040092+00:00"
+    },
+    {
+      "name": "write-baseline-1-1-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:03:18.622988+00:00"
+    },
+    {
+      "name": "write-baseline-1-1-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:03:27.128081+00:00"
+    },
+    {
+      "name": "write-baseline-1-2-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:03:35.668865+00:00"
+    },
+    {
+      "name": "write-baseline-1-2-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:03:44.235465+00:00"
+    },
+    {
+      "name": "write-baseline-1-2-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:03:52.763256+00:00"
+    },
+    {
+      "name": "write-baseline-1-2-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:04:01.353977+00:00"
+    },
+    {
+      "name": "write-baseline-1-3-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:04:09.950800+00:00"
+    },
+    {
+      "name": "write-baseline-1-3-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:04:18.532093+00:00"
+    },
+    {
+      "name": "write-baseline-1-3-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:04:27.120217+00:00"
+    },
+    {
+      "name": "write-baseline-1-3-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:04:35.697962+00:00"
+    },
+    {
+      "name": "write-baseline-16-0-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:04:44.541431+00:00"
+    },
+    {
+      "name": "write-baseline-16-0-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:04:53.452362+00:00"
+    },
+    {
+      "name": "write-baseline-16-0-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:05:02.239496+00:00"
+    },
+    {
+      "name": "write-baseline-16-0-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:05:11.038480+00:00"
+    },
+    {
+      "name": "write-baseline-16-1-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:05:19.842021+00:00"
+    },
+    {
+      "name": "write-baseline-16-1-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:05:28.643462+00:00"
+    },
+    {
+      "name": "write-baseline-16-1-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:05:37.560127+00:00"
+    },
+    {
+      "name": "write-baseline-16-1-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:05:46.425369+00:00"
+    },
+    {
+      "name": "write-baseline-16-2-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:05:55.281520+00:00"
+    },
+    {
+      "name": "write-baseline-16-2-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:06:04.187342+00:00"
+    },
+    {
+      "name": "write-baseline-16-2-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:06:12.974333+00:00"
+    },
+    {
+      "name": "write-baseline-16-2-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:06:21.812703+00:00"
+    },
+    {
+      "name": "write-baseline-16-3-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:06:30.658133+00:00"
+    },
+    {
+      "name": "write-baseline-16-3-dev-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:06:39.500922+00:00"
+    },
+    {
+      "name": "write-baseline-16-3-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:06:48.388854+00:00"
+    },
+    {
+      "name": "write-baseline-16-3-dev-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-dev/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27",
+      "finished": "2026-09-30T01:06:57.242786+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:05.819299+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:14.397167+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:23.213284+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:31.792030+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:40.377791+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:48.952964+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:07:57.794254+00:00"
+    },
+    {
+      "name": "strategies-1-0-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:06.656022+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:15.477042+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:24.322257+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:32.890454+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:41.469395+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:50.067576+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:08:58.821139+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:07.403808+00:00"
+    },
+    {
+      "name": "strategies-1-1-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:15.997220+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:24.605120+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:33.145749+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:41.912820+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:50.530029+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:09:59.146711+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:07.784485+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:16.607221+00:00"
+    },
+    {
+      "name": "strategies-1-2-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:25.421899+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:34.255720+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:43.068895+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:10:51.648988+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:00.237500+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:08.823985+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:17.607470+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:26.186107+00:00"
+    },
+    {
+      "name": "strategies-1-3-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "1",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:34.797517+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:43.691150+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:11:52.484261+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:01.524596+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:10.238881+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:18.984132+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:27.712654+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:36.690592+00:00"
+    },
+    {
+      "name": "strategies-16-0-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:45.692110+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:12:54.656516+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:03.678749+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:12.415479+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:21.120931+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:29.886605+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:38.920407+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:47.747826+00:00"
+    },
+    {
+      "name": "strategies-16-1-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:13:56.676632+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:05.573864+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:14.394639+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:23.420572+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:32.169383+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:40.877038+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:49.661411+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:14:58.613908+00:00"
+    },
+    {
+      "name": "strategies-16-2-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:07.552667+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-ipc-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:16.526404+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-ipc-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "ipc",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:25.477833+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-queue-32-1",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "1",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:34.189315+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-queue-32-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "32",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:42.953604+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-queue-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "queue",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:15:51.710270+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-existing-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "existing",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:16:00.724020+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-shared-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "shared",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:16:09.611363+00:00"
+    },
+    {
+      "name": "strategies-16-3-head-direct-1-0",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/controller-head/WriteControllerExperiments.dll",
+        "bench",
+        "direct",
+        "16",
+        "1",
+        "0",
+        "3",
+        "5",
+        "artifacts_temp/write-steady/databases"
+      ],
+      "exit": 0,
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+      "finished": "2026-09-30T01:16:18.540338+00:00"
+    }
+  ]
+}
