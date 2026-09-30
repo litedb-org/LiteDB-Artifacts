@@ -1,0 +1,86 @@
+commit 303c153a9a5ff6316679b38f164816545b2e3749
+Author: Jonas Kamsker <11245306+JKamsker@users.noreply.github.com>
+Date:   Wed Sep 30 12:16:30 2026 +0000
+
+    Limit callback close probe timeout to its intended disposal attempt
+
+diff --git a/.github/safety/coverage-ledger.json b/.github/safety/coverage-ledger.json
+index 52ad611a6..94d54b37c 100644
+--- a/.github/safety/coverage-ledger.json
++++ b/.github/safety/coverage-ledger.json
+@@ -191,6 +191,21 @@
+       "disposition": "strengthened",
+       "invariant": "Steady coordination publication must allocate exactly zero managed bytes for all 1000 measured events and preserve version/structural/reuse counters.",
+       "reason": "Retains the zero-byte threshold and original 100 warmup/1000 measured counts with no retries or discarded measurement. Warms the complete counter boundary on a dedicated worker without xUnit ExecutionContext, checks stable epoch identity before allocation assertions, and adds an escaped per-event allocation control. Hosted ARM64 .NET10.0.12 reported 6056 bytes; the original passed locally on x64 .NET10.0.11 and10.0.12, so the original cause remains unknown rather than asserted to be warmup. A successor ARM64 CI result is required."
++    },
++    {
++      "id": "133-late-callback-close-budget-scope",
++      "kind": "fixture-changed",
++      "subjects": [
++        "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs"
++      ],
++      "disposition": "intentional-change",
++      "invariant": "Late callback self-dependent close must still be refused with InvalidOperationException within the unchanged 100ms close probe; safe retained-reader controls, legitimate cross-thread drains, subsequent writes and plain/encrypted cold indexed state remain checked.",
++      "reason": "Hosted Windows x64 net8 job 109871740658 on candidate 19065cc1e (merge build 2a15beace59345d1daaa8cdbc887cfe67b5d89ff) passed the callback and refusal/write assertions but timed out at outer using Dispose line 58; the case took 325ms total. The specific scheduling or drain duration is unknown. The fixture accidentally kept its 100ms callback probe override for the whole database lifetime. Save and restore the override in a callback-local finally, retaining the exact callback limit and using the existing default close allowance only for ordinary teardown. This is test-budget scope correction, not evidence of a production semantic fix. The independently retained or non-owning reader controls perform a legitimate asynchronous close and keep the default deadline even inside the callback; their contract never required 100ms completion.",
++      "coveredBy": [
++        "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Late_callback_close_refuses_only_a_self_dependent_drain",
++        "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Cross_thread_close_drains_late_callback_without_refusing_it"
++      ],
++      "decision": "docs/transaction-handles-safety-review.md#late-callback-close-test-budget"
+     }
+   ]
+ }
+diff --git a/LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs
+index 35baee70c..13205e859 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs
+@@ -31,14 +31,23 @@ namespace LiteDB.Tests.Engine
+                 if (value.IsDocument && value["_id"] == 2)
+                 {
+                     callbacks++;
+-                    closeError = Record.Exception(db.Dispose);
++                    var lifetime = Lifetime(db);
++                    var previousWait = lifetime.CloseWaitOverride;
++                    try
++                    {
++                        // Bound only the deliberate callback self-drain probe. Ordinary
++                        // teardown must retain its default scheduling/drain allowance.
++                        if (mode == 0 || mode == 4 || mode == 5)
++                            lifetime.CloseWaitOverride = TimeSpan.FromMilliseconds(100);
++                        closeError = Record.Exception(db.Dispose);
++                    }
++                    finally { lifetime.CloseWaitOverride = previousWait; }
+                 }
+                 return value;
+             });
+             using var engine = Open(settings, mode);
+             using (db = new LiteDatabase(engine, disposeOnClose: mode != 1))
+             {
+-                Lifetime(db).CloseWaitOverride = TimeSpan.FromMilliseconds(100);
+                 using (var reader = db.Execute(mode == 5 ? "SELECT $ FROM rows FOR UPDATE" : "SELECT $ FROM rows"))
+                 {
+                     Assert.True(reader.Read());
+diff --git a/docs/transaction-handles-safety-review.md b/docs/transaction-handles-safety-review.md
+index 6f0a02506..660e163d0 100644
+--- a/docs/transaction-handles-safety-review.md
++++ b/docs/transaction-handles-safety-review.md
+@@ -339,3 +339,19 @@ failed at 24,000 bytes. Independent review confirmed those boundaries. The new
+ class passes on the local runtimes, but successor ARM64 CI remains required.
+ This is a measurement-hardening change, not a proven explanation for the old
+ 6,056-byte observation or an allocation waiver.
++
++## Late callback close test budget
++
++The callback self-drain regression keeps its 100ms close probe for raw owning
++Direct, unleased Shared, and Shared writer readers. Its required outcome remains
++`InvalidOperationException` before session closing, followed by successful writes.
++The fixture restores the prior timeout in `finally` before normal teardown.
++Independently retained and non-owning reader controls perform legitimate close
++and use the default deadline throughout. No production close limit changes.
++
++Windows x64 net8 job 109871740658 failed at the outer `using` disposal on the
++19065cc1e candidate, after the callback/refusal/write assertions passed. The case
++took 325ms overall; the specific scheduling or drain duration is unknown. This
++correction removes an accidental 100ms normal-cleanup budget, without asserting a
++production timing cause. The revised test still rejects real e821 source in all
++six plain/encrypted self-dependent callback cases.

@@ -1,0 +1,54 @@
+## Safety contracts: passed
+
+
+Implicated contracts: name each id in the PR's safety section with its evidence, or explain why the change cannot affect it.
+
+### `durable-ack`: Acknowledged durable transactions survive within the stated fault model
+
+Touched: `LiteDB/Client/Shared/AdmittedFileStream.cs`, `LiteDB/Client/Shared/DatabaseAdmissionException.cs`, `LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs`, `LiteDB/Client/Shared/DatabaseFileIdentity.cs`, `LiteDB/Client/Shared/DatabaseFileLock.cs` and 68 more
+
+Evidence: Parent_final_checkpoint_remains_best_effort_and_failed_attempt_keeps_committed_wal (exception); Acknowledged_shared_commit_survives_death_before_session_checkpoint (process-death); Disposed_bound_objects_refuse_use_without_aborting_prior_writes (exception); power-loss (modeled-power-loss); SectorTearsOfNewAppends_PreserveAcknowledgedPrefix (modeled-power-loss); RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes (modeled-power-loss); FailedCheckpointSync_PreservesAtomicDataAndStopsWrites (exception); SharedCommit_DeviceFailuresRecoverWholeTransactionsAndReleaseWriterOwnership (exception); shared (process-death); recovery (exception)
+
+Known gaps: No OS/VM reset or physical-device campaign: the device model is unclaimed.; Storage that cannot sync (#2242) is covered for its documented process-crash guarantee only; it makes no power-loss claim.
+
+### `recovery-generation`: Recovery never combines incompatible data and WAL generations
+
+Touched: `LiteDB/Client/Shared/SharedCoordinationEvents.cs`, `LiteDB/Client/Shared/SharedCoordinationFallback.cs`, `LiteDB/Client/Shared/SharedCoordinationFile.cs`, `LiteDB/Client/Shared/SharedCoordinationFiles.cs`, `LiteDB/Client/Shared/SharedCoordinationPage.cs` and 8 more
+
+Evidence: Rebuild_invalidates_cached_child_when_password_or_collation_changes (exception); Every_reachable_fault_combination_honours_the_rollback_contract (exception); Successful_rebuild_passes_every_install_fault_point (exception); Failed_password_rebuild_restores_the_original_data_and_wal_pair (exception); Repeated_recovery_failures_block_shared_reuse_and_fresh_opens (exception); Repeated_power_loss_during_recovery_keeps_the_journal (modeled-power-loss); rebuild-transition (exception)
+
+Known gaps: Directory-entry persistence of the rebuild marker and renames is not modeled (#3011); the install matrix is not power-loss evidence.
+
+### `reader-snapshot`: Readers retain their admitted snapshot across writes and reclamation
+
+Touched: `LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs`, `LiteDB/Client/Shared/AdmittedFileStream.cs`, `LiteDB/Client/Shared/DatabaseAdmissionException.cs`, `LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs`, `LiteDB/Client/Shared/DatabaseFileIdentity.cs` and 62 more
+
+Evidence: Late_callback_close_refuses_only_a_self_dependent_drain (exception); Cross_thread_close_drains_late_callback_without_refusing_it (exception); Owner_exit_during_transferred_reader_callback_preserves_recovery (process-death); Last_reader_close_fences_fresh_operation_until_core_retired (exception); Late_reader_self_close_preserves_unleased_protection_or_leased_independence (exception); Late_reader_callback_can_reenter_after_foreign_close_starts_draining (exception); Pin_close_failure_finishes_connection_cleanup_and_preserves_leased_reader (exception); Raw_close_rejects_fresh_callback_dependency_before_draining_callback; Contended_wait_preserves_release_and_abandonment; Reused_holder_and_wrapper_release_writer_and_refresh_after_external_commit; Independent_direct_handles_overlap_and_preserve_each_others_commit_and_rollback; Maintenance_progresses_under_sustained_ordinary_reads; AResolvedButUnreadWalOffsetCannotBeReclaimed (exception); LongLivedCursorsAcrossCheckpoints_MatchModel; InterleavedSharedInstances_ReadersMatchModel; Pin_owner_hands_off_to_each_repeated_waiter; KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery (process-death); threaded-snapshot; transaction-gate; cursor-handoff
+
+Known gaps: Shared reader lease files have observer stages only; no registered fault point interrupts lease publication or expiry.
+
+### `historical-input`: Supported historical inputs preserve their documented behavior
+
+Touched: `LiteDB/Engine/Engine/IndexMigration.cs`, `scripts/test-transaction-handle-compatibility.py`
+
+Evidence: Released_indexes_survive_power_loss_and_another_interrupted_recovery (modeled-power-loss); CutoverChangesOnlyHeader_ThenWritesMigratePagesOutOfOrder (exception); scripts/test-v9-compatibility.py; scripts/test-index-compatibility.py; scripts/test-parent-format-compatibility.py (corrupt-input); scripts/test-mvcc-compatibility.py (corrupt-input); scripts/test-prerelease-compatibility.py; compatibility (exception)
+
+Known gaps: Fixtures lack provenance manifests (producer, recipe, hashes, expected outcome).
+
+### `query-meaning`: Query and mapping paths preserve meaning
+
+Touched: `LiteDB/Client/Transactions/EngineFacade.cs`, `LiteDB/Client/Transactions/ILiteTransaction.cs`, `LiteDB/Client/Transactions/LiteTransaction.cs`, `LiteDB/Client/Transactions/SessionCallContext.cs`, `LiteDB/Client/Transactions/SessionCloseDependency.cs` and 14 more
+
+Evidence: Seeded_handoffs_match_committed_model_after_each_cold_reopen; Handle_metadata_queries_read_existing_collections_and_bound_uncommitted_indexes; Merged_ranges_match_unindexed_results_in_both_directions; query; linq-cache; sql-dml; mapper
+
+Known gaps: Cached and uncached paths share one translator; CLR evaluation is the independent oracle only where semantics align.
+Evidence by failure model (a `-` is an unclaimed model, not a pass):
+
+| Contract | exception | process-death | modeled-power-loss | device | corrupt-input |
+| --- | --- | --- | --- | --- | --- |
+| `durable-ack` | yes | yes | yes | - | - |
+| `recovery-generation` | yes | - | yes | - | - |
+| `reader-snapshot` | yes | yes | - | - | - |
+| `historical-input` | yes | - | yes | - | yes |
+| `query-meaning` | - | - | - | - | - |
+

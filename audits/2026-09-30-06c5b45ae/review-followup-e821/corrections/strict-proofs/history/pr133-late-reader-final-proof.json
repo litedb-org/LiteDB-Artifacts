@@ -1,0 +1,78 @@
+{
+  "GeneratedAt": "2026-09-30T11:24:01.3885591+00:00",
+  "Root": "__WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedLateReaderClose",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 12.5711993,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:24:07.6191307\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-late-133d30da52fb4436995ae10fcc65580f"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LATE_CALLBACK_AND_CLOSE_BLOCKED plain"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LATE_CALLBACK_AND_CLOSE_BLOCKED encrypted"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:24:20.1148875\u002B00:00\u0022,\u0022text\u0022:\u0022Late callback and close are mutually blocked.\u0022,\u0022success\u0022:true}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 1.0933206,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:24:20.1809505\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-late-2174e98638974f5caa913bfd5b90b692"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:24:21.2179079\u002B00:00\u0022,\u0022text\u0022:\u0022Callbacks refused; close and peer writes completed.\u0022,\u0022success\u0022:false}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          }
+        ]
+      }
+    }
+  ]
+}

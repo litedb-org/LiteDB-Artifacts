@@ -1,0 +1,403 @@
+﻿2026-09-30T09:33:14.6564092Z Current runner version: '2.337.0'
+2026-09-30T09:33:14.6590540Z ##[group]Runner Image Provisioner
+2026-09-30T09:33:14.6591584Z Hosted Compute Agent
+2026-09-30T09:33:14.6592203Z Version: 20260828.587
+2026-09-30T09:33:14.6592926Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-30T09:33:14.6593708Z Build Date: 2026-08-28T16:44:25Z
+2026-09-30T09:33:14.6594420Z Worker ID: {659ce810-fc58-4085-b637-63f8be4eacce}
+2026-09-30T09:33:14.6595246Z Azure Region: centralus
+2026-09-30T09:33:14.6595867Z ##[endgroup]
+2026-09-30T09:33:14.6597252Z ##[group]Operating System
+2026-09-30T09:33:14.6597995Z Ubuntu
+2026-09-30T09:33:14.6598855Z 24.04.5
+2026-09-30T09:33:14.6599555Z LTS
+2026-09-30T09:33:14.6600112Z ##[endgroup]
+2026-09-30T09:33:14.6600692Z ##[group]Runner Image
+2026-09-30T09:33:14.6601408Z Image: ubuntu-24.04
+2026-09-30T09:33:14.6602022Z Version: 20260920.314.1
+2026-09-30T09:33:14.6603426Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-30T09:33:14.6605147Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+2026-09-30T09:33:14.6606243Z ##[endgroup]
+2026-09-30T09:33:14.6607432Z ##[group]GITHUB_TOKEN Permissions
+2026-09-30T09:33:14.6610111Z Contents: read
+2026-09-30T09:33:14.6610750Z Metadata: read
+2026-09-30T09:33:14.6611413Z ##[endgroup]
+2026-09-30T09:33:14.6613565Z Secret source: Actions
+2026-09-30T09:33:14.6614676Z Cache mode: write
+2026-09-30T09:33:14.6615452Z Prepare workflow directory
+2026-09-30T09:33:14.7174770Z Prepare all required actions
+2026-09-30T09:33:14.7224314Z Getting action download info
+2026-09-30T09:33:15.0276065Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-30T09:33:15.1046916Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-30T09:33:15.5902383Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-09-30T09:33:15.8069179Z Uses: JKamsker/LiteDB/.github/workflows/_reusable-ci.yml@refs/pull/133/merge (dafa93b84a2ef4b009c7531c6aa11d7d4728f17e)
+2026-09-30T09:33:15.8076100Z ##[group] Inputs
+2026-09-30T09:33:15.8077107Z   tier: full
+2026-09-30T09:33:15.8082347Z   sdk-matrix: [
+  { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+  { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+  { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+]
+
+2026-09-30T09:33:15.8087614Z ##[endgroup]
+2026-09-30T09:33:15.8088775Z Complete job name: build-and-test / Safety evidence
+2026-09-30T09:33:15.8985479Z ##[group]Run actions/checkout@v4
+2026-09-30T09:33:15.8987502Z with:
+2026-09-30T09:33:15.8989046Z   repository: JKamsker/LiteDB
+2026-09-30T09:33:15.9003065Z   token: ***
+2026-09-30T09:33:15.9004498Z   ssh-strict: true
+2026-09-30T09:33:15.9005819Z   ssh-user: git
+2026-09-30T09:33:15.9007176Z   persist-credentials: true
+2026-09-30T09:33:15.9008832Z   clean: true
+2026-09-30T09:33:15.9010173Z   sparse-checkout-cone-mode: true
+2026-09-30T09:33:15.9011776Z   fetch-depth: 1
+2026-09-30T09:33:15.9013076Z   fetch-tags: false
+2026-09-30T09:33:15.9014423Z   show-progress: true
+2026-09-30T09:33:15.9015788Z   lfs: false
+2026-09-30T09:33:15.9017037Z   submodules: false
+2026-09-30T09:33:15.9018536Z   set-safe-directory: true
+2026-09-30T09:33:15.9020087Z   allow-unsafe-pr-checkout: false
+2026-09-30T09:33:15.9022195Z env:
+2026-09-30T09:33:15.9024594Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T09:33:15.9027480Z ##[endgroup]
+2026-09-30T09:33:16.0095491Z Syncing repository: JKamsker/LiteDB
+2026-09-30T09:33:16.0099585Z ##[group]Getting Git version info
+2026-09-30T09:33:16.0101633Z Working directory is '__CI_HOME__/work/LiteDB/LiteDB'
+2026-09-30T09:33:16.0104764Z [command]/usr/bin/git version
+2026-09-30T09:33:16.0158802Z git version 2.55.0
+2026-09-30T09:33:16.0189400Z ##[endgroup]
+2026-09-30T09:33:16.0204538Z Temporarily overriding HOME='__CI_HOME__/work/_temp/c319b282-e307-48bd-9888-dff8d3c7e0a9' before making global git config changes
+2026-09-30T09:33:16.0209662Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T09:33:16.0213053Z [command]/usr/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T09:33:16.0259105Z Deleting the contents of '__CI_HOME__/work/LiteDB/LiteDB'
+2026-09-30T09:33:16.0263386Z ##[group]Initializing the repository
+2026-09-30T09:33:16.0267827Z [command]/usr/bin/git init __CI_WORKSPACE__
+2026-09-30T09:33:16.0347961Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-30T09:33:16.0350856Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-30T09:33:16.0353626Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-30T09:33:16.0355181Z hint: call:
+2026-09-30T09:33:16.0356123Z hint:
+2026-09-30T09:33:16.0357444Z hint: 	git config --global init.defaultBranch <name>
+2026-09-30T09:33:16.0359173Z hint:
+2026-09-30T09:33:16.0360363Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-30T09:33:16.0362267Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-30T09:33:16.0363780Z hint:
+2026-09-30T09:33:16.0364616Z hint: 	git branch -m <name>
+2026-09-30T09:33:16.0365964Z hint:
+2026-09-30T09:33:16.0367838Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-30T09:33:16.0370869Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-09-30T09:33:16.0375719Z [command]/usr/bin/git remote add origin https://github.com/JKamsker/LiteDB
+2026-09-30T09:33:16.0409084Z ##[endgroup]
+2026-09-30T09:33:16.0410614Z ##[group]Disabling automatic garbage collection
+2026-09-30T09:33:16.0412595Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-30T09:33:16.0447375Z ##[endgroup]
+2026-09-30T09:33:16.0449140Z ##[group]Setting up auth
+2026-09-30T09:33:16.0456055Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T09:33:16.0493939Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-30T09:33:16.0850447Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T09:33:16.0893335Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-30T09:33:16.1165459Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T09:33:16.1204868Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-30T09:33:16.1449441Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-30T09:33:16.1492166Z ##[endgroup]
+2026-09-30T09:33:16.1493626Z ##[group]Fetching the repository
+2026-09-30T09:33:16.1509450Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dafa93b84a2ef4b009c7531c6aa11d7d4728f17e:refs/remotes/pull/133/merge
+2026-09-30T09:33:17.3144161Z From https://github.com/JKamsker/LiteDB
+2026-09-30T09:33:17.3145936Z  * [new ref]         dafa93b84a2ef4b009c7531c6aa11d7d4728f17e -> pull/133/merge
+2026-09-30T09:33:17.3150854Z ##[endgroup]
+2026-09-30T09:33:17.3152033Z ##[group]Determining the checkout info
+2026-09-30T09:33:17.3153210Z ##[endgroup]
+2026-09-30T09:33:17.3155869Z [command]/usr/bin/git sparse-checkout disable
+2026-09-30T09:33:17.3205432Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-30T09:33:17.3239440Z ##[group]Checking out the ref
+2026-09-30T09:33:17.3242877Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/133/merge
+2026-09-30T09:33:17.4530265Z Note: switching to 'refs/remotes/pull/133/merge'.
+2026-09-30T09:33:17.4530847Z 
+2026-09-30T09:33:17.4531376Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-30T09:33:17.4532519Z changes and commit them, and you can discard any commits you make in this
+2026-09-30T09:33:17.4533703Z state without impacting any branches by switching back to a branch.
+2026-09-30T09:33:17.4534300Z 
+2026-09-30T09:33:17.4534613Z If you want to create a new branch to retain commits you create, you may
+2026-09-30T09:33:17.4535451Z do so (now or later) by using -c with the switch command. Example:
+2026-09-30T09:33:17.4535862Z 
+2026-09-30T09:33:17.4536080Z   git switch -c <new-branch-name>
+2026-09-30T09:33:17.4536389Z 
+2026-09-30T09:33:17.4536604Z Or undo this operation with:
+2026-09-30T09:33:17.4536892Z 
+2026-09-30T09:33:17.4537078Z   git switch -
+2026-09-30T09:33:17.4547361Z 
+2026-09-30T09:33:17.4547775Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-30T09:33:17.4548501Z 
+2026-09-30T09:33:17.4549054Z HEAD is now at dafa93b Merge 01082139228101bee16048c6d375b72c9becb16a into 49c327cf1926fa300f9eb7477eb4bcb404f75c43
+2026-09-30T09:33:17.4550896Z ##[endgroup]
+2026-09-30T09:33:17.4594276Z [command]/usr/bin/git log -1 --format=%H
+2026-09-30T09:33:17.4623156Z dafa93b84a2ef4b009c7531c6aa11d7d4728f17e
+2026-09-30T09:33:17.4875191Z ##[group]Run actions/download-artifact@v4
+2026-09-30T09:33:17.4875715Z with:
+2026-09-30T09:33:17.4876119Z   pattern: test-results-*
+2026-09-30T09:33:17.4876556Z   path: evidence
+2026-09-30T09:33:17.4876984Z   merge-multiple: false
+2026-09-30T09:33:17.4877432Z   repository: JKamsker/LiteDB
+2026-09-30T09:33:17.4877888Z   run-id: 36693622504
+2026-09-30T09:33:17.4878602Z env:
+2026-09-30T09:33:17.4879280Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T09:33:17.4880008Z ##[endgroup]
+2026-09-30T09:33:17.6587694Z (node:2243) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T09:33:17.6589339Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T09:33:17.8138652Z Found 37 artifact(s)
+2026-09-30T09:33:17.8139815Z Filtering artifacts by pattern 'test-results-*'
+2026-09-30T09:33:17.8160219Z Preparing to download the following artifacts:
+2026-09-30T09:33:17.8161687Z - test-results-test-windows-1 (ID: 11088301752, Size: 1333451, Expected Digest: sha256:cdebafca93ed10c241205418d91db074b307dd959ecc5067057c081566fed227)
+2026-09-30T09:33:17.8165498Z - test-results-test-native-glibc231-1 (ID: 11088180686, Size: 151653, Expected Digest: sha256:809cf17552e6a586e87df57c8ae483ff36c474f9f20860e11bf751a9c3e143d1)
+2026-09-30T09:33:17.8167655Z - test-results-test-native-glibc231-0 (ID: 11088086355, Size: 151567, Expected Digest: sha256:425f5f905ccc084e873283494e51e3dfaa9bb17a39dd52af1fa4dcf7ddb693fb)
+2026-09-30T09:33:17.8169914Z - test-results-test-windows-2 (ID: 11087962509, Size: 1332817, Expected Digest: sha256:815a3ddfdef92673e3aeebb1b3bde88643ff4d7de689f7cd78f76896f667c9e6)
+2026-09-30T09:33:17.8172012Z - test-results-test-linux-arm64-2 (ID: 11087946757, Size: 1331891, Expected Digest: sha256:e880cc74046353e9194b47e1948113388397f7662f1e214aab062150e84aed4f)
+2026-09-30T09:33:17.8174178Z - test-results-test-windows-framework-0 (ID: 11087932543, Size: 160678, Expected Digest: sha256:013bfa6efa43aa3be6bc661d9390befe54c02af4391b68c92ead7b7759da79d4)
+2026-09-30T09:33:17.8176286Z - test-results-test-windows-9 (ID: 11087794057, Size: 1333290, Expected Digest: sha256:468872fefc94724c1f0ea29e317c0a4bb7908b8c74fa38117f392b91ed82dae0)
+2026-09-30T09:33:17.8178470Z - test-results-test-native-macos-intel-0 (ID: 11087730433, Size: 159941, Expected Digest: sha256:71f36b26740dc9f453ca1ed14a095e76aaf8e782bbb2fb347a42fcce54d5d49d)
+2026-09-30T09:33:17.8181055Z - test-results-test-native-macos-intel-1 (ID: 11087725334, Size: 159932, Expected Digest: sha256:1e651c4e11db2f7ac80da773550c548094627a53cc6a4d42547294f8ec08f44f)
+2026-09-30T09:33:17.8183230Z - test-results-test-linux-arm64-1 (ID: 11087678242, Size: 1330630, Expected Digest: sha256:faa05ba5011a3a8d452dc1cce84cbf9a2768d1f9f878216b9d8240220af976c3)
+2026-09-30T09:33:17.8185357Z - test-results-test-windows-5 (ID: 11087663144, Size: 1333684, Expected Digest: sha256:b3b6aad9590671d18882ee7a4994c0933d1fbb3042103fc59647e95bc0d9093b)
+2026-09-30T09:33:17.8187431Z - test-results-test-windows-3 (ID: 11087648362, Size: 1334894, Expected Digest: sha256:feaf13c539175e8433618f72f7443a7257cc6e74bc5189a858f20482145d3a9f)
+2026-09-30T09:33:17.8190057Z - test-results-test-linux-arm64-0 (ID: 11087644451, Size: 1330907, Expected Digest: sha256:d1d1ab1357e8407ec166faea097dfa311a15f9ef69c5ad7e544bf771e61239da)
+2026-09-30T09:33:17.8191408Z - test-results-test-macos-2 (ID: 11087641706, Size: 1335650, Expected Digest: sha256:42a8f54e0b4fd869f9419b67ad4e76fd1635bc230fef09969fad5bed3767e1b8)
+2026-09-30T09:33:17.8192796Z - test-results-test-native-windows-arm64-1 (ID: 11087501064, Size: 861304, Expected Digest: sha256:6b4566a9fc2bcc25cef04fd0c883ebf3ece918469e095f19528f76252fb05d2f)
+2026-09-30T09:33:17.8194185Z - test-results-test-windows-8 (ID: 11087462435, Size: 1331999, Expected Digest: sha256:88fbc14fafa07f85a307509dd9af0f84aa4f8a422c9a7303703718fc14a6e069)
+2026-09-30T09:33:17.8195758Z - test-results-test-macos-1 (ID: 11087381824, Size: 1334665, Expected Digest: sha256:10396d19f0788ed07eccd7416aeac82e0b32c0efcc3a6b1307faed0c0ab960b0)
+2026-09-30T09:33:17.8196982Z - test-results-test-windows-11 (ID: 11087379262, Size: 1332822, Expected Digest: sha256:f16b5fffe997c99b675437f836e03bff6164fe00089be0502d5163d62475d0ed)
+2026-09-30T09:33:17.8198399Z - test-results-test-windows-7 (ID: 11087378833, Size: 1330311, Expected Digest: sha256:ea0831b8d1e596ba36d7451089722ba3c27d2586cb8352361516928a380e7dde)
+2026-09-30T09:33:17.8200103Z - test-results-test-native-windows-arm64-0 (ID: 11087370904, Size: 861276, Expected Digest: sha256:6ae046eb498dc1add29dcd4e58aca02b6f23f4d96586daf714378569e8eea292)
+2026-09-30T09:33:17.8202178Z - test-results-test-windows-0 (ID: 11087317929, Size: 1333312, Expected Digest: sha256:9de3b685dbda6c180a6da97b1f96ae191462df9408a7e507ca5533c8d0e45e48)
+2026-09-30T09:33:17.8204094Z - test-results-test-linux-2 (ID: 11087297702, Size: 1333291, Expected Digest: sha256:35e05a2c0931b5e231b38901c968e33b902818b866946b7e13293c4ede0a8074)
+2026-09-30T09:33:17.8206006Z - test-results-test-linux-1 (ID: 11087261599, Size: 1331161, Expected Digest: sha256:2dee85a56885870e24a2a8cbd95b9662c60f1ff002493d17f982ad62d4089dc1)
+2026-09-30T09:33:17.8207942Z - test-results-test-windows-4 (ID: 11087228312, Size: 1333293, Expected Digest: sha256:de09f5fe4b2e288d8779f57378a36bb0e88ed9de83ff07d9f0dca655338f83ac)
+2026-09-30T09:33:17.8209969Z - test-results-test-linux-0 (ID: 11087223239, Size: 1330843, Expected Digest: sha256:f45758770c9a20e17687fe61928caa3396e4f9d6672efc67b53056991164d5e9)
+2026-09-30T09:33:17.8211883Z - test-results-test-macos-0 (ID: 11087221954, Size: 1337499, Expected Digest: sha256:af41011afb73e9f405bf94afd7008cc675a6a04de95b211e252ccefb9819441f)
+2026-09-30T09:33:17.8213925Z - test-results-test-windows-framework-1 (ID: 11087177755, Size: 161598, Expected Digest: sha256:6cd0a0a10c659b7eab5b867658e57e8c209748eb78896e08e248d6465bad4322)
+2026-09-30T09:33:17.8216036Z - test-results-test-windows-10 (ID: 11087128337, Size: 1332265, Expected Digest: sha256:cd1768179aac16f3623b182d59f3a2dd1b6f39f328434b28a8079fa4a6286575)
+2026-09-30T09:33:17.8217996Z - test-results-test-windows-6 (ID: 11087117844, Size: 1331647, Expected Digest: sha256:ea4da7dc75da24f498a621820da63b9c95b0bcdba20ee3a3404aad61aa99535e)
+2026-09-30T09:33:17.9955652Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-18c92d66-0ee6-57ad-93e6-b4c227e03c8f/artifacts/5abccb7f4d10aba84ca05b093a79aec9cef3e4c48213f514c133defff322b0cf.zip
+2026-09-30T09:33:17.9958917Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-1
+2026-09-30T09:33:18.0929148Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-93fca8a4-3e62-53e4-ade3-5736ce45a431/artifacts/ac1731d889fca846082a7afdb2ef75629fd43b533870476a68d73f402825cd33.zip
+2026-09-30T09:33:18.0931860Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-macos-0
+2026-09-30T09:33:18.0955022Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-a1e977e7-000d-57b7-8e12-2b087efb8543/artifacts/de31e9623545f340439c7e4157f6a89538dbefa77cc22e20a3a7296b20134c54.zip
+2026-09-30T09:33:18.0957335Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-arm64-0
+2026-09-30T09:33:18.0994849Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-1769c1be-fdc0-5924-b1d0-48da5f9d3921/artifacts/2687293aeb6715e0b1c9d862ffbeac753183f9d141fb9490da7f043225fd077f.zip
+2026-09-30T09:33:18.0997624Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-7
+2026-09-30T09:33:18.1088434Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-e08b1cdc-64c8-54b8-a6d7-48673736da85/artifacts/bea6c625ee0d29971325b17f173dbfedf09d28424d65a7172b8b3d7133659d8b.zip
+2026-09-30T09:33:18.1091362Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-5
+2026-09-30T09:33:18.1123326Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-ebf768e3-f3ca-518a-883f-2b12ecf1c70f/artifacts/29568597f9665da30a2860442d80ecaffceb6740dfb09cba1bfc53e6dc037829.zip
+2026-09-30T09:33:18.1126185Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-arm64-2
+2026-09-30T09:33:18.1181547Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-5bdb1553-938e-565e-a731-feb45202f4d8/artifacts/d0aba0f0445e460e2a9a87370bbd7c0b251f38d82908d785b3913005355dc55c.zip
+2026-09-30T09:33:18.1184404Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-2
+2026-09-30T09:33:18.1191310Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-6d89953e-a411-5c46-897b-9d6f13945c89/artifacts/a443e8e13365f98b4473cf99bd15bf6a65cfc595bc4e3061785b10108739d655.zip
+2026-09-30T09:33:18.1194215Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-1
+2026-09-30T09:33:18.1200721Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-cc94dca7-686e-50ea-8109-0459f8bd85cb/artifacts/8280dfef85170eb29c979ec366568225464c2196bb456b8c7dfb1a3dfba7e797.zip
+2026-09-30T09:33:18.1203529Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-macos-2
+2026-09-30T09:33:18.1208033Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-40d81d24-2f70-53fa-9343-16d55f38c0c2/artifacts/6e420511ba5d1d3f49dd209f4feac432368111504e39b42997ec27853072f41d.zip
+2026-09-30T09:33:18.1210106Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-macos-intel-1
+2026-09-30T09:33:18.1215260Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-449a0935-f952-5fdb-b9a0-e7525f784299/artifacts/a0b96dd1a4a02fd3aec21bde139cf5cce90f78f2c45c35a8b7d43e2240c9647c.zip
+2026-09-30T09:33:18.1216957Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-6
+2026-09-30T09:33:18.1221163Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-8b56ca2d-2ceb-52a6-911a-21abe470c91b/artifacts/57eeb67cb64471886cf397300f58bbd4da6cb27742d65a9a78177ce464ac8477.zip
+2026-09-30T09:33:18.1222831Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-9
+2026-09-30T09:33:18.1227389Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-8c7201ea-a00c-5e56-b403-b9f8fd8f02b3/artifacts/98499f07096f57cfc44444f0d12d84cf9e6031ee19ef4fdde15b2d830cc5390b.zip
+2026-09-30T09:33:18.1229452Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-10
+2026-09-30T09:33:18.1234305Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-bef2cec6-dffe-578e-889a-01058c41d465/artifacts/ee156dd7bbef5db097833a8da7cd81ac55b0598cf2c2dba4a808010b874b43a9.zip
+2026-09-30T09:33:18.1236841Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-framework-1
+2026-09-30T09:33:18.1242523Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-31e6ee3f-0db9-55c6-ac4a-9be3f22534c7/artifacts/eeaf41db41d817a7b2458f0fe339d70e114309dd3a25fa09ab04338c1320e112.zip
+2026-09-30T09:33:18.1244596Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-glibc231-1
+2026-09-30T09:33:18.1251102Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-f2802625-71e8-59f8-88b7-dee61fc3d60f/artifacts/aa8a3274c36af4b9d3d2189750fead45b945ab01d7b669abd4164da336df71dd.zip
+2026-09-30T09:33:18.1253029Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-framework-0
+2026-09-30T09:33:18.1261490Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-dad2bd91-89dc-5911-87fc-f40d6725048b/artifacts/fed42968f031016014b77b02874775183f90f7c09011d55c8ed8f0b920aa5aa3.zip
+2026-09-30T09:33:18.1263278Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-windows-arm64-1
+2026-09-30T09:33:18.1277219Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-aeec09ad-b968-557b-a80e-b4a46de7d755/artifacts/f60281c5314e490c8046e74aa06efd313269dcde0c664ca46cf904e170dd9889.zip
+2026-09-30T09:33:18.1279703Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-macos-intel-0
+2026-09-30T09:33:18.1291542Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-de28e620-09a4-55a4-81f4-379e6e37f98c/artifacts/5a8145b895bb7508f22e2b9588f2bcba044f890f94d487fd1de155ba12438bb0.zip
+2026-09-30T09:33:18.1294513Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-11
+2026-09-30T09:33:18.1308730Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-70bf2fd6-8367-5679-a485-92efc16c9866/artifacts/73faf194e1c7c3af62c0a4b818189ac34ebad8492a8f44c819b9d7541e1be6de.zip
+2026-09-30T09:33:18.1310745Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-macos-1
+2026-09-30T09:33:18.1315195Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-7f8baa41-4976-53e6-86ea-89c490ab638b/artifacts/bbd7b7816ce2b92bea8bfc96776e1cfdcab7c5e410e2452927306b70f5b2969d.zip
+2026-09-30T09:33:18.1316994Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-glibc231-0
+2026-09-30T09:33:18.1346043Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-04505b06-f30e-5020-aa16-27d99b85366f/artifacts/8c60a1963ba64ef586be7ead9eee1089ca05694544691f09c3f3ea7cadf7def3.zip
+2026-09-30T09:33:18.1348554Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-2
+2026-09-30T09:33:18.1371929Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-51028738-cc5b-5a2e-bc91-c7ae35fc3e28/artifacts/d6d96038ee8e5689788cf04ee757e50bd80b049da4996b3f099043fa4add7d4e.zip
+2026-09-30T09:33:18.1375291Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-8
+2026-09-30T09:33:18.1387698Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-ca1a1db1-4f7f-5069-bb84-bcb665d5880d/artifacts/24a163c9412c9ccc841d2b9b9e386706cc332070b4f94607680635296748966c.zip
+2026-09-30T09:33:18.1390592Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-0
+2026-09-30T09:33:18.1426378Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-da4301c4-9d37-5f91-ab85-cd97a57a5151/artifacts/dce40dc7a93493e0c954aa8af70310239b21113b291c17b23b957aa2a3e23017.zip
+2026-09-30T09:33:18.1428865Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-4
+2026-09-30T09:33:18.1437373Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-46145bf8-b43a-55ae-ab1b-7357167c8189/artifacts/1a3c38becc09f6dfbd4a2426ac5a599c2fce8c61dc05b2308ccfe774476c7402.zip
+2026-09-30T09:33:18.1439912Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-3
+2026-09-30T09:33:18.1453413Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-3d5348e3-9aa0-5022-b309-d4ae7a55c59b/artifacts/e7a0563a069ffe7306c9e63dbc1a16c755508375f9f11388aa564e0a6449f183.zip
+2026-09-30T09:33:18.1456267Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-linux-arm64-1
+2026-09-30T09:33:18.1472139Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-49d84877-f3bf-509e-9a74-352dce9df07e/artifacts/09299e0403bf51949556b8c3d6beb5d952d8d0b53bbba38217585ee129c3cb24.zip
+2026-09-30T09:33:18.1474192Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-windows-0
+2026-09-30T09:33:18.1730281Z Redirecting to blob download url: https://productionresultssa19.blob.core.windows.net/actions-results/8b1594af-6b4f-8c3b-8270-694eebfcc8e7/workflow-job-run-7069c627-f68d-5bfc-b58b-d7601a0e4a0a/artifacts/2031e0c407380ab7bb6228a3862c1debed936ba541ac862e2701f87155401f3e.zip
+2026-09-30T09:33:18.1732517Z Starting download of artifact to: __CI_WORKSPACE__/evidence/test-results-test-native-windows-arm64-0
+2026-09-30T09:33:18.2026483Z (node:2243) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-30T09:33:18.5222585Z SHA256 digest of downloaded artifact is 425f5f905ccc084e873283494e51e3dfaa9bb17a39dd52af1fa4dcf7ddb693fb
+2026-09-30T09:33:18.5230987Z Artifact download completed successfully.
+2026-09-30T09:33:18.5536191Z SHA256 digest of downloaded artifact is 809cf17552e6a586e87df57c8ae483ff36c474f9f20860e11bf751a9c3e143d1
+2026-09-30T09:33:18.5538854Z Artifact download completed successfully.
+2026-09-30T09:33:18.5626798Z SHA256 digest of downloaded artifact is 71f36b26740dc9f453ca1ed14a095e76aaf8e782bbb2fb347a42fcce54d5d49d
+2026-09-30T09:33:18.5651251Z Artifact download completed successfully.
+2026-09-30T09:33:18.5978767Z SHA256 digest of downloaded artifact is 1e651c4e11db2f7ac80da773550c548094627a53cc6a4d42547294f8ec08f44f
+2026-09-30T09:33:18.6024668Z Artifact download completed successfully.
+2026-09-30T09:33:18.6910448Z SHA256 digest of downloaded artifact is 6b4566a9fc2bcc25cef04fd0c883ebf3ece918469e095f19528f76252fb05d2f
+2026-09-30T09:33:18.6912140Z Artifact download completed successfully.
+2026-09-30T09:33:18.7098535Z SHA256 digest of downloaded artifact is 013bfa6efa43aa3be6bc661d9390befe54c02af4391b68c92ead7b7759da79d4
+2026-09-30T09:33:18.7104856Z Artifact download completed successfully.
+2026-09-30T09:33:18.7148551Z SHA256 digest of downloaded artifact is 6cd0a0a10c659b7eab5b867658e57e8c209748eb78896e08e248d6465bad4322
+2026-09-30T09:33:18.7150150Z Artifact download completed successfully.
+2026-09-30T09:33:18.8291180Z SHA256 digest of downloaded artifact is 6ae046eb498dc1add29dcd4e58aca02b6f23f4d96586daf714378569e8eea292
+2026-09-30T09:33:18.8293207Z Artifact download completed successfully.
+2026-09-30T09:33:18.9006714Z SHA256 digest of downloaded artifact is af41011afb73e9f405bf94afd7008cc675a6a04de95b211e252ccefb9819441f
+2026-09-30T09:33:18.9008578Z Artifact download completed successfully.
+2026-09-30T09:33:18.9019520Z SHA256 digest of downloaded artifact is cdebafca93ed10c241205418d91db074b307dd959ecc5067057c081566fed227
+2026-09-30T09:33:18.9020413Z Artifact download completed successfully.
+2026-09-30T09:33:18.9040142Z SHA256 digest of downloaded artifact is 42a8f54e0b4fd869f9419b67ad4e76fd1635bc230fef09969fad5bed3767e1b8
+2026-09-30T09:33:18.9058955Z Artifact download completed successfully.
+2026-09-30T09:33:18.9108476Z SHA256 digest of downloaded artifact is 10396d19f0788ed07eccd7416aeac82e0b32c0efcc3a6b1307faed0c0ab960b0
+2026-09-30T09:33:18.9109917Z Artifact download completed successfully.
+2026-09-30T09:33:18.9122681Z SHA256 digest of downloaded artifact is de09f5fe4b2e288d8779f57378a36bb0e88ed9de83ff07d9f0dca655338f83ac
+2026-09-30T09:33:18.9124534Z Artifact download completed successfully.
+2026-09-30T09:33:18.9139335Z SHA256 digest of downloaded artifact is ea0831b8d1e596ba36d7451089722ba3c27d2586cb8352361516928a380e7dde
+2026-09-30T09:33:18.9141258Z Artifact download completed successfully.
+2026-09-30T09:33:18.9143075Z SHA256 digest of downloaded artifact is 35e05a2c0931b5e231b38901c968e33b902818b866946b7e13293c4ede0a8074
+2026-09-30T09:33:18.9144865Z Artifact download completed successfully.
+2026-09-30T09:33:18.9152753Z SHA256 digest of downloaded artifact is cd1768179aac16f3623b182d59f3a2dd1b6f39f328434b28a8079fa4a6286575
+2026-09-30T09:33:18.9155076Z Artifact download completed successfully.
+2026-09-30T09:33:18.9188955Z SHA256 digest of downloaded artifact is 468872fefc94724c1f0ea29e317c0a4bb7908b8c74fa38117f392b91ed82dae0
+2026-09-30T09:33:18.9196457Z Artifact download completed successfully.
+2026-09-30T09:33:18.9230299Z SHA256 digest of downloaded artifact is ea4da7dc75da24f498a621820da63b9c95b0bcdba20ee3a3404aad61aa99535e
+2026-09-30T09:33:18.9256784Z Artifact download completed successfully.
+2026-09-30T09:33:18.9259399Z SHA256 digest of downloaded artifact is b3b6aad9590671d18882ee7a4994c0933d1fbb3042103fc59647e95bc0d9093b
+2026-09-30T09:33:18.9261372Z Artifact download completed successfully.
+2026-09-30T09:33:18.9263788Z SHA256 digest of downloaded artifact is f16b5fffe997c99b675437f836e03bff6164fe00089be0502d5163d62475d0ed
+2026-09-30T09:33:18.9265687Z Artifact download completed successfully.
+2026-09-30T09:33:18.9271864Z SHA256 digest of downloaded artifact is 815a3ddfdef92673e3aeebb1b3bde88643ff4d7de689f7cd78f76896f667c9e6
+2026-09-30T09:33:18.9274489Z Artifact download completed successfully.
+2026-09-30T09:33:18.9308353Z SHA256 digest of downloaded artifact is 88fbc14fafa07f85a307509dd9af0f84aa4f8a422c9a7303703718fc14a6e069
+2026-09-30T09:33:18.9320844Z Artifact download completed successfully.
+2026-09-30T09:33:18.9322033Z SHA256 digest of downloaded artifact is e880cc74046353e9194b47e1948113388397f7662f1e214aab062150e84aed4f
+2026-09-30T09:33:18.9323083Z Artifact download completed successfully.
+2026-09-30T09:33:18.9336282Z SHA256 digest of downloaded artifact is faa05ba5011a3a8d452dc1cce84cbf9a2768d1f9f878216b9d8240220af976c3
+2026-09-30T09:33:18.9338805Z Artifact download completed successfully.
+2026-09-30T09:33:18.9340170Z SHA256 digest of downloaded artifact is f45758770c9a20e17687fe61928caa3396e4f9d6672efc67b53056991164d5e9
+2026-09-30T09:33:18.9341464Z Artifact download completed successfully.
+2026-09-30T09:33:18.9342566Z SHA256 digest of downloaded artifact is feaf13c539175e8433618f72f7443a7257cc6e74bc5189a858f20482145d3a9f
+2026-09-30T09:33:18.9343663Z Artifact download completed successfully.
+2026-09-30T09:33:18.9344564Z SHA256 digest of downloaded artifact is d1d1ab1357e8407ec166faea097dfa311a15f9ef69c5ad7e544bf771e61239da
+2026-09-30T09:33:18.9345424Z Artifact download completed successfully.
+2026-09-30T09:33:18.9351307Z SHA256 digest of downloaded artifact is 9de3b685dbda6c180a6da97b1f96ae191462df9408a7e507ca5533c8d0e45e48
+2026-09-30T09:33:18.9352750Z Artifact download completed successfully.
+2026-09-30T09:33:19.0174236Z SHA256 digest of downloaded artifact is 2dee85a56885870e24a2a8cbd95b9662c60f1ff002493d17f982ad62d4089dc1
+2026-09-30T09:33:19.0175794Z Artifact download completed successfully.
+2026-09-30T09:33:19.0176703Z Total of 29 artifact(s) downloaded
+2026-09-30T09:33:19.0182612Z Download artifact has finished successfully
+2026-09-30T09:33:19.0561795Z ##[group]Run python .github/scripts/check_test_evidence.py --artifacts evidence --tier "$CI_TIER" --sha "$VALIDATED_SHA" --output evidence-report
+2026-09-30T09:33:19.0563262Z [36;1mpython .github/scripts/check_test_evidence.py --artifacts evidence --tier "$CI_TIER" --sha "$VALIDATED_SHA" --output evidence-report[0m
+2026-09-30T09:33:19.0803816Z shell: /usr/bin/bash -e {0}
+2026-09-30T09:33:19.0804434Z env:
+2026-09-30T09:33:19.0805200Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T09:33:19.0808835Z   NEEDS_JSON: {
+  "safety-policy": {
+    "result": "success",
+    "outputs": {}
+  },
+  "build-linux": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-linux": {
+    "result": "success",
+    "outputs": {}
+  },
+  "build-macos": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-macos": {
+    "result": "success",
+    "outputs": {}
+  },
+  "build-windows": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-windows": {
+    "result": "failure",
+    "outputs": {}
+  },
+  "test-windows-framework": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-linux-arm64": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-native-glibc231": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-native-macos-intel": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-native-windows-arm64": {
+    "result": "success",
+    "outputs": {}
+  },
+  "test-host-local-filesystem": {
+    "result": "success",
+    "outputs": {}
+  }
+}
+2026-09-30T09:33:19.0811874Z   CI_TIER: full
+2026-09-30T09:33:19.0812472Z   VALIDATED_SHA: dafa93b84a2ef4b009c7531c6aa11d7d4728f17e
+2026-09-30T09:33:19.0813384Z ##[endgroup]
+2026-09-30T09:33:23.2321687Z ##[error]Job test-windows finished as 'failure', but the full tier requires 'success'
+2026-09-30T09:33:23.2332005Z ##[error]test-windows {"arch": "x86", "item": {"display": ".NET 8", "framework": "net8.0", "includePrerelease": false, "msbuildProps": "", "runtimeMajor": 8, "sdk": "8.0.x"}, "os": "windows-latest"}: partition engine-shared did not pass cleanly (Failed, {'failed': 1})
+2026-09-30T09:33:23.2402931Z ##[error]Process completed with exit code 1.
+2026-09-30T09:33:23.2521770Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T09:33:23.2522293Z with:
+2026-09-30T09:33:23.2522702Z   name: safety-evidence
+2026-09-30T09:33:23.2523141Z   overwrite: true
+2026-09-30T09:33:23.2523603Z   path: evidence-report/safety-evidence.json
+2026-09-30T09:33:23.2524120Z   if-no-files-found: warn
+2026-09-30T09:33:23.2524572Z   compression-level: 6
+2026-09-30T09:33:23.2525030Z   include-hidden-files: false
+2026-09-30T09:33:23.2525495Z env:
+2026-09-30T09:33:23.2526148Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T09:33:23.2526843Z ##[endgroup]
+2026-09-30T09:33:23.4258637Z (node:2264) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T09:33:23.4259672Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T09:33:23.4283845Z With the provided path, there will be 1 file uploaded
+2026-09-30T09:33:23.6051257Z Artifact name is valid!
+2026-09-30T09:33:23.6052314Z Root directory input is valid!
+2026-09-30T09:33:23.7937385Z Beginning upload of artifact content to blob storage
+2026-09-30T09:33:23.8139983Z (node:2264) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-30T09:33:23.9562409Z Uploaded bytes 3233
+2026-09-30T09:33:23.9987573Z Finished uploading artifact content to blob storage!
+2026-09-30T09:33:23.9989215Z SHA256 digest of uploaded artifact zip is 8e7f43d2aaabf3b0ea390f08fd8dc78be5dd93847aedc88280256697675baad6
+2026-09-30T09:33:23.9990403Z Finalizing artifact upload
+2026-09-30T09:33:24.2248066Z Artifact safety-evidence.zip successfully finalized. Artifact ID 11087604535
+2026-09-30T09:33:24.2249798Z Artifact safety-evidence has been successfully uploaded! Final size is 3233 bytes. Artifact ID is 11087604535
+2026-09-30T09:33:24.2256869Z Artifact download URL: https://github.com/JKamsker/LiteDB/actions/runs/36693622504/artifacts/11087604535
+2026-09-30T09:33:24.2470229Z Post job cleanup.
+2026-09-30T09:33:24.3323358Z [command]/usr/bin/git version
+2026-09-30T09:33:24.3369140Z git version 2.55.0
+2026-09-30T09:33:24.3410598Z Temporarily overriding HOME='__CI_HOME__/work/_temp/625f52f6-a109-41a0-8b44-022da9836780' before making global git config changes
+2026-09-30T09:33:24.3412387Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T09:33:24.3416699Z [command]/usr/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T09:33:24.3460363Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T09:33:24.3498339Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-30T09:33:24.3767923Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T09:33:24.3796626Z http.https://github.com/.extraheader
+2026-09-30T09:33:24.3810347Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-30T09:33:24.3853765Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-30T09:33:24.4124288Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T09:33:24.4163414Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-30T09:33:24.4613426Z Cleaning up orphan processes
+2026-09-30T09:33:24.4968486Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

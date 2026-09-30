@@ -1,0 +1,1032 @@
+﻿2026-09-30T11:06:54.2877709Z Current runner version: '2.337.0'
+2026-09-30T11:06:54.2903920Z ##[group]Runner Image Provisioner
+2026-09-30T11:06:54.2904699Z Hosted Compute Agent
+2026-09-30T11:06:54.2905208Z Version: 20260828.587
+2026-09-30T11:06:54.2905757Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-30T11:06:54.2906431Z Build Date: 2026-08-28T16:44:25Z
+2026-09-30T11:06:54.2907064Z Worker ID: {3fff93e1-abbe-4e5f-a4b0-e66cb2f497dd}
+2026-09-30T11:06:54.2907714Z Azure Region: westus3
+2026-09-30T11:06:54.2908194Z ##[endgroup]
+2026-09-30T11:06:54.2909533Z ##[group]Operating System
+2026-09-30T11:06:54.2910088Z Microsoft Windows Server 2022
+2026-09-30T11:06:54.2910638Z 10.0.20348
+2026-09-30T11:06:54.2911101Z Datacenter
+2026-09-30T11:06:54.2911527Z ##[endgroup]
+2026-09-30T11:06:54.2912038Z ##[group]Runner Image
+2026-09-30T11:06:54.2912528Z Image: windows-2022
+2026-09-30T11:06:54.2913036Z Version: 20260920.314.1
+2026-09-30T11:06:54.2914420Z Included Software: https://github.com/actions/runner-images/blob/win22/20260920.314/images/windows/Windows2022-Readme.md
+2026-09-30T11:06:54.2915866Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20260920.314
+2026-09-30T11:06:54.2916688Z ##[endgroup]
+2026-09-30T11:06:54.2919576Z ##[group]GITHUB_TOKEN Permissions
+2026-09-30T11:06:54.2921708Z Actions: write
+2026-09-30T11:06:54.2922230Z ArtifactMetadata: write
+2026-09-30T11:06:54.2922771Z Attestations: write
+2026-09-30T11:06:54.2923273Z Checks: write
+2026-09-30T11:06:54.2923774Z CodeQuality: write
+2026-09-30T11:06:54.2924258Z Contents: write
+2026-09-30T11:06:54.2924733Z CopilotRequests: write
+2026-09-30T11:06:54.2925278Z Deployments: write
+2026-09-30T11:06:54.2925766Z Discussions: write
+2026-09-30T11:06:54.2926275Z Drives: write
+2026-09-30T11:06:54.2926752Z Issues: write
+2026-09-30T11:06:54.2927196Z Metadata: read
+2026-09-30T11:06:54.2927737Z Models: read
+2026-09-30T11:06:54.2928233Z Packages: write
+2026-09-30T11:06:54.2928703Z Pages: write
+2026-09-30T11:06:54.2929207Z PullRequests: write
+2026-09-30T11:06:54.2930715Z RepositoryProjects: write
+2026-09-30T11:06:54.2931286Z SecurityEvents: write
+2026-09-30T11:06:54.2931778Z Statuses: write
+2026-09-30T11:06:54.2932284Z VulnerabilityAlerts: read
+2026-09-30T11:06:54.2932791Z ##[endgroup]
+2026-09-30T11:06:54.2935300Z Secret source: Actions
+2026-09-30T11:06:54.2936085Z Cache mode: write
+2026-09-30T11:06:54.2936810Z Prepare workflow directory
+2026-09-30T11:06:54.3465761Z Prepare all required actions
+2026-09-30T11:06:54.3515940Z Getting action download info
+2026-09-30T11:06:54.7411349Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-30T11:06:54.8536808Z Download action repository 'actions/setup-dotnet@v4' (SHA:67a3573c9a986a3f9c594539f4ab511d57bb3ce9)
+2026-09-30T11:06:55.5596965Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-30T11:06:56.2364974Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-09-30T11:06:56.5406446Z Uses: JKamsker/LiteDB/.github/workflows/_reusable-ci.yml@refs/pull/133/merge (3f614aa69b15771ed1a63b8b8796172fae8b6648)
+2026-09-30T11:06:56.5411541Z ##[group] Inputs
+2026-09-30T11:06:56.5411944Z   tier: full
+2026-09-30T11:06:56.5413427Z   sdk-matrix: [
+  { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+  { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+  { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+]
+
+2026-09-30T11:06:56.5414931Z ##[endgroup]
+2026-09-30T11:06:56.5415379Z Complete job name: build-and-test / Test (Windows windows-2022 - x64 - .NET 10)
+2026-09-30T11:06:56.6979015Z ##[group]Run actions/checkout@v4
+2026-09-30T11:06:56.6980205Z with:
+2026-09-30T11:06:56.6982172Z   repository: JKamsker/LiteDB
+2026-09-30T11:06:56.6985198Z   token: ***
+2026-09-30T11:06:56.6985557Z   ssh-strict: true
+2026-09-30T11:06:56.6985931Z   ssh-user: git
+2026-09-30T11:06:56.6986361Z   persist-credentials: true
+2026-09-30T11:06:56.6986765Z   clean: true
+2026-09-30T11:06:56.6987167Z   sparse-checkout-cone-mode: true
+2026-09-30T11:06:56.6987556Z   fetch-depth: 1
+2026-09-30T11:06:56.6987911Z   fetch-tags: false
+2026-09-30T11:06:56.6988280Z   show-progress: true
+2026-09-30T11:06:56.6988637Z   lfs: false
+2026-09-30T11:06:56.6988981Z   submodules: false
+2026-09-30T11:06:56.6989338Z   set-safe-directory: true
+2026-09-30T11:06:56.6989754Z   allow-unsafe-pr-checkout: false
+2026-09-30T11:06:56.6990594Z env:
+2026-09-30T11:06:56.6991110Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:06:56.6991833Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:06:56.6992225Z ##[endgroup]
+2026-09-30T11:06:56.8448494Z Syncing repository: JKamsker/LiteDB
+2026-09-30T11:06:56.8450442Z ##[group]Getting Git version info
+2026-09-30T11:06:56.8451030Z Working directory is '__CI_HOME__/work\LiteDB\LiteDB'
+2026-09-30T11:06:56.9466569Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-30T11:06:57.3446938Z git version 2.55.0.windows.5
+2026-09-30T11:06:57.3486860Z ##[endgroup]
+2026-09-30T11:06:57.3507540Z Temporarily overriding HOME='__CI_HOME__/work\_temp\5535fb8c-e480-4a30-a4b6-9d719f6dabba' before making global git config changes
+2026-09-30T11:06:57.3509595Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T11:06:57.3519799Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T11:06:57.4081410Z Deleting the contents of '__CI_HOME__/work\LiteDB\LiteDB'
+2026-09-30T11:06:57.4086616Z ##[group]Initializing the repository
+2026-09-30T11:06:57.4096321Z [command]"C:\Program Files\Git\bin\git.exe" init __CI_WORKSPACE__
+2026-09-30T11:06:57.4856522Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-09-30T11:06:57.4894813Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/JKamsker/LiteDB
+2026-09-30T11:06:57.5432558Z ##[endgroup]
+2026-09-30T11:06:57.5433293Z ##[group]Disabling automatic garbage collection
+2026-09-30T11:06:57.5442761Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-09-30T11:06:57.5692403Z ##[endgroup]
+2026-09-30T11:06:57.5693729Z ##[group]Setting up auth
+2026-09-30T11:06:57.5710368Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T11:06:57.5973179Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-30T11:06:59.0550710Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T11:06:59.0796978Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-30T11:06:59.5694803Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T11:06:59.5938927Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-30T11:07:00.0714366Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-30T11:07:00.0972201Z ##[endgroup]
+2026-09-30T11:07:00.0972905Z ##[group]Fetching the repository
+2026-09-30T11:07:00.0992680Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3f614aa69b15771ed1a63b8b8796172fae8b6648:refs/remotes/pull/133/merge
+2026-09-30T11:07:01.9995205Z From https://github.com/JKamsker/LiteDB
+2026-09-30T11:07:01.9997058Z  * [new ref]         3f614aa69b15771ed1a63b8b8796172fae8b6648 -> pull/133/merge
+2026-09-30T11:07:02.0032664Z ##[endgroup]
+2026-09-30T11:07:02.0033520Z ##[group]Determining the checkout info
+2026-09-30T11:07:02.0035238Z ##[endgroup]
+2026-09-30T11:07:02.0049491Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-09-30T11:07:02.0465563Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-09-30T11:07:02.0734925Z ##[group]Checking out the ref
+2026-09-30T11:07:02.0735724Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/133/merge
+2026-09-30T11:07:02.5049890Z Note: switching to 'refs/remotes/pull/133/merge'.
+2026-09-30T11:07:02.5050418Z 
+2026-09-30T11:07:02.5050667Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-30T11:07:02.5051241Z changes and commit them, and you can discard any commits you make in this
+2026-09-30T11:07:02.5051757Z state without impacting any branches by switching back to a branch.
+2026-09-30T11:07:02.5052080Z 
+2026-09-30T11:07:02.5052280Z If you want to create a new branch to retain commits you create, you may
+2026-09-30T11:07:02.5052922Z do so (now or later) by using -c with the switch command. Example:
+2026-09-30T11:07:02.5053239Z 
+2026-09-30T11:07:02.5053415Z   git switch -c <new-branch-name>
+2026-09-30T11:07:02.5053597Z 
+2026-09-30T11:07:02.5053742Z Or undo this operation with:
+2026-09-30T11:07:02.5053944Z 
+2026-09-30T11:07:02.5054083Z   git switch -
+2026-09-30T11:07:02.5054289Z 
+2026-09-30T11:07:02.5054621Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-30T11:07:02.5055148Z 
+2026-09-30T11:07:02.5055732Z HEAD is now at 3f614aa Merge e821ae7479dcb83570031180b0c0e3f4fd167793 into 5dd942a7367c361fadd600be4ce10aace2768b27
+2026-09-30T11:07:02.5467562Z ##[endgroup]
+2026-09-30T11:07:02.5480702Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-09-30T11:07:02.5715983Z 3f614aa69b15771ed1a63b8b8796172fae8b6648
+2026-09-30T11:07:02.6254961Z ##[group]Run actions/setup-dotnet@v4
+2026-09-30T11:07:02.6255452Z with:
+2026-09-30T11:07:02.6255738Z   dotnet-version: 10.0.x
+2026-09-30T11:07:02.6256048Z   cache: false
+2026-09-30T11:07:02.6256293Z env:
+2026-09-30T11:07:02.6256740Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:07:02.6257232Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:07:02.6257538Z ##[endgroup]
+2026-09-30T11:07:02.8075296Z (node:1528) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:07:02.8914008Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:07:02.8915159Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '__CI_HOME__/work\_actions\actions\setup-dotnet\v4\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Runtime dotnet -Channel LTS
+2026-09-30T11:07:04.0763736Z dotnet-install: .NET Core Runtime with version '10.0.12' is already installed.
+2026-09-30T11:07:04.2197689Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '__CI_HOME__/work\_actions\actions\setup-dotnet\v4\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Channel 10.0
+2026-09-30T11:07:04.9751085Z dotnet-install: .NET Core SDK with version '10.0.401' is already installed.
+2026-09-30T11:07:05.0703120Z ##[group]Run actions/download-artifact@v4
+2026-09-30T11:07:05.0703463Z with:
+2026-09-30T11:07:05.0703655Z   name: tests-build-windows
+2026-09-30T11:07:05.0703862Z   path: .
+2026-09-30T11:07:05.0704047Z   merge-multiple: false
+2026-09-30T11:07:05.0704263Z   repository: JKamsker/LiteDB
+2026-09-30T11:07:05.0704471Z   run-id: 36705044676
+2026-09-30T11:07:05.0704821Z env:
+2026-09-30T11:07:05.0705136Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:07:05.0705555Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:07:05.0705819Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:07:05.0706043Z ##[endgroup]
+2026-09-30T11:07:05.2547248Z Downloading single artifact
+2026-09-30T11:07:05.2766841Z (node:4636) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:07:05.2767535Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:07:05.5070189Z Preparing to download the following artifacts:
+2026-09-30T11:07:05.5071094Z - tests-build-windows (ID: 11091504763, Size: 42284746, Expected Digest: sha256:8ef3f3e072c1502b9af75fe9e14c86ce024023ff410c2275bbde411c19c818ee)
+2026-09-30T11:07:05.7326604Z Redirecting to blob download url: https://productionresultssa18.blob.core.windows.net/actions-results/b2c9bfe9-81f6-86f6-816b-fddb3bc6c705/workflow-job-run-dd093d5b-0da5-57f9-b54e-bf203321924a/artifacts/a423237836c40f3642fb865e060786e1e859ed0c40243637743f88aa5e75f120.zip
+2026-09-30T11:07:05.7327798Z Starting download of artifact to: __CI_WORKSPACE__
+2026-09-30T11:07:05.9819622Z (node:4636) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-30T11:07:07.5874477Z SHA256 digest of downloaded artifact is 8ef3f3e072c1502b9af75fe9e14c86ce024023ff410c2275bbde411c19c818ee
+2026-09-30T11:07:07.5875139Z Artifact download completed successfully.
+2026-09-30T11:07:07.5875443Z Total of 1 artifact(s) downloaded
+2026-09-30T11:07:07.5885375Z Download artifact has finished successfully
+2026-09-30T11:07:07.6155720Z ##[group]Run $diagnostics = Join-Path ([IO.Path]::GetTempPath()) 'litedb-shared-diagnostics-36705044676-8'
+2026-09-30T11:07:07.6156733Z [36;1m$diagnostics = Join-Path ([IO.Path]::GetTempPath()) 'litedb-shared-diagnostics-36705044676-8'[0m
+2026-09-30T11:07:07.6157487Z [36;1mWrite-Host "Original temp directory: $([IO.Path]::GetTempPath())"[0m
+2026-09-30T11:07:07.6158061Z [36;1mWrite-Host "Database and diagnostics root: $diagnostics"[0m
+2026-09-30T11:07:07.6158731Z [36;1m"LITEDB_SHARED_DIAGNOSTICS=$diagnostics" | Out-File $env:GITHUB_ENV -Append -Encoding utf8[0m
+2026-09-30T11:07:07.6254036Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-30T11:07:07.6254389Z env:
+2026-09-30T11:07:07.6254736Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:07:07.6255159Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:07:07.6255421Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:07:07.6255719Z ##[endgroup]
+2026-09-30T11:07:07.9792637Z Original temp directory: __CI_HOME__\AppData\Local\Temp\
+2026-09-30T11:07:07.9809855Z Database and diagnostics root: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:07:08.0468205Z ##[group]Run ./scripts/run-ci-tests.ps1 -RuntimeMajor 10 -Framework "net10.0" -Architecture "x64" -PartitionSuite
+2026-09-30T11:07:08.0469065Z [36;1m./scripts/run-ci-tests.ps1 -RuntimeMajor 10 -Framework "net10.0" -Architecture "x64" -PartitionSuite[0m
+2026-09-30T11:07:08.0505832Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-30T11:07:08.0506172Z env:
+2026-09-30T11:07:08.0506530Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:07:08.0506953Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:07:08.0507211Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:07:08.0507682Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:07:08.0508827Z   LITEDB_EVIDENCE_MATRIX: {
+  "os": "windows-2022",
+  "arch": "x64",
+  "item": {
+    "display": ".NET 10",
+    "runtimeMajor": 10,
+    "sdk": "10.0.x",
+    "framework": "net10.0",
+    "includePrerelease": false,
+    "msbuildProps": ""
+  }
+}
+2026-09-30T11:07:08.0509742Z ##[endgroup]
+2026-09-30T11:07:09.6876061Z dotnet-install: Downloaded file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x64.zip size is 36960258 bytes.
+2026-09-30T11:07:09.6885352Z dotnet-install: Either downloaded or local package size can not be measured. One of them may be corrupted.
+2026-09-30T11:07:09.6916925Z dotnet-install: Extracting the archive.
+2026-09-30T11:07:10.3315321Z dotnet-install: Binaries of dotnet can be found in __CI_HOME__/work\_temp\litedb-runtime-10-x64\
+2026-09-30T11:07:10.3323905Z dotnet-install: Note that the script does not ensure your Windows version is supported during the installation.
+2026-09-30T11:07:10.3332750Z dotnet-install: To check the list of supported versions, go to https://learn.microsoft.com/dotnet/core/install/windows#supported-versions
+2026-09-30T11:07:10.3341274Z dotnet-install: Installed version is 10.0.12
+2026-09-30T11:07:10.3348527Z dotnet-install: Installation finished
+2026-09-30T11:07:10.3498485Z 
+2026-09-30T11:07:10.3500900Z Host:
+2026-09-30T11:07:10.3501832Z   Version:      10.0.12
+2026-09-30T11:07:10.3502196Z   Architecture: x64
+2026-09-30T11:07:10.3502493Z   Commit:       95017c711e
+2026-09-30T11:07:10.3502855Z   RID:          win-x64
+2026-09-30T11:07:10.3503058Z 
+2026-09-30T11:07:10.3503225Z .NET SDKs installed:
+2026-09-30T11:07:10.3503543Z   No SDKs were found.
+2026-09-30T11:07:10.3503751Z 
+2026-09-30T11:07:10.3503886Z .NET runtimes installed:
+2026-09-30T11:07:10.3504528Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:07:10.3505143Z 
+2026-09-30T11:07:10.3505334Z Other architectures found:
+2026-09-30T11:07:10.3505711Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:07:10.3506353Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:07:10.3506895Z 
+2026-09-30T11:07:10.3507095Z Environment variables:
+2026-09-30T11:07:10.3507514Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:07:10.3508042Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:07:10.3508675Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:07:10.3509359Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:07:10.3509694Z 
+2026-09-30T11:07:10.3509834Z global.json file:
+2026-09-30T11:07:10.3510137Z   Not found
+2026-09-30T11:07:10.3510319Z 
+2026-09-30T11:07:10.3510441Z Learn more:
+2026-09-30T11:07:10.3510772Z   https://aka.ms/dotnet/info
+2026-09-30T11:07:10.3511033Z 
+2026-09-30T11:07:10.3511164Z Download .NET:
+2026-09-30T11:07:10.3511477Z   https://aka.ms/dotnet/download
+2026-09-30T11:07:10.3732617Z 
+2026-09-30T11:07:10.3733181Z Host:
+2026-09-30T11:07:10.3733558Z   Version:      10.0.12
+2026-09-30T11:07:10.3733799Z   Architecture: x64
+2026-09-30T11:07:10.3734006Z   Commit:       95017c711e
+2026-09-30T11:07:10.3734237Z   RID:          win-x64
+2026-09-30T11:07:10.3737058Z 
+2026-09-30T11:07:10.3737446Z .NET SDKs installed:
+2026-09-30T11:07:10.3737686Z   No SDKs were found.
+2026-09-30T11:07:10.3737909Z 
+2026-09-30T11:07:10.3738045Z .NET runtimes installed:
+2026-09-30T11:07:10.3738614Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:07:10.3738981Z 
+2026-09-30T11:07:10.3739084Z Other architectures found:
+2026-09-30T11:07:10.3739323Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:07:10.3739705Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:07:10.3740019Z 
+2026-09-30T11:07:10.3740116Z Environment variables:
+2026-09-30T11:07:10.3740345Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:07:10.3740617Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:07:10.3740937Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:07:10.3741268Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:07:10.3742238Z 
+2026-09-30T11:07:10.3742328Z global.json file:
+2026-09-30T11:07:10.3742513Z   Not found
+2026-09-30T11:07:10.3742629Z 
+2026-09-30T11:07:10.3742696Z Learn more:
+2026-09-30T11:07:10.3742905Z   https://aka.ms/dotnet/info
+2026-09-30T11:07:10.3743061Z 
+2026-09-30T11:07:10.3743139Z Download .NET:
+2026-09-30T11:07:10.3743343Z   https://aka.ms/dotnet/download
+2026-09-30T11:07:21.6559604Z Partition coverage: 2531 test methods, 0 not in exactly one partition.
+2026-09-30T11:07:21.7274251Z Running complete-suite partition: issues
+2026-09-30T11:07:21.7371441Z 
+2026-09-30T11:07:21.7372262Z Host:
+2026-09-30T11:07:21.7372681Z   Version:      10.0.12
+2026-09-30T11:07:21.7373086Z   Architecture: x64
+2026-09-30T11:07:21.7373393Z   Commit:       95017c711e
+2026-09-30T11:07:21.7373727Z   RID:          win-x64
+2026-09-30T11:07:21.7373929Z 
+2026-09-30T11:07:21.7374455Z .NET SDKs installed:
+2026-09-30T11:07:21.7374838Z   No SDKs were found.
+2026-09-30T11:07:21.7375008Z 
+2026-09-30T11:07:21.7375139Z .NET runtimes installed:
+2026-09-30T11:07:21.7375566Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:07:21.7375913Z 
+2026-09-30T11:07:21.7376019Z Other architectures found:
+2026-09-30T11:07:21.7376322Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:07:21.7376845Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:07:21.7377849Z 
+2026-09-30T11:07:21.7378047Z Environment variables:
+2026-09-30T11:07:21.7378454Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:07:21.7378906Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:07:21.7379407Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:07:21.7380008Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:07:21.7380605Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:07:21.7380993Z 
+2026-09-30T11:07:21.7381160Z global.json file:
+2026-09-30T11:07:21.7381532Z   Not found
+2026-09-30T11:07:21.7381712Z 
+2026-09-30T11:07:21.7381850Z Learn more:
+2026-09-30T11:07:21.7382201Z   https://aka.ms/dotnet/info
+2026-09-30T11:07:21.7382456Z 
+2026-09-30T11:07:21.7382574Z Download .NET:
+2026-09-30T11:07:21.7382898Z   https://aka.ms/dotnet/download
+2026-09-30T11:07:21.9878572Z VSTest version 18.7.0 (x64)
+2026-09-30T11:07:21.9904559Z 
+2026-09-30T11:07:22.0968078Z Starting test execution, please wait...
+2026-09-30T11:07:22.1700719Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:08:34.4865929Z [xUnit.net 00:01:11.86]     LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [SKIP]
+2026-09-30T11:08:34.4885809Z   Skipped LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test [1 ms]
+2026-09-30T11:08:52.0955258Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-issues.trx
+2026-09-30T11:08:52.0959525Z 
+2026-09-30T11:08:52.1016092Z Passed!  - Failed:     0, Passed:  1570, Skipped:     1, Total:  1571, Duration: 1 m 28 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:08:52.3140932Z Running complete-suite partition: rebuild
+2026-09-30T11:08:52.3247423Z 
+2026-09-30T11:08:52.3248015Z Host:
+2026-09-30T11:08:52.3248388Z   Version:      10.0.12
+2026-09-30T11:08:52.3249103Z   Architecture: x64
+2026-09-30T11:08:52.3249338Z   Commit:       95017c711e
+2026-09-30T11:08:52.3249571Z   RID:          win-x64
+2026-09-30T11:08:52.3249710Z 
+2026-09-30T11:08:52.3249885Z .NET SDKs installed:
+2026-09-30T11:08:52.3250241Z   No SDKs were found.
+2026-09-30T11:08:52.3250425Z 
+2026-09-30T11:08:52.3250541Z .NET runtimes installed:
+2026-09-30T11:08:52.3250973Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:08:52.3251349Z 
+2026-09-30T11:08:52.3251469Z Other architectures found:
+2026-09-30T11:08:52.3251726Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:08:52.3252242Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:08:52.3253044Z 
+2026-09-30T11:08:52.3253190Z Environment variables:
+2026-09-30T11:08:52.3253453Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:08:52.3253755Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:08:52.3254078Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:08:52.3254444Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:08:52.3254800Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:08:52.3254988Z 
+2026-09-30T11:08:52.3255089Z global.json file:
+2026-09-30T11:08:52.3255289Z   Not found
+2026-09-30T11:08:52.3255404Z 
+2026-09-30T11:08:52.3255481Z Learn more:
+2026-09-30T11:08:52.3255704Z   https://aka.ms/dotnet/info
+2026-09-30T11:08:52.3255857Z 
+2026-09-30T11:08:52.3255949Z Download .NET:
+2026-09-30T11:08:52.3256157Z   https://aka.ms/dotnet/download
+2026-09-30T11:08:52.5408607Z VSTest version 18.7.0 (x64)
+2026-09-30T11:08:52.5437512Z 
+2026-09-30T11:08:52.6436996Z Starting test execution, please wait...
+2026-09-30T11:08:52.6788259Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:09:01.0773153Z [xUnit.net 00:00:07.98]     LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [SKIP]
+2026-09-30T11:09:01.1169828Z   Skipped LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [1 ms]
+2026-09-30T11:09:22.2290172Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-rebuild.trx
+2026-09-30T11:09:22.2294355Z 
+2026-09-30T11:09:22.2334099Z Passed!  - Failed:     0, Passed:    87, Skipped:     1, Total:    88, Duration: 28 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:09:22.2744558Z Running complete-suite partition: engine-compact
+2026-09-30T11:09:22.2832669Z 
+2026-09-30T11:09:22.2833268Z Host:
+2026-09-30T11:09:22.2833667Z   Version:      10.0.12
+2026-09-30T11:09:22.2834046Z   Architecture: x64
+2026-09-30T11:09:22.2834374Z   Commit:       95017c711e
+2026-09-30T11:09:22.2834784Z   RID:          win-x64
+2026-09-30T11:09:22.2834989Z 
+2026-09-30T11:09:22.2835162Z .NET SDKs installed:
+2026-09-30T11:09:22.2835480Z   No SDKs were found.
+2026-09-30T11:09:22.2835677Z 
+2026-09-30T11:09:22.2835808Z .NET runtimes installed:
+2026-09-30T11:09:22.2837178Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:09:22.2837537Z 
+2026-09-30T11:09:22.2837663Z Other architectures found:
+2026-09-30T11:09:22.2837905Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:09:22.2838459Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:09:22.2838856Z 
+2026-09-30T11:09:22.2839012Z Environment variables:
+2026-09-30T11:09:22.2839389Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:09:22.2839772Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:09:22.2840099Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:09:22.2840759Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:09:22.2841139Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:09:22.2841342Z 
+2026-09-30T11:09:22.2841422Z global.json file:
+2026-09-30T11:09:22.2841665Z   Not found
+2026-09-30T11:09:22.2841770Z 
+2026-09-30T11:09:22.2841870Z Learn more:
+2026-09-30T11:09:22.2842089Z   https://aka.ms/dotnet/info
+2026-09-30T11:09:22.2842266Z 
+2026-09-30T11:09:22.2842346Z Download .NET:
+2026-09-30T11:09:22.2842580Z   https://aka.ms/dotnet/download
+2026-09-30T11:09:22.4828356Z VSTest version 18.7.0 (x64)
+2026-09-30T11:09:22.4852508Z 
+2026-09-30T11:09:22.5836605Z Starting test execution, please wait...
+2026-09-30T11:09:22.6306067Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:10:11.6408891Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-engine-compact.trx
+2026-09-30T11:10:11.6412891Z 
+2026-09-30T11:10:11.6455435Z Passed!  - Failed:     0, Passed:   296, Skipped:     0, Total:   296, Duration: 47 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:10:11.6988921Z Running complete-suite partition: engine-index
+2026-09-30T11:10:11.7086824Z 
+2026-09-30T11:10:11.7087845Z Host:
+2026-09-30T11:10:11.7088341Z   Version:      10.0.12
+2026-09-30T11:10:11.7088775Z   Architecture: x64
+2026-09-30T11:10:11.7089218Z   Commit:       95017c711e
+2026-09-30T11:10:11.7089837Z   RID:          win-x64
+2026-09-30T11:10:11.7090070Z 
+2026-09-30T11:10:11.7090508Z .NET SDKs installed:
+2026-09-30T11:10:11.7091121Z   No SDKs were found.
+2026-09-30T11:10:11.7091374Z 
+2026-09-30T11:10:11.7091589Z .NET runtimes installed:
+2026-09-30T11:10:11.7092207Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:10:11.7092809Z 
+2026-09-30T11:10:11.7092968Z Other architectures found:
+2026-09-30T11:10:11.7093273Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:10:11.7093743Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:10:11.7094097Z 
+2026-09-30T11:10:11.7094251Z Environment variables:
+2026-09-30T11:10:11.7094542Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:10:11.7094883Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:10:11.7095261Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:10:11.7095657Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:10:11.7096044Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:10:11.7096276Z 
+2026-09-30T11:10:11.7096366Z global.json file:
+2026-09-30T11:10:11.7096658Z   Not found
+2026-09-30T11:10:11.7096778Z 
+2026-09-30T11:10:11.7096894Z Learn more:
+2026-09-30T11:10:11.7097141Z   https://aka.ms/dotnet/info
+2026-09-30T11:10:11.7097336Z 
+2026-09-30T11:10:11.7097424Z Download .NET:
+2026-09-30T11:10:11.7097700Z   https://aka.ms/dotnet/download
+2026-09-30T11:10:11.9269901Z VSTest version 18.7.0 (x64)
+2026-09-30T11:10:11.9300552Z 
+2026-09-30T11:10:12.0408623Z Starting test execution, please wait...
+2026-09-30T11:10:12.0772235Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:10:43.2609887Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-engine-index.trx
+2026-09-30T11:10:43.2614327Z 
+2026-09-30T11:10:43.2656366Z Passed!  - Failed:     0, Passed:    63, Skipped:     0, Total:    63, Duration: 29 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:10:43.3232723Z Running complete-suite partition: engine-admission
+2026-09-30T11:10:43.3345009Z 
+2026-09-30T11:10:43.3345481Z Host:
+2026-09-30T11:10:43.3345830Z   Version:      10.0.12
+2026-09-30T11:10:43.3346178Z   Architecture: x64
+2026-09-30T11:10:43.3346479Z   Commit:       95017c711e
+2026-09-30T11:10:43.3346957Z   RID:          win-x64
+2026-09-30T11:10:43.3347226Z 
+2026-09-30T11:10:43.3347481Z .NET SDKs installed:
+2026-09-30T11:10:43.3347789Z   No SDKs were found.
+2026-09-30T11:10:43.3347988Z 
+2026-09-30T11:10:43.3348118Z .NET runtimes installed:
+2026-09-30T11:10:43.3349106Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:10:43.3349738Z 
+2026-09-30T11:10:43.3350008Z Other architectures found:
+2026-09-30T11:10:43.3350446Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:10:43.3350983Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:10:43.3351419Z 
+2026-09-30T11:10:43.3351575Z Environment variables:
+2026-09-30T11:10:43.3351925Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:10:43.3352325Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:10:43.3352738Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:10:43.3353239Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:10:43.3353724Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:10:43.3353994Z 
+2026-09-30T11:10:43.3354109Z global.json file:
+2026-09-30T11:10:43.3354438Z   Not found
+2026-09-30T11:10:43.3354576Z 
+2026-09-30T11:10:43.3354874Z Learn more:
+2026-09-30T11:10:43.3355186Z   https://aka.ms/dotnet/info
+2026-09-30T11:10:43.3355422Z 
+2026-09-30T11:10:43.3355536Z Download .NET:
+2026-09-30T11:10:43.3355877Z   https://aka.ms/dotnet/download
+2026-09-30T11:10:43.5398129Z VSTest version 18.7.0 (x64)
+2026-09-30T11:10:43.5420234Z 
+2026-09-30T11:10:43.6335085Z Starting test execution, please wait...
+2026-09-30T11:10:43.6689523Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:11:09.9237665Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-engine-admission.trx
+2026-09-30T11:11:09.9241680Z 
+2026-09-30T11:11:09.9287293Z Passed!  - Failed:     0, Passed:   126, Skipped:     0, Total:   126, Duration: 24 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:11:09.9711057Z Running complete-suite partition: engine-shared
+2026-09-30T11:11:09.9803581Z 
+2026-09-30T11:11:09.9804098Z Host:
+2026-09-30T11:11:09.9804576Z   Version:      10.0.12
+2026-09-30T11:11:09.9805021Z   Architecture: x64
+2026-09-30T11:11:09.9805444Z   Commit:       95017c711e
+2026-09-30T11:11:09.9806606Z   RID:          win-x64
+2026-09-30T11:11:09.9806935Z 
+2026-09-30T11:11:09.9807170Z .NET SDKs installed:
+2026-09-30T11:11:09.9807566Z   No SDKs were found.
+2026-09-30T11:11:09.9808035Z 
+2026-09-30T11:11:09.9808378Z .NET runtimes installed:
+2026-09-30T11:11:09.9809145Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:11:09.9809792Z 
+2026-09-30T11:11:09.9810015Z Other architectures found:
+2026-09-30T11:11:09.9810448Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:11:09.9811172Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:11:09.9811804Z 
+2026-09-30T11:11:09.9812038Z Environment variables:
+2026-09-30T11:11:09.9812578Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:11:09.9813200Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:11:09.9813846Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:11:09.9814602Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:11:09.9815266Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:11:09.9815608Z 
+2026-09-30T11:11:09.9815851Z global.json file:
+2026-09-30T11:11:09.9816248Z   Not found
+2026-09-30T11:11:09.9816463Z 
+2026-09-30T11:11:09.9816664Z Learn more:
+2026-09-30T11:11:09.9817071Z   https://aka.ms/dotnet/info
+2026-09-30T11:11:09.9817359Z 
+2026-09-30T11:11:09.9817543Z Download .NET:
+2026-09-30T11:11:09.9817967Z   https://aka.ms/dotnet/download
+2026-09-30T11:11:10.2020669Z VSTest version 18.7.0 (x64)
+2026-09-30T11:11:10.2046862Z 
+2026-09-30T11:11:10.3076393Z Starting test execution, please wait...
+2026-09-30T11:11:10.3455295Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:11:13.1035010Z [xUnit.net 00:00:02.31]     LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection [FAIL]
+2026-09-30T11:11:13.2748256Z   Failed LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection [112 ms]
+2026-09-30T11:11:13.2749583Z   Error Message:
+2026-09-30T11:11:13.2750369Z    Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+2026-09-30T11:11:13.2751634Z System.InvalidOperationException: Cannot close a shared connection from inside its executing operation.
+2026-09-30T11:11:13.2752905Z    at LiteDB.SharedEngine.Dispose(Boolean disposing) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.Disposal.cs:line 20
+2026-09-30T11:11:13.2754126Z    at LiteDB.SharedEngine.Dispose() in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.cs:line 440
+2026-09-30T11:11:13.2755204Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.<>c__DisplayClass1_0.<Open_retains_admission_when_a_callback_disposes_the_connection>b__1() in __CI_WORKSPACE__\LiteDB.Tests\Engine\SharedAdmissionLifetime_Tests.cs:line 78
+2026-09-30T11:11:13.2757340Z    at LiteDB.SharedEngine.CreateEngine(Boolean recoveredAbandonedOwner, EngineSettings settings) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.cs:line 158
+2026-09-30T11:11:13.2758523Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.Coordination.cs:line 41
+2026-09-30T11:11:13.2759776Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.cs:line 134
+2026-09-30T11:11:13.2760864Z    at LiteDB.SharedEngine.<>c__DisplayClass7_0`1.<QueryDatabase>b__0() in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.Calls.cs:line 44
+2026-09-30T11:11:13.2761719Z    at LiteDB.SharedEngine.Call[T](Func`1 call) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.Calls.cs:line 61
+2026-09-30T11:11:13.2762522Z    at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.Calls.cs:line 42
+2026-09-30T11:11:13.2763295Z    at LiteDB.SharedEngine.Pragma(String name) in __CI_WORKSPACE__\LiteDB\Client\Shared\SharedEngine.cs:line 345
+2026-09-30T11:11:13.2764430Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.<>c__DisplayClass1_0.<Open_retains_admission_when_a_callback_disposes_the_connection>b__2() in __CI_WORKSPACE__\LiteDB.Tests\Engine\SharedAdmissionLifetime_Tests.cs:line 82
+2026-09-30T11:11:13.2765453Z    at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+2026-09-30T11:11:13.2766053Z    at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+2026-09-30T11:11:13.2766565Z   Stack Trace:
+2026-09-30T11:11:13.2766948Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-09-30T11:11:13.2767539Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-09-30T11:11:13.2768167Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-09-30T11:11:13.2768835Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-09-30T11:11:13.2769425Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-09-30T11:11:13.2770031Z    at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+2026-09-30T11:11:13.2770858Z    at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+2026-09-30T11:11:13.2771792Z    at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+2026-09-30T11:11:13.2772847Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection() in __CI_WORKSPACE__\LiteDB.Tests\Engine\SharedAdmissionLifetime_Tests.cs:line 83
+2026-09-30T11:11:13.2773857Z    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+2026-09-30T11:11:13.2775031Z    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+2026-09-30T11:12:22.6592625Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-engine-shared.trx
+2026-09-30T11:12:22.6597197Z 
+2026-09-30T11:12:22.6641135Z Failed!  - Failed:     1, Passed:   373, Skipped:     0, Total:   374, Duration: 1 m 10 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:12:22.7157052Z Running complete-suite partition: engine
+2026-09-30T11:12:22.7272395Z 
+2026-09-30T11:12:22.7273105Z Host:
+2026-09-30T11:12:22.7273555Z   Version:      10.0.12
+2026-09-30T11:12:22.7273984Z   Architecture: x64
+2026-09-30T11:12:22.7274736Z   Commit:       95017c711e
+2026-09-30T11:12:22.7275665Z   RID:          win-x64
+2026-09-30T11:12:22.7275897Z 
+2026-09-30T11:12:22.7276022Z .NET SDKs installed:
+2026-09-30T11:12:22.7276286Z   No SDKs were found.
+2026-09-30T11:12:22.7276454Z 
+2026-09-30T11:12:22.7276598Z .NET runtimes installed:
+2026-09-30T11:12:22.7277623Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:12:22.7278141Z 
+2026-09-30T11:12:22.7278262Z Other architectures found:
+2026-09-30T11:12:22.7278559Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:12:22.7279062Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:12:22.7279388Z 
+2026-09-30T11:12:22.7279521Z Environment variables:
+2026-09-30T11:12:22.7279805Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:12:22.7280190Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:12:22.7280541Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:12:22.7280937Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:12:22.7281319Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:12:22.7281551Z 
+2026-09-30T11:12:22.7281671Z global.json file:
+2026-09-30T11:12:22.7281915Z   Not found
+2026-09-30T11:12:22.7282028Z 
+2026-09-30T11:12:22.7282146Z Learn more:
+2026-09-30T11:12:22.7282392Z   https://aka.ms/dotnet/info
+2026-09-30T11:12:22.7282585Z 
+2026-09-30T11:12:22.7282703Z Download .NET:
+2026-09-30T11:12:22.7282953Z   https://aka.ms/dotnet/download
+2026-09-30T11:12:22.9312523Z VSTest version 18.7.0 (x64)
+2026-09-30T11:12:22.9336068Z 
+2026-09-30T11:12:23.0246171Z Starting test execution, please wait...
+2026-09-30T11:12:23.0607481Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:13:05.4507877Z [xUnit.net 00:00:41.98]     LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture [SKIP]
+2026-09-30T11:13:06.2972040Z   Skipped LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture [1 ms]
+2026-09-30T11:14:12.1129460Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-engine.trx
+2026-09-30T11:14:12.1134061Z 
+2026-09-30T11:14:12.1179200Z Passed!  - Failed:     0, Passed:   457, Skipped:     1, Total:   458, Duration: 1 m 47 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:14:12.1974063Z Running complete-suite partition: query-not-equal
+2026-09-30T11:14:12.2090733Z 
+2026-09-30T11:14:12.2091478Z Host:
+2026-09-30T11:14:12.2091952Z   Version:      10.0.12
+2026-09-30T11:14:12.2092451Z   Architecture: x64
+2026-09-30T11:14:12.2092836Z   Commit:       95017c711e
+2026-09-30T11:14:12.2093913Z   RID:          win-x64
+2026-09-30T11:14:12.2094379Z 
+2026-09-30T11:14:12.2094580Z .NET SDKs installed:
+2026-09-30T11:14:12.2094990Z   No SDKs were found.
+2026-09-30T11:14:12.2095244Z 
+2026-09-30T11:14:12.2095446Z .NET runtimes installed:
+2026-09-30T11:14:12.2096193Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:14:12.2096823Z 
+2026-09-30T11:14:12.2097019Z Other architectures found:
+2026-09-30T11:14:12.2097513Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:14:12.2098251Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:14:12.2098841Z 
+2026-09-30T11:14:12.2099370Z Environment variables:
+2026-09-30T11:14:12.2099848Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:14:12.2100467Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:14:12.2101520Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:14:12.2102325Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:14:12.2103074Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:14:12.2103488Z 
+2026-09-30T11:14:12.2103670Z global.json file:
+2026-09-30T11:14:12.2104064Z   Not found
+2026-09-30T11:14:12.2104287Z 
+2026-09-30T11:14:12.2104437Z Learn more:
+2026-09-30T11:14:12.2104842Z   https://aka.ms/dotnet/info
+2026-09-30T11:14:12.2105136Z 
+2026-09-30T11:14:12.2105321Z Download .NET:
+2026-09-30T11:14:12.2105753Z   https://aka.ms/dotnet/download
+2026-09-30T11:14:12.4311375Z VSTest version 18.7.0 (x64)
+2026-09-30T11:14:12.4336226Z 
+2026-09-30T11:14:12.5376717Z Starting test execution, please wait...
+2026-09-30T11:14:12.5770137Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:14:23.0697063Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-query-not-equal.trx
+2026-09-30T11:14:23.0701428Z 
+2026-09-30T11:14:23.0741368Z Passed!  - Failed:     0, Passed:    14, Skipped:     0, Total:    14, Duration: 9 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:14:23.1193546Z Running complete-suite partition: query
+2026-09-30T11:14:23.1284346Z 
+2026-09-30T11:14:23.1285434Z Host:
+2026-09-30T11:14:23.1285926Z   Version:      10.0.12
+2026-09-30T11:14:23.1286398Z   Architecture: x64
+2026-09-30T11:14:23.1286816Z   Commit:       95017c711e
+2026-09-30T11:14:23.1287239Z   RID:          win-x64
+2026-09-30T11:14:23.1287720Z 
+2026-09-30T11:14:23.1287901Z .NET SDKs installed:
+2026-09-30T11:14:23.1288344Z   No SDKs were found.
+2026-09-30T11:14:23.1288518Z 
+2026-09-30T11:14:23.1288723Z .NET runtimes installed:
+2026-09-30T11:14:23.1289472Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:14:23.1290075Z 
+2026-09-30T11:14:23.1290273Z Other architectures found:
+2026-09-30T11:14:23.1290722Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:14:23.1291426Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:14:23.1292014Z 
+2026-09-30T11:14:23.1292190Z Environment variables:
+2026-09-30T11:14:23.1292692Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:14:23.1293211Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:14:23.1293815Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:14:23.1294534Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:14:23.1295307Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:14:23.1295705Z 
+2026-09-30T11:14:23.1295885Z global.json file:
+2026-09-30T11:14:23.1296275Z   Not found
+2026-09-30T11:14:23.1296500Z 
+2026-09-30T11:14:23.1296644Z Learn more:
+2026-09-30T11:14:23.1298761Z   https://aka.ms/dotnet/info
+2026-09-30T11:14:23.1299248Z 
+2026-09-30T11:14:23.1299419Z Download .NET:
+2026-09-30T11:14:23.1299836Z   https://aka.ms/dotnet/download
+2026-09-30T11:14:23.3351575Z VSTest version 18.7.0 (x64)
+2026-09-30T11:14:23.3376506Z 
+2026-09-30T11:14:23.4337553Z Starting test execution, please wait...
+2026-09-30T11:14:23.4727434Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:14:58.7708610Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-query.trx
+2026-09-30T11:14:58.7711134Z 
+2026-09-30T11:14:58.7759311Z Passed!  - Failed:     0, Passed:   826, Skipped:     0, Total:   826, Duration: 33 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:14:58.8556613Z Running complete-suite partition: shared-mapped-process
+2026-09-30T11:14:58.8657043Z 
+2026-09-30T11:14:58.8657459Z Host:
+2026-09-30T11:14:58.8657754Z   Version:      10.0.12
+2026-09-30T11:14:58.8658073Z   Architecture: x64
+2026-09-30T11:14:58.8658639Z   Commit:       95017c711e
+2026-09-30T11:14:58.8658925Z   RID:          win-x64
+2026-09-30T11:14:58.8659159Z 
+2026-09-30T11:14:58.8659575Z .NET SDKs installed:
+2026-09-30T11:14:58.8659858Z   No SDKs were found.
+2026-09-30T11:14:58.8660029Z 
+2026-09-30T11:14:58.8660144Z .NET runtimes installed:
+2026-09-30T11:14:58.8660648Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:14:58.8661016Z 
+2026-09-30T11:14:58.8661158Z Other architectures found:
+2026-09-30T11:14:58.8661493Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:14:58.8662064Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:14:58.8662599Z 
+2026-09-30T11:14:58.8662737Z Environment variables:
+2026-09-30T11:14:58.8663018Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:14:58.8663310Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:14:58.8663662Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:14:58.8664303Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:14:58.8664700Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:14:58.8664930Z 
+2026-09-30T11:14:58.8665029Z global.json file:
+2026-09-30T11:14:58.8665283Z   Not found
+2026-09-30T11:14:58.8665433Z 
+2026-09-30T11:14:58.8665542Z Learn more:
+2026-09-30T11:14:58.8665784Z   https://aka.ms/dotnet/info
+2026-09-30T11:14:58.8665992Z 
+2026-09-30T11:14:58.8666091Z Download .NET:
+2026-09-30T11:14:58.8666751Z   https://aka.ms/dotnet/download
+2026-09-30T11:14:59.0711171Z VSTest version 18.7.0 (x64)
+2026-09-30T11:14:59.0734846Z 
+2026-09-30T11:14:59.1693852Z Starting test execution, please wait...
+2026-09-30T11:14:59.2043354Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:15:52.2994472Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-shared-mapped-process.trx
+2026-09-30T11:15:52.2996628Z 
+2026-09-30T11:15:52.3036996Z Passed!  - Failed:     0, Passed:    36, Skipped:     0, Total:    36, Duration: 51 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:15:52.3434105Z Running complete-suite partition: shared-process
+2026-09-30T11:15:52.3538083Z 
+2026-09-30T11:15:52.3538667Z Host:
+2026-09-30T11:15:52.3539077Z   Version:      10.0.12
+2026-09-30T11:15:52.3539503Z   Architecture: x64
+2026-09-30T11:15:52.3539907Z   Commit:       95017c711e
+2026-09-30T11:15:52.3540335Z   RID:          win-x64
+2026-09-30T11:15:52.3540553Z 
+2026-09-30T11:15:52.3540758Z .NET SDKs installed:
+2026-09-30T11:15:52.3541173Z   No SDKs were found.
+2026-09-30T11:15:52.3541435Z 
+2026-09-30T11:15:52.3541607Z .NET runtimes installed:
+2026-09-30T11:15:52.3542301Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:15:52.3542858Z 
+2026-09-30T11:15:52.3543363Z Other architectures found:
+2026-09-30T11:15:52.3544027Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:15:52.3544782Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:15:52.3545357Z 
+2026-09-30T11:15:52.3545549Z Environment variables:
+2026-09-30T11:15:52.3545985Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:15:52.3546464Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:15:52.3547015Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:15:52.3547581Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:15:52.3548152Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:15:52.3548490Z 
+2026-09-30T11:15:52.3548621Z global.json file:
+2026-09-30T11:15:52.3548988Z   Not found
+2026-09-30T11:15:52.3549160Z 
+2026-09-30T11:15:52.3549314Z Learn more:
+2026-09-30T11:15:52.3549677Z   https://aka.ms/dotnet/info
+2026-09-30T11:15:52.3549966Z 
+2026-09-30T11:15:52.3550097Z Download .NET:
+2026-09-30T11:15:52.3550490Z   https://aka.ms/dotnet/download
+2026-09-30T11:15:52.5622977Z VSTest version 18.7.0 (x64)
+2026-09-30T11:15:52.5647971Z 
+2026-09-30T11:15:52.6655383Z Starting test execution, please wait...
+2026-09-30T11:15:52.7054015Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:17:50.6450589Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-shared-process.trx
+2026-09-30T11:17:50.6453622Z 
+2026-09-30T11:17:50.6494115Z Passed!  - Failed:     0, Passed:    55, Skipped:     0, Total:    55, Duration: 1 m 56 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:17:50.6889773Z Running complete-suite partition: shared
+2026-09-30T11:17:50.6987092Z 
+2026-09-30T11:17:50.6987953Z Host:
+2026-09-30T11:17:50.6988367Z   Version:      10.0.12
+2026-09-30T11:17:50.6988837Z   Architecture: x64
+2026-09-30T11:17:50.6989242Z   Commit:       95017c711e
+2026-09-30T11:17:50.6989637Z   RID:          win-x64
+2026-09-30T11:17:50.6989882Z 
+2026-09-30T11:17:50.6990058Z .NET SDKs installed:
+2026-09-30T11:17:50.6990481Z   No SDKs were found.
+2026-09-30T11:17:50.6990704Z 
+2026-09-30T11:17:50.6991294Z .NET runtimes installed:
+2026-09-30T11:17:50.6992010Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:17:50.6992593Z 
+2026-09-30T11:17:50.6992776Z Other architectures found:
+2026-09-30T11:17:50.6993273Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:17:50.6993960Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:17:50.6994551Z 
+2026-09-30T11:17:50.6994721Z Environment variables:
+2026-09-30T11:17:50.6995181Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:17:50.6995737Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:17:50.6996314Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:17:50.6996974Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:17:50.6997735Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:17:50.6998143Z 
+2026-09-30T11:17:50.6998328Z global.json file:
+2026-09-30T11:17:50.6998731Z   Not found
+2026-09-30T11:17:50.6998970Z 
+2026-09-30T11:17:50.6999107Z Learn more:
+2026-09-30T11:17:50.6999473Z   https://aka.ms/dotnet/info
+2026-09-30T11:17:50.6999718Z 
+2026-09-30T11:17:50.6999880Z Download .NET:
+2026-09-30T11:17:50.7000270Z   https://aka.ms/dotnet/download
+2026-09-30T11:17:50.8993897Z VSTest version 18.7.0 (x64)
+2026-09-30T11:17:50.9017756Z 
+2026-09-30T11:17:50.9950569Z Starting test execution, please wait...
+2026-09-30T11:17:51.0336145Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:18:05.1353935Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-shared.trx
+2026-09-30T11:18:05.1357997Z 
+2026-09-30T11:18:05.1396952Z Passed!  - Failed:     0, Passed:    55, Skipped:     0, Total:    55, Duration: 12 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:18:05.1785322Z Running complete-suite partition: mvcc
+2026-09-30T11:18:05.1875613Z 
+2026-09-30T11:18:05.1876155Z Host:
+2026-09-30T11:18:05.1876850Z   Version:      10.0.12
+2026-09-30T11:18:05.1877229Z   Architecture: x64
+2026-09-30T11:18:05.1877465Z   Commit:       95017c711e
+2026-09-30T11:18:05.1877769Z   RID:          win-x64
+2026-09-30T11:18:05.1878354Z 
+2026-09-30T11:18:05.1878576Z .NET SDKs installed:
+2026-09-30T11:18:05.1878881Z   No SDKs were found.
+2026-09-30T11:18:05.1879059Z 
+2026-09-30T11:18:05.1879171Z .NET runtimes installed:
+2026-09-30T11:18:05.1879667Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:18:05.1880091Z 
+2026-09-30T11:18:05.1880283Z Other architectures found:
+2026-09-30T11:18:05.1880649Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:18:05.1881325Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:18:05.1881678Z 
+2026-09-30T11:18:05.1881810Z Environment variables:
+2026-09-30T11:18:05.1882100Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:18:05.1882431Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:18:05.1883060Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:18:05.1883453Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:18:05.1883847Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:18:05.1884079Z 
+2026-09-30T11:18:05.1884159Z global.json file:
+2026-09-30T11:18:05.1884404Z   Not found
+2026-09-30T11:18:05.1884519Z 
+2026-09-30T11:18:05.1884635Z Learn more:
+2026-09-30T11:18:05.1884891Z   https://aka.ms/dotnet/info
+2026-09-30T11:18:05.1885088Z 
+2026-09-30T11:18:05.1885200Z Download .NET:
+2026-09-30T11:18:05.1885456Z   https://aka.ms/dotnet/download
+2026-09-30T11:18:05.3924121Z VSTest version 18.7.0 (x64)
+2026-09-30T11:18:05.3946716Z 
+2026-09-30T11:18:05.4844640Z Starting test execution, please wait...
+2026-09-30T11:18:05.5215372Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:19:59.5268553Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-mvcc.trx
+2026-09-30T11:19:59.5272751Z 
+2026-09-30T11:19:59.5316409Z Passed!  - Failed:     0, Passed:   403, Skipped:     0, Total:   403, Duration: 1 m 52 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:19:59.6481218Z Running complete-suite partition: internals
+2026-09-30T11:19:59.6593575Z 
+2026-09-30T11:19:59.6594283Z Host:
+2026-09-30T11:19:59.6595227Z   Version:      10.0.12
+2026-09-30T11:19:59.6595833Z   Architecture: x64
+2026-09-30T11:19:59.6596221Z   Commit:       95017c711e
+2026-09-30T11:19:59.6596883Z   RID:          win-x64
+2026-09-30T11:19:59.6597095Z 
+2026-09-30T11:19:59.6597306Z .NET SDKs installed:
+2026-09-30T11:19:59.6597661Z   No SDKs were found.
+2026-09-30T11:19:59.6597896Z 
+2026-09-30T11:19:59.6598048Z .NET runtimes installed:
+2026-09-30T11:19:59.6598790Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:19:59.6599377Z 
+2026-09-30T11:19:59.6599592Z Other architectures found:
+2026-09-30T11:19:59.6600029Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:19:59.6600809Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:19:59.6601390Z 
+2026-09-30T11:19:59.6601605Z Environment variables:
+2026-09-30T11:19:59.6602052Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:19:59.6602622Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:19:59.6603212Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:19:59.6604039Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:19:59.6604813Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:19:59.6605256Z 
+2026-09-30T11:19:59.6605414Z global.json file:
+2026-09-30T11:19:59.6605836Z   Not found
+2026-09-30T11:19:59.6606030Z 
+2026-09-30T11:19:59.6606204Z Learn more:
+2026-09-30T11:19:59.6606602Z   https://aka.ms/dotnet/info
+2026-09-30T11:19:59.6606923Z 
+2026-09-30T11:19:59.6607054Z Download .NET:
+2026-09-30T11:19:59.6607451Z   https://aka.ms/dotnet/download
+2026-09-30T11:19:59.8665314Z VSTest version 18.7.0 (x64)
+2026-09-30T11:19:59.8695416Z 
+2026-09-30T11:19:59.9822972Z Starting test execution, please wait...
+2026-09-30T11:20:00.0228084Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:21:00.7680593Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-internals.trx
+2026-09-30T11:21:00.7684152Z 
+2026-09-30T11:21:00.7726770Z Passed!  - Failed:     0, Passed:   435, Skipped:     0, Total:   435, Duration: 59 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:21:00.8443219Z Running complete-suite partition: remaining
+2026-09-30T11:21:00.8558242Z 
+2026-09-30T11:21:00.8559213Z Host:
+2026-09-30T11:21:00.8559691Z   Version:      10.0.12
+2026-09-30T11:21:00.8560124Z   Architecture: x64
+2026-09-30T11:21:00.8560502Z   Commit:       95017c711e
+2026-09-30T11:21:00.8560939Z   RID:          win-x64
+2026-09-30T11:21:00.8561223Z 
+2026-09-30T11:21:00.8561442Z .NET SDKs installed:
+2026-09-30T11:21:00.8561806Z   No SDKs were found.
+2026-09-30T11:21:00.8562080Z 
+2026-09-30T11:21:00.8562569Z .NET runtimes installed:
+2026-09-30T11:21:00.8564157Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work\_temp\litedb-runtime-10-x64\shared\Microsoft.NETCore.App]
+2026-09-30T11:21:00.8564812Z 
+2026-09-30T11:21:00.8565052Z Other architectures found:
+2026-09-30T11:21:00.8565504Z   x86   [C:\Program Files (x86)\dotnet]
+2026-09-30T11:21:00.8566233Z     registered at [HKLM\SOFTWARE\dotnet\Setup\InstalledVersions\x86\InstallLocation]
+2026-09-30T11:21:00.8566929Z 
+2026-09-30T11:21:00.8567134Z Environment variables:
+2026-09-30T11:21:00.8567621Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-09-30T11:21:00.8568249Z   DOTNET_NOLOGO                            [1]
+2026-09-30T11:21:00.8568951Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-09-30T11:21:00.8569715Z   DOTNET_ROOT                              [C:\Program Files\dotnet]
+2026-09-30T11:21:00.8570364Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-09-30T11:21:00.8570738Z 
+2026-09-30T11:21:00.8571176Z global.json file:
+2026-09-30T11:21:00.8571600Z   Not found
+2026-09-30T11:21:00.8571782Z 
+2026-09-30T11:21:00.8571962Z Learn more:
+2026-09-30T11:21:00.8572345Z   https://aka.ms/dotnet/info
+2026-09-30T11:21:00.8572644Z 
+2026-09-30T11:21:00.8572790Z Download .NET:
+2026-09-30T11:21:00.8573217Z   https://aka.ms/dotnet/download
+2026-09-30T11:21:01.0585237Z VSTest version 18.7.0 (x64)
+2026-09-30T11:21:01.0609619Z 
+2026-09-30T11:21:01.1561583Z Starting test execution, please wait...
+2026-09-30T11:21:01.1921106Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:23:16.0237626Z Results File: __CI_WORKSPACE__\LiteDB.Tests\TestResults\TestResults-remaining.trx
+2026-09-30T11:23:16.0239631Z 
+2026-09-30T11:23:16.0286007Z Passed!  - Failed:     0, Passed:   613, Skipped:     0, Total:   613, Duration: 2 m 13 s - LiteDB.Tests.dll (net10.0)
+2026-09-30T11:23:16.2579908Z [31;1mException: [0m__CI_WORKSPACE__\scripts\run-ci-tests.ps1:105[0m
+2026-09-30T11:23:16.2580487Z [31;1m[0m[36;1mLine |[0m
+2026-09-30T11:23:16.2581277Z [31;1m[0m[36;1m[36;1m 105 | [0m … iled.Count) { [36;1mthrow "Test partitions failed: $($failed -join ', ')"[0m }[0m
+2026-09-30T11:23:16.2582100Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-09-30T11:23:16.2583136Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mTest partitions failed: engine-shared[0m
+2026-09-30T11:23:16.2921052Z ##[error]Process completed with exit code 1.
+2026-09-30T11:23:16.3135209Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T11:23:16.3135709Z with:
+2026-09-30T11:23:16.3136023Z   name: shared-worker-timeouts-windows-2022-x64-.NET 10
+2026-09-30T11:23:16.3136549Z   path: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8/
+2026-09-30T11:23:16.3137029Z   retention-days: 14
+2026-09-30T11:23:16.3137325Z   if-no-files-found: ignore
+2026-09-30T11:23:16.3137606Z   compression-level: 6
+2026-09-30T11:23:16.3137894Z   overwrite: false
+2026-09-30T11:23:16.3138152Z   include-hidden-files: false
+2026-09-30T11:23:16.3138455Z env:
+2026-09-30T11:23:16.3138831Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:23:16.3139320Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:23:16.3139635Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:23:16.3140194Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:23:16.3140805Z ##[endgroup]
+2026-09-30T11:23:16.5140149Z (node:3608) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:23:16.5141281Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:23:16.5189757Z No files were found with the provided path: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8/. No artifacts will be uploaded.
+2026-09-30T11:23:16.5549713Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T11:23:16.5550302Z with:
+2026-09-30T11:23:16.5550676Z   name: test-results-test-windows-8
+2026-09-30T11:23:16.5551160Z   overwrite: true
+2026-09-30T11:23:16.5552012Z   path: LiteDB.Tests/TestResults/*.trx
+LiteDB.Tests/TestResults/evidence-leg.json
+LiteDB.Tests/TestResults/discovered-tests.txt
+
+2026-09-30T11:23:16.5552947Z   if-no-files-found: warn
+2026-09-30T11:23:16.5553567Z   compression-level: 6
+2026-09-30T11:23:16.5553955Z   include-hidden-files: false
+2026-09-30T11:23:16.5554351Z env:
+2026-09-30T11:23:16.5554909Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:23:16.5555670Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:23:16.5556146Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:23:16.5556946Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:23:16.5557750Z ##[endgroup]
+2026-09-30T11:23:16.7529826Z (node:5264) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:23:16.7530754Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:23:16.7630290Z With the provided path, there will be 17 files uploaded
+2026-09-30T11:23:17.0137016Z Artifact name is valid!
+2026-09-30T11:23:17.0139952Z Root directory input is valid!
+2026-09-30T11:23:17.2280613Z Beginning upload of artifact content to blob storage
+2026-09-30T11:23:17.3854998Z (node:5264) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-30T11:23:17.9586269Z Uploaded bytes 1348807
+2026-09-30T11:23:18.0198779Z Finished uploading artifact content to blob storage!
+2026-09-30T11:23:18.0200249Z SHA256 digest of uploaded artifact zip is 9eff364779a17fd8d680fa812020e47e5ac8f0eb120e454074effdc758052962
+2026-09-30T11:23:18.0201448Z Finalizing artifact upload
+2026-09-30T11:23:18.3090674Z Artifact test-results-test-windows-8.zip successfully finalized. Artifact ID 11092359096
+2026-09-30T11:23:18.3092278Z Artifact test-results-test-windows-8 has been successfully uploaded! Final size is 1348807 bytes. Artifact ID is 11092359096
+2026-09-30T11:23:18.3101356Z Artifact download URL: https://github.com/JKamsker/LiteDB/actions/runs/36705044676/artifacts/11092359096
+2026-09-30T11:23:18.3454948Z Prepare all required actions
+2026-09-30T11:23:18.3455926Z Getting action download info
+2026-09-30T11:23:18.6830212Z ##[group]Run ./.github/actions/retained-fixtures
+2026-09-30T11:23:18.6830556Z env:
+2026-09-30T11:23:18.6830986Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:23:18.6831470Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:23:18.6831788Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:23:18.6832360Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:23:18.6832876Z ##[endgroup]
+2026-09-30T11:23:18.6892890Z ##[start-action display=Collect retained fixtures;id=__self.__run]
+2026-09-30T11:23:18.7032337Z ##[group]Run if [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi
+2026-09-30T11:23:18.7033135Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi[0m
+2026-09-30T11:23:18.7033829Z [36;1m"$retained_python" scripts/collect-retained-fixtures.py "$LITEDB_RETAINED_FIXTURES"[0m
+2026-09-30T11:23:18.7048000Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-30T11:23:18.7048462Z env:
+2026-09-30T11:23:18.7048863Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:23:18.7049361Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:23:18.7049697Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:23:18.7050228Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:23:18.7050829Z ##[endgroup]
+2026-09-30T11:23:20.4155352Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=1726]
+2026-09-30T11:23:20.4158108Z ##[start-action display=Upload fixture manifests and copies;id=__self.__actions_upload-artifact]
+2026-09-30T11:23:20.4281908Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T11:23:20.4282191Z with:
+2026-09-30T11:23:20.4282437Z   name: retained-fixtures-test-windows-8
+2026-09-30T11:23:20.4282805Z   path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/
+2026-09-30T11:23:20.4283170Z   if-no-files-found: ignore
+2026-09-30T11:23:20.4283402Z   retention-days: 14
+2026-09-30T11:23:20.4283617Z   compression-level: 6
+2026-09-30T11:23:20.4283839Z   overwrite: false
+2026-09-30T11:23:20.4284036Z   include-hidden-files: false
+2026-09-30T11:23:20.4285224Z env:
+2026-09-30T11:23:20.4285556Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:23:20.4285974Z   LITEDB_SHARED_EXPECT_TEMP_VOLUME: 1
+2026-09-30T11:23:20.4286255Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T11:23:20.4286728Z   LITEDB_SHARED_DIAGNOSTICS: __CI_HOME__\AppData\Local\Temp\litedb-shared-diagnostics-36705044676-8
+2026-09-30T11:23:20.4287194Z ##[endgroup]
+2026-09-30T11:23:20.6215038Z (node:7412) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:23:20.6215745Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:23:20.6239730Z No files were found with the provided path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/. No artifacts will be uploaded.
+2026-09-30T11:23:20.6365080Z ##[end-action id=__self.__actions_upload-artifact;outcome=success;conclusion=success;duration_ms=220]
+2026-09-30T11:23:20.6561306Z Post job cleanup.
+2026-09-30T11:23:20.8395764Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-30T11:23:20.8625741Z git version 2.55.0.windows.5
+2026-09-30T11:23:20.8695836Z Temporarily overriding HOME='__CI_HOME__/work\_temp\d7609a63-e1cf-4e7f-b5a4-da3b10da3753' before making global git config changes
+2026-09-30T11:23:20.8697151Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T11:23:20.8708879Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T11:23:20.8972994Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T11:23:20.9227110Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-30T11:23:21.4259667Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T11:23:21.4471985Z http.https://github.com/.extraheader
+2026-09-30T11:23:21.4511965Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-09-30T11:23:21.4757494Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-30T11:23:21.9584167Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T11:23:21.9833466Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-30T11:23:22.4920850Z Cleaning up orphan processes
+2026-09-30T11:23:22.4953131Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-dotnet@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,204 @@
+diff --git a/LiteDB/Client/Shared/SharedEngine.Calls.cs b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+index b28a4af17..30d2d52b1 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Calls.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+@@ -53,8 +53,23 @@ namespace LiteDB
+         });
+ 
+         /// <summary>Run a public call; the admission it made, if any, ends when it returns.</summary>
+-        private T Call<T>(Func<T> call)
++        private T Call<T>(Func<T> call, bool rollback = false)
+         {
++            // A late reader callback must be refused before waiting for either
++            // connection bookkeeping or writer ownership that close is draining.
++            if (Volatile.Read(ref _disposed) != 0)
++            {
++                if (rollback) return default;
++                throw new ObjectDisposedException(nameof(SharedEngine));
++            }
++            if (Volatile.Read(ref _ownerRetiring) != 0 && this.IsExecutingOwnedCoreOnCurrentThread())
++            {
++                // A handed-off reader can still be running when its original owner
++                // exits. Its callback cannot wait for the native owner draining it.
++                // Unrelated new callers retain their normal admission wait/recovery.
++                if (rollback) return default;
++                throw new InvalidOperationException("Cannot reenter shared ownership while this reader is being retired.");
++            }
+             var depth = this.AdmittedDepth();
+             try
+             {
+diff --git a/LiteDB/Client/Shared/SharedEngine.Disposal.cs b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+index 4af3592f2..72f297fa3 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Disposal.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+@@ -1,4 +1,6 @@
+ using System;
++using System.Linq;
++using LiteDB.Engine;
+ using System.Threading;
+ using LiteDB.Client.Shared;
+ using LiteDB.Utils;
+@@ -12,13 +14,17 @@ namespace LiteDB
+         private bool _transactionChild;
+         protected virtual void Dispose(bool disposing)
+         {
+-            if (!disposing || Volatile.Read(ref _disposed) != 0) return;
+-            // A callback cannot drain its own call or release that call's writer
+-            // ownership. Refuse before changing the connection's lifetime state.
+-            // Reader.Read can execute after SharedEngine.Query admission has ended.
+-            if (this.AdmittedDepth() != 0 || _engine?.IsExecutingOnCurrentThread == true)
+-                throw new InvalidOperationException("Cannot close a shared connection from inside its executing operation.");
+-            if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
++            if (!disposing) return;
++            lock (_useLock)
++            {
++                if (_disposed != 0) return;
++                // Later Read() callbacks can execute on a separate mutex-backed
++                // snapshot after Shared Query admission has ended. Leased snapshots
++                // are independent of this connection and are deliberately excluded.
++                if (this.AdmittedDepth() != 0 || this.IsExecutingOwnedCoreOnCurrentThread())
++                    throw new InvalidOperationException("Cannot close a shared connection from inside its executing operation.");
++                Volatile.Write(ref _disposed, 1);
++            }
+ 
+             var cleanup = new TryCatch();
+             cleanup.Catch(() => this.DisposeConnection(cleanup));
+@@ -71,22 +77,7 @@ namespace LiteDB
+ 
+             // Calls admitted before Dispose started finish first; later ones are refused.
+             cleanup.Catch(this.WaitForAdmittedCalls);
+-            var closed = false;
+-            lock (_useLock)
+-            {
+-                if (_engine != null)
+-                {
+-                    // This parent's historical final checkpoint is best effort; its
+-                    // returned close errors do not change acknowledged WAL outcomes.
+-                    // A thrown admission/refusal error means this core has not closed:
+-                    // do not continue into dependent native-ownership release below.
+-                    _engine.Close(final: true);
+-                    _engine = null;
+-                    closed = true;
+-                }
+-                cleanup.Catch(this.CloseMutexSnapshotsLocked);
+-                _databaseUsers = 0;
+-            }
++            var closed = this.CloseOwnedCores(checkpoint: true, final: true);
+             // Open readers and transactions of any thread end with the connection.
+             cleanup.Catch(_owner.ReleaseAll);
+             // Operations left a WAL below the close threshold: checkpoint it now, so
+@@ -101,14 +92,34 @@ namespace LiteDB
+             cleanup.Catch(this.DisposeCoordination);
+         }
+ 
+-        /// <summary>
+-        /// Readers streaming under the mutex end with their ownership, like the
+-        /// operation engine: a later read would no longer be ordered with writers.
+-        /// </summary>
+-        private void CloseMutexSnapshotsLocked()
++        private bool IsExecutingOwnedCoreOnCurrentThread()
++        {
++            lock (_useLock)
++                return _engine?.IsExecutingOnCurrentThread == true ||
++                    _mutexSnapshots.Any(snapshot => snapshot.IsExecutingOnCurrentThread);
++        }
++
++        /// <summary>Keep ownership published while draining, without a callback-needed lock.</summary>
++        private bool CloseOwnedCores(bool checkpoint, bool final = false)
+         {
+-            foreach (var snapshot in _mutexSnapshots) snapshot.Close(checkpoint: false);
+-            _mutexSnapshots.Clear();
++            LiteEngine core;
++            LiteEngine[] snapshots;
++            lock (_useLock)
++            {
++                core = _engine;
++                snapshots = _mutexSnapshots.ToArray();
++            }
++            // Returned errors follow completed teardown and keep the parent's
++            // best-effort policy. A thrown refusal must prevent native release.
++            core?.Close(checkpoint: checkpoint, final: final);
++            foreach (var snapshot in snapshots) snapshot.Close(checkpoint: false);
++            lock (_useLock)
++            {
++                if (ReferenceEquals(_engine, core)) _engine = null;
++                foreach (var snapshot in snapshots) _mutexSnapshots.Remove(snapshot);
++                _databaseUsers = 0;
++            }
++            return core != null;
+         }
+     }
+ }
+diff --git a/LiteDB/Client/Shared/SharedEngine.Query.cs b/LiteDB/Client/Shared/SharedEngine.Query.cs
+index c14e2ef03..39699a1a8 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Query.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Query.cs
+@@ -296,7 +296,7 @@ namespace LiteDB
+                     return new SharedDataReader(continued, () =>
+                     {
+                         try { this.CloseMutexSnapshot(locked); }
+-                        finally { _owner.Exit(generation); }
++                        finally { if (locked.IsDisposed) _owner.Exit(generation); }
+                     });
+                 }
+ 
+@@ -406,9 +406,15 @@ namespace LiteDB
+         {
+             lock (_useLock)
+             {
+-                if (!_mutexSnapshots.Remove(snapshot)) return;
++                if (!_mutexSnapshots.Contains(snapshot)) return;
++            }
++            try { snapshot.Dispose(); }
++            finally
++            {
++                // Refused teardown leaves the live snapshot and its native owner
++                // published so a later connection close can safely retry.
++                if (snapshot.IsDisposed) lock (_useLock) _mutexSnapshots.Remove(snapshot);
+             }
+-            snapshot.Dispose();
+         }
+ 
+         /// <summary>
+diff --git a/LiteDB/Client/Shared/SharedEngine.cs b/LiteDB/Client/Shared/SharedEngine.cs
+index a5acd3494..e124d4000 100644
+--- a/LiteDB/Client/Shared/SharedEngine.cs
++++ b/LiteDB/Client/Shared/SharedEngine.cs
+@@ -31,6 +31,7 @@ namespace LiteDB
+         // Read-only snapshots streaming under the mutex (no lease could be registered).
+         private readonly HashSet<LiteEngine> _mutexSnapshots = new HashSet<LiteEngine>();
+         private int _disposed;
++        private int _ownerRetiring;
+ #if DEBUG || TESTING
+         internal Func<LiteEngine> SimulateOpenEngine { get; set; }
+ 
+@@ -227,15 +228,13 @@ namespace LiteDB
+         /// </summary>
+         private void OnOwnerExited()
+         {
+-            lock (_useLock)
++            Volatile.Write(ref _ownerRetiring, 1);
++            try
+             {
+-                _databaseUsers = 0;
+-                var engine = _engine;
+-                _engine = null;
+-                engine?.Close(checkpoint: false);
+-                this.CloseMutexSnapshotsLocked();
++                this.CloseOwnedCores(checkpoint: false);
++                _handles?.CloseIdle();
+             }
+-            _handles?.CloseIdle();
++            finally { Volatile.Write(ref _ownerRetiring, 0); }
+         }
+ 
+         #region Transaction Operations
+@@ -271,7 +270,7 @@ namespace LiteDB
+ 
+         public bool Commit() => this.Call(() => CompleteTransaction(commit: true));
+ 
+-        public bool Rollback() => this.Call(() => CompleteTransaction(commit: false));
++        public bool Rollback() => this.Call(() => CompleteTransaction(commit: false), rollback: true);
+ 
+         private bool CompleteTransaction(bool commit)
+         {

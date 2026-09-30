@@ -1,0 +1,34 @@
+{
+  "candidate": "f95f0b0cd59d35d285ac72183589975751e35229",
+  "localSource": "303c153a9",
+  "localAndCandidateFullTreeEqual": true,
+  "candidateTree": "03605ef756b50c7393607a5aa37280e8d6238d55",
+  "productionTree": "95f947dfbda13d002c2a2f6b0d83a1e2777b4807",
+  "measuredSource": "19065cc1e6b14ee697f7512fa9e65dbe00a8b882",
+  "productionDiffEmpty": true,
+  "kind": "Test-only timing-scope correction; no production fix or new benchmark attribution",
+  "originalHostedFailure": {
+    "candidate": "19065cc1e6b14ee697f7512fa9e65dbe00a8b882",
+    "job": 109871740658,
+    "leg": "Windowslatest/x64/net8",
+    "where": "outer using cleanup line58, unsafe mode0 plain",
+    "observed": "Callback/refusal/post-refusal checks alreadypassed;100ms override persisted into outercleanup",
+    "unknown": "Specific original scheduling/drain duration cause remains unknown"
+  },
+  "correction": "100ms probe deadline only within unsafe callback modes0/4/5, previous override restored in finally; safe modes1/2/3 and outercleanup retain normal deadline",
+  "oracle": "Real e821 plus revised test6fails6safe passes perruntime; fixed18passes perruntime, no mutant",
+  "independentReview": "review_final_cleanup reported bounded clean test-only review perparent",
+  "hostedStatus": "New full final8candidate gate required;190 hosted gate failed and is retained interim",
+  "benchmark": "Original190binaries/84processes420windows remain applicable through exactproductiontree equivalence; not relabeled as f95built binaries",
+  "additionalHostedFailure": {
+    "candidate": "19065cc1e",
+    "job": 109871740900,
+    "leg": "Windows2022/x64/net10",
+    "mode": 0,
+    "password": "secret",
+    "where": "outerusingline58",
+    "overallDurationMs": 515,
+    "classification": "Same test-scope issue asfirstplaincase; no new productmechanism or specific scheduling/drain cause established"
+  },
+  "previousWorkflowDisposition": "190CI ended35success/2failure/2cancelled after successor push;29 artifacts retained but one cancelled leg incomplete. No oldgreenqualification claimed."
+}

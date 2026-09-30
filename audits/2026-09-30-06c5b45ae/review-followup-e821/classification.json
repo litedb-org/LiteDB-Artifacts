@@ -1,0 +1,36 @@
+{
+  "review": 5365276527,
+  "candidate": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+  "status": "Both P1 findings reproduced on actuale821 and corrected; current190 hostedqualification pending",
+  "findings": [
+    {
+      "claim": "A refused close of an unleased snapshot still releases its native protection",
+      "severity": "P1",
+      "status": "Confirmed on actuale821; corrected Shared74/99 source with forced plain/encrypted controls and independent review",
+      "evidence": "corrections/shared-late-reader/, corrections/independent-review/ and strict-proofs/"
+    },
+    {
+      "claim": "Cross-thread Shared disposal can deadlock a late reader callback on `_useLock`",
+      "severity": "P1",
+      "status": "Confirmed on actuale821; corrected Shared74/99 source with forced plain/encrypted controls and independent review",
+      "evidence": "corrections/shared-late-reader/, corrections/independent-review/ and strict-proofs/"
+    }
+  ],
+  "scope": "Raw SharedEngine callbacks during reader advances after Query returned",
+  "limits": "Actual source-specific before/fixed evidence now retained. No demonstrated acknowledged-commit-loss claim. FinalCI pending; first facade setup-failure rawreport unavailable and disclosed.",
+  "additionalFindings": [
+    {
+      "claim": "Owning facade late-reader callback closes its own dependent core/session",
+      "source": "comment5910144864",
+      "status": "Actuale8216fail6control unitbefore, fixed08952perruntime and corrected strictproof; current190hosted pending"
+    },
+    {
+      "claim": "Fresh opens race a draining core after first correction",
+      "status": "Actualintermediate74 fails; originale821 controlpasses; fenced99 correction validated"
+    },
+    {
+      "claim": "ARM64 steady-publication test observed6056bytes",
+      "status": "Causeunknown; exactzero/negativecontrol24000 retained. CIcollector verified current190ARM64net10 strictzero+positivecontrol and all15partition runtimeguards passed; fullaggregate pending."
+    }
+  ]
+}

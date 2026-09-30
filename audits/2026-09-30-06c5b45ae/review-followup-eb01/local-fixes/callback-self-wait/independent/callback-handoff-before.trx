@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7bb86747-15e7-43c9-9856-b8511a545725" name="@dev-build-server 2026-09-30 10:18:51" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T10:18:51.4818426+00:00" queuing="2026-09-30T10:18:51.4818427+00:00" start="2026-09-30T10:18:49.1311580+00:00" finish="2026-09-30T10:18:51.4898659+00:00" />
+  <TestSettings name="default" id="b920117a-699a-4268-8f69-8be2147379d7">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_10_18_51" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="6ef49c8c-a4c1-4708-9bb2-3878a748b0af" testId="202e1f93-6992-9d43-3cc1-b3d6b0da422d" testName="LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests.Previous_scope_tail_must_not_clear_the_next_executing_thread_marker" computerName="dev-build-server" duration="00:00:01.1611795" startTime="2026-09-30T10:18:51.4144831+00:00" endTime="2026-09-30T10:18:51.4144975+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ef49c8c-a4c1-4708-9bb2-3878a748b0af">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.False() Failure
+Expected: False
+Actual:   True</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests.Previous_scope_tail_must_not_clear_the_next_executing_thread_marker() in __WORKSPACE__/temporary/pr133-callback-selfwait-review/LiteDB.Tests/Engine/CallbackScopeHandoffReview_Tests.cs:line 61
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests.Previous_scope_tail_must_not_clear_the_next_executing_thread_marker" storage="__WORKSPACE__/temporary/pr133-callback-selfwait-review/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="202e1f93-6992-9d43-3cc1-b3d6b0da422d">
+      <Execution id="6ef49c8c-a4c1-4708-9bb2-3878a748b0af" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-callback-selfwait-review/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests" name="Previous_scope_tail_must_not_clear_the_next_executing_thread_marker" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="202e1f93-6992-9d43-3cc1-b3d6b0da422d" executionId="6ef49c8c-a4c1-4708-9bb2-3878a748b0af" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.30)
+[xUnit.net 00:00:00.13]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.78]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.79]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.98]       Assert.False() Failure
+[xUnit.net 00:00:01.98]       Expected: False
+[xUnit.net 00:00:01.98]       Actual:   True
+[xUnit.net 00:00:01.98]       Stack Trace:
+[xUnit.net 00:00:01.98]         __WORKSPACE__/temporary/pr133-callback-selfwait-review/LiteDB.Tests/Engine/CallbackScopeHandoffReview_Tests.cs(61,0): at LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests.Previous_scope_tail_must_not_clear_the_next_executing_thread_marker()
+[xUnit.net 00:00:01.98]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:01.98]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.99]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T10:18:51.4132785+00:00">
+        <Text>[xUnit.net 00:00:01.98]     LiteDB.Tests.Engine.CallbackScopeHandoffReview_Tests.Previous_scope_tail_must_not_clear_the_next_executing_thread_marker [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

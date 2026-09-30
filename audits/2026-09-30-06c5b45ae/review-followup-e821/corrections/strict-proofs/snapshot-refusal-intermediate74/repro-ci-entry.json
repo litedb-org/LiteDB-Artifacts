@@ -1,0 +1,8 @@
+{
+  "Issue_133_SharedSnapshotCloseRefusal": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_self_close_preserves_unleased_protection_or_leased_independence"
+    ]
+  }
+}

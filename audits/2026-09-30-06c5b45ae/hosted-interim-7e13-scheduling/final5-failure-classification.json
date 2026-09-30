@@ -1,0 +1,18 @@
+{
+  "head": "7e13e58e5f4e40642492ce768b49018e4a958c8b",
+  "ciRun": 36704366871,
+  "classification": "CI harness configuration omission; three new commit-pinned regression repros lack dedicated-proof substitutions in .github/repro-ci.json.",
+  "confirmedEvidence": [
+    "final5-build-linux-failure.log",
+    "final5-raw-callback-repro-failure.log"
+  ],
+  "policyFailures": 5,
+  "newRepros": [
+    "Issue_133_RawCloseCallbackDependency",
+    "Issue_3067_HandleCallbackSelfWait",
+    "Issue_3067_SharedPinCleanup"
+  ],
+  "effect": "Ordinary repro jobs cannot restore their required local known-bad package feed; Linux policy matrix checks reject their unintended scheduling.",
+  "plannedResolution": "Add the three substitutions with permanent guards; retain all13 dedicated known-bad proof comparisons. Root is preparing a harness-only successor; no product change is required for this failure.",
+  "benchmarkStatus": "Production binaries unchanged; metadata/log collection only during timing."
+}

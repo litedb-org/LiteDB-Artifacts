@@ -1,0 +1,36 @@
+{
+  "regressionProof": {
+    "repro": "Issue_3067_SharedLateReaderClose",
+    "knownBad": {
+      "kind": "pr-commit",
+      "commit": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+      "pr": 133,
+      "reason": "The callback/Shared-use-lock drain cycle exists only in the fork PR #133 integration and has not reached upstream dev or a published package."
+    },
+    "permanentGuard": [
+      "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_callback_can_reenter_after_foreign_close_starts_draining"
+    ]
+  },
+  "reproCi": {
+    "Issue_3067_SharedLateReaderClose": {
+      "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+      "tests": [
+        "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_callback_can_reenter_after_foreign_close_starts_draining"
+      ]
+    }
+  },
+  "contractEvidence": {
+    "reader-snapshot": [
+      {
+        "test": "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_callback_can_reenter_after_foreign_close_starts_draining",
+        "model": "exception",
+        "proves": "A callback on a post-Query reader advance is held while foreign disposal enters core-close drain; the callback Shared reentry must be refused, both threads finish and cold committed rows remain available. Plain/encrypted operation-core and mutex-snapshot paths are exercised."
+      }
+    ]
+  },
+  "notes": [
+    "No new hooks in the black-box proof; no hook registration required for the repro.",
+    "Native writer release, cold indexed committed/aborted/sentinel model and separate-process write are additionally asserted in the strict historical proof.",
+    "Confirm final permanent guard name and current assertions before installing these proposed entries."
+  ]
+}

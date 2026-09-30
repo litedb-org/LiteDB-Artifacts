@@ -1,0 +1,814 @@
+name: Reusable CI (Build & Test)
+
+on:
+  workflow_call:
+    inputs:
+      tier:
+        description: Coverage tier (pr or full)
+        required: false
+        type: string
+        default: full
+      sdk-matrix:
+        required: false
+        type: string
+        default: |
+          [
+            { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+            { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+            { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+          ]
+
+env:
+  LITEDB_RETAINED_FIXTURES: ${{ github.workspace }}/LiteDB.Tests/TestResults/retained-fixtures
+
+jobs:
+  # docs/rules/safety-evidence.md: coverage may change, but never silently. Runs
+  # beside the build so a missing disposition does not delay the test legs.
+  safety-policy:
+    name: Safety policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check coverage regressions against the ledger
+        run: python .github/scripts/check_coverage_regression.py --base "${BASE_SHA:-HEAD^}"
+
+      - name: Check the fault-point registry
+        if: ${{ !cancelled() }}
+        run: python .github/scripts/check_fault_points.py --base "${BASE_SHA:-HEAD^}"
+
+      - name: Report implicated safety contracts
+        if: ${{ !cancelled() }}
+        run: python .github/scripts/check_contracts.py --base "${BASE_SHA:-HEAD^}"
+
+      - name: Validate the regression-proof ledger
+        if: ${{ !cancelled() }}
+        run: python .github/scripts/regression_proof.py validate
+
+  build-linux:
+    name: Build (Linux)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+
+      - name: Check CI policy and changed C# file sizes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          python -m unittest discover -s .github/scripts -p 'test_*.py'
+          python scripts/check-csharp-size.py --base "${BASE_SHA:-HEAD^}"
+
+      - name: Restore
+        run: dotnet restore LiteDB.sln /p:TestingEnabled=true
+
+      - name: Build
+        run: dotnet build LiteDB.sln --configuration Release --no-restore /p:TestingEnabled=true
+
+      - name: Verify index migration from LiteDB 5.0.21
+        run: python3 scripts/test-index-compatibility.py
+      - name: Verify vector file compatibility with LiteDB 5.0.21
+        run: python3 scripts/test-vector-compatibility.py
+      - name: Verify genuine v9 vectors through the storage stack
+        run: python3 scripts/test-v9-compatibility.py
+      - name: Verify MVCC file rejection by the v12 parent
+        run: python3 scripts/test-mvcc-compatibility.py --parent-ref a2ea9a65a469f6449bb8838592f5266b078758b3
+
+      - name: Build memory validation runner
+        run: dotnet build tools/MemoryValidation/MemoryValidation.csproj --configuration Release
+
+      - name: Verify rejection by the actual preceding format
+        run: python3 scripts/test-parent-format-compatibility.py --max-version 12 --v12-ref a2ea9a65a469f6449bb8838592f5266b078758b3
+
+      - name: Build memory profile measurements
+        run: dotnet build tools/MemoryProfiles/MemoryProfiles.csproj --configuration Release
+
+      - name: Build production native admission validation
+        run: dotnet build tools/NativeAdmissionValidation/NativeAdmissionValidation.csproj --configuration Release /p:TestingEnabled=false
+
+      # Compatibility/measurement tools build production assemblies. Restore the
+      # hook-enabled outputs before packaging any test artifacts.
+      - name: Restore test-hook assemblies
+        run: dotnet build LiteDB.sln --configuration Release --no-restore /p:TestingEnabled=true
+
+      - name: Record build provenance
+        run: >-
+          printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')"
+          "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+
+      - name: Package build outputs
+        run: tar -czf tests-build-linux.tar.gz LiteDB/bin/Release LiteDB/obj/Release LiteDB.Tests/bin/Release LiteDB.Tests/obj/Release LiteDB.Tests.SharedMutexHarness/bin/Release LiteDB.Tests.SharedMutexHarness/obj/Release tools/NativeAdmissionValidation/bin/Release
+
+      - name: Upload linux test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-build-linux
+          path: tests-build-linux.tar.gz
+
+      - name: Verify real graph-failure fixture retention
+        run: python3 scripts/test-graph-retention.py --output artifacts_temp/graph-retention-contract
+
+      - name: Upload graph retention contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-retention-contract-linux
+          path: artifacts_temp/graph-retention-contract/
+          if-no-files-found: warn
+
+      - name: Verify prerelease database acknowledgement guard
+        run: >-
+          dotnet test LiteDB.Tests/LiteDB.Tests.csproj
+          --configuration Release
+          --framework net8.0
+          /p:TestingEnabled=true
+          /p:LiteDBPreDev=true
+          --filter FullyQualifiedName~PreDevRelease_Tests
+
+  test-linux:
+    name: Test (Linux ${{ matrix.item.display }})
+    runs-on: ubuntu-latest
+    needs: build-linux
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJson(inputs.tier == 'full' && inputs.sdk-matrix || '[{"display":".NET 8","runtimeMajor":8,"sdk":"8.0.x","framework":"net8.0","includePrerelease":false},{"display":".NET 10","runtimeMajor":10,"sdk":"10.0.x","framework":"net10.0","includePrerelease":false}]') }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK ${{ matrix.item.display }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.item.sdk }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-build-linux
+
+      - name: Extract build artifacts
+        run: tar -xzf tests-build-linux.tar.gz
+
+      - name: Run all test partitions with verified runtime and architecture
+        shell: pwsh
+        timeout-minutes: 40
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.item.runtimeMajor }}
+          -Framework "${{ matrix.item.framework }}"
+          -PartitionSuite
+
+      - name: Upload test partition results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          overwrite: true
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+          if-no-files-found: warn
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  test-native-glibc231:
+    if: inputs.tier == 'full'
+    name: Native admission (glibc 2.31 - ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: build-linux
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tests-build-linux
+      - name: Extract test build
+        run: tar -xzf tests-build-linux.tar.gz
+      - name: Verify old glibc symbol compatibility and native admission
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: bash scripts/test-native-admission-glibc.sh
+      - name: Upload native admission results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          path: |
+            LiteDB.Tests/TestResults/NativeAdmission-glibc231-*.trx
+            LiteDB.Tests/TestResults/NativeAdmission-bind-*
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+            LiteDB.Tests/TestResults/native-partitions.json
+          if-no-files-found: warn
+
+      - name: Upload retained container graph fixtures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retained-fixtures-glibc-${{ matrix.os }}
+          path: LiteDB.Tests/TestResults/retained-fixtures/
+          if-no-files-found: ignore
+
+  build-macos:
+    if: inputs.tier == 'full'
+    name: Build (macOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore LiteDB.sln /p:TestingEnabled=true
+
+      - name: Build
+        run: dotnet build LiteDB.sln --configuration Release --no-restore /p:TestingEnabled=true
+
+      - name: Record build provenance
+        run: >-
+          printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')"
+          "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+
+      - name: Package build outputs
+        run: tar -czf tests-build-macos.tar.gz LiteDB/bin/Release LiteDB/obj/Release LiteDB.Tests/bin/Release LiteDB.Tests/obj/Release LiteDB.Tests.SharedMutexHarness/bin/Release LiteDB.Tests.SharedMutexHarness/obj/Release
+
+      - name: Upload macOS test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-build-macos
+          path: tests-build-macos.tar.gz
+
+  test-macos:
+    if: inputs.tier == 'full'
+    name: Test (macOS ${{ matrix.item.display }})
+    runs-on: macos-latest
+    needs: build-macos
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJson(inputs.sdk-matrix) }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK ${{ matrix.item.display }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.item.sdk }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-build-macos
+
+      - name: Extract build artifacts
+        run: tar -xzf tests-build-macos.tar.gz
+
+      - name: Run all test partitions with verified runtime and architecture
+        shell: pwsh
+        timeout-minutes: 40
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.item.runtimeMajor }}
+          -Framework "${{ matrix.item.framework }}"
+          -PartitionSuite
+
+      - name: Upload test partition results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          overwrite: true
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+          if-no-files-found: warn
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  test-native-macos-intel:
+    if: inputs.tier == 'full'
+    name: Native admission (macOS Intel - ${{ matrix.framework }})
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - framework: net8.0
+            runtimeMajor: 8
+          - framework: net10.0
+            runtimeMajor: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+      - name: Build admission tests and process harness
+        run: dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f ${{ matrix.framework }} -p:TestingEnabled=true
+      - name: Record build provenance
+        run: >-
+          printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')"
+          "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+      # Darwin x64 uses different stat symbols and variadic calling conventions
+      # from arm64. The full macOS suite above exercises the arm64 runner.
+      - name: Verify Intel native locking and replacement
+        shell: pwsh
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.runtimeMajor }}
+          -Framework "${{ matrix.framework }}"
+          -Architecture x64
+          -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated'
+          -ResultFile 'NativeAdmission.trx'
+          -PartitionFiltered
+      - name: Upload native admission results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+            LiteDB.Tests/TestResults/native-partitions.json
+          if-no-files-found: warn
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  build-windows:
+    name: Build (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          # The v9 compatibility probe builds a historical commit in a worktree.
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore LiteDB.sln /p:TestingEnabled=true
+
+      - name: Build
+        run: dotnet build LiteDB.sln --configuration Release --no-restore /p:TestingEnabled=true
+
+      - name: Verify genuine v9 vectors through the storage stack
+        run: python scripts/test-v9-compatibility.py
+
+      - name: Record build provenance
+        shell: bash
+        run: >-
+          printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')"
+          "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+
+      - name: Upload windows test build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-build-windows
+          path: |
+            LiteDB/bin/Release
+            LiteDB/obj/Release
+            LiteDB.Tests/bin/Release
+            LiteDB.Tests/obj/Release
+            LiteDB.Tests.SharedMutexHarness/bin/Release
+            LiteDB.Tests.SharedMutexHarness/obj/Release
+
+  test-windows:
+    name: Test (Windows ${{ matrix.os }} - ${{ matrix.arch }} - ${{ matrix.item.display }})
+    runs-on: ${{ matrix.os }}
+    needs: build-windows
+    env:
+      LITEDB_SHARED_EXPECT_TEMP_VOLUME: '1'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJson(inputs.tier == 'full' && '["windows-latest","windows-2022"]' || '["windows-latest"]') }}
+        arch: ${{ fromJson(inputs.tier == 'full' && '["x64","x86"]' || '["x64"]') }}
+        item: ${{ fromJson(inputs.tier == 'full' && inputs.sdk-matrix || '[{"display":".NET 10","runtimeMajor":10,"sdk":"10.0.x","framework":"net10.0","includePrerelease":false}]') }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK ${{ matrix.item.display }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.item.sdk }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-build-windows
+          path: .
+
+      - name: Preserve the original system-temp storage volume
+        shell: pwsh
+        run: |
+          $diagnostics = Join-Path ([IO.Path]::GetTempPath()) 'litedb-shared-diagnostics-${{ github.run_id }}-${{ strategy.job-index }}'
+          Write-Host "Original temp directory: $([IO.Path]::GetTempPath())"
+          Write-Host "Database and diagnostics root: $diagnostics"
+          "LITEDB_SHARED_DIAGNOSTICS=$diagnostics" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Install and verify Microsoft ProcDump
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86' && matrix.item.runtimeMajor == 8
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'Procdump.zip'
+          $directory = Join-Path $env:RUNNER_TEMP 'litedb-procdump'
+          Invoke-WebRequest 'https://download.sysinternals.com/files/Procdump.zip' -OutFile $archive
+          Expand-Archive $archive $directory
+          $executable = Join-Path $directory 'procdump.exe'
+          $signature = Get-AuthenticodeSignature $executable
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') {
+            throw "Untrusted ProcDump signature: $($signature.Status) $($signature.SignerCertificate.Subject)"
+          }
+          Get-FileHash $archive, $executable -Algorithm SHA256 | Format-List
+          (Get-Item $executable).VersionInfo | Format-List FileVersion, ProductVersion
+          "LITEDB_SHARED_PROCDUMP=$executable" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Run all test partitions with verified runtime and architecture
+        shell: pwsh
+        timeout-minutes: 40
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.item.runtimeMajor }}
+          -Framework "${{ matrix.item.framework }}"
+          -Architecture "${{ matrix.arch }}"
+          -PartitionSuite
+
+      - name: Verify Windows x86 dump and storage-volume contracts
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86' && matrix.item.runtimeMajor == 8
+        shell: pwsh
+        timeout-minutes: 5
+        env:
+          LITEDB_SHARED_DUMP_SMOKE: '1'
+        run: |
+          $runtime = Join-Path $env:RUNNER_TEMP 'litedb-runtime-8-x86'
+          ./scripts/run-ci-tests.ps1 -RuntimeMajor 8 -Framework net8.0 -Architecture x86 `
+            -RuntimeDirectory $runtime -Filter 'FullyQualifiedName~SharedWorkerDump' `
+            -ResultFile 'SharedDumpContracts.trx'
+          if ($LASTEXITCODE -ne 0) { throw 'Diagnostic contract tests failed.' }
+
+      - name: Repeat Windows x86 .NET 8 concurrent inserts with diagnostics
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86' && matrix.item.runtimeMajor == 8
+        shell: pwsh
+        timeout-minutes: 5
+        run: |
+          $runtime = Join-Path $env:RUNNER_TEMP 'litedb-runtime-8-x86'
+          for ($repeat = 1; $repeat -le 4; $repeat++) {
+            ./scripts/run-ci-tests.ps1 -RuntimeMajor 8 -Framework net8.0 -Architecture x86 `
+              -RuntimeDirectory $runtime -Filter 'FullyQualifiedName~CrossProcess_Shared_ConcurrentWrites_InsertDocuments' `
+              -ResultFile "CrossProcessRepeat-$repeat.trx"
+            if ($LASTEXITCODE -ne 0) { throw "Concurrent insert repeat $repeat failed." }
+          }
+
+      - name: Preserve exact symbols and x86 runtime after failure
+        if: failure() && matrix.os == 'windows-latest' && matrix.arch == 'x86' && matrix.item.runtimeMajor == 8
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-worker-binaries-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.item.display }}
+          path: |
+            LiteDB.Tests/bin/Release/net8.0/
+            ${{ runner.temp }}/litedb-runtime-8-x86/shared/Microsoft.NETCore.App/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload source-volume diagnostics after test-host exit
+        if: always() && env.LITEDB_SHARED_DIAGNOSTICS != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-worker-timeouts-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.item.display }}
+          path: ${{ env.LITEDB_SHARED_DIAGNOSTICS }}/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload test partition results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          overwrite: true
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+          if-no-files-found: warn
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  test-windows-framework:
+    name: Test (Windows ${{ matrix.framework }})
+    runs-on: windows-2022
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: ${{ fromJson(inputs.tier == 'full' && '["net462","net481"]' || '["net481"]') }}
+    env:
+      XUNIT_RUNNER_VERSION: 2.9.2
+      LITEDB_EXPECTED_RUNTIME_MAJOR: '4'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore LiteDB.Tests/LiteDB.Tests.csproj /p:TestingEnabled=true
+
+      - name: Build test project
+        run: >-
+          dotnet build LiteDB.Tests/LiteDB.Tests.csproj
+          --configuration Release
+          --framework ${{ matrix.framework }}
+          --no-restore
+          /p:TestingEnabled=true
+
+      - name: Run .NET Framework tests
+        shell: pwsh
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: |
+          $framework = '${{ matrix.framework }}'
+          $runner = Join-Path $env:USERPROFILE ".nuget\packages\xunit.runner.console\$env:XUNIT_RUNNER_VERSION\tools\$framework\xunit.console.exe"
+          $assembly = "LiteDB.Tests\bin\Release\$framework\LiteDB.Tests.dll"
+          $results = "LiteDB.Tests\TestResults\TestResults-$framework.xml"
+          New-Item -ItemType Directory -Force (Split-Path $results) | Out-Null
+          # Record what this leg tested for the Safety evidence job.
+          [ordered]@{
+            schemaVersion = 1; job = $env:GITHUB_JOB; matrix = ($env:LITEDB_EVIDENCE_MATRIX | ConvertFrom-Json)
+            sha = (git rev-parse HEAD); tree = (git rev-parse 'HEAD^{tree}'); buildSha = (git rev-parse HEAD)
+            framework = $framework; format = 'xunit'; discovery = $null
+            partitions = [ordered]@{ all = "TestResults-$framework.xml" }
+          } | ConvertTo-Json -Depth 8 | Set-Content 'LiteDB.Tests\TestResults\evidence-leg.json' -Encoding utf8
+
+          & $runner $assembly -nologo -xml $results
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          [xml]$report = Get-Content $results
+          $total = [int]$report.assemblies.assembly.total
+          if ($total -eq 0) { throw "The $framework runner discovered zero tests." }
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          overwrite: true
+          path: |
+            LiteDB.Tests/TestResults/*.xml
+            LiteDB.Tests/TestResults/evidence-leg.json
+          if-no-files-found: warn
+
+  test-linux-arm64:
+    if: inputs.tier == 'full'
+    name: Test (Linux ARM64 - ${{ matrix.item.display }})
+    runs-on: ubuntu-24.04-arm
+    needs: build-linux
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJson(inputs.sdk-matrix) }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK ${{ matrix.item.display }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.item.sdk }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-build-linux
+
+      - name: Extract build artifacts
+        run: tar -xzf tests-build-linux.tar.gz
+
+      - name: Run all test partitions with verified runtime and architecture
+        shell: pwsh
+        timeout-minutes: 40
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.item.runtimeMajor }}
+          -Framework "${{ matrix.item.framework }}"
+          -Architecture arm64
+          -PartitionSuite
+
+      - name: Upload test partition results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          overwrite: true
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+          if-no-files-found: warn
+
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  # docs/rules/safety-evidence.md: green must mean complete, current and executed.
+  # A skipped, cancelled or missing leg, a result from another revision, an empty
+  # or truncated partition, or a test no leg executed fails this job.
+  safety-evidence:
+    name: Safety evidence
+    if: ${{ !cancelled() }}
+    needs: [safety-policy, build-linux, test-linux, build-macos, test-macos, build-windows, test-windows, test-windows-framework, test-linux-arm64, test-native-glibc231, test-native-macos-intel, test-native-windows-arm64, test-host-local-filesystem]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Artifacts of the current run download with the runner's own token; fork PRs
+    # grant no `actions` scope, and requesting it fails the whole workflow.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          path: evidence
+
+      - name: Verify evidence completeness
+        if: ${{ !cancelled() }}
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          CI_TIER: ${{ inputs.tier }}
+          VALIDATED_SHA: ${{ github.sha }}
+        run: >-
+          python .github/scripts/check_test_evidence.py --artifacts evidence --tier "$CI_TIER"
+          --sha "$VALIDATED_SHA" --output evidence-report
+
+      - name: Upload evidence summary
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-evidence
+          overwrite: true
+          path: evidence-report/safety-evidence.json
+          if-no-files-found: warn
+
+  test-native-windows-arm64:
+    if: inputs.tier == 'full'
+    name: Native admission (Windows ARM64 - ${{ matrix.framework }})
+    runs-on: windows-11-arm
+    needs: build-windows
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - framework: net8.0
+            runtimeMajor: 8
+          - framework: net10.0
+            runtimeMajor: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          name: tests-build-windows
+      - name: Verify ARM64 runtime, native admission, fallback and replacement
+        shell: pwsh
+        env:
+          LITEDB_EVIDENCE_MATRIX: ${{ toJSON(matrix) }}
+        run: >-
+          ./scripts/run-ci-tests.ps1
+          -RuntimeMajor ${{ matrix.runtimeMajor }}
+          -Framework "${{ matrix.framework }}"
+          -Architecture arm64
+          -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~SharedCoordinated'
+          -ResultFile 'NativeAdmission-arm64.trx'
+          -PartitionFiltered
+      - name: Verify Windows fixture collector and actual failing graph host
+        shell: pwsh
+        run: |
+          python -m unittest discover -s .github/scripts -p test_retained_fixtures.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/test-graph-retention.py --framework '${{ matrix.framework }}' --architecture arm64 --output artifacts_temp/graph-retention-contract
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload native and retention contract results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.job }}-${{ strategy.job-index }}
+          path: |
+            LiteDB.Tests/TestResults/*.trx
+            LiteDB.Tests/TestResults/evidence-leg.json
+            LiteDB.Tests/TestResults/discovered-tests.txt
+            LiteDB.Tests/TestResults/native-partitions.json
+            artifacts_temp/graph-retention-contract/
+          if-no-files-found: warn
+      - name: Preserve failed graph fixtures after test-host exit
+        if: always()
+        uses: ./.github/actions/retained-fixtures
+
+  test-host-local-filesystem:
+    if: inputs.tier == 'full'
+    name: Host-local admission (real f2fs)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Install local filesystem tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y f2fs-tools linux-modules-extra-$(uname -r)
+      - name: Build production admission validation
+        run: dotnet build tools/NativeAdmissionValidation/NativeAdmissionValidation.csproj -c Release -f net8.0 -p:TestingEnabled=false
+      - name: Verify actual unqualified local storage and file-bind refusal
+        run: bash scripts/test-host-local-filesystem.sh
+      - name: Upload filesystem qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-local-f2fs
+          path: LiteDB.Tests/TestResults/host-local-f2fs/
+          if-no-files-found: warn

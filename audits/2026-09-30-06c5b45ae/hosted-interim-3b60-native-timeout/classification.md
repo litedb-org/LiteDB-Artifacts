@@ -1,0 +1,7 @@
+# Native macOS Intel .NET10 session timeout
+
+The3b60d5aea candidate leg tested merge dc5a87cc7c95be202c26fd5d30475673892deaea with matching binary provenance. The log explicitly aborts after300000ms;637tests passed,1skipped,0assertion failures. The retainedTRX misleadingly prints a Passed! aggregate line with summary outcome Failed. It is incomplete: the current safety checker independently rejects4discovered methods without results.
+
+Classification: CI harness capacity defect in an increasingly large single filtered session; no production assertion failure observed in the completed portion. Partition-only correction is pending. It must preserve the exact selected union, runtime guards, discovery/provenance, missing/duplicate/empty partition rejection and300s per-session budget. Production benchmark remains applicable if the fix changes only CI harness. This run must never be counted as green.
+
+A second harness defect was confirmed independently:21lowercase-rebuild methods (45executed cases) appeared inTRX but not the recorder's case-sensitive selected listing. VSTest matching is case-insensitive. The recorder is corrected to compare both inclusion and exclusion case-insensitively; current filters are unchanged. Old275method listing is incomplete and cannot substantiate full-selection completeness. The known archived union has296nonguard methods, partitioned101/85/110; fresh full discovery must still run. See `recorder-case-mismatch.json`.

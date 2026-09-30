@@ -1,0 +1,114 @@
+{
+  "GeneratedAt": "2026-09-30T11:14:11.2625103+00:00",
+  "Root": "__WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedLateReaderClose",
+      "State": 0,
+      "Failed": true,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 1,
+        "Met": false,
+        "ExitCode": 1,
+        "DurationSeconds": 0.3863946,
+        "UseProjectReference": false,
+        "FailureReason": "Expected exit code 0 but observed 1.",
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:14:16.1309797\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:14:16.4549952\u002B00:00\u0022,\u0022text\u0022:\u0022Unexpected proof failure.\u0022,\u0022success\u0022:false,\u0022payload\u0022:{\u0022error\u0022:\u0022System.ArgumentException: The length of the name exceeds the maximum limit. (Parameter \\u0027name\\u0027)\\n   at System.Threading.Mutex.CreateMutexCore(Boolean initiallyOwned, String name, Boolean\\u0026 createdNew)\\n   at System.Threading.Mutex..ctor(Boolean initiallyOwned, String name)\\n   at LiteDB.SharedMutexFactory.Create(String name)\\n   at LiteDB.SharedEngine..ctor(EngineSettings settings)\\n   at Issue_3067_SharedLateReaderClose.Program.Reproduce(String filename, String password) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 53\\n   at Issue_3067_SharedLateReaderClose.Program.Main(String[] args) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 19\u0022}}"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "System.ArgumentException: The length of the name exceeds the maximum limit. (Parameter \u0027name\u0027)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.Threading.Mutex.CreateMutexCore(Boolean initiallyOwned, String name, Boolean\u0026 createdNew)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.Threading.Mutex..ctor(Boolean initiallyOwned, String name)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.SharedMutexFactory.Create(String name)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.SharedEngine..ctor(EngineSettings settings)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3067_SharedLateReaderClose.Program.Reproduce(String filename, String password) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 53"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3067_SharedLateReaderClose.Program.Main(String[] args) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 19"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": false,
+        "ExitCode": 1,
+        "DurationSeconds": 6.5043338,
+        "UseProjectReference": true,
+        "FailureReason": "Expected exit code 10 but observed 1.",
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:14:16.5149238\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LATE_CALLBACK_AND_CLOSE_BLOCKED plain"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T11:14:22.9547469\u002B00:00\u0022,\u0022text\u0022:\u0022Unexpected proof failure.\u0022,\u0022success\u0022:false,\u0022payload\u0022:{\u0022error\u0022:\u0022System.ArgumentException: The length of the name exceeds the maximum limit. (Parameter \\u0027name\\u0027)\\n   at System.Threading.Mutex.CreateMutexCore(Boolean initiallyOwned, String name, Boolean\\u0026 createdNew)\\n   at System.Threading.Mutex..ctor(Boolean initiallyOwned, String name)\\n   at LiteDB.SharedMutexFactory.Create(String name) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB/Client/Shared/SharedMutexFactory.cs:line 20\\n   at LiteDB.SharedEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB/Client/Shared/SharedEngine.cs:line 77\\n   at Issue_3067_SharedLateReaderClose.Program.Reproduce(String filename, String password) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 53\\n   at Issue_3067_SharedLateReaderClose.Program.Main(String[] args) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 19\u0022}}"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "System.ArgumentException: The length of the name exceeds the maximum limit. (Parameter \u0027name\u0027)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.Threading.Mutex.CreateMutexCore(Boolean initiallyOwned, String name, Boolean\u0026 createdNew)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at System.Threading.Mutex..ctor(Boolean initiallyOwned, String name)"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.SharedMutexFactory.Create(String name) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB/Client/Shared/SharedMutexFactory.cs:line 20"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at LiteDB.SharedEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB/Client/Shared/SharedEngine.cs:line 77"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3067_SharedLateReaderClose.Program.Reproduce(String filename, String password) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 53"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_3067_SharedLateReaderClose.Program.Main(String[] args) in __WORKSPACE__/temporary/pr133-late-reader-proof/LiteDB.ReproRunner/Repros/Issue_3067_SharedLateReaderClose/Program.cs:line 19"
+          }
+        ]
+      }
+    }
+  ]
+}

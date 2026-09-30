@@ -1,0 +1,9 @@
+# Issue_3067_LateCallbackClose: exact before/after evidence
+
+Known-bad package is the actual reviewed e821ae7479dcb83570031180b0c0e3f4fd167793. Tested proof-tree commit a6d53adb1ac6f3b1cdb135b969713b8b7cb68b09 has identical LiteDB source to production candidate 0891c35bc (`git diff 0891c35bc HEAD -- LiteDB` was empty). Release net8.0, default production configuration (no TestingEnabled=true), Linux.
+
+Both variants passed their strict expected dispositions. `report.json` preserves loaded-configuration handshakes, stages, elapsed times and exit codes. `ver_*/build` holds exact loaded binaries, captured after both builds completed and before automatic runner cleanup. `source` is the exact proof source, manifest and project; `retain-proof.py` documents capture. `sha256.json` covers these files.
+
+Harness corrections are explicitly accounted for: legacy native mutex naming requires short database paths (both variants now use the same system temporary volume); empty string passwords enable encryption, so genuinely plain paths use null and empty CLI transport is normalized to null. Earlier labeled-plain runs before this correction are superseded and do not prove unencrypted behavior. The final report and binaries here run the corrected null-password/plain plus nonempty-password/encrypted cases.
+
+The facade proof's first external-peer control correctly failed with `LiteException: File is not encrypted` because its empty CLI password was interpreted as an encryption password for a null-password seed. That was a harness failure, not a product regression; the runner rejected both variants rather than accepting the unexpected error. The final source normalizes the transport and the complete control passes. Original failed facade run output is retained in the conversation tool result; its local report was overwritten on rerun, so this note does not pretend to preserve that original raw report.

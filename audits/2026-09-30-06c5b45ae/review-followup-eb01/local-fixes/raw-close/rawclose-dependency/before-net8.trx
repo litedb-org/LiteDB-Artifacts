@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f022a50e-d11e-4e8d-8127-42ea02465892" name="@dev-build-server 2026-09-30 10:13:55" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T10:13:55.8854583+00:00" queuing="2026-09-30T10:13:55.8854583+00:00" start="2026-09-30T10:13:52.3101674+00:00" finish="2026-09-30T10:13:55.8899755+00:00" />
+  <TestSettings name="default" id="d4b54adf-428c-488d-adae-ca1adad0c97b">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_10_13_55" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="2ea046e2-ba97-490a-9c6f-7d5c943e3fea" testId="a9f94c9c-df7c-a46b-3e01-d88045041766" testName="LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests.Raw_close_rejects_fresh_callback_dependency_before_draining_callback" computerName="dev-build-server" duration="00:00:02.2602780" startTime="2026-09-30T10:13:55.7966801+00:00" endTime="2026-09-30T10:13:55.7967018+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ea046e2-ba97-490a-9c6f-7d5c943e3fea">
+      <Output>
+        <ErrorInfo>
+          <Message>Close must reject fresh work before waiting for an active callback that needs it.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests.Raw_close_rejects_fresh_callback_dependency_before_draining_callback() in __WORKSPACE__/temporary/pr133-maintenance-followup-before/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs:line 62
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests.Raw_close_rejects_fresh_callback_dependency_before_draining_callback" storage="__WORKSPACE__/temporary/pr133-maintenance-followup-before/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="a9f94c9c-df7c-a46b-3e01-d88045041766">
+      <Execution id="2ea046e2-ba97-490a-9c6f-7d5c943e3fea" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-maintenance-followup-before/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests" name="Raw_close_rejects_fresh_callback_dependency_before_draining_callback" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="a9f94c9c-df7c-a46b-3e01-d88045041766" executionId="2ea046e2-ba97-490a-9c6f-7d5c943e3fea" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.30)
+[xUnit.net 00:00:00.13]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.83]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.84]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:03.14]       Close must reject fresh work before waiting for an active callback that needs it.
+[xUnit.net 00:00:03.14]       Stack Trace:
+[xUnit.net 00:00:03.14]         __WORKSPACE__/temporary/pr133-maintenance-followup-before/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs(62,0): at LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests.Raw_close_rejects_fresh_callback_dependency_before_draining_callback()
+[xUnit.net 00:00:03.14]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:03.15]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T10:13:55.7949961+00:00">
+        <Text>[xUnit.net 00:00:03.14]     LiteDB.Tests.Engine.TransactionHandleRawCloseDependency_Tests.Raw_close_rejects_fresh_callback_dependency_before_draining_callback [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

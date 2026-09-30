@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="ed407c64-1110-497d-8db4-44b5993931b3" name="@dev-build-server 2026-09-30 11:25:29" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T11:25:29.4367847+00:00" queuing="2026-09-30T11:25:29.4367848+00:00" start="2026-09-30T11:25:27.9885312+00:00" finish="2026-09-30T11:25:29.4431783+00:00" />
+  <TestSettings name="default" id="b0b2bcf8-c922-4e4e-a4eb-2004c6db531a">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_11_25_29" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="54baf8c4-5a30-4869-b3d1-a9bc5e580ca4" testId="99412025-880b-7087-b9f8-f3f581433b26" testName="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_last_reader_close_fences_fresh_operation_until_core_retired" computerName="dev-build-server" duration="00:00:00.1817691" startTime="2026-09-30T11:25:29.3244268+00:00" endTime="2026-09-30T11:25:29.3244430+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54baf8c4-5a30-4869-b3d1-a9bc5e580ca4">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Null() Failure: Value is not null
+Expected: null
+Actual:   LiteDB.LiteException: This engine instance already disposed.
+   at LiteDB.Engine.OperationLifetime.Enter(Boolean continuation) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/Services/OperationLifetime.cs:line 45
+   at LiteDB.Engine.LiteEngine.EnterOperation(Boolean continuation) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/LiteEngine.cs:line 27
+   at LiteDB.Engine.LiteEngine.EnterPublicOperation() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/LiteEngine.cs:line 35
+   at LiteDB.Engine.LiteEngine.Pragma(String name) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/Engine/Pragma.cs:line 16
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass100_0.&lt;Pragma&gt;b__0() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.cs:line 347
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass7_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 47
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 76
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 42
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.cs:line 347
+   at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.&lt;&gt;c__DisplayClass6_0.&lt;Review_last_reader_close_fences_fresh_operation_until_core_retired&gt;b__1() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs:line 232
+   at Xunit.Record.Exception(Func`1 testCode) in /_/src/xunit.core/Record.cs:line 47</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_last_reader_close_fences_fresh_operation_until_core_retired() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs:line 237
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_last_reader_close_fences_fresh_operation_until_core_retired" storage="__WORKSPACE__/temporary/pr133-late-reader-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="99412025-880b-7087-b9f8-f3f581433b26">
+      <Execution id="54baf8c4-5a30-4869-b3d1-a9bc5e580ca4" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests" name="Review_last_reader_close_fences_fresh_operation_until_core_retired" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="99412025-880b-7087-b9f8-f3f581433b26" executionId="54baf8c4-5a30-4869-b3d1-a9bc5e580ca4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.13]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.78]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.79]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.00]       Assert.Null() Failure: Value is not null
+[xUnit.net 00:00:01.00]       Expected: null
+[xUnit.net 00:00:01.00]       Actual:   LiteDB.LiteException: This engine instance already disposed.
+[xUnit.net 00:00:01.00]          at LiteDB.Engine.OperationLifetime.Enter(Boolean continuation) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/Services/OperationLifetime.cs:line 45
+[xUnit.net 00:00:01.00]          at LiteDB.Engine.LiteEngine.EnterOperation(Boolean continuation) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/LiteEngine.cs:line 27
+[xUnit.net 00:00:01.00]          at LiteDB.Engine.LiteEngine.EnterPublicOperation() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/LiteEngine.cs:line 35
+[xUnit.net 00:00:01.00]          at LiteDB.Engine.LiteEngine.Pragma(String name) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Engine/Engine/Pragma.cs:line 16
+[xUnit.net 00:00:01.00]          at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass100_0.&lt;Pragma&gt;b__0() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.cs:line 347
+[xUnit.net 00:00:01.00]          at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass7_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 47
+[xUnit.net 00:00:01.00]          at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 76
+[xUnit.net 00:00:01.00]          at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 42
+[xUnit.net 00:00:01.00]          at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB/Client/Shared/SharedEngine.cs:line 347
+[xUnit.net 00:00:01.00]          at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.&lt;&gt;c__DisplayClass6_0.&lt;Review_last_reader_close_fences_fresh_operation_until_core_retired&gt;b__1() in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs:line 232
+[xUnit.net 00:00:01.00]          at Xunit.Record.Exception(Func`1 testCode) in /_/src/xunit.core/Record.cs:line 47
+[xUnit.net 00:00:01.00]       Stack Trace:
+[xUnit.net 00:00:01.00]         __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs(237,0): at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_last_reader_close_fences_fresh_operation_until_core_retired()
+[xUnit.net 00:00:01.00]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.00]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.01]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T11:25:29.3227372+00:00">
+        <Text>[xUnit.net 00:00:01.00]     LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_last_reader_close_fences_fresh_operation_until_core_retired [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

@@ -1,0 +1,17 @@
+{
+  "testSource": "eb01f346e product plus new test file subsequently committed unchanged as f6f1ad574",
+  "integratedTestCommit": "cb36c346e per parent attribution",
+  "testCases": "16 each runtime:4new read-policy tests plus existing child lifetime/settings lifetime; overlapping broader suites",
+  "baseline": {
+    "source": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+    "TestingEnabled": false,
+    "sha256": "dc319b9c8f7774ede2898ae315c7b339a880ddaa282e362491e9cd18834373da"
+  },
+  "candidate": {
+    "source": "eb01f346e",
+    "TestingEnabled": true,
+    "sha256": "f3127aebe2c6965f77c6e01ddad7b7edbb883507f7ba782e44e031ddcf999ab8"
+  },
+  "finding": "Bounded allegation refuted: both ordinary and handle reads retain constructor-snapshotted delegate; changing mutable target of retained delegate remains observed. Caller settings delegate replacement does not update either API.",
+  "limits": "Probe compares differently instrumented libraries and establishes behavior only; not performance evidence. No final integrated qualification inferred."
+}

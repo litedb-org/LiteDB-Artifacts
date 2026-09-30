@@ -1,0 +1,93 @@
+{
+  "createdUtc": "2026-09-30T10:19:57.274291+00:00",
+  "status": "Review corrections integrated in7e13; e821 proof-scheduling successor and full hosted qualification pending",
+  "reviewedCandidates": [
+    "01082139228101bee16048c6d375b72c9becb16a",
+    "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee"
+  ],
+  "findings": [
+    {
+      "id": "shared-pin-cleanup-exception",
+      "severity": "P2",
+      "review": "5364329616",
+      "claim": "Pin WaitReleased failure may skip independent connection cleanup; preserve first error and complete cleanup.",
+      "status": "implemented and locally validated; final integrated gate pending",
+      "evidenceRequired": "Need actual failing-before, corrected cleanup/error identity, reader retirement, repeated disposal and cold model controls.",
+      "localEvidence": "local-fixes/shared-close/; source d1f4bd414, strict actualeb01 proof;28cases/runtime plus independent22case review; raw-callback-followup retains actuald1 ownership-release failures, correctedeaa34cases/runtime and guarded OSfault proof; integrated7e1318case independent review"
+    },
+    {
+      "id": "shared-final-checkpoint-contract",
+      "severity": "P2",
+      "review": "5364329616",
+      "claim": "Shared final checkpoint discards or swallows errors despite documented session contract.",
+      "status": "resolved by precise historical best-effort contract and fault/recovery tests; final integrated gate pending",
+      "evidenceRequired": "Resolve production/documentation contract; fault real parent final checkpoint and verify retained WAL/model/index recovery.",
+      "localEvidence": "local-fixes/shared-close/; parent-only checkpoint controls, committed indexed cold recovery"
+    },
+    {
+      "id": "shared-cancellable-mutex-polling",
+      "severity": "P2",
+      "review": "5908951510",
+      "claim": "Always-cancellable session token changes Shared waits to 10 ms polls.",
+      "status": "production wait change locally validated; final integrated gate pending",
+      "evidenceRequired": "Investigate blocking/cancellation semantics and measure successor; named-mutex WaitAny suggestion is unsupported on this Linux runtime.",
+      "localEvidence": "local-fixes/waits/; explicit uncommitted-source attribution and original premature-observer failure retained"
+    },
+    {
+      "id": "direct-prepersist-active-cleanup",
+      "severity": "P3",
+      "review": "5908951510",
+      "claim": "Commit pre-persist exception can leave active transaction on shared Direct context.",
+      "status": "not established in bounded public-path investigation; controls retained",
+      "evidenceRequired": "Classify reachable failures; preserve actual outcomes and ensure lock/resource cleanup with genuine-failure controls.",
+      "localEvidence": "local-fixes/callback-self-wait/; before/after precondition/retry controls pass; no production Commit semantic change"
+    },
+    {
+      "id": "callback-collection-self-wait",
+      "severity": "P3",
+      "review": "5908951510",
+      "claim": "Handle-owned locks lack ordinary callback self-wait detection.",
+      "status": "confirmed and corrected; first fix handoff regression separately corrected; final integrated gate pending",
+      "evidenceRequired": "Establish documented callback behavior and bounded guard evidence.",
+      "localEvidence": "local-fixes/callback-self-wait/; actualeb01 andd2 failures; corrected42463cases/runtime, independent51cases/runtime"
+    },
+    {
+      "id": "shared-cached-readtransform",
+      "severity": "P3",
+      "review": "5908951510",
+      "claim": "Cached child ReadTransform wrapper may retain first begin delegate semantics.",
+      "status": "bounded allegation refuted against original and current product; regression controls added without production change",
+      "evidenceRequired": "Check settings refresh/reuse and weak ownership; add forced delegate-change and retained-graph controls as applicable.",
+      "localEvidence": "local-fixes/read-policy/; public baseline/candidate probe and16cases/runtime; sourcef6f1ad574"
+    },
+    {
+      "id": "scheduler-duplication",
+      "severity": "P3",
+      "review": "5908951510",
+      "claim": "Shared holder and session-close scheduler implementations duplicate logic.",
+      "status": "pending investigation/fix evidence",
+      "evidenceRequired": "Classify scope; unrelated refactoring remains excluded unless required for correctness."
+    },
+    {
+      "id": "maintenance-cross-thread-dependency",
+      "severity": "P3",
+      "review": "5908951510",
+      "claim": "Unbounded close fence can block fresh work required by active work on another thread.",
+      "status": "confirmed and corrected; final integrated gate pending",
+      "evidenceRequired": "Bound the public contract and establish reachable supported dependency behavior before disposition.",
+      "localEvidence": "local-fixes/raw-close/; actualeb01 callback guard fails, e58425passes1existing skip/runtime, pre-PRbase control"
+    },
+    {
+      "id": "api-and-maintenance-nits",
+      "severity": "nit",
+      "review": "5908951510",
+      "claim": "Drop/Rename always-throwing handle API, zero ThreadID, TransactionWriters pruning, stray BOM.",
+      "status": "pending investigation/fix evidence",
+      "evidenceRequired": "Review each individually; record disposition, avoid broad unrelated refactoring."
+    }
+  ],
+  "waitAnyProbe": {
+    "status": "executed runtime feasibility probe, exit1 PlatformNotSupportedException",
+    "limit": "Named synchronization primitive WaitAny unsupported on this observed Linux/net10 runtime. Does not establish Windows behavior or resolve polling performance/correctness finding."
+  }
+}

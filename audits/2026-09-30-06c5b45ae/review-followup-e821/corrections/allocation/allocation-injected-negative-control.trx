@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="ae371be0-562f-431e-ab6c-fed8f2ffc3a0" name="@dev-build-server 2026-09-30 11:38:48" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T11:38:48.6204709+00:00" queuing="2026-09-30T11:38:48.6204709+00:00" start="2026-09-30T11:38:47.4007726+00:00" finish="2026-09-30T11:38:48.6278981+00:00" />
+  <TestSettings name="default" id="3267886d-e3a4-4019-8e4b-e30595abfbe0">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_11_38_48" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="e20e02a6-16b6-4106-8814-ff84f406b45d" testId="34dcef05-e4cb-082e-7fd0-2f84e7552a90" testName="LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects" computerName="dev-build-server" duration="00:00:00.0742532" startTime="2026-09-30T11:38:48.5096856+00:00" endTime="2026-09-30T11:38:48.5097018+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e20e02a6-16b6-4106-8814-ff84f406b45d">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected allocated to be 0L because publication must not allocate per-event closures or delegates, but found 24000L (difference of 24000).</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.&lt;&gt;c.&lt;Steady_epoch_publication_allocates_no_managed_objects&gt;b__5_0(String file) in __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs:line 115
+   at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.WithFile(Action`1 test) in __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs:line 318
+   at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects() in __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs:line 103
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/arm-allocation/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="34dcef05-e4cb-082e-7fd0-2f84e7552a90">
+      <Execution id="e20e02a6-16b6-4106-8814-ff84f406b45d" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedCoordinationPage_Tests" name="Steady_epoch_publication_allocates_no_managed_objects" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="34dcef05-e4cb-082e-7fd0-2f84e7552a90" executionId="e20e02a6-16b6-4106-8814-ff84f406b45d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" passed="0" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.13]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.69]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.70]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:00.81]       Expected allocated to be 0L because publication must not allocate per-event closures or delegates, but found 24000L (difference of 24000).
+[xUnit.net 00:00:00.81]       Stack Trace:
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)
+[xUnit.net 00:00:00.81]            at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:00.81]         __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs(115,0): at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.&lt;&gt;c.&lt;Steady_epoch_publication_allocates_no_managed_objects&gt;b__5_0(String file)
+[xUnit.net 00:00:00.81]         __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs(318,0): at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.WithFile(Action`1 test)
+[xUnit.net 00:00:00.81]         __WORKSPACE__/artifacts_temp/arm-allocation/LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs(103,0): at LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects()
+[xUnit.net 00:00:00.81]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:00.81]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.82]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T11:38:48.5077057+00:00">
+        <Text>[xUnit.net 00:00:00.81]     LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

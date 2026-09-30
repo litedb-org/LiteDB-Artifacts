@@ -1,0 +1,5 @@
+# Hosted evidence
+
+Completed interim eb01 candidate: full29-leg CI and Safety evidence passed;13 proof workflow jobs established10/10 comparisons; Fuzz, Index and Shared-slot production workflows passed. Additional review required successor production fixes, so this is historical evidence only. Original earlier12-leg cutoff remains intact in the parent directory.
+
+Source identity and original hashes are in source-index.json and candidate provenance. test-results.tar.gz contains only the exact manifest-complete CI result directories. Workflow replay manifests retain every original member hash; successful Fuzz generated end-state databases may be omitted with hashes, while original zip archives remain local. Public copies may normalize machine-specific path prefixes with original/published hashes recorded separately. Original failed/superseded runs remain evidence of their actual outcomes and never establish successor acceptance. Existing quarantine omissions and optional skipped jobs are retained explicitly. No device/power-loss qualification is claimed.

@@ -1,0 +1,28 @@
+{
+  "id": "Issue_133_SharedSnapshotCloseRefusal",
+  "title": "Refused late Shared snapshot close releases native writer ownership",
+  "issues": [
+    "https://github.com/JKamsker/LiteDB/pull/133"
+  ],
+  "failingSince": "0.0.0-knownbad.e821ae7479dc",
+  "timeoutSeconds": 120,
+  "requiresParallel": false,
+  "defaultInstances": 1,
+  "args": [],
+  "tags": [
+    "regression-proof"
+  ],
+  "state": "green",
+  "expectedOutcomes": {
+    "package": {
+      "kind": "reproduce",
+      "exitCode": 0,
+      "logContains": "BUG_REPRODUCED"
+    },
+    "latest": {
+      "kind": "noRepro",
+      "exitCode": 10,
+      "logContains": "VERIFIED_FIXED"
+    }
+  }
+}

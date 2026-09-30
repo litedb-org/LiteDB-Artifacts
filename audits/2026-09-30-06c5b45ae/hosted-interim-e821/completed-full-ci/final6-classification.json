@@ -1,0 +1,31 @@
+{
+  "classification": "Interim candidate reopened by review; no final acceptance inferred even if hosted gates complete.",
+  "head": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+  "review": 5365276527,
+  "reviewCapturedUtc": "2026-09-30T11:00:00Z",
+  "status": "Two reported P1 late-reader Shared callback findings under reproduction/investigation; production correction not yet established.",
+  "recordedUtc": "2026-09-30T11:07:35.826000+00:00",
+  "hostedFailures": [
+    {
+      "job": 109853569762,
+      "test": "LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection",
+      "expected": "IOException",
+      "actual": "InvalidOperationException: Cannot close a shared connection from inside its executing operation.",
+      "status": "Executed assertion failure; production/test contract alignment under investigation, not waived."
+    },
+    {
+      "job": 109854435203,
+      "test": "LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection",
+      "expected": "IOException",
+      "actual": "InvalidOperationException: Cannot close a shared connection from inside its executing operation.",
+      "status": "Executed assertion failure; production/test contract alignment under investigation, not waived."
+    },
+    {
+      "job": 109859163860,
+      "test": "LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects",
+      "expected": "0 bytes",
+      "actual": "6056 bytes",
+      "status": "Executed assertion failure on Linux ARM64/net10; cause unknown, not waived."
+    }
+  ]
+}

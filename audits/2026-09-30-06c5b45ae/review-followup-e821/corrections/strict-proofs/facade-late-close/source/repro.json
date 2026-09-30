@@ -1,0 +1,34 @@
+{
+  "id": "Issue_3067_LateCallbackClose",
+  "title": "Facade close waits for its own late ordinary reader callback",
+  "issues": [
+    "https://github.com/litedb-org/LiteDB/issues/3067"
+  ],
+  "failingSince": "0.0.0-knownbad.e821ae7479dc",
+  "timeoutSeconds": 120,
+  "requiresParallel": false,
+  "defaultInstances": 1,
+  "sharedDatabaseKey": "pr133-late-callback-close",
+  "args": [],
+  "tags": [
+    "transactions",
+    "callback",
+    "disposal"
+  ],
+  "supports": [
+    "any"
+  ],
+  "state": "green",
+  "expectedOutcomes": {
+    "package": {
+      "kind": "reproduce",
+      "exitCode": 0,
+      "logContains": "REGRESSION_REPRODUCED"
+    },
+    "latest": {
+      "kind": "noRepro",
+      "exitCode": 10,
+      "logContains": "FIXED_STATE_VERIFIED"
+    }
+  }
+}

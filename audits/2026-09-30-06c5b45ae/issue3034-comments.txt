@@ -1,0 +1,99 @@
+author:	JKamsker
+association:	member
+edited:	false
+status:	none
+--
+## Extend the repro runner into a temporary regression-proof runner
+
+I would like to expand the repro-runner idea so bug fixes can prove the regression against a **real known-bad state**, while avoiding permanent CI cost.
+
+### Required bad state
+
+Every regression proof should pin a revision/package in which the bug demonstrably existed.
+
+Preference order:
+
+1. **Published NuGet package containing the bug** — strongest evidence.
+2. **A commit that existed on `dev`**.
+3. **Exception: a real historical commit from the originating PR/feature branch**, when the defect was introduced and fixed before it ever reached `dev`.
+
+A synthetic mutant should **not** substitute for the historical bad state. Mutants are still useful for oracle self-tests, but they do not prove that the regression test detects the actual bug that occurred.
+
+### PR gate
+
+The same repro/scenario should be run against both revisions:
+
+```
+known bad state -> MUST FAIL
+PR candidate    -> MUST PASS
+```
+
+The job succeeds only when both conditions are true.
+
+Where possible, this should be the exact same test/scenario. If the fixed code introduces hooks/APIs that make that impossible, use a black-box reproducer that can exercise both revisions rather than silently dropping the failing-before requirement.
+
+### After merge
+
+Run the regression once more against the actual integrated `dev` revision:
+
+```
+merged dev -> MUST PASS
+```
+
+After that successful integrated run, the historical bad-state comparison no longer needs to run on every commit.
+
+The **regression scenario itself must survive permanently**:
+
+- fast enough -> ordinary unit/integration suite;
+- expensive -> nightly / E2E / compatibility / fuzz suite.
+
+So the lifecycle is roughly:
+
+```
+bug
+ -> repro + pinned real bad state
+ -> PR: bad FAILS + candidate PASSES
+ -> merge
+ -> integrated dev PASSES once
+ -> historical comparison retires
+ -> regression test remains permanently in the appropriate suite
+```
+
+This gives us mechanical, revision-specific failing-before evidence without turning every historical regression into permanent CI overhead.
+
+It also seems stronger than a generic "revert-the-fix" check: we prove the test against the **actual known-bad revision/package**, rather than assuming that reverting one patch reconstructs the original broken state.
+--
+author:	JKamsker
+association:	member
+edited:	true
+status:	none
+--
+#3045 implements the GitHub-side machinery for this issue. It reuses the existing rules, CI jobs, fuzz targets and ReproRunner rather than adding a new framework. The process doc is `docs/rules/safety-evidence.md`.
+
+**What it adds**
+- **PR section:** the five-prompt template, plus a check that the section is filled in and names every safety contract the changed paths touch. An unedited template fails.
+- **Contract index** (`.github/safety/contracts.json`): the five contract families, each linked to its rule docs, with evidence per failure model. Every referenced test, fuzz target and script must exist and actually run in CI.
+- **Coverage-regression check:** flags removed tests, new skips, fewer assertions, changed fixtures, corpus repins, new expected failures, unscheduled fuzz targets, and changed CI filters, timeouts or partitions. Each needs a ledger entry added *by the same change*, so an old entry can't approve a later weakening.
+- **Fault-point registry:** every string-named fault hook and every test hook in `LiteDB/`, with the tests that claim it. New or removed hooks fail, new persistent I/O is flagged, and known transitions without hooks (#3011, lease files) are listed.
+- **Safety evidence job:** fails if a job was skipped or cancelled, a CI leg is missing, results come from another revision, a partition is empty or truncated, or a test ran on no leg without a quarantine entry.
+- **Regression proofs** (for the comment above): each fix pins its repro to a real known-bad state (a published package, then a `dev` commit, then a PR commit; no mutants). The PR must show *known bad fails, candidate passes*, and the push to `dev` repeats it once. After that it only runs when the proof changes, while the named permanent tests stay in the normal suites. **A PR labelled `bug` must add at least one proof**, otherwise the check fails. `python .github/scripts/regression_proof.py new --id Issue_<n>_<Name> --issue <n> --title ...` scaffolds the repro, pinned to the newest published package.
+
+**What it found on current `dev`** (recorded as gaps, not fixed there)
+- 66 named fault hooks, not 22. Four WAL crash points are named through a conditional, so a literal grep misses them.
+- No test claims `startup-before/after-tail-trim` or `before-wal-reclaim-lock`.
+- `SimulateDataWriteFail` exists but no test ever sets it.
+- `Rebuild_Crash_IO_Write_Error` is `#if DEBUG`, so Release CI never runs it. It is quarantined with the 7 unconditional skips.
+
+**Pilots**
+- Hosted CI on #3045 checked 4 PR-tier legs at one revision, 4,847 results each on the .NET 8/10 legs.
+- Regression proofs for #2586 (5.0.20) and #2614 (5.0.21) passed on hosted CI. The `dev`-commit path was tested locally with `8576017ce`, the commit before the #2586 fix.
+- Run against #3027 (not included in #3045), the checks would ask for 6 coverage dispositions (two renamed tests, fewer assertions, two corpus repins), 3 fault-hook registrations and the PR section.
+
+**Defaults chosen** (easy to change later)
+- Owner: maintainer; first quarantine review by 2026-12-31.
+- No repository settings changed: nothing is required yet and there's no merge queue. Require *Safety evidence* first once it's stable. Never require path-filtered workflows.
+- Published prereleases: any file from any published version either opens correctly or is refused with both files untouched. It's never misread and never modified. Full support is promised for stable releases and for prereleases a fixture or proof names.
+
+**Still open:** a nightly job that opens files written by recent prerelease packages; checking at runtime that a registered hook actually fired; canary mutants; lifecycle scenarios; fixture provenance manifests; the first baseline audit report.
+
+--

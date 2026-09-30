@@ -1,5 +1,5 @@
 ..........................Traceback (most recent call last):
-  File "/tmp/pr133-evidence-policy/.github/scripts/safety_common.py", line 94, in read_json
+  File "__WORKSPACE__/temporary/pr133-evidence-policy/.github/scripts/safety_common.py", line 94, in read_json
     return json.loads(text)
            ^^^^^^^^^^^^^^^^
   File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
@@ -16,17 +16,17 @@ json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes:
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/tmp/pr133-evidence-policy/.github/scripts/check_coverage_regression.py", line 315, in main
+  File "__WORKSPACE__/temporary/pr133-evidence-policy/.github/scripts/check_coverage_regression.py", line 315, in main
     unresolved = check_ledger(base, head, findings, report)
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/pr133-evidence-policy/.github/scripts/check_coverage_regression.py", line 225, in check_ledger
+  File "__WORKSPACE__/temporary/pr133-evidence-policy/.github/scripts/check_coverage_regression.py", line 225, in check_ledger
     ledger = head.read_json(LEDGER, {}) or {}
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/pr133-evidence-policy/.github/scripts/safety_common.py", line 96, in read_json
+  File "__WORKSPACE__/temporary/pr133-evidence-policy/.github/scripts/safety_common.py", line 96, in read_json
     raise MalformedJson(f"{path} is not valid JSON at {self.rev}: {error}") from error
 safety_common.MalformedJson: .github/safety/coverage-ledger.json is not valid JSON at HEAD: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
 .........................................Fixture collection failure (primary test failure preserved): Fixture host is still running; refusing to copy
-.Fixture collection failure (primary test failure preserved): /tmp/tmp037wjvzi/litedb-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.db: copy failure sentinel
+.Fixture collection failure (primary test failure preserved): __WORKSPACE__/temporary/tmp037wjvzi/litedb-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.db: copy failure sentinel
 ..........................
 ----------------------------------------------------------------------
 Ran 94 tests in 3.142s

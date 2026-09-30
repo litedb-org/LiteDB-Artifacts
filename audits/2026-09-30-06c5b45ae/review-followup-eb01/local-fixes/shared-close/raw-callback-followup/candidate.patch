@@ -1,0 +1,157 @@
+diff --git a/LiteDB.Tests/Engine/SharedCallbackClose_Tests.cs b/LiteDB.Tests/Engine/SharedCallbackClose_Tests.cs
+new file mode 100644
+index 000000000..949d9f290
+--- /dev/null
++++ b/LiteDB.Tests/Engine/SharedCallbackClose_Tests.cs
+@@ -0,0 +1,84 @@
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Threading;
++using LiteDB.Engine;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class SharedCallbackClose_Tests
++    {
++        [Theory]
++        [InlineData(null, 0)]
++        [InlineData(null, 1)]
++        [InlineData(null, 2)]
++        [InlineData("secret", 0)]
++        [InlineData("secret", 1)]
++        [InlineData("secret", 2)]
++        public void Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(string password, int path)
++        {
++            using var file = new TempFile();
++            Action callback = null;
++            using var shared = new SharedEngine(new EngineSettings
++            {
++                Filename = file, Password = password,
++                ReadTransform = (_, value) => { var run = callback; callback = null; run?.Invoke(); return value; }
++            });
++            shared.EnsureIndex("rows", "value", "$.value", false);
++            shared.Insert("rows", new[] { new BsonDocument { ["_id"] = 0, ["value"] = 0 } }, BsonAutoId.Int32);
++            var callbacks = 0;
++            var refused = false;
++            var prematurelyReleased = false;
++            void CloseInsideCall()
++            {
++                callbacks++;
++                Assert.True(shared.MutexOwner.IsOwnedByCurrentThread);
++                Assert.False(shared.MutexOwner.OwnsDirectly);
++                refused = Record.Exception(shared.Dispose) is InvalidOperationException;
++                var probe = new Thread(() =>
++                {
++                    if (!shared.MutexOwner.Mutex.WaitOne(0)) return;
++                    prematurelyReleased = true;
++                    shared.MutexOwner.Mutex.ReleaseMutex();
++                });
++                probe.Start();
++                Assert.True(probe.Join(TimeSpan.FromSeconds(5)));
++            }
++            if (path != 0)
++            {
++#pragma warning disable CS0618
++                if (path == 1) Assert.True(shared.BeginTrans());
++#pragma warning restore CS0618
++                callback = CloseInsideCall;
++                using var reader = shared.Query("rows", new Query { Limit = 1 });
++                Assert.True(reader.Read());
++                Assert.False(prematurelyReleased);
++                reader.Dispose();
++                if (path == 1) Assert.True(shared.Commit());
++            }
++            else
++            {
++                IEnumerable<BsonDocument> Input()
++                {
++                    yield return new BsonDocument { ["_id"] = 1, ["value"] = 1 };
++                    CloseInsideCall();
++                    yield return new BsonDocument { ["_id"] = 2, ["value"] = 2 };
++                }
++                Assert.Equal(2, shared.Insert("rows", Input(), BsonAutoId.Int32));
++            }
++            Assert.Equal(1, callbacks);
++            Assert.True(refused);
++            Assert.False(prematurelyReleased);
++            // Refusal must leave the engine usable and final disposal retryable.
++            shared.Insert("rows", new[] { new BsonDocument { ["_id"] = 3, ["value"] = 3 } }, BsonAutoId.Int32);
++            shared.Dispose();
++            using var cold = new LiteDatabase(new ConnectionString { Filename = file, Password = password });
++            var expected = path != 0 ? new[] { 0, 3 } : new[] { 0, 1, 2, 3 };
++            Assert.Equal(expected, cold.GetCollection("rows").FindAll().Select(row => row["_id"].AsInt32).OrderBy(id => id));
++            var seek = cold.GetCollection("rows").Query().Where(Query.EQ("value", 3));
++            Assert.StartsWith("INDEX SEEK", seek.GetPlan()["index"]["mode"].AsString);
++            Assert.Equal(3, Assert.Single(seek.ToArray())["_id"].AsInt32);
++        }
++    }
++}
+diff --git a/LiteDB/Client/Shared/SharedEngine.Disposal.cs b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+index d35cde851..4af3592f2 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Disposal.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+@@ -12,7 +12,13 @@ namespace LiteDB
+         private bool _transactionChild;
+         protected virtual void Dispose(bool disposing)
+         {
+-            if (!disposing || Interlocked.Exchange(ref _disposed, 1) != 0) return;
++            if (!disposing || Volatile.Read(ref _disposed) != 0) return;
++            // A callback cannot drain its own call or release that call's writer
++            // ownership. Refuse before changing the connection's lifetime state.
++            // Reader.Read can execute after SharedEngine.Query admission has ended.
++            if (this.AdmittedDepth() != 0 || _engine?.IsExecutingOnCurrentThread == true)
++                throw new InvalidOperationException("Cannot close a shared connection from inside its executing operation.");
++            if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
+ 
+             var cleanup = new TryCatch();
+             cleanup.Catch(() => this.DisposeConnection(cleanup));
+@@ -72,14 +78,11 @@ namespace LiteDB
+                 {
+                     // This parent's historical final checkpoint is best effort; its
+                     // returned close errors do not change acknowledged WAL outcomes.
+-                    // Keep the core published if close refuses an active raw callback;
+-                    // that operation still owns its normal unwind/close path.
+-                    cleanup.Catch(() =>
+-                    {
+-                        _engine.Close(final: true);
+-                        _engine = null;
+-                        closed = true;
+-                    });
++                    // A thrown admission/refusal error means this core has not closed:
++                    // do not continue into dependent native-ownership release below.
++                    _engine.Close(final: true);
++                    _engine = null;
++                    closed = true;
+                 }
+                 cleanup.Catch(this.CloseMutexSnapshotsLocked);
+                 _databaseUsers = 0;
+diff --git a/LiteDB/Engine/LiteEngine.cs b/LiteDB/Engine/LiteEngine.cs
+index 584141492..07658c196 100644
+--- a/LiteDB/Engine/LiteEngine.cs
++++ b/LiteDB/Engine/LiteEngine.cs
+@@ -22,6 +22,7 @@ namespace LiteDB.Engine
+ 
+         private LockService _locker;
+         private readonly OperationLifetime _operations;
++        internal bool IsExecutingOnCurrentThread => _operations.IsExecutingOnCurrentThread;
+         internal OperationLifetime.Lease EnterOperation(bool continuation = false) =>
+             _operations.Enter(continuation);
+         private void ValidatePublicDispatch()
+diff --git a/LiteDB/Engine/Services/OperationLifetime.cs b/LiteDB/Engine/Services/OperationLifetime.cs
+index d7908d16c..d4f2e3171 100644
+--- a/LiteDB/Engine/Services/OperationLifetime.cs
++++ b/LiteDB/Engine/Services/OperationLifetime.cs
+@@ -20,6 +20,11 @@ namespace LiteDB.Engine
+         internal Action WaitingForMaintenance;
+ #endif
+ 
++        internal bool IsExecutingOnCurrentThread
++        {
++            get { lock (_gate) return _threads.ContainsKey(Thread.CurrentThread); }
++        }
++
+         internal Lease Enter(bool continuation = false)
+         {
+             var thread = Thread.CurrentThread;

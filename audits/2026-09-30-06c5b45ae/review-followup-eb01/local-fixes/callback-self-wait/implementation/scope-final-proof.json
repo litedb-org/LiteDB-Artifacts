@@ -1,0 +1,70 @@
+{
+  "GeneratedAt": "2026-09-30T10:23:42.2347859+00:00",
+  "Root": "__WORKSPACE__/artifacts_temp/fix-comment-p3/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_HandleCallbackSelfWait",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REGRESSION_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 4.3961537,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T10:23:46.3021709\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.eb01f346eb7d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "Observed callback refusal after 00:00:04.0024424"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "REGRESSION_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T10:23:50.6314756\u002B00:00\u0022,\u0022text\u0022:\u0022Callback waited for its own handle\\u0027s lock.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "FIXED_STATE_VERIFIED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 0.3589882,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T10:23:50.7073652\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.eb01f346eb7d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "Observed callback refusal after 00:00:00.0011210"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FIXED_STATE_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T10:23:51.0049071\u002B00:00\u0022,\u0022text\u0022:\u0022Callback self-wait refused; independent work and cold state verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

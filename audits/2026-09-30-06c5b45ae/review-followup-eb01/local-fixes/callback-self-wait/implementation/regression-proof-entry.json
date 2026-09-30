@@ -1,0 +1,15 @@
+{
+  "repro": "Issue_3067_HandleCallbackSelfWait",
+  "knownBad": {
+    "kind": "pr-commit",
+    "commit": "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee",
+    "reason": "Handle-owned collection locks and callback binding suppression were introduced on fork PR #133 and have not reached upstream dev or a published package.",
+    "pr": 133
+  },
+  "permanentGuard": [
+    "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Same_collection_callback_refuses_self_wait_without_enlisting_independent_work",
+    "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Original_thread_may_wait_for_idle_handle_completed_by_another_thread",
+    "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Repeated_public_handoff_restores_binding_before_admitting_next_callback",
+    "LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs#Public_admission_handoff_preserves_current_callback_marker"
+  ]
+}

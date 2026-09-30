@@ -1,0 +1,468 @@
+commit d2edc140692d677c9482e4bdc2843211099a03ff
+Author:     Jonas Kamsker <11245306+JKamsker@users.noreply.github.com>
+AuthorDate: Wed Sep 30 10:15:36 2026 +0000
+Commit:     Jonas Kamsker <11245306+JKamsker@users.noreply.github.com>
+CommitDate: Wed Sep 30 10:15:36 2026 +0000
+
+    Reject callback collection self-waits while preserving handle handoff
+
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Issue_3067_HandleCallbackSelfWait.csproj b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Issue_3067_HandleCallbackSelfWait.csproj
+new file mode 100644
+index 000000000..b156c8f12
+--- /dev/null
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Issue_3067_HandleCallbackSelfWait.csproj
+@@ -0,0 +1,29 @@
++<Project Sdk="Microsoft.NET.Sdk">
++
++  <PropertyGroup>
++    <OutputType>Exe</OutputType>
++    <TargetFramework>net8.0</TargetFramework>
++    <ImplicitUsings>enable</ImplicitUsings>
++    <Nullable>enable</Nullable>
++    <UseProjectReference Condition="'$(UseProjectReference)' == ''">false</UseProjectReference>
++    <LiteDBPackageVersion Condition="'$(LiteDBPackageVersion)' == ''">0.0.0-knownbad.eb01f346eb7d</LiteDBPackageVersion>
++  </PropertyGroup>
++
++  <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
++    <ProjectReference Include="..\..\..\LiteDB\LiteDB.csproj" />
++  </ItemGroup>
++
++  <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
++    <PackageReference Include="LiteDB" Version="$(LiteDBPackageVersion)" />
++  </ItemGroup>
++
++  <ItemGroup>
++    <ProjectReference Include="..\..\LiteDB.ReproRunner.Shared\LiteDB.ReproRunner.Shared.csproj" />
++  </ItemGroup>
++
++  <ItemGroup>
++    <AssemblyMetadata Include="LiteDB.ReproRunner.UseProjectReference" Value="$(UseProjectReference)" />
++    <AssemblyMetadata Include="LiteDB.ReproRunner.LiteDBPackageVersion" Value="$(LiteDBPackageVersion)" />
++  </ItemGroup>
++
++</Project>
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Program.cs b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Program.cs
+new file mode 100644
+index 000000000..46ee5e475
+--- /dev/null
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/Program.cs
+@@ -0,0 +1,75 @@
++using System;
++using System.Diagnostics;
++using System.IO;
++using System.Linq;
++using LiteDB;
++using LiteDB.ReproRunner.Shared;
++using LiteDB.ReproRunner.Shared.Messaging;
++
++var host = ReproHostClient.CreateDefault();
++ReproConfigurationReporter.SendConfiguration(host);
++var root = ReproContext.FromEnvironment().SharedDatabaseRoot ?? AppContext.BaseDirectory;
++Directory.CreateDirectory(root);
++var path = Path.Combine(root, "callback-" + Guid.NewGuid().ToString("N") + ".db");
++try
++{
++    var reproduced = Run(path);
++    Console.WriteLine(reproduced ? "REGRESSION_REPRODUCED" : "FIXED_STATE_VERIFIED");
++    host.SendResult(reproduced, reproduced ? "Callback waited for its own handle's lock." : "Callback self-wait refused; independent work and cold state verified.");
++    return reproduced ? 0 : 10;
++}
++catch (Exception error)
++{
++    Console.Error.WriteLine(error);
++    host.SendResult(false, "Unexpected or ambiguous result: " + error);
++    return 2;
++}
++
++static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id, ["Value"] = id * 10 };
++static bool Run(string path)
++{
++    bool reproduced;
++    using (var db = new LiteDatabase(path))
++    {
++        db.GetCollection("rows").Insert(Row(1));
++        db.GetCollection("rows").EnsureIndex("Value");
++        db.GetCollection("sentinel").Insert(Row(9));
++        db.Timeout = TimeSpan.FromSeconds(4);
++        using var tx = db.BeginTransaction();
++        tx.GetCollection("rows").Insert(Row(2));
++        var elapsed = TimeSpan.Zero;
++        var reached = false;
++        tx.GetCollection<CallbackRow>("rows").Insert(new CallbackRow { Id = 3, Callback = () =>
++        {
++            reached = true;
++            var timer = Stopwatch.StartNew();
++            try { db.GetCollection("rows").Insert(Row(4)); throw new Exception("Self-dependent write unexpectedly succeeded"); }
++            catch (LiteException error) when (error.ErrorCode == LiteException.LOCK_TIMEOUT) { }
++            elapsed = timer.Elapsed;
++            if (db.GetCollection("rows").FindById(2) != null) throw new Exception("Ordinary read enlisted in handle");
++            db.GetCollection("ordinary").Insert(Row(5));
++        }});
++        if (!reached || tx.State != LiteTransactionState.Active) throw new Exception("Callback did not preserve handle");
++        reproduced = elapsed >= TimeSpan.FromSeconds(3);
++        if (!reproduced && elapsed >= TimeSpan.FromSeconds(1)) throw new Exception("Ambiguous callback latency " + elapsed);
++        Console.WriteLine("Observed callback refusal after " + elapsed);
++        tx.Rollback();
++    }
++    for (var reopen = 0; reopen < 2; reopen++)
++    {
++        using var db = new LiteDatabase(path);
++        var query = db.GetCollection("rows").Query().Where(Query.EQ("Value", 10));
++        if (query.GetPlan()["index"]["name"] != "Value" ||
++            !query.ToArray().Select(row => row["_id"].AsInt32).SequenceEqual(new[] { 1 }) ||
++            db.GetCollection("rows").Count() != 1 || db.GetCollection("ordinary").FindById(5) == null ||
++            db.GetCollection("sentinel").FindById(9) == null)
++            throw new Exception("Cold state/index model mismatch");
++    }
++    return reproduced;
++}
++sealed class CallbackRow
++{
++    [BsonIgnore] public Action? Callback;
++    public int Id { get; set; }
++    public int Value { get { Callback?.Invoke(); return Id * 10; } set { } }
++}
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/README.md b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/README.md
+new file mode 100644
+index 000000000..28903935e
+--- /dev/null
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/README.md
+@@ -0,0 +1,17 @@
++# Handle callback self-wait
++
++A Direct transaction owns the rows collection, then a mapper callback performs an
++independent ordinary write to that same collection. The ordinary write must reject
++the self-wait immediately; a different collection still commits independently.
++The handle remains active and is rolled back, and two cold reopens check the
++indexed committed row and independent/sentinel collections.
++
++The public black-box reproducer uses a four-second TIMEOUT. An exact LOCK_TIMEOUT
++after at least three seconds reproduces the old waiting behavior. The fixed oracle
++requires rejection within one second; the ambiguous interval or any other failure
++exits 2 and cannot pass. The permanent tests use the existing BeforeWait observer
++instead of timing and also cover encrypted files and sequential thread handoff.
++
++Known-bad PR commit: eb01f346eb7d8d51925a45c2f87ef40e1c3984ee. Strict expected
++exits/markers distinguish reproduction (0) and completed verification (10).
++This is exception/concurrency evidence, not a power-loss test.
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/repro.json b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/repro.json
+new file mode 100644
+index 000000000..53d0d47d3
+--- /dev/null
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_HandleCallbackSelfWait/repro.json
+@@ -0,0 +1,34 @@
++{
++  "id": "Issue_3067_HandleCallbackSelfWait",
++  "title": "Independent callback write waits on its executing transaction handle",
++  "issues": [
++    "https://github.com/litedb-org/LiteDB/issues/3067"
++  ],
++  "failingSince": "0.0.0-knownbad.eb01f346eb7d",
++  "timeoutSeconds": 90,
++  "requiresParallel": false,
++  "defaultInstances": 1,
++  "sharedDatabaseKey": "pr133-callback-self-wait",
++  "args": [],
++  "tags": [
++    "transactions",
++    "callback",
++    "locking"
++  ],
++  "supports": [
++    "any"
++  ],
++  "state": "green",
++  "expectedOutcomes": {
++    "package": {
++      "kind": "reproduce",
++      "exitCode": 0,
++      "logContains": "REGRESSION_REPRODUCED"
++    },
++    "latest": {
++      "kind": "noRepro",
++      "exitCode": 10,
++      "logContains": "FIXED_STATE_VERIFIED"
++    }
++  }
++}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs
+new file mode 100644
+index 000000000..74185e632
+--- /dev/null
++++ b/LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs
+@@ -0,0 +1,131 @@
++using System;
++using System.Collections.Concurrent;
++using System.Linq;
++using System.Reflection;
++using System.Threading;
++using LiteDB.Engine;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class TransactionHandleCallbackLock_Tests
++    {
++        public sealed class CallbackRow
++        {
++            [BsonIgnore] public Action Callback;
++            public int Id { get; set; }
++            public int Value { get { Callback?.Invoke(); return Id * 10; } set { } }
++        }
++
++        [Theory]
++        [InlineData(null, false)]
++        [InlineData("secret", false)]
++        [InlineData(null, true)]
++        [InlineData("secret", true)]
++        public void Same_collection_callback_refuses_self_wait_without_enlisting_independent_work(string password, bool handoff)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file, Password = password };
++            using (var db = new LiteDatabase(settings))
++            {
++                Seed(db);
++                db.Timeout = TimeSpan.FromSeconds(1);
++                using var tx = db.BeginTransaction();
++                tx.GetCollection("rows").Insert(Row(2));
++                var collectionLock = RowsLock(db);
++                var waited = false;
++                collectionLock.BeforeWait = () => waited = true;
++                var callbackRan = false;
++                Action write = () => tx.GetCollection<CallbackRow>("rows").Insert(new CallbackRow { Id = 3, Callback = () =>
++                {
++                    callbackRan = true;
++                    Assert.Equal(LiteException.LOCK_TIMEOUT,
++                        Assert.Throws<LiteException>(() => db.GetCollection("rows").Insert(Row(4))).ErrorCode);
++                    Assert.NotNull(db.GetCollection("rows").FindById(1));
++                    Assert.Null(db.GetCollection("rows").FindById(2));
++                    // A different collection is legitimate independent callback work.
++                    db.GetCollection("ordinary").Insert(Row(5));
++                }});
++                if (handoff)
++                {
++                    Exception failure = null;
++                    var worker = new Thread(() => { try { write(); } catch (Exception error) { failure = error; } });
++                    worker.Start();
++                    Assert.True(worker.Join(TimeSpan.FromSeconds(5)));
++                    Assert.Null(failure);
++                }
++                else write();
++                Assert.True(callbackRan);
++                Assert.False(waited);
++                Assert.Equal(LiteTransactionState.Active, tx.State);
++                tx.Rollback();
++            }
++            Verify(settings, new[] { 1 }, true);
++        }
++
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public void Original_thread_may_wait_for_idle_handle_completed_by_another_thread(string password)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file, Password = password };
++            using (var db = new LiteDatabase(settings))
++            {
++                Seed(db);
++                using var tx = db.BeginTransaction();
++                tx.GetCollection("rows").Insert(Row(2));
++                using var waiting = new ManualResetEventSlim();
++                RowsLock(db).BeforeWait = waiting.Set;
++                Exception failure = null;
++                var completing = new Thread(() =>
++                {
++                    try
++                    {
++                        Assert.True(waiting.Wait(TimeSpan.FromSeconds(5)));
++                        tx.Commit();
++                    }
++                    catch (Exception error) { failure = error; }
++                }) { IsBackground = true };
++                completing.Start();
++                db.GetCollection("rows").Insert(Row(3));
++                Assert.True(completing.Join(TimeSpan.FromSeconds(5)));
++                Assert.Null(failure);
++                Assert.True(waiting.IsSet);
++                Assert.Equal(LiteTransactionState.Committed, tx.State);
++            }
++            Verify(settings, new[] { 1, 2, 3 }, false);
++        }
++
++        private static CollectionLock RowsLock(LiteDatabase db)
++        {
++            var engine = NativeAdmissionDirectPool_Tests.Engine(db);
++            var locker = (LockService)typeof(LiteEngine).GetField("_locker", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(engine);
++            var collections = (ConcurrentDictionary<string, CollectionLock>)typeof(LockService)
++                .GetField("_collections", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(locker);
++            return collections["rows"];
++        }
++        private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id, ["Value"] = id * 10 };
++        private static void Seed(LiteDatabase db)
++        {
++            db.GetCollection("rows").Insert(Row(1));
++            db.GetCollection("rows").EnsureIndex("Value");
++            db.GetCollection("sentinel").Insert(Row(9));
++            db.Checkpoint();
++        }
++        private static void Verify(ConnectionString settings, int[] ids, bool ordinary)
++        {
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var db = new LiteDatabase(settings);
++                var query = db.GetCollection("rows").Query().Where(Query.GTE("Value", 10));
++                Assert.Equal("Value", query.GetPlan()["index"]["name"].AsString);
++                Assert.Equal(ids, query.ToArray().Select(row => row["_id"].AsInt32).OrderBy(id => id));
++                Assert.Equal(ids.Length, db.GetCollection("rows").Count());
++                Assert.Equal(ordinary ? 1 : 0, db.GetCollection("ordinary").Count());
++                if (ordinary) Assert.NotNull(db.GetCollection("ordinary").FindById(5));
++                Assert.NotNull(db.GetCollection("sentinel").FindById(9));
++            }
++        }
++    }
++}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleCommitPrecondition_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleCommitPrecondition_Tests.cs
+new file mode 100644
+index 000000000..e0c68ee1f
+--- /dev/null
++++ b/LiteDB.Tests/Engine/TransactionHandleCommitPrecondition_Tests.cs
+@@ -0,0 +1,55 @@
++using System;
++using System.Linq;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class TransactionHandleCommitPrecondition_Tests
++    {
++        [Theory]
++        [InlineData(false, false)]
++        [InlineData(false, true)]
++        [InlineData(true, false)]
++        [InlineData(true, true)]
++        public void Open_cursor_commit_refusal_keeps_handle_active_and_completion_releases_locks(bool shared, bool rollback)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file,
++                Connection = shared ? ConnectionType.Shared : ConnectionType.Direct };
++            using (var db = new LiteDatabase(settings))
++            {
++                var rows = db.GetCollection("rows");
++                rows.Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
++                rows.EnsureIndex("value");
++                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9 });
++                using var tx = db.BeginTransaction();
++                tx.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 2, ["value"] = 20 });
++                using (var reader = tx.GetCollection("rows").Query().ExecuteReader())
++                {
++                    Assert.True(reader.Read());
++                    Assert.Throws<InvalidOperationException>(tx.Commit);
++                    Assert.Equal(LiteTransactionState.Active, tx.State);
++                    Assert.True(reader.Read());
++                }
++                if (rollback) tx.Rollback(); else tx.Commit();
++                Assert.Equal(rollback ? LiteTransactionState.RolledBack : LiteTransactionState.Committed, tx.State);
++                // Reuse the same collection while the originating facade is still alive:
++                // retained refcounts cannot hide an abandoned writer transaction here.
++                using var next = db.BeginTransaction();
++                next.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 3, ["value"] = 30 });
++                next.Commit();
++                Assert.Equal(rollback ? 2 : 3, rows.Count());
++            }
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var db = new LiteDatabase(settings);
++                var query = db.GetCollection("rows").Query().Where(Query.GTE("value", 10));
++                Assert.Equal("value", query.GetPlan()["index"]["name"].AsString);
++                var ids = rollback ? new[] { 1, 3 } : new[] { 1, 2, 3 };
++                Assert.Equal(ids, query.ToArray().Select(row => row["_id"].AsInt32).OrderBy(id => id));
++                Assert.Equal(ids.Length, db.GetCollection("rows").Count());
++                Assert.NotNull(db.GetCollection("sentinel").FindById(9));
++            }
++        }
++    }
++}
+diff --git a/LiteDB/Engine/Services/CollectionLock.cs b/LiteDB/Engine/Services/CollectionLock.cs
+index 386b5f0a4..f6ee896fb 100644
+--- a/LiteDB/Engine/Services/CollectionLock.cs
++++ b/LiteDB/Engine/Services/CollectionLock.cs
+@@ -11,6 +11,7 @@ namespace LiteDB.Engine
+         private readonly object _lock = new object();
+         private object _owner;
+         private Thread _thread;
++        private TransactionContext _handle;
+         private int _depth;
+         private bool _stopping;
+ #if DEBUG || TESTING
+@@ -26,7 +27,8 @@ namespace LiteDB.Engine
+                 while (_owner != null && !ReferenceEquals(_owner, owner))
+                 {
+                     // Waiting for another session on this thread cannot make progress.
+-                    if (ReferenceEquals(_thread, Thread.CurrentThread)) return false;
++                    if (ReferenceEquals(_thread, Thread.CurrentThread) ||
++                        ReferenceEquals(_handle?.ExecutingThread, Thread.CurrentThread)) return false;
+                     var elapsed = (System.Diagnostics.Stopwatch.GetTimestamp() - started) / (double)System.Diagnostics.Stopwatch.Frequency;
+                     var remaining = timeout - TimeSpan.FromSeconds(elapsed);
+                     if (remaining <= TimeSpan.Zero) return false;
+@@ -38,6 +40,7 @@ namespace LiteDB.Engine
+                 }
+                 _owner = owner;
+                 _thread = TransactionContext.AdmissionOwner as Thread;
++                _handle = TransactionContext.AdmissionOwner as TransactionContext;
+                 _depth++;
+                 return true;
+             }
+@@ -60,6 +63,7 @@ namespace LiteDB.Engine
+                 if (--_depth != 0) return;
+                 _owner = null;
+                 _thread = null;
++                _handle = null;
+                 Monitor.PulseAll(_lock);
+             }
+         }
+diff --git a/LiteDB/Engine/TransactionContext.cs b/LiteDB/Engine/TransactionContext.cs
+index 18f684481..87c32144c 100644
+--- a/LiteDB/Engine/TransactionContext.cs
++++ b/LiteDB/Engine/TransactionContext.cs
+@@ -1,4 +1,5 @@
+ using System;
++using System.Threading;
+ 
+ namespace LiteDB.Engine
+ {
+@@ -13,6 +14,9 @@ namespace LiteDB.Engine
+         internal readonly EngineContext.TransactionSlot Slot = new EngineContext.TransactionSlot();
+         internal TransactionService Transaction;
+         internal volatile LiteTransactionState Outcome = LiteTransactionState.Active;
++        // Ordinary callbacks suppress binding, but still depend on this executing
++        // handle returning before its locks can be released.
++        internal volatile Thread ExecutingThread;
+ 
+         internal TransactionContext(LiteEngine engine, EngineContext session)
+         { Engine = engine; Session = session; Policy = session.Policy.Clone(); }
+@@ -40,9 +44,21 @@ namespace LiteDB.Engine
+ 
+         internal readonly struct Scope : IDisposable
+         {
+-            private readonly TransactionContext _previous;
+-            internal Scope(TransactionContext transaction) { _previous = _executing; _executing = transaction; }
+-            public void Dispose() => _executing = _previous;
++            private readonly TransactionContext _previous, _transaction;
++            private readonly Thread _previousThread;
++            internal Scope(TransactionContext transaction)
++            {
++                _previous = _executing;
++                _transaction = transaction;
++                _previousThread = transaction?.ExecutingThread;
++                if (transaction != null) transaction.ExecutingThread = Thread.CurrentThread;
++                _executing = transaction;
++            }
++            public void Dispose()
++            {
++                _executing = _previous;
++                if (_transaction != null) _transaction.ExecutingThread = _previousThread;
++            }
+         }
+     }
+ }

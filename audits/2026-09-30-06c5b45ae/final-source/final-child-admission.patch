@@ -1,0 +1,328 @@
+diff --git a/LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs
+new file mode 100644
+index 000000000..44597e43a
+--- /dev/null
++++ b/LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs
+@@ -0,0 +1,123 @@
++using System;
++using System.Linq;
++using System.IO;
++using System.Reflection;
++using System.Threading;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class TransactionHandleBoundDisposeRace_Tests
++    {
++        [Theory]
++        [InlineData(false, false, null)]
++        [InlineData(false, true, null)]
++        [InlineData(true, false, null)]
++        [InlineData(true, true, null)]
++        [InlineData(false, false, "secret")]
++        [InlineData(false, true, "secret")]
++        [InlineData(true, false, "secret")]
++        [InlineData(true, true, "secret")]
++        public void Disposal_between_child_capture_and_admission_does_not_abort_writes(bool shared, bool enumerator, string password)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file,
++                Connection = shared ? ConnectionType.Shared : ConnectionType.Direct, Password = password };
++            using (var db = new LiteDatabase(settings))
++            {
++                db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
++                db.GetCollection("rows").EnsureIndex("value");
++                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9 });
++                using var tx = db.BeginTransaction();
++                var rows = tx.GetCollection("rows");
++                rows.Insert(new BsonDocument { ["_id"] = 2, ["value"] = 20 });
++                var reader = rows.Query().ExecuteReader();
++                var iterator = rows.FindAll().GetEnumerator();
++                Assert.True(reader.Read());
++                Assert.True(iterator.MoveNext());
++                var gate = typeof(LiteTransaction).GetField("_gate", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tx);
++                using var starting = new ManualResetEventSlim();
++                Exception failure = null;
++                var worker = new Thread(() =>
++                {
++                    starting.Set();
++                    try { if (enumerator) iterator.MoveNext(); else reader.Read(); }
++                    catch (Exception error) { failure = error; }
++                }) { IsBackground = true };
++                lock (gate)
++                {
++                    worker.Start();
++                    Assert.True(starting.Wait(TimeSpan.FromSeconds(5)));
++                    // This worker has no other wait: it has captured the child and is
++                    // blocked in handle admission while this thread owns the gate.
++                    Assert.True(SpinWait.SpinUntil(() => (worker.ThreadState & ThreadState.WaitSleepJoin) != 0,
++                        TimeSpan.FromSeconds(5)));
++                    if (enumerator) iterator.Dispose(); else reader.Dispose();
++                }
++                Assert.True(worker.Join(TimeSpan.FromSeconds(5)));
++                Assert.IsType<ObjectDisposedException>(failure);
++                Assert.Equal(LiteTransactionState.Active, tx.State);
++                reader.Dispose();
++                iterator.Dispose();
++                tx.Commit();
++            }
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var db = new LiteDatabase(settings);
++                var query = db.GetCollection("rows").Query().Where(Query.GTE("value", 10));
++                Assert.Equal("value", query.GetPlan()["index"]["name"].AsString);
++                Assert.Equal(new[] { 1, 2 }, query.ToArray().Select(row => row["_id"].AsInt32).OrderBy(id => id));
++                Assert.Equal(2, db.GetCollection("rows").Count());
++                Assert.NotNull(db.GetCollection("sentinel").FindById(9));
++            }
++        }
++        [Theory]
++        [InlineData(false, false)]
++        [InlineData(false, true)]
++        [InlineData(true, false)]
++        [InlineData(true, true)]
++        public void Actual_reader_operation_and_disposal_failures_still_abort(bool shared, bool disposal)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file,
++                Connection = shared ? ConnectionType.Shared : ConnectionType.Direct };
++            using (var db = new LiteDatabase(settings))
++            {
++                db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
++                db.GetCollection("rows").EnsureIndex("value");
++                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9 });
++                using var tx = db.BeginTransaction();
++                tx.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 2, ["value"] = 20 });
++                Exception original = disposal ? (Exception)new IOException("actual reader disposal failure") :
++                    new ObjectDisposedException("actual reader failure");
++                var reader = new GuardedTransactionReader((LiteTransaction)tx, new FailingReader(original));
++                if (disposal) Assert.Same(original, Record.Exception(reader.Dispose));
++                else Assert.Same(original, Record.Exception(() => reader.Read()));
++                Assert.Equal(LiteTransactionState.Failed, tx.State);
++                reader.Dispose();
++            }
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var db = new LiteDatabase(settings);
++                var query = db.GetCollection("rows").Query().Where(Query.EQ("value", 10));
++                Assert.Equal("value", query.GetPlan()["index"]["name"].AsString);
++                Assert.StartsWith("INDEX SEEK", query.GetPlan()["index"]["mode"].AsString);
++                Assert.Equal(new[] { 1 }, query.ToArray().Select(row => row["_id"].AsInt32));
++                Assert.Equal(1, db.GetCollection("rows").Count());
++                Assert.NotNull(db.GetCollection("sentinel").FindById(9));
++            }
++        }
++
++        private sealed class FailingReader : IBsonDataReader
++        {
++            private readonly Exception _failure;
++            internal FailingReader(Exception failure) { _failure = failure; }
++            public BsonValue this[string field] => throw _failure;
++            public string Collection => "rows";
++            public BsonValue Current => throw _failure;
++            public bool HasValues => true;
++            public bool Read() => throw _failure;
++            public void Dispose() => throw _failure;
++        }
++    }
++}
+diff --git a/LiteDB.Tests/Engine/TransactionHandleChildCloseRace_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleChildCloseRace_Tests.cs
+new file mode 100644
+index 000000000..8d469b325
+--- /dev/null
++++ b/LiteDB.Tests/Engine/TransactionHandleChildCloseRace_Tests.cs
+@@ -0,0 +1,107 @@
++using System;
++using System.Collections;
++using System.Collections.Generic;
++using System.Linq;
++using System.Reflection;
++using System.Threading;
++using System.Threading.Tasks;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class TransactionHandleChildCloseRace_Tests
++    {
++        [Theory]
++        [InlineData(false, false, null)]
++        [InlineData(false, true, null)]
++        [InlineData(true, false, null)]
++        [InlineData(true, true, null)]
++        [InlineData(false, false, "secret")]
++        [InlineData(false, true, "secret")]
++        [InlineData(true, false, "secret")]
++        [InlineData(true, true, "secret")]
++        public async Task Admitted_child_call_finishes_when_disposal_hands_cleanup_to_session(bool shared, bool enumerator, string password)
++        {
++            using var file = new TempFile();
++            var settings = new ConnectionString { Filename = file, Password = password,
++                Connection = shared ? ConnectionType.Shared : ConnectionType.Direct };
++            using var entered = new ManualResetEventSlim();
++            using var resume = new ManualResetEventSlim();
++            using (var db = new LiteDatabase(settings))
++            {
++                db.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
++                db.GetCollection("rows").EnsureIndex("value");
++                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9 });
++                using var tx = db.BeginTransaction();
++                tx.GetCollection("rows").Insert(new BsonDocument { ["_id"] = 2, ["value"] = 20 });
++                IDisposable child;
++                Func<bool> step;
++                if (enumerator)
++                {
++                    var iterator = tx.GetCollection("rows").FindAll().GetEnumerator();
++                    var innerField = iterator.GetType().GetField("_inner", BindingFlags.Instance | BindingFlags.NonPublic);
++                    innerField.SetValue(iterator, new BlockingEnumerator((IEnumerator<BsonDocument>)innerField.GetValue(iterator), entered, resume));
++                    child = iterator;
++                    step = iterator.MoveNext;
++                }
++                else
++                {
++                    var reader = tx.GetCollection("rows").Query().ExecuteReader();
++                    var innerField = reader.GetType().GetField("_inner", BindingFlags.Instance | BindingFlags.NonPublic);
++                    innerField.SetValue(reader, new BlockingReader((IBsonDataReader)innerField.GetValue(reader), entered, resume));
++                    child = reader;
++                    step = reader.Read;
++                }
++                var operation = Task.Run(step);
++                Task closing = null;
++                try
++                {
++                    Assert.True(entered.Wait(TimeSpan.FromSeconds(5)));
++                    var lifetime = (SessionLifetime)typeof(LiteDatabase).GetField("_lifetime", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(db);
++                    closing = Task.Run(db.Dispose);
++                    Assert.True(SpinWait.SpinUntil(() => lifetime.Closing.IsCancellationRequested, TimeSpan.FromSeconds(5)));
++                    child.Dispose();
++                    child.Dispose();
++                    Assert.False(operation.IsCompleted);
++                    Assert.False(closing.IsCompleted);
++                }
++                finally { resume.Set(); }
++                Assert.True(await operation);
++                await closing;
++                Assert.Equal(LiteTransactionState.RolledBack, tx.State);
++                Assert.Throws<ObjectDisposedException>(() => step());
++            }
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var cold = new LiteDatabase(settings);
++                Assert.Equal(new[] { 1 }, cold.GetCollection("rows").Find(Query.GTE("value", 10)).Select(x => x["_id"].AsInt32));
++                Assert.Equal(1, cold.GetCollection("rows").Count());
++                Assert.NotNull(cold.GetCollection("sentinel").FindById(9));
++            }
++        }
++
++        private sealed class BlockingReader : IBsonDataReader
++        {
++            private readonly IBsonDataReader _inner;
++            private readonly ManualResetEventSlim _entered, _resume;
++            internal BlockingReader(IBsonDataReader inner, ManualResetEventSlim entered, ManualResetEventSlim resume) { _inner = inner; _entered = entered; _resume = resume; }
++            public BsonValue this[string field] => _inner[field];
++            public BsonValue Current => _inner.Current;
++            public string Collection => _inner.Collection;
++            public bool HasValues => _inner.HasValues;
++            public bool Read() { _entered.Set(); if (!_resume.Wait(TimeSpan.FromSeconds(10))) throw new TimeoutException(); return _inner.Read(); }
++            public void Dispose() => _inner.Dispose();
++        }
++        private sealed class BlockingEnumerator : IEnumerator<BsonDocument>
++        {
++            private readonly IEnumerator<BsonDocument> _inner;
++            private readonly ManualResetEventSlim _entered, _resume;
++            internal BlockingEnumerator(IEnumerator<BsonDocument> inner, ManualResetEventSlim entered, ManualResetEventSlim resume) { _inner = inner; _entered = entered; _resume = resume; }
++            public BsonDocument Current => _inner.Current;
++            object IEnumerator.Current => Current;
++            public bool MoveNext() { _entered.Set(); if (!_resume.Wait(TimeSpan.FromSeconds(10))) throw new TimeoutException(); return _inner.MoveNext(); }
++            public void Reset() => _inner.Reset();
++            public void Dispose() => _inner.Dispose();
++        }
++    }
++}
+diff --git a/LiteDB/Client/Transactions/LiteTransaction.cs b/LiteDB/Client/Transactions/LiteTransaction.cs
+index d5cf6fa77..da03b86ea 100644
+--- a/LiteDB/Client/Transactions/LiteTransaction.cs
++++ b/LiteDB/Client/Transactions/LiteTransaction.cs
+@@ -65,16 +65,19 @@ namespace LiteDB
+             if (close) RequestClose();
+         }
+ 
+-        internal T Run<T>(Func<T> action)
++        internal T Run<T>(Func<T> action, Action validate = null)
+         {
+             using var admission = Enter();
++            // Child lifetime misuse is an admission refusal, not a statement failure.
++            try { validate?.Invoke(); }
++            catch { Exit(); throw; }
+             return RunCore(action);
+         }
+ 
+-        internal void DisposeBoundObject(Action action)
++        internal bool DisposeBoundObject(Action action)
+         {
+             using var admission = EnterCleanup();
+-            if (admission.HasValue) RunCore(() => { action(); return true; });
++            return admission.HasValue && RunCore(() => { action(); return true; });
+         }
+ 
+         private T RunCore<T>(Func<T> action)
+diff --git a/LiteDB/Client/Transactions/TransactionEnumerable.cs b/LiteDB/Client/Transactions/TransactionEnumerable.cs
+index 78291dc23..4814cc56e 100644
+--- a/LiteDB/Client/Transactions/TransactionEnumerable.cs
++++ b/LiteDB/Client/Transactions/TransactionEnumerable.cs
+@@ -19,16 +19,20 @@ namespace LiteDB
+             private IEnumerator<T> _inner;
+             internal Enumerator(LiteTransaction owner, IEnumerator<T> inner) { _owner = owner; _inner = inner; }
+             private IEnumerator<T> Inner => _inner ?? throw new ObjectDisposedException(nameof(IEnumerator<T>));
+-            public T Current { get { var inner = Inner; return _owner.Run(() => inner.Current); } }
++            private void Validate() { if (_inner == null) throw new ObjectDisposedException(nameof(IEnumerator<T>)); }
++            public T Current { get { var inner = Inner; return _owner.Run(() => inner.Current, Validate); } }
+             object IEnumerator.Current => Current;
+-            public bool MoveNext() { var inner = Inner; return _owner.Run(() => inner.MoveNext()); }
++            public bool MoveNext() { var inner = Inner; return _owner.Run(() => inner.MoveNext(), Validate); }
+             public void Reset() => throw new NotSupportedException();
+             public void Dispose()
+             {
+                 if (_inner == null) return;
+-                _owner.DisposeBoundObject(() => _inner.Dispose());
+-                // Terminal/session cleanup owns every tracked engine cursor.
+-                _inner = null;
++                if (!_owner.DisposeBoundObject(() =>
++                {
++                    var inner = _inner;
++                    _inner = null;
++                    inner?.Dispose();
++                })) _inner = null; // Session close owns cleanup; admitted calls retained their inner.
+             }
+         }
+     }
+@@ -39,16 +43,21 @@ namespace LiteDB
+         private IBsonDataReader _inner;
+         internal GuardedTransactionReader(LiteTransaction owner, IBsonDataReader inner) { _owner = owner; _inner = inner; }
+         private IBsonDataReader Inner => _inner ?? throw new ObjectDisposedException(nameof(IBsonDataReader));
+-        public BsonValue Current { get { var inner = Inner; return _owner.Run(() => inner.Current); } }
+-        public BsonValue this[string field] { get { var inner = Inner; return _owner.Run(() => inner[field]); } }
+-        public string Collection { get { var inner = Inner; return _owner.Run(() => inner.Collection); } }
+-        public bool HasValues { get { var inner = Inner; return _owner.Run(() => inner.HasValues); } }
+-        public bool Read() { var inner = Inner; return _owner.Run(() => inner.Read()); }
++        private void Validate() { if (_inner == null) throw new ObjectDisposedException(nameof(IBsonDataReader)); }
++        public BsonValue Current { get { var inner = Inner; return _owner.Run(() => inner.Current, Validate); } }
++        public BsonValue this[string field] { get { var inner = Inner; return _owner.Run(() => inner[field], Validate); } }
++        public string Collection { get { var inner = Inner; return _owner.Run(() => inner.Collection, Validate); } }
++        public bool HasValues { get { var inner = Inner; return _owner.Run(() => inner.HasValues, Validate); } }
++        public bool Read() { var inner = Inner; return _owner.Run(() => inner.Read(), Validate); }
+         public void Dispose()
+         {
+             if (_inner == null) return;
+-            _owner.DisposeBoundObject(() => _inner.Dispose());
+-            _inner = null;
++            if (!_owner.DisposeBoundObject(() =>
++            {
++                var inner = _inner;
++                _inner = null;
++                inner?.Dispose();
++            })) _inner = null;
+         }
+     }
+ }

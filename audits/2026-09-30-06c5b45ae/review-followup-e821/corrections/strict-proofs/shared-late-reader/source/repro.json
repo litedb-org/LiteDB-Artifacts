@@ -1,0 +1,28 @@
+{
+  "id": "Issue_3067_SharedLateReaderClose",
+  "title": "Shared disposal deadlocks a later reader callback on connection admission",
+  "issues": [
+    "https://github.com/JKamsker/LiteDB/pull/133"
+  ],
+  "failingSince": "0.0.0-knownbad.e821ae7479dc",
+  "timeoutSeconds": 120,
+  "requiresParallel": false,
+  "defaultInstances": 1,
+  "args": [],
+  "tags": [
+    "regression-proof"
+  ],
+  "state": "green",
+  "expectedOutcomes": {
+    "package": {
+      "kind": "reproduce",
+      "exitCode": 0,
+      "logContains": "BUG_REPRODUCED"
+    },
+    "latest": {
+      "kind": "noRepro",
+      "exitCode": 10,
+      "logContains": "VERIFIED_FIXED"
+    }
+  }
+}

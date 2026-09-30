@@ -1,0 +1,10 @@
+{
+  "id": "133-allocation-measurement-boundary",
+  "kind": "fixture-changed",
+  "subjects": [
+    "LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs"
+  ],
+  "disposition": "strengthened",
+  "invariant": "Steady coordination publication must allocate exactly zero managed bytes for all 1000 measured events and preserve version/structural/reuse counters.",
+  "reason": "Retains the zero-byte threshold and original 100 warmup/1000 measured counts with no retries or discarded measurement. Warms the complete counter boundary on a dedicated worker without xUnit ExecutionContext, checks stable epoch identity before allocation assertions, and adds an escaped per-event allocation control. Hosted ARM64 .NET10.0.12 reported 6056 bytes; the original passed locally on x64 .NET10.0.11 and10.0.12, so the original cause remains unknown rather than asserted to be warmup. A successor ARM64 CI result is required."
+}

@@ -1,0 +1,46 @@
+diff --git a/LiteDB/Client/Transactions/LiteTransaction.cs b/LiteDB/Client/Transactions/LiteTransaction.cs
+index da03b86ea..a284848dd 100644
+--- a/LiteDB/Client/Transactions/LiteTransaction.cs
++++ b/LiteDB/Client/Transactions/LiteTransaction.cs
+@@ -82,16 +82,19 @@ namespace LiteDB
+ 
+         private T RunCore<T>(Func<T> action)
+         {
+-            using var context = _resources.Session.Enter();
+-            using var binding = TransactionContext.Enter(_transaction);
+-            try { return action(); }
+-            catch (Exception error)
++            try
+             {
+-                var intact = ReferenceEquals(_transaction.Slot.Transaction, _transaction.Transaction) &&
+-                    _transaction.Transaction.State == TransactionState.Active;
+-                if (!intact || (!(error is TransactionCapabilityException) && !(error is ReadOnlyContextException) &&
+-                    !(_transaction.Policy.ReadOnly && error is NotSupportedException))) Abort(error);
+-                throw;
++                using var context = _resources.Session.Enter();
++                using var binding = TransactionContext.Enter(_transaction);
++                try { return action(); }
++                catch (Exception error)
++                {
++                    var intact = ReferenceEquals(_transaction.Slot.Transaction, _transaction.Transaction) &&
++                        _transaction.Transaction.State == TransactionState.Active;
++                    if (!intact || (!(error is TransactionCapabilityException) && !(error is ReadOnlyContextException) &&
++                        !(_transaction.Policy.ReadOnly && error is NotSupportedException))) Abort(error);
++                    throw;
++                }
+             }
+             finally { Exit(); }
+         }
+@@ -188,10 +191,10 @@ namespace LiteDB
+         public void Commit()
+         {
+             using var admission = Enter();
+-            using var context = _resources.Session.Enter();
+-            using var binding = TransactionContext.Enter(_transaction);
+             try
+             {
++                using var context = _resources.Session.Enter();
++                using var binding = TransactionContext.Enter(_transaction);
+                 if (_readers.Count != 0) throw new InvalidOperationException("Close transaction-bound readers before committing.");
+                 Exception failure = null;
+                 try { Dispatch(() => _resources.Engine.Commit()); }

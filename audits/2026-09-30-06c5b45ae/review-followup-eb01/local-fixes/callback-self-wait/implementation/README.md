@@ -1,0 +1,9 @@
+Candidate d2edc140692d677c9482e4bdc2843211099a03ff, parent eb01f346eb7d8d51925a45c2f87ef40e1c3984ee.
+
+Confirmed collection self-wait regression: original eb01 production plus new tests yields 4 failures (plain/encrypted, same-thread/sequential handoff callback), 6 passing controls (idle handle handoff progress, Commit cursor preconditions retain Active and release locks on retry/rollback). Final candidate passes 30/30 scoped tests on both net8/net10. The strict black-box proof pins the actual eb01 package and requires exit0+regression marker before versus exit10+verified marker after. See proof.json for configuration and exact refusal timings.
+
+Commit pre-persist concern: no supported public path found that bypasses the handle's tracked-reader precondition while leaving a usable core and active orphan transaction. Production Commit behavior intentionally unchanged. New explicit cursor-refusal/retry tests pass even before this fix and verify indexed cold state plus another handle's progress while the original facade remains open.
+
+Models: ordinary concurrency/exception; no process-death or power-loss claim. No new hooks. The observer-based permanent callback guards do not use elapsed time. The public-only black-box proof uses a4-second configured timeout, >=3 seconds to reproduce, <1 second to verify; intermediate timings and unexpected exceptions cannot pass.
+
+Independent review identified marker restoration racing public admission handoff in initialcandidate d2. Followup4248035ba restores RunCore/Commit binding/context scopes before Exit. Four real 4-thread×1000-call handoff variants fail on actual d2 (handoff-before-d2.log/trx); final test also verifies cold index/record/sentinel state. A separate 200-cycle public callback handoff test covers the semantic self-wait consequence. Finalscope outputs are prefixed scope-final-. The old manual-tail diagnostic is not treated as a fixed-after regression because it hardcodes the old order.

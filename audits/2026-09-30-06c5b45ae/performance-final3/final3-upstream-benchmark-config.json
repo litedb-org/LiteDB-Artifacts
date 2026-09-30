@@ -1,0 +1,61 @@
+{
+  "versions": {
+    "dev": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27"
+    },
+    "parent": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+      "revision": "49c327cf1926fa300f9eb7477eb4bcb404f75c43"
+    },
+    "final": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-final3/TransactionHandleBenchmarks.dll",
+      "revision": "7e13e58e5f4e40642492ce768b49018e4a958c8b"
+    }
+  },
+  "groups": [
+    {
+      "name": "upstream",
+      "versions": [
+        "dev",
+        "parent",
+        "final"
+      ],
+      "rounds": 4,
+      "warmup": 5,
+      "windows": 5,
+      "cases": [
+        [
+          "direct",
+          "ordinary",
+          "read",
+          1
+        ],
+        [
+          "direct",
+          "legacy",
+          "read",
+          1
+        ],
+        [
+          "direct",
+          "ordinary",
+          "open",
+          1
+        ],
+        [
+          "shared",
+          "ordinary",
+          "read",
+          1
+        ],
+        [
+          "shared",
+          "legacy",
+          "read",
+          1
+        ]
+      ]
+    }
+  ]
+}

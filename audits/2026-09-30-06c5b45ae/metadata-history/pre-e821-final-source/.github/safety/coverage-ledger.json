@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "description": "Coverage accounting. 'quarantine' lists tests that no CI leg executes, each with an owner, a review date and the gap it leaves; the Safety evidence job fails on any other never-executed test. 'dispositions' explain removed or weakened coverage; check_coverage_regression.py accepts only dispositions added by the same change. See docs/rules/safety-evidence.md.",
+  "quarantine": [
+    {
+      "test": "LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture",
+      "reason": "Collation.Default snapshots the culture once per process, so the test passes only as the first LiteDB use in the process; after another test created a database it sees that culture instead of 'fi'.",
+      "owner": "JKamsker",
+      "review": "2026-12-31",
+      "gap": "A new database taking its collation from the current thread culture is not asserted on any CI leg; product behaviour (process-wide snapshot) decides whether the test can be made order-independent."
+    },
+    {
+      "test": "LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error",
+      "reason": "Not supported yet: rebuilding 'ana'/'ANA' from en-US/None to en-US/IgnoreCase throws 'Cannot insert duplicate key' instead of recording the collision in _rebuild_errors.",
+      "owner": "JKamsker",
+      "review": "2026-12-31",
+      "gap": "Rebuilding to a collation under which unique keys collide is not exercised; the expected _rebuild_errors behaviour is not implemented."
+    },
+    {
+      "test": "LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test",
+      "reason": "Takes ~102 s (100 iterations with a 1 s sleep; passed 5/5 locally on net10.0). The DiskWriterQueue race of #2127 no longer exists; the queue was removed in 198f0a672.",
+      "owner": "JKamsker",
+      "review": "2026-12-31",
+      "gap": "Back-to-back file-backed inserts into 100 recreated databases do not run in CI; the original race cannot recur, so the test is a candidate to retire as obsolete."
+    }
+  ],
+  "dispositions": [
+    {
+      "id": "3034-evidence-jobs",
+      "kind": "ci-test-config-changed",
+      "subjects": [
+        ".github/workflows/_reusable-ci.yml"
+      ],
+      "disposition": "strengthened",
+      "invariant": "Every test leg's results are uploaded and judged; no existing timeout, filter or partition changes.",
+      "reason": "Adds the Safety policy and Safety evidence jobs (10-minute limits) and a results upload for the .NET Framework leg, which uploaded nothing before; existing test steps keep their timeouts and filters."
+    },
+    {
+      "id": "133-reentrant-close",
+      "kind": "test-removed",
+      "subjects": [
+        "LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected"
+      ],
+      "disposition": "intentional-change",
+      "invariant": "An active operation and its committed data remain protected from reentrant facade disposal.",
+      "reason": "Session close now explicitly rejects reentrant disposal before state changes; the replacement asserts native exclusion, continued session usability, final release and cold committed data.",
+      "decision": "docs/transaction-handles.md#session-close-and-resource-topology",
+      "coveredBy": [
+        "LiteDB.Tests/Engine/NativeAdmissionDirectPool_Tests.cs#Reentrant_last_owner_disposal_is_rejected_before_affecting_the_session"
+      ]
+    },
+    {
+      "id": "133-rebuild-tail",
+      "kind": "test-removed",
+      "subjects": [
+        "LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup"
+      ],
+      "disposition": "intentional-change",
+      "invariant": "Rebuild must not dispose services still needed by a transaction cleanup tail.",
+      "reason": "The operation lease deliberately keeps maintenance out until cleanup returns; the replacement forces the cleanup interval and verifies cold committed data.",
+      "decision": "docs/transaction-handles.md#session-close-and-resource-topology",
+      "coveredBy": [
+        "LiteDB.Tests/Issues/Issue2965_Tests.cs#Rebuild_waits_until_transaction_release_cleanup_returns"
+      ]
+    },
+    {
+      "id": "133-rebuild-waiter",
+      "kind": "test-removed",
+      "subjects": [
+        "LiteDB.Tests.Issues.Issue2965_Tests.Operation_queued_behind_rebuild_fails_cleanly_and_can_be_retried"
+      ],
+      "disposition": "intentional-change",
+      "invariant": "An operation queued behind rebuild must not touch retired services or lose data.",
+      "reason": "Admission now waits before selecting services, so the operation succeeds against the replacement; both the queued write and a later write are verified after cold reopen.",
+      "decision": "docs/transaction-handles.md#session-close-and-resource-topology",
+      "coveredBy": [
+        "LiteDB.Tests/Issues/Issue2965_Tests.cs#Operation_queued_behind_rebuild_uses_the_new_services_safely"
+      ]
+    },
+    {
+      "id": "133-complete-platform-evidence",
+      "kind": "ci-test-config-changed",
+      "subjects": [
+        ".github/workflows/_reusable-ci.yml",
+        ".github/safety/ci-evidence.json",
+        "scripts/run-ci-tests.ps1",
+        "scripts/test-native-admission-glibc.sh"
+      ],
+      "disposition": "strengthened",
+      "invariant": "Every existing test workload and native-platform qualification remains mandatory, with runtime guards and complete candidate-matched results.",
+      "reason": "Registers inherited glibc/macOS Intel/Windows ARM64/f2fs jobs in the upstream aggregate; native filtered legs add provenance and discovery without narrowing their executed filters. TransactionHandle coverage is added to native filters. Missing or stale evidence now fails the aggregate."
+    },
+    {
+      "id": "133-disposed-reader-exception",
+      "kind": "assertions-reduced",
+      "subjects": [
+        "LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs"
+      ],
+      "disposition": "intentional-change",
+      "invariant": "Bound readers never resume engine work after either explicit reader disposal or transaction completion.",
+      "reason": "An explicitly disposed reader now consistently throws ObjectDisposedException before entering the transaction guard, preserving earlier writes; the existing terminal rejection assertion changes exception type without being removed.",
+      "decision": "docs/transaction-handles.md#outcome-and-cleanup",
+      "coveredBy": [
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposed_bound_objects_refuse_use_without_aborting_prior_writes"
+      ]
+    },
+    {
+      "id": "133-commit-proof-scheduling",
+      "kind": "ci-test-config-changed",
+      "subjects": [
+        ".github/repro-ci.json",
+        ".github/scripts/test_generate_repro_matrix.py"
+      ],
+      "disposition": "covered-elsewhere",
+      "invariant": "All eight known-bad comparisons run with their required packed-commit feed, while permanent regression guards remain in ordinary runtime/platform tests. Unknown new repros remain scheduled.",
+      "reason": "Commit-pinned packages cannot restore in the ordinary repro matrix. The dedicated Regression proof workflow packs the real known-bad revision, executes strict before/after comparisons and validates provenance. Each substitution lists its permanent guard; matrix tests enforce that mapping.",
+      "coveredBy": [
+        ".github/workflows/regression-proof.yml"
+      ]
+    },
+    {
+      "id": "133-retained-recovery-evidence-harness-changed",
+      "kind": "harness-changed",
+      "subjects": [
+        "scripts/test-index-migration-recovery.py",
+        "tools/IndexMigrationRecovery/Program.cs"
+      ],
+      "disposition": "strengthened",
+      "invariant": "The existing plain/encrypted index-migration fault and repeated-recovery matrix remains executed with unchanged assertions.",
+      "reason": "The stacked branch retains failure databases and configuration for investigation and uploads them when present. This adds evidence retention without narrowing the eight boundary scenarios or making test failures optional."
+    },
+    {
+      "id": "133-retained-recovery-evidence-ci-test-config-changed",
+      "kind": "ci-test-config-changed",
+      "subjects": [
+        ".github/workflows/index-migration-compatibility.yml"
+      ],
+      "disposition": "strengthened",
+      "invariant": "The existing plain/encrypted index-migration fault and repeated-recovery matrix remains executed with unchanged assertions.",
+      "reason": "The stacked branch retains failure databases and configuration for investigation and uploads them when present. This adds evidence retention without narrowing the eight boundary scenarios or making test failures optional."
+    },
+    {
+      "id": "133-partition-native-capacity",
+      "kind": "ci-test-config-changed",
+      "subjects": [
+        ".github/workflows/_reusable-ci.yml",
+        "scripts/run-ci-tests.ps1",
+        "scripts/test-native-admission-glibc.sh"
+      ],
+      "disposition": "strengthened",
+      "invariant": "Every test selected by the native platform filters executes with runtime and hook guards; each session remains limited to 300 seconds and complete current-candidate evidence remains mandatory.",
+      "reason": "Run 36691368391 on 3b60d5aea exhausted the 300-second macOS Intel net10 session after 638 results with continued progress and no failed assertions; same-head net8 finished all 642 cases. Divide the unchanged selection into disjoint handles/admission/remainder sessions. Discovery verifies exactly one workload partition with no empty or aliased results; all sessions are declared in aggregate evidence and the runtime/hook guards execute in each. The discovery matcher also now follows VSTest case-insensitive FQN filtering so lowercase rebuild methods are accounted for. No tests or platforms are omitted."
+    },
+    {
+      "id": "133-pin-progress-budget",
+      "kind": "harness-changed",
+      "subjects": [
+        "LiteDB.Tests/Engine/SharedReaderPin_Tests.cs",
+        "LiteDB.Tests/Internals/SharedPinProgressProbe.cs",
+        "LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs"
+      ],
+      "disposition": "intentional-change",
+      "invariant": "A live idle Shared pin owner must release native ownership for every one of twenty separately committed child writes; a held transaction must still block those writes, and cold database/index state must match the complete model.",
+      "reason": "The Windows x86/net8 failure on 010821392 exposed an opaque combined startup-plus-twenty-commit deadline; its failing phase remains unknown. Child ready/go and actual native-admission/commit markers separate startup from write progress. The original twenty-second cumulative throughput budget intentionally becomes twenty seconds per completed-write progress interval (diagnostic markers never renew it), plus a strict sixty-second overall cap and unchanged 300-second session cap. All twenty ordinary insert commits and the parent update remain. Dedicated live owner threads prevent async owner-exit abandonment from satisfying either oracle; plain/encrypted held-pin negative controls must reject the missing first commit, with exact cold ID/payload/index/sentinel verification.",
+      "decision": "docs/transaction-handles-safety-review.md#cross-process-pin-progress-budget",
+      "coveredBy": [
+        "LiteDB.Tests/Engine/SharedReaderPin_Tests.cs#Another_process_waits_only_while_the_pin_is_in_use",
+        "LiteDB.Tests/Engine/SharedPinProgress_Tests.cs#Progress_oracle_rejects_a_writer_blocked_by_a_held_pin"
+      ]
+    }
+  ]
+}

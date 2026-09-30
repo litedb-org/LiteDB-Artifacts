@@ -1,0 +1,363 @@
+diff --git a/.github/safety/coverage-ledger.json b/.github/safety/coverage-ledger.json
+index 7e4caea5b..7eddff294 100644
+--- a/.github/safety/coverage-ledger.json
++++ b/.github/safety/coverage-ledger.json
+@@ -150,6 +150,23 @@
+       "disposition": "strengthened",
+       "invariant": "Every test selected by the native platform filters executes with runtime and hook guards; each session remains limited to 300 seconds and complete current-candidate evidence remains mandatory.",
+       "reason": "Run 36691368391 on 3b60d5aea exhausted the 300-second macOS Intel net10 session after 638 results with continued progress and no failed assertions; same-head net8 finished all 642 cases. Divide the unchanged selection into disjoint handles/admission/remainder sessions. Discovery verifies exactly one workload partition with no empty or aliased results; all sessions are declared in aggregate evidence and the runtime/hook guards execute in each. The discovery matcher also now follows VSTest case-insensitive FQN filtering so lowercase rebuild methods are accounted for. No tests or platforms are omitted."
++    },
++    {
++      "id": "133-pin-progress-budget",
++      "kind": "harness-changed",
++      "subjects": [
++        "LiteDB.Tests/Engine/SharedReaderPin_Tests.cs",
++        "LiteDB.Tests/Internals/SharedPinProgressProbe.cs",
++        "LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs"
++      ],
++      "disposition": "intentional-change",
++      "invariant": "A live idle Shared pin owner must release native ownership for every one of twenty separately committed child writes; a held transaction must still block those writes, and cold database/index state must match the complete model.",
++      "reason": "The Windows x86/net8 failure on 010821392 exposed an opaque combined startup-plus-twenty-commit deadline; its failing phase remains unknown. Child ready/go and actual native-admission/commit markers separate startup from write progress. The original twenty-second cumulative throughput budget intentionally becomes twenty seconds per completed-write progress interval (diagnostic markers never renew it), plus a strict sixty-second overall cap and unchanged 300-second session cap. All twenty ordinary insert commits and the parent update remain. Dedicated live owner threads prevent async owner-exit abandonment from satisfying either oracle; plain/encrypted held-pin negative controls must reject the missing first commit, with exact cold ID/payload/index/sentinel verification.",
++      "decision": "docs/transaction-handles-safety-review.md#cross-process-pin-progress-budget",
++      "coveredBy": [
++        "LiteDB.Tests/Engine/SharedReaderPin_Tests.cs#Another_process_waits_only_while_the_pin_is_in_use",
++        "LiteDB.Tests/Engine/SharedPinProgress_Tests.cs#Progress_oracle_rejects_a_writer_blocked_by_a_held_pin"
++      ]
+     }
+   ]
+ }
+diff --git a/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs b/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs
+index 68d36e08d..93b74b9a4 100644
+--- a/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs
++++ b/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs
+@@ -16,6 +16,7 @@ internal static class MvccHarness
+         var mode = args[1];
+         var filename = args[2];
+         var password = args[3] == "-" ? null : args[3];
++        if (SharedPinProgressHarness.TryRun(mode, filename, password, args)) return true;
+         if (TransactionHandleHarness.TryRun(mode, filename, password, args)) return true;
+         if (NativeAdmissionHarness.TryRun(mode, filename, password, args)) return true;
+         if (SharedModeHarness.TryRun(mode, filename, password, args)) return true;
+diff --git a/LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs b/LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs
+new file mode 100644
+index 000000000..f7679ea07
+--- /dev/null
++++ b/LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs
+@@ -0,0 +1,37 @@
++using System.Reflection;
++using LiteDB;
++using LiteDB.Engine;
++
++internal static class SharedPinProgressHarness
++{
++    internal static bool TryRun(string mode, string filename, string? password, string[] args)
++    {
++        if (mode != "pin-insert-progress") return false;
++        using var engine = new SharedEngine(new EngineSettings
++        {
++            Filename = filename, Password = password, TransactionPageLimit = 1, CacheSize = 8192
++        });
++        using var database = new LiteDatabase(engine, disposeOnClose: false);
++        var collection = database.GetCollection("docs");
++        const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
++        var turnstile = typeof(SharedEngine).GetField("_turnstile", flags)!.GetValue(engine)!;
++        var observed = 0;
++        turnstile.GetType().GetProperty("BeforeMainWait", flags)!.SetValue(turnstile, (Action)(() =>
++        {
++            // This observes actual native admission, not just entry into Insert.
++            // It does not assert that the mutex was still occupied when WaitOne ran.
++            if (Interlocked.Exchange(ref observed, 1) == 0) Console.WriteLine("native-wait");
++        }));
++        Console.WriteLine("ready");
++        if (Console.ReadLine() != "go") throw new InvalidOperationException("Missing pin probe go command");
++        var start = int.Parse(args[4]);
++        for (var id = start; id < start + 20; id++)
++        {
++            // Preserve the original twenty ordinary, separately committed writes.
++            collection.Insert(new BsonDocument { ["_id"] = id });
++            Console.WriteLine("committed:" + id);
++        }
++        Console.WriteLine("done");
++        return true;
++    }
++}
+diff --git a/LiteDB.Tests/Engine/SharedPinProgress_Tests.cs b/LiteDB.Tests/Engine/SharedPinProgress_Tests.cs
+new file mode 100644
+index 000000000..f95714373
+--- /dev/null
++++ b/LiteDB.Tests/Engine/SharedPinProgress_Tests.cs
+@@ -0,0 +1,72 @@
++#if !NETFRAMEWORK
++using System;
++using System.Linq;
++using System.Threading;
++using System.Threading.Tasks;
++using FluentAssertions;
++using LiteDB.Engine;
++using LiteDB.Internals;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    [Collection(nameof(SharedReaderPinCollection))]
++    public class SharedPinProgress_Tests
++    {
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public async Task Progress_oracle_rejects_a_writer_blocked_by_a_held_pin(string password)
++        {
++            using var file = new TempFile();
++            using (var engine = new SharedEngine(new EngineSettings { Filename = file.Filename, Password = password }))
++            {
++                engine.Insert("docs", Enumerable.Range(1, 200).Select(id => new BsonDocument
++                    { ["_id"] = id, ["value"] = 0, ["payload"] = new string('p', 200) }), BsonAutoId.Int32);
++                engine.EnsureIndex("docs", "value", "$.value", false);
++                engine.Insert("untouched", new[] { new BsonDocument { ["_id"] = 1, ["value"] = "preserved" } }, BsonAutoId.Int32);
++                using var child = new SharedPinProgressProbe(file.Filename, password);
++                await child.Ready();
++                using var pinned = new ManualResetEventSlim();
++                using var finish = new ManualResetEventSlim();
++                Exception ownerError = null;
++                var owner = new Thread(() =>
++                {
++                    try
++                    {
++                        using var reader = engine.Query("docs", new Query());
++                        reader.Read().Should().BeTrue();
++                        engine.Update("docs", new[] { new BsonDocument
++                            { ["_id"] = 1, ["value"] = 1, ["payload"] = new string('p', 200) } });
++                        // A real transaction hold cannot expire while this owner lives.
++                        engine.BeginTrans().Should().BeTrue();
++                        pinned.Set();
++                        finish.Wait();
++                    }
++                    catch (Exception error) { ownerError = error; pinned.Set(); }
++                }) { IsBackground = true };
++                owner.Start();
++                try
++                {
++                    pinned.Wait(TimeSpan.FromSeconds(10)).Should().BeTrue();
++                    ownerError.Should().BeNull();
++                    child.Start();
++                    await child.ObserveAdmission();
++                    var failure = await Assert.ThrowsAsync<TimeoutException>(() => child.Complete(TimeSpan.FromSeconds(1)));
++                    failure.Message.Should().Contain("committed:1000");
++                    owner.IsAlive.Should().BeTrue();
++                }
++                finally
++                {
++                    // Kill the blocked probe before allowing the owner to release.
++                    child.Dispose();
++                    finish.Set();
++                    owner.Join(TimeSpan.FromSeconds(10)).Should().BeTrue();
++                }
++                ownerError.Should().BeNull();
++            }
++            SharedPinProgressProbe.VerifyCold(file.Filename, 200, password, inserted: false);
++        }
++    }
++}
++#endif
+diff --git a/LiteDB.Tests/Engine/SharedReaderPin_Tests.cs b/LiteDB.Tests/Engine/SharedReaderPin_Tests.cs
+index 223fea973..5880a0aa7 100644
+--- a/LiteDB.Tests/Engine/SharedReaderPin_Tests.cs
++++ b/LiteDB.Tests/Engine/SharedReaderPin_Tests.cs
+@@ -388,17 +388,30 @@ namespace LiteDB.Tests.Engine
+         {
+             using var engine = this.Open(expire: true);
+             engine.Insert("docs", Enumerable.Range(1, Count).Select(id => Doc(id, 0)), BsonAutoId.Int32);
+-            var reader = _open.Track(engine.Query("docs", new Query()));
+-            reader.Read().Should().BeTrue();
+-            engine.Update("docs", new[] { Doc(1, 1) });
+-
+-            // The owner keeps its reader open and stops calling in: the process
+-            // cannot signal this instance, so the idle limit must end the pin.
+-            await MvccProcess.Run("insert", this.Filename, null, "1000");
+-
+-            engine.Update("docs", new[] { Doc(2, 1) });
+-            reader.Dispose();
+-            engine.Query("docs", new Query()).ToEnumerable().Count().Should().Be(Count + 20);
++            engine.EnsureIndex("docs", "value", "$.value", false);
++            engine.Insert("untouched", new[] { new BsonDocument { ["_id"] = 1, ["value"] = "preserved" } }, BsonAutoId.Int32);
++            using var process = new SharedPinProgressProbe(this.Filename);
++            await process.Ready();
++            using var finish = new ManualResetEventSlim();
++            var reader = this.PinOnIdleThread(engine, finish, out var owner);
++            try
++            {
++                // Keep the actual pin owner alive across awaits. Progress must come
++                // from idle expiry, not abandonment of an async test runner thread.
++                process.Start();
++                await process.Complete();
++                owner.IsAlive.Should().BeTrue();
++                engine.Update("docs", new[] { Doc(2, 1) });
++                reader.Dispose();
++                engine.Query("docs", new Query()).ToEnumerable().Count().Should().Be(Count + 20);
++            }
++            finally
++            {
++                finish.Set();
++                owner.Join(Prompt).Should().BeTrue();
++            }
++            engine.Dispose();
++            SharedPinProgressProbe.VerifyCold(this.Filename, Count);
+         }
+ #endif
+ 
+diff --git a/LiteDB.Tests/Internals/SharedPinProgressProbe.cs b/LiteDB.Tests/Internals/SharedPinProgressProbe.cs
+new file mode 100644
+index 000000000..f2f4967de
+--- /dev/null
++++ b/LiteDB.Tests/Internals/SharedPinProgressProbe.cs
+@@ -0,0 +1,107 @@
++#if !NETFRAMEWORK
++using System;
++using System.Diagnostics;
++using System.Linq;
++using System.Threading.Tasks;
++using FluentAssertions;
++
++namespace LiteDB.Internals
++{
++    /// <summary>Progress means a completed write; diagnostic messages never extend its deadline.</summary>
++    internal sealed class SharedPinProgressProbe : IDisposable
++    {
++        private static readonly TimeSpan Limit = TimeSpan.FromSeconds(20);
++        private static readonly TimeSpan OverallLimit = TimeSpan.FromSeconds(60);
++        private readonly Stopwatch _elapsed = Stopwatch.StartNew();
++        private readonly MvccProcess _process;
++        private readonly int _start;
++        private TimeSpan _lastCommit;
++        private bool _admissionObserved, _disposed;
++
++        internal SharedPinProgressProbe(string filename, string password = null, int start = 1000)
++        {
++            _start = start;
++            _process = new MvccProcess("pin-insert-progress", filename, password, start.ToString());
++        }
++
++        internal Task Ready() => Expect("ready", Limit);
++
++        internal void Start()
++        {
++            _lastCommit = _elapsed.Elapsed;
++            _process.Send("go");
++        }
++
++        internal async Task ObserveAdmission()
++        {
++            await Expect("native-wait", Limit);
++            _admissionObserved = true;
++        }
++
++        internal async Task Complete(TimeSpan? progressLimit = null)
++        {
++            var progress = progressLimit ?? Limit;
++            if (!_admissionObserved) await ObserveAdmission();
++            for (var id = _start; id < _start + 20; id++)
++            {
++                await Expect("committed:" + id, progress);
++                _lastCommit = _elapsed.Elapsed;
++            }
++            await Expect("done", progress);
++            await _process.Finish().WaitAsync(Remaining(OverallLimit - _elapsed.Elapsed));
++            Remaining(OverallLimit - _elapsed.Elapsed);
++        }
++
++        private async Task Expect(string expected, TimeSpan progress)
++        {
++            string line;
++            try
++            {
++                var remaining = Remaining(Min(progress - (_elapsed.Elapsed - _lastCommit), OverallLimit - _elapsed.Elapsed));
++                line = await _process.ReadLine(remaining);
++                Remaining(Min(progress - (_elapsed.Elapsed - _lastCommit), OverallLimit - _elapsed.Elapsed));
++            }
++            catch (TimeoutException error)
++            {
++                throw new TimeoutException($"Pin child stopped before '{expected}'; elapsed={_elapsed.Elapsed}, " +
++                    $"last completed-write offset={_lastCommit}. Diagnostic markers do not renew the progress deadline.", error);
++            }
++            line.Should().Be(expected);
++        }
++
++        private static TimeSpan Remaining(TimeSpan value)
++        {
++            if (value <= TimeSpan.Zero) throw new TimeoutException("Pin child exceeded its bounded progress or total deadline.");
++            return value;
++        }
++        private static TimeSpan Min(TimeSpan first, TimeSpan second) => first < second ? first : second;
++
++        internal static void VerifyCold(string filename, int seedCount, string password = null, bool inserted = true)
++        {
++            using var cold = new LiteDatabase(new ConnectionString { Filename = filename, Password = password });
++            var collection = cold.GetCollection("docs");
++            var rows = collection.Query().OrderBy("_id").ToArray();
++            var expected = Enumerable.Range(1, seedCount).Concat(inserted ? Enumerable.Range(1000, 20) : Array.Empty<int>());
++            rows.Select(row => row["_id"].AsInt32).Should().Equal(expected);
++            foreach (var row in rows.Take(seedCount))
++            {
++                var id = row["_id"].AsInt32;
++                row["value"].AsInt32.Should().Be(id == 1 || (inserted && id == 2) ? 1 : 0);
++                row["payload"].AsString.Should().Be(new string('p', 200));
++            }
++            foreach (var row in rows.Skip(seedCount)) row.Count.Should().Be(1);
++            collection.Query().Where("value = 1").GetPlan()["index"].AsDocument["mode"].AsString.Should().StartWith("INDEX SEEK");
++            collection.Find("value = 1").Select(row => row["_id"].AsInt32).OrderBy(id => id)
++                .Should().Equal(inserted ? new[] { 1, 2 } : new[] { 1 });
++            cold.GetCollection("untouched").FindById(1)["value"].AsString.Should().Be("preserved");
++        }
++
++        public void Dispose()
++        {
++            if (_disposed) return;
++            _disposed = true;
++            _process.Dispose();
++        }
++    }
++}
++#endif
+diff --git a/docs/transaction-handles-safety-review.md b/docs/transaction-handles-safety-review.md
+index b2105839f..101b283fd 100644
+--- a/docs/transaction-handles-safety-review.md
++++ b/docs/transaction-handles-safety-review.md
+@@ -156,3 +156,38 @@ result files before execution; aggregate evidence requires every result. The
+ recorder also now matches VSTest's case-insensitive FQN filtering, so lowercase
+ `rebuild` methods already executed by the old filter are included in truncation
+ accounting. This harness correction changes no library code or benchmark binary.
++
++### Cross-process pin progress budget
++
++The full `010821392` run timed out in the Windows x86/.NET 8 pin test while
++waiting for the child process's final `done` line. That line followed startup and
++twenty separately committed inserts. The retained failure does not identify
++whether startup, native admission, any insert, or output delivery stopped; it is
++not evidence of a particular product deadlock or established runner slowdown.
++
++The test now starts its child before establishing the pin, waits for `ready`,
++then releases a `go` barrier after a dedicated owner thread is pinned. That
++owner remains alive throughout the proof, so progress cannot be explained by
++abandonment of an async test-runner thread. The child reports its first actual
++native-admission attempt through the existing `BeforeMainWait` hook and each of
++the same twenty ordinary inserts only after it returns. The native marker proves
++reaching admission, not by itself that the mutex was occupied at that instant.
++
++This deliberately changes the test from a combined twenty-second startup-plus-
++throughput budget to separate bounded startup and write-progress checks. Startup
++remains bounded by twenty seconds; the first commit is due within twenty seconds
++of `go`, and each later commit within twenty seconds of the preceding commit.
++Diagnostic markers do not renew that deadline. A strict sixty-second overall
++cap includes startup, writes and child exit; the test-session cap remains 300
++seconds. No write, process, platform, assertion, or failure is skipped or retried.
++The final parent update remains, and cold reopen additionally checks every ID,
++payload, an index-seek result and an unrelated sentinel.
++
++Plain and encrypted negative controls retain a real transaction hold on a live
++pin owner. After observing native admission, the same progress checker must
++reject the missing first commit. The child is killed before the owner is allowed
++to exit, and cold reopen confirms no child writes were admitted. These controls
++prevent the progress protocol from treating an indefinitely blocked writer as
++success. This correction changes test discrimination and diagnostics only; it
++makes no production-code change and does not resolve the original opaque
++failure's phase retrospectively.

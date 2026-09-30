@@ -1,0 +1,44 @@
+{
+  "versions": {
+    "head": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-head/TransactionHandleBenchmarks.dll",
+      "revision": "c8c0cfab623a22880b1d71eb966b09e89f9153b9"
+    },
+    "final": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-final4/TransactionHandleBenchmarks.dll",
+      "revision": "19065cc1e6b14ee697f7512fa9e65dbe00a8b882"
+    }
+  },
+  "groups": [
+    {
+      "name": "shared-reuse",
+      "versions": [
+        "head",
+        "final"
+      ],
+      "rounds": 4,
+      "warmup": 5,
+      "windows": 5,
+      "cases": [
+        [
+          "shared",
+          "handle",
+          "read",
+          0
+        ],
+        [
+          "shared",
+          "handle",
+          "read",
+          1
+        ],
+        [
+          "shared",
+          "handle",
+          "read",
+          10
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+WARNING: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/safety/ci-evidence.json matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/workflows/index-migration-compatibility.yml matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+WARNING: Disposition for harness-changed: scripts/test-index-migration-recovery.py matches no change in this diff
+WARNING: Disposition for harness-changed: tools/IndexMigrationRecovery/Program.cs matches no change in this diff
+## Coverage regression: passed
+
+- :warning: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/safety/ci-evidence.json matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/workflows/index-migration-compatibility.yml matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+- :warning: Disposition for harness-changed: scripts/test-index-migration-recovery.py matches no change in this diff
+- :warning: Disposition for harness-changed: tools/IndexMigrationRecovery/Program.cs matches no change in this diff
+
+| Kind | Subject | Detail | Disposition |
+| --- | --- | --- | --- |
+| test-removed | `LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected` | was in LiteDB.Tests/Engine/NativeAdmissionDirectPool_Tests.cs; new in that file: Reentrant_last_owner_disposal_is_rejected_before_affecting_the_session | recorded |
+| test-removed | `LiteDB.Tests.Issues.Issue2965_Tests.Operation_queued_behind_rebuild_fails_cleanly_and_can_be_retried` | was in LiteDB.Tests/Issues/Issue2965_Tests.cs; new in that file: Operation_queued_behind_rebuild_uses_the_new_services_safely, Rebuild_waits_until_transaction_release_cleanup_returns | recorded |
+| test-removed | `LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup` | was in LiteDB.Tests/Issues/Issue2965_Tests.cs; new in that file: Operation_queued_behind_rebuild_uses_the_new_services_safely, Rebuild_waits_until_transaction_release_cleanup_returns | recorded |
+| ci-test-config-changed | `.github/workflows/_reusable-ci.yml` | --Filter 'FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated'; --Filter 'FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~SharedCoordinated'; +timeout-minutes: 10; +-F | recorded |
+| ci-test-config-changed | `scripts/run-ci-tests.ps1` | +--discovery $listing --filter "$Filter" --result $ResultFile --framework $Framework ` | recorded |
+3 quarantined tests remain visible coverage gaps; see `.github/safety/coverage-ledger.json`.
+
+WARNING: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+WARNING: Disposition for test-removed: LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected matches no change in this diff
+WARNING: Disposition for test-removed: LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup matches no change in this diff
+## Coverage regression: passed
+
+- :warning: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+- :warning: Disposition for test-removed: LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected matches no change in this diff
+- :warning: Disposition for test-removed: LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup matches no change in this diff
+
+| Kind | Subject | Detail | Disposition |
+| --- | --- | --- | --- |
+| test-removed | `LiteDB.Tests.Issues.Issue2965_Tests.Operation_queued_behind_rebuild_fails_cleanly_and_can_be_retried` | was in LiteDB.Tests/Issues/Issue2965_Tests.cs; new in that file: Operation_queued_behind_rebuild_uses_the_new_services_safely, Rebuild_waits_until_transaction_release_cleanup_returns | recorded |
+| ci-test-config-changed | `.github/safety/ci-evidence.json` | test settings modified | recorded |
+| harness-changed | `scripts/test-index-migration-recovery.py` | test or compatibility harness modified | recorded |
+| harness-changed | `tools/IndexMigrationRecovery/Program.cs` | test or compatibility harness modified | recorded |
+| ci-test-config-changed | `.github/workflows/_reusable-ci.yml` | +timeout-minutes: 15; +timeout-minutes: 15; +-Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated'; +if-no-files-found: ignore; +if-no-files-found: warn; +if-no-files-found: warn; +if-no-files-found: warn; +timeout-minutes: 25; +-Filter 'FullyQualifiedName~Transactio | recorded |
+| ci-test-config-changed | `.github/workflows/index-migration-compatibility.yml` | +if-no-files-found: ignore | recorded |
+| ci-test-config-changed | `scripts/run-ci-tests.ps1` | -engine = 'FullyQualifiedName~LiteDB.Tests.Engine.&FullyQualifiedName!~LiteDB.Tests.Engine.Rebuild&FullyQualifiedName!~LiteDB.Tests.Engine.Compact&FullyQualifiedName!~LiteDB.Tests.Engine.Index'; -'shared-process' = 'FullyQualifiedName~LiteDB.Internals.Shared&FullyQualifiedName~Process'; -engine = 'FullyQualifiedName~LiteDB.Tests.Engine.&FullyQualifiedName!~LiteDB.Tests.Engine.Rebuild&FullyQualifiedName!~LiteDB.Tests.Engine.Compact&FullyQualifiedName!~LiteDB.Tests.Engine.Index'; -'shared-process' | recorded |
+3 quarantined tests remain visible coverage gaps; see `.github/safety/coverage-ledger.json`.
+
+## Fault-point registry: passed
+
+
+| Hook | Protocol | Evidence | Gap |
+| --- | --- | --- | --- |
+| `checkpoint-stage:retirement-after-header-write` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-header-write` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, TornPromotion_RemainsRecoverableAfterTwoTornRepairs, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-journal-retire-flush` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-header-flushed` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, DamagedOrCrcValidMalformedProofs_FailClosedWithoutChangingSources, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-journal-retired` | MVCC retirement root publication | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-after-record-write` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-before-record-write` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, FailedDurableBarrier_StopsBeforeUnsafeReuse, fuzz:mvcc-retirement |  |
+| `checkpoint-stage:retirement-records-flushed` | MVCC retirement witness | EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:mvcc-retirement |  |
+| `process-crash:wal-confirmation-after-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-confirmation-before-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-page-after-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-page-before-write` | WAL append | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-after-durable-flush` | WAL commit | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, SharedCommit_HonorsDurabilitySettingAtConfirmation, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-before-durable-flush` | WAL commit | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, SharedCommit_DeviceFailuresRecoverWholeTransactionsAndReleaseWriterOwnership, SharedCommit_HonorsDurabilitySettingAtConfirmation, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-after-index-confirmation` | WAL commit publication | Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:wal-before-index-confirmation` | WAL commit publication | RecoveredHeaderKeepsCheckpointOutsideCommitPublication, fuzz:power-loss, fuzz:shared |  |
+| `injector:SimulateDirectoryErrno` | WAL directory entry sync | A_failed_directory_sync_fails_the_commit, A_directory_that_cannot_sync_reports_the_log_as_not_durable_and_keeps_committing |  |
+| `injector:SimulateDiskWriteFail` | WAL page writes | Failure_at_each_wal_page_boundary_never_publishes_partial_documents_or_schemas, FailedConfirmationAfterTheLastFlush_ReleasesItsFrameAndRemainsUncommitted, fuzz:storage |  |
+| `checkpoint-stage:before-wal-reclaim-lock` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary |  |
+| `checkpoint-stage:wal-slot-cleared` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `checkpoint-stage:wal-slots-flushed` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `checkpoint-stage:wal-slots-published` | WAL slot reclamation | RecoveryWorksAtEveryReclamationBoundary, KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes |  |
+| `injector:Attach` | admitted stream lifetime | Holder_stream_callback_rejects_indirect_session_close |  |
+| `process-crash:checkpoint-after-clear` | checkpoint WAL clearing | RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:mvcc-checkpoint, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-clear` | checkpoint WAL clearing | RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, Only_checkpoint_crash_workers_retain_the_native_mutex_after_commit, fuzz:mvcc-checkpoint, fuzz:power-loss, fuzz:shared |  |
+| `checkpoint-stage:before-commit-lock` | checkpoint admission | RecoveredHeaderKeepsCheckpointOutsideCommitPublication, RootedFullCheckpoint_FailedJournalSyncPreservesOriginalGeneration, fuzz:mvcc-checkpoint |  |
+| `checkpoint-stage:before-index-lock` | checkpoint admission | CheckpointCannotPassVersionCaptureBeforePinPublication, fuzz:cursor-handoff |  |
+| `checkpoint-stage:data-flushed` | checkpoint backfill | InterruptedFullCheckpointRecoversCommittedState |  |
+| `checkpoint-stage:data-page` | checkpoint backfill | InterruptedFullCheckpointRecoversCommittedState, KillingPartialCheckpointerDoesNotInvalidateAnotherProcessesReader |  |
+| `process-crash:checkpoint-after-data-flush` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-after-page-write` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-data-flush` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `process-crash:checkpoint-before-page-write` | checkpoint backfill | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes, fuzz:power-loss, fuzz:shared |  |
+| `checkpoint-stage:after-reclaim` | checkpoint reclamation | InterruptedFullCheckpointRecoversCommittedState | Only the checkpoint exception model is claimed; process death and modeled power loss after reclamation are not. |
+| `checkpoint-stage:before-reclaim` | checkpoint reclamation | InterruptedFullCheckpointRecoversCommittedState, TornRootRemoval_ToleratesRepeatedTornHeaderRepairs, fuzz:mvcc-checkpoint |  |
+| `injector:SimulateDataWriteFail` | data-file page writes | FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit, FailedCloseCheckpoint_LeavesTheWalToRecoverEveryCommit |  |
+| `injector:SimulateErrno` | file sync (fsync) | Failed_log_sync_stops_checkpoint_before_the_data_file_changes, FailedInitialization_ReleasesFileHandle_AndAllowsRetry |  |
+| `injector:TimestampOverride` | handle admission deadline | Both_shared_waits_spend_one_deadline |  |
+| `process-crash:promotion-recovery-after-header-flush` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-recovery-after-header-write` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-recovery-before-header-write` | header journal recovery | Repeated_power_loss_during_recovery_keeps_the_journal, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-header-flush` | header promotion | Promotion_recovery_preserves_a_later_corruption_guard, Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-header-write` | header promotion | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-header-write` | header promotion | Torn_header_is_recovered_from_durable_journal, Torn_header_recovers_through_real_files_without_touching_unrelated_files, Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-flush` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-page-write` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, Recovery_keeps_a_valid_header_when_the_journal_is_only_OS_cached, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-journal-write` | header promotion journal | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, Torn_journal_cannot_damage_the_unpromoted_database, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-after-journal-retire-flush` | header promotion journal retirement | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, EveryRetirementBoundary_PreservesAcknowledgedPayloadsAndIndexes, fuzz:compact-power-loss |  |
+| `process-crash:promotion-before-journal-retire-flush` | header promotion journal retirement | Power_loss_preserves_legacy_rows_and_atomic_compact_transaction, fuzz:compact-power-loss |  |
+| `injector:UnsupportedVolume` | native filesystem qualification | Opt_in_changes_lock_authority_and_preserves_commits_rollback_indexes_and_stale_files |  |
+| `injector:SimulateDiskReadFail` | page reads | ReadHook_Failure_ReleasesAcquiredFrame, InvalidState_PersistsMarkerBeforeClosingDataWriter |  |
+| `rebuild-install:after-log-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:after-source-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:after-temp-install` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-log-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-source-backup` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-temp-install` | rebuild install | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Opens_are_guarded_during_every_installation_phase, fuzz:rebuild-transition |  |
+| `rebuild-install:before-candidate-cleanup` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point |  |
+| `rebuild-install:before-candidate-republish` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-candidate-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Failed_candidate_rollback_keeps_the_original_wal_with_its_backup_data |  |
+| `rebuild-install:before-log-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-source-retraction` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Repeated_recovery_failures_block_shared_reuse_and_fresh_opens |  |
+| `rebuild-install:before-source-rollback` | rebuild install rollback | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Shared_handle_adopts_the_collation_of_a_republished_replacement |  |
+| `rebuild-install:before-recovery-marker` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Marker_creation_failure_does_not_move_the_original_files |  |
+| `rebuild-install:before-recovery-marker-delete` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Failed_marker_cleanup_preserves_the_original_error_and_blocks_opens |  |
+| `rebuild-install:before-recovery-marker-flush` | rebuild recovery marker | Every_reachable_fault_combination_honours_the_rollback_contract, Successful_rebuild_passes_every_install_fault_point, Marker_flush_failure_leaves_the_original_pair_untouched_and_access_blocked |  |
+| `injector:BeforeCloseDispatch` | session close dispatch | Failed_cleanup_dispatch_retains_ownership_and_retry_completes |  |
+| `coordination-file:created` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file |  |
+| `coordination-file:flushed` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `coordination-file:published` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Death_during_control_creation_preserves_data_and_recovers_mapped_reads |  |
+| `coordination-file:publishing` | shared coordination sidecar publication | Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `coordination-file:retired` | shared coordination sidecar publication | Failed_retirement_is_repeatable_without_partial_authority_admission |  |
+| `coordination-file:written` | shared coordination sidecar publication | Failed_creation_publishes_only_complete_bytes_and_removes_its_temporary_file, Cleanup_cannot_remove_a_live_publisher_even_at_the_rename_boundary |  |
+| `injector:SimulatePosixDelete` | shared file handles | Volumes_without_posix_delete_open_files_per_operation |  |
+| `process-crash:startup-after-tail-trim` | startup trailing-page trim | InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly, InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly |  |
+| `process-crash:startup-before-tail-trim` | startup trailing-page trim | InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly, InterruptedTailTrim_RecoversEveryCommittedDocumentRepeatedly |  |
+Known persistent transitions without a hook:
+
+- rebuild install: Directory-entry persistence of the recovery marker and the backup/install renames: rebuild-install hooks fault the operations, but the model does not lose unsynced directory entries. (#3011)
+- shared reader leases: Reader lease-file publication, renewal and expiry have observer stages only (CoordinationStage); no registered fault point interrupts them.
+
+## Safety contracts: passed
+
+
+Implicated contracts: name each id in the PR's safety section with its evidence, or explain why the change cannot affect it.
+
+### `durable-ack`: Acknowledged durable transactions survive within the stated fault model
+
+Touched: `LiteDB/Client/Shared/SharedEngine.Disposal.cs`, `LiteDB/Client/Shared/SharedEngine.Readers.cs`, `LiteDB/Client/Shared/SharedEngine.Transactions.cs`, `LiteDB/Client/Shared/SharedEngine.Waiters.cs`, `LiteDB/Client/Shared/SharedEngine.cs` and 33 more
+
+Evidence: Acknowledged_shared_commit_survives_death_before_session_checkpoint (process-death); Disposed_bound_objects_refuse_use_without_aborting_prior_writes (exception); power-loss (modeled-power-loss); SectorTearsOfNewAppends_PreserveAcknowledgedPrefix (modeled-power-loss); RootedFullCheckpoint_PowerLossPreservesPayloadsAndIndexes (modeled-power-loss); FailedCheckpointSync_PreservesAtomicDataAndStopsWrites (exception); SharedCommit_DeviceFailuresRecoverWholeTransactionsAndReleaseWriterOwnership (exception); shared (process-death); recovery (exception)
+
+Known gaps: No OS/VM reset or physical-device campaign: the device model is unclaimed.; Storage that cannot sync (#2242) is covered for its documented process-crash guarantee only; it makes no power-loss claim.
+
+### `recovery-generation`: Recovery never combines incompatible data and WAL generations
+
+Touched: `LiteDB/Engine/Disk/DiskService.cs`, `LiteDB/Engine/Disk/PageFramePool.cs`, `LiteDB/Engine/Engine/Rebuild.cs`
+
+Evidence: Rebuild_invalidates_cached_child_when_password_or_collation_changes (exception); Every_reachable_fault_combination_honours_the_rollback_contract (exception); Successful_rebuild_passes_every_install_fault_point (exception); Failed_password_rebuild_restores_the_original_data_and_wal_pair (exception); Repeated_recovery_failures_block_shared_reuse_and_fresh_opens (exception); Repeated_power_loss_during_recovery_keeps_the_journal (modeled-power-loss); rebuild-transition (exception)
+
+Known gaps: Directory-entry persistence of the rebuild marker and renames is not modeled (#3011); the install matrix is not power-loss evidence.
+
+### `reader-snapshot`: Readers retain their admitted snapshot across writes and reclamation
+
+Touched: `LiteDB/Client/Shared/SharedEngine.Disposal.cs`, `LiteDB/Client/Shared/SharedEngine.Readers.cs`, `LiteDB/Client/Shared/SharedEngine.Transactions.cs`, `LiteDB/Client/Shared/SharedEngine.Waiters.cs`, `LiteDB/Client/Shared/SharedEngine.cs` and 28 more
+
+Evidence: Reused_holder_and_wrapper_release_writer_and_refresh_after_external_commit; Independent_direct_handles_overlap_and_preserve_each_others_commit_and_rollback; Maintenance_progresses_under_sustained_ordinary_reads; AResolvedButUnreadWalOffsetCannotBeReclaimed (exception); LongLivedCursorsAcrossCheckpoints_MatchModel; InterleavedSharedInstances_ReadersMatchModel; Pin_owner_hands_off_to_each_repeated_waiter; KilledReclaimerCannotInvalidateLiveReaderOrReusedSlotRecovery (process-death); threaded-snapshot; transaction-gate; cursor-handoff
+
+Known gaps: Shared reader lease files have observer stages only; no registered fault point interrupts lease publication or expiry.
+
+### `historical-input`: Supported historical inputs preserve their documented behavior
+
+Touched: `scripts/test-prerelease-compatibility.py`, `scripts/test-transaction-handle-compatibility.py`, `tools/PrereleaseCompatibility/Program.cs`
+
+Evidence: Released_indexes_survive_power_loss_and_another_interrupted_recovery (modeled-power-loss); CutoverChangesOnlyHeader_ThenWritesMigratePagesOutOfOrder (exception); scripts/test-v9-compatibility.py; scripts/test-index-compatibility.py; scripts/test-parent-format-compatibility.py (corrupt-input); scripts/test-mvcc-compatibility.py (corrupt-input); scripts/test-prerelease-compatibility.py; compatibility (exception)
+
+Known gaps: Fixtures lack provenance manifests (producer, recipe, hashes, expected outcome).
+
+### `query-meaning`: Query and mapping paths preserve meaning
+
+Touched: `LiteDB/Client/Transactions/EngineFacade.cs`, `LiteDB/Client/Transactions/ILiteTransaction.cs`, `LiteDB/Client/Transactions/LiteTransaction.cs`, `LiteDB/Client/Transactions/SessionCallContext.cs`, `LiteDB/Client/Transactions/SessionCloseDependency.cs` and 14 more
+
+Evidence: Seeded_handoffs_match_committed_model_after_each_cold_reopen; Handle_metadata_queries_read_existing_collections_and_bound_uncommitted_indexes; Merged_ranges_match_unindexed_results_in_both_directions; query; linq-cache; sql-dml; mapper
+
+Known gaps: Cached and uncached paths share one translator; CLR evaluation is the independent oracle only where semantics align.
+Evidence by failure model (a `-` is an unclaimed model, not a pass):
+
+| Contract | exception | process-death | modeled-power-loss | device | corrupt-input |
+| --- | --- | --- | --- | --- | --- |
+| `durable-ack` | yes | yes | yes | - | - |
+| `recovery-generation` | yes | - | yes | - | - |
+| `reader-snapshot` | yes | yes | - | - | - |
+| `historical-input` | yes | - | yes | - | yes |
+| `query-meaning` | - | - | - | - | - |
+
+## Regression proof: passed
+
+
+10 regression proofs in `.github/safety/regression-proofs.json`.
+
+..........................Traceback (most recent call last):
+  File "__WORKSPACE__/artifacts_temp/integration/.github/scripts/safety_common.py", line 94, in read_json
+    return json.loads(text)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "__WORKSPACE__/artifacts_temp/integration/.github/scripts/check_coverage_regression.py", line 315, in main
+    unresolved = check_ledger(base, head, findings, report)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "__WORKSPACE__/artifacts_temp/integration/.github/scripts/check_coverage_regression.py", line 225, in check_ledger
+    ledger = head.read_json(LEDGER, {}) or {}
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "__WORKSPACE__/artifacts_temp/integration/.github/scripts/safety_common.py", line 96, in read_json
+    raise MalformedJson(f"{path} is not valid JSON at {self.rev}: {error}") from error
+safety_common.MalformedJson: .github/safety/coverage-ledger.json is not valid JSON at HEAD: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+.........................................Fixture collection failure (primary test failure preserved): Fixture host is still running; refusing to copy
+.Fixture collection failure (primary test failure preserved): __WORKSPACE__/temporary/tmp724hzwra/litedb-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.db: copy failure sentinel
+..........................
+----------------------------------------------------------------------
+Ran 94 tests in 3.111s
+
+OK
+ERROR: Issue_1_Sample: the run did not meet both expectations (failed=True)
+ERROR: Issue_1_Sample: the known-bad state did not fail as required (package {'expected': 0, 'actual': 1, 'met': False, 'useprojectreference': False, 'output': [{'Stream': 'stdout', 'Text': '{"type": "configuration", "payload": {"useProjectReference": false, "liteDBPackageVersion": "5.0.20"}}'}]})
+WARNING: LiteDB.Tests/Engine/Transactions_Tests.cs: 456 lines exceeds the recommended 300
+WARNING: LiteDB.Tests/Query/VectorIndex_Tests.cs: 1018 lines exceeds the recommended 300 (Existing vector index persistence regression fixture, unchanged since before the size check was introduced in 3996dabe; baseline for the dev-to-master PR. No further growth allowed.)
+WARNING: LiteDB/Client/Database/LiteDatabase.cs: 439 lines exceeds the recommended 300
+WARNING: LiteDB/Client/Shared/SharedEngine.cs: 450 lines exceeds the recommended 300
+WARNING: LiteDB/Client/Shared/SharedMutexOwner.cs: 488 lines exceeds the recommended 300
+WARNING: LiteDB/Engine/Disk/DiskService.cs: 382 lines exceeds the recommended 300
+WARNING: LiteDB/Engine/Disk/PageFramePool.cs: 367 lines exceeds the recommended 300
+WARNING: LiteDB/Engine/EngineSettings.cs: 327 lines exceeds the recommended 300
+WARNING: LiteDB/Engine/LiteEngine.cs: 380 lines exceeds the recommended 300
+WARNING: LiteDB/Engine/Services/TransactionService.cs: 500 lines exceeds the recommended 300

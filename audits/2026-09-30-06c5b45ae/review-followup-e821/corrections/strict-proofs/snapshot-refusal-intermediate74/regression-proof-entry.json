@@ -1,0 +1,12 @@
+{
+  "repro": "Issue_133_SharedSnapshotCloseRefusal",
+  "knownBad": {
+    "kind": "pr-commit",
+    "commit": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+    "reason": "Introduced in fork PR133 Shared close cleanup before upstream integration; no released package contains this regression. Public filesystem-backed proof reproduces premature native release after a refused later-reader callback close.",
+    "pr": 133
+  },
+  "permanentGuard": [
+    "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_self_close_preserves_unleased_protection_or_leased_independence"
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "GeneratedAt": "2026-09-30T08:01:13.3975153+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_2614_DiskServiceDispose",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": null,
+        "ExpectedLogContains": null,
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 0.1335368,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1132278\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00225.0.21\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022lifecycle\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1549715\u002B00:00\u0022,\u0022event\u0022:\u0022starting\u0022,\u0022payload\u0022:{\u0022instanceIndex\u0022:0,\u0022totalInstances\u0022:1,\u0022sharedDatabaseRoot\u0022:\u0022__CI_WORKSPACE__/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2614_DiskServiceDispose/ver_5_0_21/run/issue2614-disk/ff4c59762e824e3e8a0532819743de5c\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1681604\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original RLIMIT_FSIZE: cur=18446744073709551615, max=18446744073709551615\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.169295\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Applied RLIMIT_FSIZE cur=4096\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1695635\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Attempting to create database at __CI_WORKSPACE__/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2614_DiskServiceDispose/ver_5_0_21/run/issue2614-disk/ff4c59762e824e3e8a0532819743de5c/issue2614-disk.db\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1980849\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Observed exception while opening database: System.ArgumentOutOfRangeException: Specified file length was too large for the file system. (Parameter \\u0027value\\u0027)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1992892\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Restored original file size limit. Checking for lingering file handles...\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1997325\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Failed to reopen database file due to lingering handle: The process cannot access the file \\u0027__CI_WORKSPACE__/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2614_DiskServiceDispose/ver_5_0_21/run/issue2614-disk/ff4c59762e824e3e8a0532819743de5c/issue2614-disk.db\\u0027 because it is being used by another process.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.1998064\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Attempting to delete the locked database file.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.2001313\u002B00:00\u0022,\u0022text\u0022:\u0022DiskService left the database file locked after initialization failure.\u0022,\u0022success\u0022:true}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022lifecycle\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.2004974\u002B00:00\u0022,\u0022event\u0022:\u0022completed\u0022,\u0022payload\u0022:{\u0022success\u0022:true}}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": null,
+        "ExpectedLogContains": null,
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 1,
+        "DurationSeconds": 0.2507343,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.2632762\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00225.0.21\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022lifecycle\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.3180585\u002B00:00\u0022,\u0022event\u0022:\u0022starting\u0022,\u0022payload\u0022:{\u0022instanceIndex\u0022:0,\u0022totalInstances\u0022:1,\u0022sharedDatabaseRoot\u0022:\u0022__CI_WORKSPACE__/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2614_DiskServiceDispose/ver_latest/run/issue2614-disk/4d82595fdb34481880af99f4891cd7e4\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.3265708\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original RLIMIT_FSIZE: cur=18446744073709551615, max=18446744073709551615\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.3281378\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Applied RLIMIT_FSIZE cur=4096\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.3285853\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Attempting to create database at __CI_WORKSPACE__/LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/Release/net8.0/runs/Issue_2614_DiskServiceDispose/ver_latest/run/issue2614-disk/4d82595fdb34481880af99f4891cd7e4/issue2614-disk.db\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.4015408\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Observed exception while opening database: System.ArgumentOutOfRangeException: Specified file length was too large for the file system. (Parameter \\u0027value\\u0027)\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.4028482\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Restored original file size limit. Checking for lingering file handles...\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.40291\u002B00:00\u0022,\u0022level\u0022:\u0022Error\u0022,\u0022text\u0022:\u0022Successfully reopened the database file with exclusive access.\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.4494656\u002B00:00\u0022,\u0022level\u0022:\u0022Error\u0022,\u0022text\u0022:\u0022Reproduction failed: System.InvalidOperationException: Database file reopened successfully; the repro did not observe the lock.\\n   at Issue_2614_DiskServiceDispose.Program.Run(ReproHostClient host, ReproContext context) in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 123\\n   at Issue_2614_DiskServiceDispose.Program.Main() in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 37\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.4499409\u002B00:00\u0022,\u0022text\u0022:\u0022Reproduction failed unexpectedly.\u0022,\u0022success\u0022:false,\u0022payload\u0022:{\u0022exception\u0022:\u0022System.InvalidOperationException: Database file reopened successfully; the repro did not observe the lock.\\n   at Issue_2614_DiskServiceDispose.Program.Run(ReproHostClient host, ReproContext context) in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 123\\n   at Issue_2614_DiskServiceDispose.Program.Main() in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 37\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022lifecycle\u0022,\u0022timestamp\u0022:\u00222026-09-30T08:01:26.4512902\u002B00:00\u0022,\u0022event\u0022:\u0022completed\u0022,\u0022payload\u0022:{\u0022success\u0022:false}}"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "System.InvalidOperationException: Database file reopened successfully; the repro did not observe the lock."
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_2614_DiskServiceDispose.Program.Run(ReproHostClient host, ReproContext context) in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 123"
+          },
+          {
+            "Stream": "stderr",
+            "Text": "   at Issue_2614_DiskServiceDispose.Program.Main() in __CI_WORKSPACE__/LiteDB.ReproRunner/Repros/Issue_2614_DiskServiceDispose/Program.cs:line 37"
+          }
+        ]
+      }
+    }
+  ]
+}

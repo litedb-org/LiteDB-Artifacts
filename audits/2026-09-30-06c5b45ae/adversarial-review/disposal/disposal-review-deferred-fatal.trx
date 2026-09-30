@@ -10,36 +10,36 @@
         <ErrorInfo>
           <Message>System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
 ---- System.IO.IOException : peer WAL write failed</Message>
-          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs:line 48
-   at LiteDB.Engine.LiteEngine.Rollback() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 68
-   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
-   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
-   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
-   at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 220
-   at LiteDB.LiteTransaction.DisposeCore() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 277
-   at LiteDB.LiteTransaction.Dispose() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 253
-   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 165
+          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs:line 48
+   at LiteDB.Engine.LiteEngine.Rollback() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 68
+   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
+   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
+   at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 220
+   at LiteDB.LiteTransaction.DisposeCore() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 277
+   at LiteDB.LiteTransaction.Dispose() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 253
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 165
    at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(Object, Span`1)
    at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 ----- Inner Stack Trace -----
-   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 246
-   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
-   at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/NonClosingStream.cs:line 27
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 246
+   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
+   at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/NonClosingStream.cs:line 27
    at System.Security.Cryptography.CryptoStream.WriteAsyncCore(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken, Boolean useAsync)
    at System.Security.Cryptography.CryptoStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-   at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/AesStream.cs:line 213
-   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
-   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
-   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
-   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
-   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 264
-   at LiteDB.Engine.TransactionService.PersistAndConfirm() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 324
-   at LiteDB.Engine.TransactionService.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 306
-   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 124
-   at LiteDB.Engine.LiteEngine.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 53
-   at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193
-   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
-   at LiteDB.LiteTransaction.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193</StackTrace>
+   at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/AesStream.cs:line 213
+   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
+   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 264
+   at LiteDB.Engine.TransactionService.PersistAndConfirm() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 324
+   at LiteDB.Engine.TransactionService.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 306
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 124
+   at LiteDB.Engine.LiteEngine.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 53
+   at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
+   at LiteDB.LiteTransaction.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -48,44 +48,44 @@
         <ErrorInfo>
           <Message>System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
 ---- System.IO.IOException : peer WAL write failed</Message>
-          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs:line 48
-   at LiteDB.Engine.LiteEngine.Rollback() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 68
-   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
-   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
-   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
-   at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 220
-   at LiteDB.LiteTransaction.DisposeCore() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 277
-   at LiteDB.LiteTransaction.Dispose() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 253
-   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 165
+          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs:line 48
+   at LiteDB.Engine.LiteEngine.Rollback() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 68
+   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
+   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 174
+   at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 220
+   at LiteDB.LiteTransaction.DisposeCore() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 277
+   at LiteDB.LiteTransaction.Dispose() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 253
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 165
    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
    at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
 ----- Inner Stack Trace -----
-   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 246
-   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
-   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
-   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
-   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
-   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
-   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 264
-   at LiteDB.Engine.TransactionService.PersistAndConfirm() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 324
-   at LiteDB.Engine.TransactionService.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 306
-   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 124
-   at LiteDB.Engine.LiteEngine.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 53
-   at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193
-   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
-   at LiteDB.LiteTransaction.Commit() in /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193</StackTrace>
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 246
+   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
+   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
+   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 264
+   at LiteDB.Engine.TransactionService.PersistAndConfirm() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 324
+   at LiteDB.Engine.TransactionService.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs:line 306
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 124
+   at LiteDB.Engine.LiteEngine.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs:line 53
+   at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 105
+   at LiteDB.LiteTransaction.Commit() in __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs:line 193</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
   </Results>
   <TestDefinitions>
-    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: &quot;secret&quot;)" storage="/tmp/pr133-fresh-disposal-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="64aabdf6-8c94-0390-3933-4ccc9e0a0893">
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: &quot;secret&quot;)" storage="__WORKSPACE__/temporary/pr133-fresh-disposal-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="64aabdf6-8c94-0390-3933-4ccc9e0a0893">
       <Execution id="0e38cb86-d3c1-4186-9e5d-5df6f06bef39" />
-      <TestMethod codeBase="/tmp/pr133-fresh-disposal-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
     </UnitTest>
-    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: null)" storage="/tmp/pr133-fresh-disposal-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="f17a2137-b22a-dff4-748f-94b9ad3a274d">
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: null)" storage="__WORKSPACE__/temporary/pr133-fresh-disposal-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="f17a2137-b22a-dff4-748f-94b9ad3a274d">
       <Execution id="155dab83-65c0-4398-bcde-63f5e9fa6aa9" />
-      <TestMethod codeBase="/tmp/pr133-fresh-disposal-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
     </UnitTest>
   </TestDefinitions>
   <TestEntries>
@@ -106,65 +106,65 @@
 [xUnit.net 00:00:01.17]       System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
 [xUnit.net 00:00:01.17]       ---- System.IO.IOException : peer WAL write failed
 [xUnit.net 00:00:01.17]       Stack Trace:
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs(48,0): at LiteDB.Engine.EngineState.Validate()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(220,0): at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(277,0): at LiteDB.LiteTransaction.DisposeCore()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(253,0): at LiteDB.LiteTransaction.Dispose()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(165,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs(48,0): at LiteDB.Engine.EngineState.Validate()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(220,0): at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(277,0): at LiteDB.LiteTransaction.DisposeCore()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(253,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(165,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
 [xUnit.net 00:00:01.17]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
 [xUnit.net 00:00:01.17]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
 [xUnit.net 00:00:01.17]         ----- Inner Stack Trace -----
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(246,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0()
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
-[xUnit.net 00:00:01.17]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.Commit()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(246,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0()
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.17]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.Commit()
 [xUnit.net 00:00:01.31]       System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
 [xUnit.net 00:00:01.31]       ---- System.IO.IOException : peer WAL write failed
 [xUnit.net 00:00:01.31]       Stack Trace:
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs(48,0): at LiteDB.Engine.EngineState.Validate()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(220,0): at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(277,0): at LiteDB.LiteTransaction.DisposeCore()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(253,0): at LiteDB.LiteTransaction.Dispose()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(165,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/EngineState.cs(48,0): at LiteDB.Engine.EngineState.Validate()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__26_0()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(174,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(220,0): at LiteDB.LiteTransaction.RollbackCore(Boolean onlyIfActive)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(277,0): at LiteDB.LiteTransaction.DisposeCore()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(253,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(165,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
 [xUnit.net 00:00:01.31]            at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(Object, Span`1)
 [xUnit.net 00:00:01.31]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
 [xUnit.net 00:00:01.31]         ----- Inner Stack Trace -----
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(246,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/NonClosingStream.cs(27,0): at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(246,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/NonClosingStream.cs(27,0): at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count)
 [xUnit.net 00:00:01.31]            at System.Security.Cryptography.CryptoStream.WriteAsyncCore(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken, Boolean useAsync)
 [xUnit.net 00:00:01.31]            at System.Security.Cryptography.CryptoStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/AesStream.cs(213,0): at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0()
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
-[xUnit.net 00:00:01.31]         /tmp/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.Commit()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/AesStream.cs(213,0): at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__27_0()
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(105,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.31]         __WORKSPACE__/temporary/pr133-fresh-disposal-review/LiteDB/Client/Transactions/LiteTransaction.cs(193,0): at LiteDB.LiteTransaction.Commit()
 [xUnit.net 00:00:01.31]   Finished:    LiteDB.Tests
 </StdOut>
     </Output>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="9965c0d4-6c8a-45e9-9ee1-9c5bcff4cf9f" name="@dev-build-server 2026-09-30 11:21:52" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T11:21:52.9318880+00:00" queuing="2026-09-30T11:21:52.9318881+00:00" start="2026-09-30T11:21:48.6566351+00:00" finish="2026-09-30T11:21:56.0427687+00:00" />
+  <TestSettings name="default" id="6f3c58e4-a367-4747-bcca-c47ad40efdab">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_11_21_52" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="64010335-bbd3-4493-b746-22df1742beaa" testId="8afb648f-6e9c-64ef-31b3-6434d761843e" testName="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: False)" computerName="dev-build-server" duration="00:00:03.0584747" startTime="2026-09-30T11:21:55.9794143+00:00" endTime="2026-09-30T11:21:55.9794144+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="64010335-bbd3-4493-b746-22df1742beaa">
+      <Output>
+        <ErrorInfo>
+          <Message>Owner-exit cleanup deadlocked with transferred reader's late callback.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Boolean pin) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs:line 166
+   at InvokeStub_ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ba8f5718-c8f5-41e4-be60-0d600c2c5341" testId="9c7ea283-cb1e-c88d-f75a-f434354e46f4" testName="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: True)" computerName="dev-build-server" duration="00:00:03.2066488" startTime="2026-09-30T11:21:52.8822483+00:00" endTime="2026-09-30T11:21:52.8822778+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ba8f5718-c8f5-41e4-be60-0d600c2c5341">
+      <Output>
+        <ErrorInfo>
+          <Message>Owner-exit cleanup deadlocked with transferred reader's late callback.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Boolean pin) in __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs:line 166
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: False)" storage="__WORKSPACE__/temporary/pr133-late-reader-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="8afb648f-6e9c-64ef-31b3-6434d761843e">
+      <Execution id="64010335-bbd3-4493-b746-22df1742beaa" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests" name="Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: True)" storage="__WORKSPACE__/temporary/pr133-late-reader-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="9c7ea283-cb1e-c88d-f75a-f434354e46f4">
+      <Execution id="ba8f5718-c8f5-41e4-be60-0d600c2c5341" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewLateSharedReader_Tests" name="Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8afb648f-6e9c-64ef-31b3-6434d761843e" executionId="64010335-bbd3-4493-b746-22df1742beaa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c7ea283-cb1e-c88d-f75a-f434354e46f4" executionId="ba8f5718-c8f5-41e4-be60-0d600c2c5341" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="2" executed="2" passed="0" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.12]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.66]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.67]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:03.92]       Owner-exit cleanup deadlocked with transferred reader's late callback.
+[xUnit.net 00:00:03.92]       Stack Trace:
+[xUnit.net 00:00:03.92]         __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs(166,0): at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Boolean pin)
+[xUnit.net 00:00:03.92]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.92]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:07.02]       Owner-exit cleanup deadlocked with transferred reader's late callback.
+[xUnit.net 00:00:07.02]       Stack Trace:
+[xUnit.net 00:00:07.02]         __WORKSPACE__/temporary/pr133-late-reader-review/LiteDB.Tests/Engine/ReviewLateSharedReader_Tests.cs(166,0): at LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Boolean pin)
+[xUnit.net 00:00:07.02]            at InvokeStub_ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(Object, Span`1)
+[xUnit.net 00:00:07.02]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:07.03]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T11:21:52.8792010+00:00">
+        <Text>[xUnit.net 00:00:03.92]     LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T11:21:55.9784120+00:00">
+        <Text>[xUnit.net 00:00:07.02]     LiteDB.Tests.Engine.ReviewLateSharedReader_Tests.Review_owner_exit_during_transferred_unleased_reader_callback_does_not_deadlock(pin: False) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

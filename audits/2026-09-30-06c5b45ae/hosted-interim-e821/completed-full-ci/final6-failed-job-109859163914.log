@@ -1,0 +1,604 @@
+﻿2026-09-30T11:17:29.6901394Z Current runner version: '2.337.0'
+2026-09-30T11:17:29.6935911Z ##[group]Runner Image Provisioner
+2026-09-30T11:17:29.6937042Z Hosted Compute Agent
+2026-09-30T11:17:29.6937671Z Version: 20260828.587
+2026-09-30T11:17:29.6938296Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-30T11:17:29.6939176Z Build Date: 2026-08-28T16:44:25Z
+2026-09-30T11:17:29.6939917Z Worker ID: {1c5ef932-cd94-4a48-9153-0ecc514765a5}
+2026-09-30T11:17:29.6940706Z Azure Region: westcentralus
+2026-09-30T11:17:29.6941311Z ##[endgroup]
+2026-09-30T11:17:29.6943304Z ##[group]Operating System
+2026-09-30T11:17:29.6944355Z Ubuntu
+2026-09-30T11:17:29.6944910Z 24.04.5
+2026-09-30T11:17:29.6945494Z LTS
+2026-09-30T11:17:29.6946027Z ##[endgroup]
+2026-09-30T11:17:29.6946586Z ##[group]Runner Image
+2026-09-30T11:17:29.6947264Z Image: ubuntu-24.04-arm
+2026-09-30T11:17:29.6947890Z Version: 20260920.129.1
+2026-09-30T11:17:29.6949307Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24-arm64/20260920.129/images/ubuntu/Ubuntu2404-Arm64-Readme.md
+2026-09-30T11:17:29.6950954Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24-arm64%2F20260920.129
+2026-09-30T11:17:29.6951919Z ##[endgroup]
+2026-09-30T11:17:29.6955091Z ##[group]GITHUB_TOKEN Permissions
+2026-09-30T11:17:29.6958715Z Actions: write
+2026-09-30T11:17:29.6959375Z ArtifactMetadata: write
+2026-09-30T11:17:29.6960135Z Attestations: write
+2026-09-30T11:17:29.6960762Z Checks: write
+2026-09-30T11:17:29.6961322Z CodeQuality: write
+2026-09-30T11:17:29.6962028Z Contents: write
+2026-09-30T11:17:29.6962597Z CopilotRequests: write
+2026-09-30T11:17:29.6963251Z Deployments: write
+2026-09-30T11:17:29.6963874Z Discussions: write
+2026-09-30T11:17:29.6964738Z Drives: write
+2026-09-30T11:17:29.6965391Z Issues: write
+2026-09-30T11:17:29.6965935Z Metadata: read
+2026-09-30T11:17:29.6966803Z Models: read
+2026-09-30T11:17:29.6967384Z Packages: write
+2026-09-30T11:17:29.6967946Z Pages: write
+2026-09-30T11:17:29.6968627Z PullRequests: write
+2026-09-30T11:17:29.6969234Z RepositoryProjects: write
+2026-09-30T11:17:29.6969924Z SecurityEvents: write
+2026-09-30T11:17:29.6970574Z Statuses: write
+2026-09-30T11:17:29.6971165Z VulnerabilityAlerts: read
+2026-09-30T11:17:29.6971986Z ##[endgroup]
+2026-09-30T11:17:29.6975793Z Secret source: Actions
+2026-09-30T11:17:29.6977017Z Cache mode: write
+2026-09-30T11:17:29.6977804Z Prepare workflow directory
+2026-09-30T11:17:29.7619441Z Prepare all required actions
+2026-09-30T11:17:29.7671494Z Getting action download info
+2026-09-30T11:17:30.0733196Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-30T11:17:30.2279246Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-30T11:17:30.9909398Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-09-30T11:17:31.1831942Z Uses: JKamsker/LiteDB/.github/workflows/_reusable-ci.yml@refs/pull/133/merge (3f614aa69b15771ed1a63b8b8796172fae8b6648)
+2026-09-30T11:17:31.1838150Z ##[group] Inputs
+2026-09-30T11:17:31.1838977Z   tier: full
+2026-09-30T11:17:31.1841763Z   sdk-matrix: [
+  { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+  { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+  { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+]
+
+2026-09-30T11:17:31.1844849Z ##[endgroup]
+2026-09-30T11:17:31.1845976Z Complete job name: build-and-test / Native admission (glibc 2.31 - ubuntu-24.04-arm)
+2026-09-30T11:17:31.2685535Z ##[group]Run actions/checkout@v4
+2026-09-30T11:17:31.2687447Z with:
+2026-09-30T11:17:31.2688193Z   repository: JKamsker/LiteDB
+2026-09-30T11:17:31.2692258Z   token: ***
+2026-09-30T11:17:31.2693030Z   ssh-strict: true
+2026-09-30T11:17:31.2693661Z   ssh-user: git
+2026-09-30T11:17:31.2695074Z   persist-credentials: true
+2026-09-30T11:17:31.2695836Z   clean: true
+2026-09-30T11:17:31.2696498Z   sparse-checkout-cone-mode: true
+2026-09-30T11:17:31.2697332Z   fetch-depth: 1
+2026-09-30T11:17:31.2698102Z   fetch-tags: false
+2026-09-30T11:17:31.2698815Z   show-progress: true
+2026-09-30T11:17:31.2699511Z   lfs: false
+2026-09-30T11:17:31.2700169Z   submodules: false
+2026-09-30T11:17:31.2700937Z   set-safe-directory: true
+2026-09-30T11:17:31.2701682Z   allow-unsafe-pr-checkout: false
+2026-09-30T11:17:31.2703048Z env:
+2026-09-30T11:17:31.2704562Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:17:31.2705806Z ##[endgroup]
+2026-09-30T11:17:31.3617686Z Syncing repository: JKamsker/LiteDB
+2026-09-30T11:17:31.3621575Z ##[group]Getting Git version info
+2026-09-30T11:17:31.3622778Z Working directory is '__CI_HOME__/work/LiteDB/LiteDB'
+2026-09-30T11:17:31.3624942Z [command]/usr/bin/git version
+2026-09-30T11:17:31.3665875Z git version 2.55.0
+2026-09-30T11:17:31.3670714Z ##[endgroup]
+2026-09-30T11:17:31.3681212Z Temporarily overriding HOME='__CI_HOME__/work/_temp/9102de6f-3d86-468e-86e3-31a0aaa3f4c7' before making global git config changes
+2026-09-30T11:17:31.3687101Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T11:17:31.3688543Z [command]/usr/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T11:17:31.3720279Z Deleting the contents of '__CI_HOME__/work/LiteDB/LiteDB'
+2026-09-30T11:17:31.3738882Z ##[group]Initializing the repository
+2026-09-30T11:17:31.3758624Z [command]/usr/bin/git init __CI_WORKSPACE__
+2026-09-30T11:17:31.3822896Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-30T11:17:31.3824598Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-30T11:17:31.3825832Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-30T11:17:31.3826937Z hint: call:
+2026-09-30T11:17:31.3827591Z hint:
+2026-09-30T11:17:31.3828317Z hint: 	git config --global init.defaultBranch <name>
+2026-09-30T11:17:31.3829238Z hint:
+2026-09-30T11:17:31.3830046Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-30T11:17:31.3831336Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-30T11:17:31.3832339Z hint:
+2026-09-30T11:17:31.3832967Z hint: 	git branch -m <name>
+2026-09-30T11:17:31.3833784Z hint:
+2026-09-30T11:17:31.3835015Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-30T11:17:31.3836448Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-09-30T11:17:31.3839251Z [command]/usr/bin/git remote add origin https://github.com/JKamsker/LiteDB
+2026-09-30T11:17:31.3897492Z ##[endgroup]
+2026-09-30T11:17:31.3898899Z ##[group]Disabling automatic garbage collection
+2026-09-30T11:17:31.3899890Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-30T11:17:31.3906518Z ##[endgroup]
+2026-09-30T11:17:31.3907793Z ##[group]Setting up auth
+2026-09-30T11:17:31.3913793Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T11:17:31.3949283Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-30T11:17:31.4220723Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T11:17:31.4250958Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-30T11:17:31.4440288Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T11:17:31.4471939Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-30T11:17:31.4665443Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-30T11:17:31.4703251Z ##[endgroup]
+2026-09-30T11:17:31.4705231Z ##[group]Fetching the repository
+2026-09-30T11:17:31.4712113Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3f614aa69b15771ed1a63b8b8796172fae8b6648:refs/remotes/pull/133/merge
+2026-09-30T11:17:32.9176401Z From https://github.com/JKamsker/LiteDB
+2026-09-30T11:17:32.9178184Z  * [new ref]         3f614aa69b15771ed1a63b8b8796172fae8b6648 -> pull/133/merge
+2026-09-30T11:17:32.9182577Z ##[endgroup]
+2026-09-30T11:17:32.9184414Z ##[group]Determining the checkout info
+2026-09-30T11:17:32.9186031Z ##[endgroup]
+2026-09-30T11:17:32.9186924Z [command]/usr/bin/git sparse-checkout disable
+2026-09-30T11:17:32.9228733Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-30T11:17:32.9257408Z ##[group]Checking out the ref
+2026-09-30T11:17:32.9260295Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/133/merge
+2026-09-30T11:17:33.0012304Z Note: switching to 'refs/remotes/pull/133/merge'.
+2026-09-30T11:17:33.0013133Z 
+2026-09-30T11:17:33.0013805Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-30T11:17:33.0015776Z changes and commit them, and you can discard any commits you make in this
+2026-09-30T11:17:33.0017404Z state without impacting any branches by switching back to a branch.
+2026-09-30T11:17:33.0018390Z 
+2026-09-30T11:17:33.0019103Z If you want to create a new branch to retain commits you create, you may
+2026-09-30T11:17:33.0020689Z do so (now or later) by using -c with the switch command. Example:
+2026-09-30T11:17:33.0021551Z 
+2026-09-30T11:17:33.0021934Z   git switch -c <new-branch-name>
+2026-09-30T11:17:33.0022542Z 
+2026-09-30T11:17:33.0022973Z Or undo this operation with:
+2026-09-30T11:17:33.0023567Z 
+2026-09-30T11:17:33.0023940Z   git switch -
+2026-09-30T11:17:33.0024767Z 
+2026-09-30T11:17:33.0025544Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-30T11:17:33.0026650Z 
+2026-09-30T11:17:33.0027847Z HEAD is now at 3f614aa Merge e821ae7479dcb83570031180b0c0e3f4fd167793 into 5dd942a7367c361fadd600be4ce10aace2768b27
+2026-09-30T11:17:33.0031655Z ##[endgroup]
+2026-09-30T11:17:33.0059417Z [command]/usr/bin/git log -1 --format=%H
+2026-09-30T11:17:33.0082758Z 3f614aa69b15771ed1a63b8b8796172fae8b6648
+2026-09-30T11:17:33.0415771Z ##[group]Run actions/download-artifact@v4
+2026-09-30T11:17:33.0416759Z with:
+2026-09-30T11:17:33.0417422Z   name: tests-build-linux
+2026-09-30T11:17:33.0418208Z   merge-multiple: false
+2026-09-30T11:17:33.0418972Z   repository: JKamsker/LiteDB
+2026-09-30T11:17:33.0419738Z   run-id: 36705044676
+2026-09-30T11:17:33.0420421Z env:
+2026-09-30T11:17:33.0421632Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:17:33.0423045Z ##[endgroup]
+2026-09-30T11:17:33.1693509Z Downloading single artifact
+2026-09-30T11:17:33.1815406Z (node:2306) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:17:33.1817337Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:17:33.3847772Z Preparing to download the following artifacts:
+2026-09-30T11:17:33.3848577Z - tests-build-linux (ID: 11092895133, Size: 40924912, Expected Digest: sha256:9a817022d420035f3b1baccd31fb0174439b1ef76f9606992832fa7b21b9432f)
+2026-09-30T11:17:33.5986267Z Redirecting to blob download url: https://productionresultssa18.blob.core.windows.net/actions-results/b2c9bfe9-81f6-86f6-816b-fddb3bc6c705/workflow-job-run-1d241edd-237b-5cc3-9eff-733c9396c058/artifacts/799830fbb823578604daec1b2b37aa7877ec9b16b5eb82ed2bc92fc868613cf2.zip
+2026-09-30T11:17:33.5987515Z Starting download of artifact to: __CI_WORKSPACE__
+2026-09-30T11:17:33.8573634Z (node:2306) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-30T11:17:35.3598662Z SHA256 digest of downloaded artifact is 9a817022d420035f3b1baccd31fb0174439b1ef76f9606992832fa7b21b9432f
+2026-09-30T11:17:35.3599202Z Artifact download completed successfully.
+2026-09-30T11:17:35.3599470Z Total of 1 artifact(s) downloaded
+2026-09-30T11:17:35.3606860Z Download artifact has finished successfully
+2026-09-30T11:17:35.3732752Z ##[group]Run tar -xzf tests-build-linux.tar.gz
+2026-09-30T11:17:35.3733186Z [36;1mtar -xzf tests-build-linux.tar.gz[0m
+2026-09-30T11:17:35.3825685Z shell: /usr/bin/bash -e {0}
+2026-09-30T11:17:35.3825940Z env:
+2026-09-30T11:17:35.3826325Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:17:35.3826771Z ##[endgroup]
+2026-09-30T11:17:36.0111530Z ##[group]Run bash scripts/test-native-admission-glibc.sh
+2026-09-30T11:17:36.0111997Z [36;1mbash scripts/test-native-admission-glibc.sh[0m
+2026-09-30T11:17:36.0147181Z shell: /usr/bin/bash -e {0}
+2026-09-30T11:17:36.0147418Z env:
+2026-09-30T11:17:36.0147797Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:17:36.0148301Z   LITEDB_EVIDENCE_MATRIX: {
+  "os": "ubuntu-24.04-arm"
+}
+2026-09-30T11:17:36.0148580Z ##[endgroup]
+2026-09-30T11:17:36.4058443Z #0 building with "default" instance using docker driver
+2026-09-30T11:17:36.4058720Z 
+2026-09-30T11:17:36.4058932Z #1 [internal] load build definition from native-admission-glibc231.Dockerfile
+2026-09-30T11:17:36.4059320Z #1 transferring dockerfile: 1.18kB done
+2026-09-30T11:17:36.4059555Z #1 DONE 0.0s
+2026-09-30T11:17:36.4059657Z 
+2026-09-30T11:17:36.4059809Z #2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:8.0
+2026-09-30T11:17:36.4378586Z #2 DONE 0.2s
+2026-09-30T11:17:36.4378859Z 
+2026-09-30T11:17:36.4379108Z #3 [internal] load metadata for mcr.microsoft.com/dotnet/runtime-deps:6.0-bullseye-slim
+2026-09-30T11:17:36.7428328Z #3 DONE 0.5s
+2026-09-30T11:17:36.8569923Z 
+2026-09-30T11:17:36.8584662Z #4 [internal] load .dockerignore
+2026-09-30T11:17:36.8585282Z #4 transferring context: 2B done
+2026-09-30T11:17:36.8585650Z #4 DONE 0.0s
+2026-09-30T11:17:36.8585889Z 
+2026-09-30T11:17:36.8586475Z #5 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-bullseye-slim@sha256:e6db4775c7adaf8cedb2e9c8172916cf11985c44ca67d2657b57e689dce18702
+2026-09-30T11:17:36.8587555Z #5 resolve mcr.microsoft.com/dotnet/runtime-deps:6.0-bullseye-slim@sha256:e6db4775c7adaf8cedb2e9c8172916cf11985c44ca67d2657b57e689dce18702 done
+2026-09-30T11:17:36.8588450Z #5 sha256:e6db4775c7adaf8cedb2e9c8172916cf11985c44ca67d2657b57e689dce18702 1.08kB / 1.08kB done
+2026-09-30T11:17:36.8589161Z #5 sha256:d1f54dc92146c35cd2602048f310308b88e6f2db01b9b49dd42a817edbca5e45 741B / 741B done
+2026-09-30T11:17:36.8589882Z #5 sha256:9628145f220b98e663d3084c5e8ff6d5b2e86899ea4dab6150885939364105d8 1.18kB / 1.18kB done
+2026-09-30T11:17:36.8590601Z #5 sha256:6a43d3167ec1fb9f3b40bf3e095c86abebf31d406e2de1d196433c26d262f72c 0B / 28.74MB 0.1s
+2026-09-30T11:17:36.8591346Z #5 sha256:369029f3fa35a4a5dca36b2629693ed3538ef5a74d58e4c205d364dd133c6a77 1.05MB / 15.12MB 0.1s
+2026-09-30T11:17:36.9572302Z #5 sha256:6a43d3167ec1fb9f3b40bf3e095c86abebf31d406e2de1d196433c26d262f72c 23.07MB / 28.74MB 0.2s
+2026-09-30T11:17:36.9573006Z #5 sha256:369029f3fa35a4a5dca36b2629693ed3538ef5a74d58e4c205d364dd133c6a77 15.12MB / 15.12MB 0.2s
+2026-09-30T11:17:37.1644911Z #5 sha256:6a43d3167ec1fb9f3b40bf3e095c86abebf31d406e2de1d196433c26d262f72c 28.74MB / 28.74MB 0.4s done
+2026-09-30T11:17:37.1645665Z #5 sha256:369029f3fa35a4a5dca36b2629693ed3538ef5a74d58e4c205d364dd133c6a77 15.12MB / 15.12MB 0.4s done
+2026-09-30T11:17:37.1646267Z #5 extracting sha256:6a43d3167ec1fb9f3b40bf3e095c86abebf31d406e2de1d196433c26d262f72c
+2026-09-30T11:17:39.0581855Z #5 extracting sha256:6a43d3167ec1fb9f3b40bf3e095c86abebf31d406e2de1d196433c26d262f72c 1.8s done
+2026-09-30T11:17:39.0582910Z #5 extracting sha256:369029f3fa35a4a5dca36b2629693ed3538ef5a74d58e4c205d364dd133c6a77
+2026-09-30T11:17:39.3710809Z #5 extracting sha256:369029f3fa35a4a5dca36b2629693ed3538ef5a74d58e4c205d364dd133c6a77 0.2s done
+2026-09-30T11:17:42.9150597Z #5 DONE 6.0s
+2026-09-30T11:17:42.9150919Z 
+2026-09-30T11:17:42.9151994Z #6 [dotnet 1/1] FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:78235e09001f52b6592c458ac010775ebac6725422e80cd0c1650590f67b2743
+2026-09-30T11:17:42.9152829Z #6 resolve mcr.microsoft.com/dotnet/sdk:8.0@sha256:78235e09001f52b6592c458ac010775ebac6725422e80cd0c1650590f67b2743 done
+2026-09-30T11:17:42.9153512Z #6 sha256:5c510dadd2699f3fa0e36f0ab5fc140d1920fb32da83a80d8c605703dd9f7fa8 5.01kB / 5.01kB done
+2026-09-30T11:17:42.9154294Z #6 sha256:333125b5cee9fb6718bdcb523fc93b4adc71b7c37ada6146a20c193430e549b9 28.12MB / 28.12MB 0.4s done
+2026-09-30T11:17:42.9155439Z #6 sha256:499ef1502b0215a158a8051a0324dfcc62f69a2f7d0a8bde03b2fb0f5d15edec 2.64kB / 2.64kB done
+2026-09-30T11:17:42.9156051Z #6 sha256:78235e09001f52b6592c458ac010775ebac6725422e80cd0c1650590f67b2743 1.08kB / 1.08kB done
+2026-09-30T11:17:42.9156674Z #6 sha256:919ae2c43807f108193fc7d4be4c6ded510870f652757e258622b10cb8090722 18.54MB / 18.54MB 0.6s done
+2026-09-30T11:17:42.9157311Z #6 sha256:4ee8afcd14712028ed495ef6b45920844ea5d58aecc2a9cba7c8b78bc2493109 3.34kB / 3.34kB 0.5s done
+2026-09-30T11:17:42.9157954Z #6 sha256:ef26ffa25c678bf0cab47ab28d3b9d816e1f5c931bf65016b471d40939307709 30.84MB / 30.84MB 0.7s done
+2026-09-30T11:17:42.9158579Z #6 extracting sha256:333125b5cee9fb6718bdcb523fc93b4adc71b7c37ada6146a20c193430e549b9 1.8s done
+2026-09-30T11:17:42.9159163Z #6 sha256:924ae8793220c875d070e65156282e3a0d34757f17150913996d911925352806 162B / 162B 0.6s done
+2026-09-30T11:17:42.9159762Z #6 sha256:e5270f2607be50c76940c0bb7c89654f9896408fa32f41d90effd1497a225542 31.37MB / 31.37MB 0.9s done
+2026-09-30T11:17:42.9160404Z #6 sha256:4b6eb2daf5a62c43c2fc22aa607e64636503db8ed0d399f614da184e20a245e0 10.77MB / 10.77MB 0.7s done
+2026-09-30T11:17:42.9161066Z #6 sha256:fd8148c93d3b7d456e6da58d6fa64925f33ff72f3b0a59ed74e9cf56753638eb 174.53MB / 174.53MB 2.0s done
+2026-09-30T11:17:42.9161720Z #6 sha256:c6f5b039e9073edc049a2da8cddf98369caba827c6231a4dca2ca3d5ddd28d04 17.60MB / 17.60MB 0.9s done
+2026-09-30T11:17:42.9162370Z #6 sha256:b13a9a7ac21dc43cef89fd67c0afaa59e61073f8313725126ffaaa4e1a458751 17.04MB / 17.04MB 1.1s done
+2026-09-30T11:17:42.9163006Z #6 sha256:0b88d34117a2f1f978ab315592e7a0383f081db6fe5e11dc63eaa68db2d1b1e8 2.71kB / 2.71kB 1.0s done
+2026-09-30T11:17:42.9163615Z #6 extracting sha256:919ae2c43807f108193fc7d4be4c6ded510870f652757e258622b10cb8090722 0.2s done
+2026-09-30T11:17:42.9164597Z #6 extracting sha256:4ee8afcd14712028ed495ef6b45920844ea5d58aecc2a9cba7c8b78bc2493109 done
+2026-09-30T11:17:42.9165198Z #6 extracting sha256:ef26ffa25c678bf0cab47ab28d3b9d816e1f5c931bf65016b471d40939307709 0.1s
+2026-09-30T11:17:43.2790681Z #6 extracting sha256:ef26ffa25c678bf0cab47ab28d3b9d816e1f5c931bf65016b471d40939307709 0.3s done
+2026-09-30T11:17:43.5142470Z #6 extracting sha256:924ae8793220c875d070e65156282e3a0d34757f17150913996d911925352806 done
+2026-09-30T11:17:43.5143168Z #6 extracting sha256:4b6eb2daf5a62c43c2fc22aa607e64636503db8ed0d399f614da184e20a245e0 0.1s
+2026-09-30T11:17:43.6686204Z #6 extracting sha256:4b6eb2daf5a62c43c2fc22aa607e64636503db8ed0d399f614da184e20a245e0 0.1s done
+2026-09-30T11:17:43.6687582Z #6 extracting sha256:e5270f2607be50c76940c0bb7c89654f9896408fa32f41d90effd1497a225542
+2026-09-30T11:17:44.5343333Z #6 extracting sha256:e5270f2607be50c76940c0bb7c89654f9896408fa32f41d90effd1497a225542 0.7s done
+2026-09-30T11:17:44.8273157Z #6 extracting sha256:fd8148c93d3b7d456e6da58d6fa64925f33ff72f3b0a59ed74e9cf56753638eb
+2026-09-30T11:17:46.7194030Z #6 ...
+2026-09-30T11:17:46.7196324Z 
+2026-09-30T11:17:46.7198627Z #7 [stage-1 2/3] RUN printf '%s\n'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye main'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security main'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye-updates main'       > /etc/apt/sources.list     && apt-get update && apt-get install -y --no-install-recommends python3     && rm -rf /var/lib/apt/lists/*
+2026-09-30T11:17:46.7200969Z #7 0.268 Get:1 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye InRelease [75.1 kB]
+2026-09-30T11:17:46.7201671Z #7 0.310 Get:2 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security InRelease [27.2 kB]
+2026-09-30T11:17:46.7202393Z #7 0.330 Get:3 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye-updates InRelease [44.0 kB]
+2026-09-30T11:17:46.7203080Z #7 0.613 Get:4 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 Packages [7955 kB]
+2026-09-30T11:17:46.7204405Z #7 1.367 Get:5 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 Packages [463 kB]
+2026-09-30T11:17:46.7205288Z #7 1.389 Get:6 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye-updates/main arm64 Packages [16.3 kB]
+2026-09-30T11:17:46.7205803Z #7 1.505 Fetched 8580 kB in 1s (6237 kB/s)
+2026-09-30T11:17:46.7206057Z #7 1.505 Reading package lists...
+2026-09-30T11:17:46.7206284Z #7 1.947 Reading package lists...
+2026-09-30T11:17:46.7206513Z #7 2.342 Building dependency tree...
+2026-09-30T11:17:46.7206754Z #7 2.482 Reading state information...
+2026-09-30T11:17:46.7207058Z #7 2.625 The following additional packages will be installed:
+2026-09-30T11:17:46.7207482Z #7 2.625   libexpat1 libmpdec3 libncursesw6 libpython3-stdlib libpython3.9-minimal
+2026-09-30T11:17:46.7207979Z #7 2.626   libpython3.9-stdlib libreadline8 libsqlite3-0 media-types python3-minimal
+2026-09-30T11:17:46.7208397Z #7 2.626   python3.9 python3.9-minimal readline-common
+2026-09-30T11:17:46.7208685Z #7 2.627 Suggested packages:
+2026-09-30T11:17:46.7209028Z #7 2.627   python3-doc python3-tk python3-venv python3.9-venv python3.9-doc binutils
+2026-09-30T11:17:46.7209414Z #7 2.627   binfmt-support readline-doc
+2026-09-30T11:17:46.7209655Z #7 2.627 Recommended packages:
+2026-09-30T11:17:46.7209871Z #7 2.627   libgpm2
+2026-09-30T11:17:46.7210092Z #7 2.692 The following NEW packages will be installed:
+2026-09-30T11:17:46.7210943Z #7 2.693   libexpat1 libmpdec3 libncursesw6 libpython3-stdlib libpython3.9-minimal
+2026-09-30T11:17:46.7211421Z #7 2.693   libpython3.9-stdlib libreadline8 libsqlite3-0 media-types python3
+2026-09-30T11:17:46.7211867Z #7 2.693   python3-minimal python3.9 python3.9-minimal readline-common
+2026-09-30T11:17:46.7212279Z #7 3.628 0 upgraded, 14 newly installed, 0 to remove and 25 not upgraded.
+2026-09-30T11:17:46.7212617Z #7 3.628 Need to get 6224 kB of archives.
+2026-09-30T11:17:46.7212957Z #7 3.628 After this operation, 22.4 MB of additional disk space will be used.
+2026-09-30T11:17:46.7213718Z #7 3.628 Get:1 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 libpython3.9-minimal arm64 3.9.2-1+deb11u7 [802 kB]
+2026-09-30T11:17:46.7215373Z #7 3.714 Get:2 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 libexpat1 arm64 2.2.10-2+deb11u7 [85.3 kB]
+2026-09-30T11:17:46.7217264Z #7 3.719 Get:3 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 python3.9-minimal arm64 3.9.2-1+deb11u7 [1890 kB]
+2026-09-30T11:17:46.7218205Z #7 3.766 Get:4 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 python3-minimal arm64 3.9.2-3 [38.2 kB]
+2026-09-30T11:17:46.7219007Z #7 3.767 Get:5 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 media-types all 4.0.0 [30.3 kB]
+2026-09-30T11:17:46.7219781Z #7 3.771 Get:6 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 libmpdec3 arm64 2.5.1-1 [84.4 kB]
+2026-09-30T11:17:46.7220632Z #7 3.773 Get:7 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 libncursesw6 arm64 6.2+20201114-2+deb11u2 [121 kB]
+2026-09-30T11:17:46.7221794Z #7 3.774 Get:8 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 readline-common all 8.1-1 [73.7 kB]
+2026-09-30T11:17:46.7222589Z #7 3.775 Get:9 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 libreadline8 arm64 8.1-1 [160 kB]
+2026-09-30T11:17:46.7223469Z #7 3.776 Get:10 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 libsqlite3-0 arm64 3.34.1-3+deb11u1 [750 kB]
+2026-09-30T11:17:46.7224622Z #7 3.790 Get:11 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 libpython3.9-stdlib arm64 3.9.2-1+deb11u7 [1660 kB]
+2026-09-30T11:17:46.7225780Z #7 3.804 Get:12 https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security/main arm64 python3.9 arm64 3.9.2-1+deb11u7 [468 kB]
+2026-09-30T11:17:46.7226709Z #7 3.808 Get:13 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 libpython3-stdlib arm64 3.9.2-3 [21.4 kB]
+2026-09-30T11:17:46.7227525Z #7 3.808 Get:14 https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye/main arm64 python3 arm64 3.9.2-3 [37.9 kB]
+2026-09-30T11:17:46.7234928Z #7 3.898 debconf: delaying package configuration, since apt-utils is not installed
+2026-09-30T11:17:46.7235328Z #7 3.923 Fetched 6224 kB in 1s (5605 kB/s)
+2026-09-30T11:17:46.7235689Z #7 3.935 Selecting previously unselected package libpython3.9-minimal:arm64.
+2026-09-30T11:17:46.7236073Z #7 3.935 (Reading database ... 
+2026-09-30T11:17:46.7236373Z (Reading database ... 5%
+2026-09-30T11:17:46.7236893Z (Reading database ... 10%
+2026-09-30T11:17:46.7237100Z (Reading database ... 15%
+2026-09-30T11:17:46.7237301Z (Reading database ... 20%
+2026-09-30T11:17:46.7237508Z (Reading database ... 25%
+2026-09-30T11:17:46.7237723Z (Reading database ... 30%
+2026-09-30T11:17:46.7237925Z (Reading database ... 35%
+2026-09-30T11:17:46.7238126Z (Reading database ... 40%
+2026-09-30T11:17:46.7238339Z (Reading database ... 45%
+2026-09-30T11:17:46.7238540Z (Reading database ... 50%
+2026-09-30T11:17:46.7238739Z (Reading database ... 55%
+2026-09-30T11:17:46.7238939Z (Reading database ... 60%
+2026-09-30T11:17:46.7239140Z (Reading database ... 65%
+2026-09-30T11:17:46.7239345Z (Reading database ... 70%
+2026-09-30T11:17:46.7239545Z (Reading database ... 75%
+2026-09-30T11:17:46.7239744Z (Reading database ... 80%
+2026-09-30T11:17:46.7239946Z (Reading database ... 85%
+2026-09-30T11:17:46.7240230Z (Reading database ... 90%
+2026-09-30T11:17:46.7240504Z (Reading database ... 95%
+2026-09-30T11:17:46.7240726Z (Reading database ... 100%
+2026-09-30T11:17:46.7241025Z (Reading database ... 6986 files and directories currently installed.)
+2026-09-30T11:17:46.8347583Z #7 3.939 Preparing to unpack .../libpython3.9-minimal_3.9.2-1+deb11u7_arm64.deb ...
+2026-09-30T11:17:46.8349590Z #7 3.941 Unpacking libpython3.9-minimal:arm64 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:46.8351129Z #7 4.006 Selecting previously unselected package libexpat1:arm64.
+2026-09-30T11:17:46.8352874Z #7 4.008 Preparing to unpack .../libexpat1_2.2.10-2+deb11u7_arm64.deb ...
+2026-09-30T11:17:46.8353436Z #7 4.009 Unpacking libexpat1:arm64 (2.2.10-2+deb11u7) ...
+2026-09-30T11:17:46.8354664Z #7 4.026 Selecting previously unselected package python3.9-minimal.
+2026-09-30T11:17:46.8355413Z #7 4.027 Preparing to unpack .../python3.9-minimal_3.9.2-1+deb11u7_arm64.deb ...
+2026-09-30T11:17:46.8356662Z #7 4.031 Unpacking python3.9-minimal (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:46.9353682Z #7 4.138 Setting up libpython3.9-minimal:arm64 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:46.9354582Z #7 4.142 Setting up libexpat1:arm64 (2.2.10-2+deb11u7) ...
+2026-09-30T11:17:46.9355153Z #7 4.144 Setting up python3.9-minimal (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:47.3609988Z #7 4.580 Selecting previously unselected package python3-minimal.
+2026-09-30T11:17:47.5299583Z #7 4.580 (Reading database ... 
+2026-09-30T11:17:47.5299896Z (Reading database ... 5%
+2026-09-30T11:17:47.5300583Z (Reading database ... 10%
+2026-09-30T11:17:47.5300802Z (Reading database ... 15%
+2026-09-30T11:17:47.5309041Z (Reading database ... 20%
+2026-09-30T11:17:47.5309288Z (Reading database ... 25%
+2026-09-30T11:17:47.5309494Z (Reading database ... 30%
+2026-09-30T11:17:47.5309695Z (Reading database ... 35%
+2026-09-30T11:17:47.5309904Z (Reading database ... 40%
+2026-09-30T11:17:47.5310107Z (Reading database ... 45%
+2026-09-30T11:17:47.5310308Z (Reading database ... 50%
+2026-09-30T11:17:47.5310507Z (Reading database ... 55%
+2026-09-30T11:17:47.5310715Z (Reading database ... 60%
+2026-09-30T11:17:47.5310917Z (Reading database ... 65%
+2026-09-30T11:17:47.5311116Z (Reading database ... 70%
+2026-09-30T11:17:47.5311345Z (Reading database ... 75%
+2026-09-30T11:17:47.5311549Z (Reading database ... 80%
+2026-09-30T11:17:47.5311750Z (Reading database ... 85%
+2026-09-30T11:17:47.5312270Z (Reading database ... 90%
+2026-09-30T11:17:47.5312504Z (Reading database ... 95%
+2026-09-30T11:17:47.5312706Z (Reading database ... 100%
+2026-09-30T11:17:47.5313016Z (Reading database ... 7280 files and directories currently installed.)
+2026-09-30T11:17:47.5313446Z #7 4.584 Preparing to unpack .../0-python3-minimal_3.9.2-3_arm64.deb ...
+2026-09-30T11:17:47.5313808Z #7 4.601 Unpacking python3-minimal (3.9.2-3) ...
+2026-09-30T11:17:47.5314346Z #7 4.749 Selecting previously unselected package media-types.
+2026-09-30T11:17:47.7509991Z #7 4.750 Preparing to unpack .../1-media-types_4.0.0_all.deb ...
+2026-09-30T11:17:47.7510362Z #7 4.820 Unpacking media-types (4.0.0) ...
+2026-09-30T11:17:47.9627214Z #7 5.182 Selecting previously unselected package libmpdec3:arm64.
+2026-09-30T11:17:48.0745605Z #7 5.183 Preparing to unpack .../2-libmpdec3_2.5.1-1_arm64.deb ...
+2026-09-30T11:17:48.0746012Z #7 5.294 Unpacking libmpdec3:arm64 (2.5.1-1) ...
+2026-09-30T11:17:48.8077477Z #7 6.027 Selecting previously unselected package libncursesw6:arm64.
+2026-09-30T11:17:48.9628216Z #7 6.028 Preparing to unpack .../3-libncursesw6_6.2+20201114-2+deb11u2_arm64.deb ...
+2026-09-30T11:17:48.9628780Z #7 6.031 Unpacking libncursesw6:arm64 (6.2+20201114-2+deb11u2) ...
+2026-09-30T11:17:49.0078781Z #7 6.226 Selecting previously unselected package readline-common.
+2026-09-30T11:17:49.1197224Z #7 6.227 Preparing to unpack .../4-readline-common_8.1-1_all.deb ...
+2026-09-30T11:17:49.1198059Z #7 6.339 Unpacking readline-common (8.1-1) ...
+2026-09-30T11:17:49.2596819Z #7 6.479 Selecting previously unselected package libreadline8:arm64.
+2026-09-30T11:17:49.3636169Z #7 6.479 Preparing to unpack .../5-libreadline8_8.1-1_arm64.deb ...
+2026-09-30T11:17:49.3636597Z #7 6.507 Unpacking libreadline8:arm64 (8.1-1) ...
+2026-09-30T11:17:49.3636957Z #7 6.529 Selecting previously unselected package libsqlite3-0:arm64.
+2026-09-30T11:17:49.3637397Z #7 6.530 Preparing to unpack .../6-libsqlite3-0_3.34.1-3+deb11u1_arm64.deb ...
+2026-09-30T11:17:49.3637837Z #7 6.532 Unpacking libsqlite3-0:arm64 (3.34.1-3+deb11u1) ...
+2026-09-30T11:17:49.3638235Z #7 6.573 Selecting previously unselected package libpython3.9-stdlib:arm64.
+2026-09-30T11:17:49.3638789Z #7 6.575 Preparing to unpack .../7-libpython3.9-stdlib_3.9.2-1+deb11u7_arm64.deb ...
+2026-09-30T11:17:49.3639227Z #7 6.576 Unpacking libpython3.9-stdlib:arm64 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:49.5338300Z #7 6.753 Selecting previously unselected package python3.9.
+2026-09-30T11:17:49.6641127Z #7 6.754 Preparing to unpack .../8-python3.9_3.9.2-1+deb11u7_arm64.deb ...
+2026-09-30T11:17:49.6642327Z #7 6.755 Unpacking python3.9 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:49.6642742Z #7 6.774 Selecting previously unselected package libpython3-stdlib:arm64.
+2026-09-30T11:17:49.6643187Z #7 6.775 Preparing to unpack .../9-libpython3-stdlib_3.9.2-3_arm64.deb ...
+2026-09-30T11:17:49.6643576Z #7 6.776 Unpacking libpython3-stdlib:arm64 (3.9.2-3) ...
+2026-09-30T11:17:49.6643889Z #7 6.791 Setting up python3-minimal (3.9.2-3) ...
+2026-09-30T11:17:49.8937206Z #7 6.904 Selecting previously unselected package python3.
+2026-09-30T11:17:49.8937589Z #7 6.904 (Reading database ... 
+2026-09-30T11:17:49.8938329Z (Reading database ... 5%
+2026-09-30T11:17:49.8938540Z (Reading database ... 10%
+2026-09-30T11:17:49.8938754Z (Reading database ... 15%
+2026-09-30T11:17:49.8938960Z (Reading database ... 20%
+2026-09-30T11:17:49.8939165Z (Reading database ... 25%
+2026-09-30T11:17:49.8939369Z (Reading database ... 30%
+2026-09-30T11:17:49.8939578Z (Reading database ... 35%
+2026-09-30T11:17:49.8939783Z (Reading database ... 40%
+2026-09-30T11:17:49.8939986Z (Reading database ... 45%
+2026-09-30T11:17:49.8940189Z (Reading database ... 50%
+2026-09-30T11:17:49.8940395Z (Reading database ... 55%
+2026-09-30T11:17:49.8940602Z (Reading database ... 60%
+2026-09-30T11:17:49.8940804Z (Reading database ... 65%
+2026-09-30T11:17:49.8941005Z (Reading database ... 70%
+2026-09-30T11:17:49.8941207Z (Reading database ... 75%
+2026-09-30T11:17:49.8941417Z (Reading database ... 80%
+2026-09-30T11:17:49.8941908Z (Reading database ... 85%
+2026-09-30T11:17:49.8942146Z (Reading database ... 90%
+2026-09-30T11:17:49.8942363Z (Reading database ... 95%
+2026-09-30T11:17:49.8942570Z (Reading database ... 100%
+2026-09-30T11:17:49.8942872Z (Reading database ... 7719 files and directories currently installed.)
+2026-09-30T11:17:49.8943270Z #7 6.908 Preparing to unpack .../python3_3.9.2-3_arm64.deb ...
+2026-09-30T11:17:49.8943578Z #7 6.914 Unpacking python3 (3.9.2-3) ...
+2026-09-30T11:17:49.8943860Z #7 6.928 Setting up media-types (4.0.0) ...
+2026-09-30T11:17:49.8944561Z #7 6.931 Setting up libsqlite3-0:arm64 (3.34.1-3+deb11u1) ...
+2026-09-30T11:17:49.8944939Z #7 6.933 Setting up libncursesw6:arm64 (6.2+20201114-2+deb11u2) ...
+2026-09-30T11:17:49.8945280Z #7 6.936 Setting up libmpdec3:arm64 (2.5.1-1) ...
+2026-09-30T11:17:49.8945572Z #7 6.938 Setting up readline-common (8.1-1) ...
+2026-09-30T11:17:49.8945862Z #7 6.942 Setting up libreadline8:arm64 (8.1-1) ...
+2026-09-30T11:17:49.8946204Z #7 6.943 Setting up libpython3.9-stdlib:arm64 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:49.8946563Z #7 6.946 Setting up libpython3-stdlib:arm64 (3.9.2-3) ...
+2026-09-30T11:17:49.8946886Z #7 6.948 Setting up python3.9 (3.9.2-1+deb11u7) ...
+2026-09-30T11:17:49.9898559Z #7 ...
+2026-09-30T11:17:49.9898745Z 
+2026-09-30T11:17:49.9899115Z #6 [dotnet 1/1] FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:78235e09001f52b6592c458ac010775ebac6725422e80cd0c1650590f67b2743
+2026-09-30T11:17:49.9899980Z #6 extracting sha256:fd8148c93d3b7d456e6da58d6fa64925f33ff72f3b0a59ed74e9cf56753638eb 2.5s done
+2026-09-30T11:17:49.9901211Z #6 extracting sha256:c6f5b039e9073edc049a2da8cddf98369caba827c6231a4dca2ca3d5ddd28d04 0.1s done
+2026-09-30T11:17:49.9901988Z #6 extracting sha256:0b88d34117a2f1f978ab315592e7a0383f081db6fe5e11dc63eaa68db2d1b1e8 done
+2026-09-30T11:17:49.9902765Z #6 extracting sha256:b13a9a7ac21dc43cef89fd67c0afaa59e61073f8313725126ffaaa4e1a458751 0.3s done
+2026-09-30T11:17:49.9903896Z #6 DONE 13.2s
+2026-09-30T11:17:50.1402885Z 
+2026-09-30T11:17:50.1405028Z #7 [stage-1 2/3] RUN printf '%s\n'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye main'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260801T000000Z bullseye-security main'       'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20260801T000000Z bullseye-updates main'       > /etc/apt/sources.list     && apt-get update && apt-get install -y --no-install-recommends python3     && rm -rf /var/lib/apt/lists/*
+2026-09-30T11:17:50.2125169Z #7 7.431 Setting up python3 (3.9.2-3) ...
+2026-09-30T11:17:50.3370938Z #7 7.437 running python rtupdate hooks for python3.9...
+2026-09-30T11:17:50.3371743Z #7 7.437 running python post-rtupdate hooks for python3.9...
+2026-09-30T11:17:50.3372449Z #7 7.498 Processing triggers for libc-bin (2.31-13+deb11u11) ...
+2026-09-30T11:17:50.3372898Z #7 DONE 7.6s
+2026-09-30T11:17:50.6478167Z 
+2026-09-30T11:17:50.6478886Z #8 [stage-1 3/3] COPY --from=dotnet /usr/share/dotnet /usr/share/dotnet
+2026-09-30T11:17:53.3010275Z #8 DONE 2.7s
+2026-09-30T11:17:53.4524822Z 
+2026-09-30T11:17:53.4525439Z #9 exporting to image
+2026-09-30T11:17:53.4526304Z #9 exporting layers
+2026-09-30T11:17:54.8530540Z #9 exporting layers 1.6s done
+2026-09-30T11:17:54.8674613Z #9 writing image sha256:eae745b40821b66fe56b389bd346b917c0a8ad4db0a9d1fbda59d2b65e5217f6 done
+2026-09-30T11:17:54.8675212Z #9 naming to docker.io/library/litedb-admission-glibc231 done
+2026-09-30T11:17:54.8675516Z #9 DONE 1.6s
+2026-09-30T11:17:55.2209561Z .NET SDK:
+2026-09-30T11:17:55.2209805Z  Version:           8.0.425
+2026-09-30T11:17:55.2210028Z  Commit:            4a98f641c7
+2026-09-30T11:17:55.2737312Z  Workload version:  8.0.400-manifests.ac071bc2
+2026-09-30T11:17:55.2746199Z  MSBuild version:   17.11.48+02bf66295
+2026-09-30T11:17:55.2746414Z 
+2026-09-30T11:17:55.2746494Z Runtime Environment:
+2026-09-30T11:17:55.2753708Z  OS Name:     debian
+2026-09-30T11:17:55.2753937Z  OS Version:  11
+2026-09-30T11:17:55.2773770Z  OS Platform: Linux
+2026-09-30T11:17:55.2837570Z  RID:         linux-arm64
+2026-09-30T11:17:55.2837870Z  Base Path:   /usr/share/dotnet/sdk/8.0.425/
+2026-09-30T11:17:55.2838084Z 
+2026-09-30T11:17:55.2838170Z .NET workloads installed:
+2026-09-30T11:17:55.2864873Z Configured to use loose manifests when installing new manifests.
+2026-09-30T11:17:55.2865256Z There are no installed workloads to display.
+2026-09-30T11:17:55.2879808Z 
+2026-09-30T11:17:55.2880243Z Host:
+2026-09-30T11:17:55.2880462Z   Version:      8.0.31
+2026-09-30T11:17:55.2880669Z   Architecture: arm64
+2026-09-30T11:17:55.2880860Z   Commit:       1219a42122
+2026-09-30T11:17:55.2880994Z 
+2026-09-30T11:17:55.2881063Z .NET SDKs installed:
+2026-09-30T11:17:55.2881260Z   8.0.425 [/usr/share/dotnet/sdk]
+2026-09-30T11:17:55.2881409Z 
+2026-09-30T11:17:55.2881488Z .NET runtimes installed:
+2026-09-30T11:17:55.2881841Z   Microsoft.AspNetCore.App 8.0.31 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
+2026-09-30T11:17:55.2882376Z   Microsoft.NETCore.App 8.0.31 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+2026-09-30T11:17:55.2882674Z 
+2026-09-30T11:17:55.2882757Z Other architectures found:
+2026-09-30T11:17:55.2882964Z   None
+2026-09-30T11:17:55.2883050Z 
+2026-09-30T11:17:55.2883128Z Environment variables:
+2026-09-30T11:17:55.2883333Z   DOTNET_ROOT       [/usr/share/dotnet]
+2026-09-30T11:17:55.2883496Z 
+2026-09-30T11:17:55.2883578Z global.json file:
+2026-09-30T11:17:55.2883747Z   Not found
+2026-09-30T11:17:55.2883838Z 
+2026-09-30T11:17:55.2883906Z Learn more:
+2026-09-30T11:17:55.2884300Z   https://aka.ms/dotnet/info
+2026-09-30T11:17:55.2884459Z 
+2026-09-30T11:17:55.2884527Z Download .NET:
+2026-09-30T11:17:55.2884716Z   https://aka.ms/dotnet/download
+2026-09-30T11:17:55.7735618Z An issue was encountered verifying workloads. For more information, run "dotnet workload update".
+2026-09-30T11:17:55.8337327Z VSTest version 17.11.1 (arm64)
+2026-09-30T11:17:55.8386334Z 
+2026-09-30T11:17:57.5016641Z Running native selection partition: handles
+2026-09-30T11:17:57.7575810Z An issue was encountered verifying workloads. For more information, run "dotnet workload update".
+2026-09-30T11:17:57.8128596Z VSTest version 17.11.1 (arm64)
+2026-09-30T11:17:57.8174966Z 
+2026-09-30T11:17:57.9021917Z Starting test execution, please wait...
+2026-09-30T11:17:57.9309599Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:18:41.1494020Z Results File: /results/NativeAdmission-glibc231-arm64-handles.trx
+2026-09-30T11:18:41.1497676Z 
+2026-09-30T11:18:41.1542932Z Passed!  - Failed:     0, Passed:   237, Skipped:     0, Total:   237, Duration: 40 s - LiteDB.Tests.dll (net8.0)
+2026-09-30T11:18:41.2417414Z Running native selection partition: admission
+2026-09-30T11:18:41.5590404Z An issue was encountered verifying workloads. For more information, run "dotnet workload update".
+2026-09-30T11:18:41.6172602Z VSTest version 17.11.1 (arm64)
+2026-09-30T11:18:41.6221550Z 
+2026-09-30T11:18:41.7081199Z Starting test execution, please wait...
+2026-09-30T11:18:41.7364803Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:19:39.5436741Z Results File: /results/NativeAdmission-glibc231-arm64-admission.trx
+2026-09-30T11:19:39.5438969Z 
+2026-09-30T11:19:39.5484205Z Passed!  - Failed:     0, Passed:   202, Skipped:     0, Total:   202, Duration: 56 s - LiteDB.Tests.dll (net8.0)
+2026-09-30T11:19:39.6321764Z Running native selection partition: remaining
+2026-09-30T11:19:40.0136570Z An issue was encountered verifying workloads. For more information, run "dotnet workload update".
+2026-09-30T11:19:40.0705884Z VSTest version 17.11.1 (arm64)
+2026-09-30T11:19:40.0753871Z 
+2026-09-30T11:19:40.1601130Z Starting test execution, please wait...
+2026-09-30T11:19:40.1903083Z A total of 1 test files matched the specified pattern.
+2026-09-30T11:19:51.3927034Z [xUnit.net 00:00:10.85]     LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection [FAIL]
+2026-09-30T11:19:51.4187715Z   Failed LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection [48 ms]
+2026-09-30T11:19:51.4191283Z   Error Message:
+2026-09-30T11:19:51.4192042Z    Expected a <System.IO.IOException> to be thrown, but found <System.InvalidOperationException>:
+2026-09-30T11:19:51.4193228Z System.InvalidOperationException: Cannot close a shared connection from inside its executing operation.
+2026-09-30T11:19:51.4194294Z    at LiteDB.SharedEngine.Dispose(Boolean disposing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Disposal.cs:line 20
+2026-09-30T11:19:51.4195136Z    at LiteDB.SharedEngine.Dispose() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 440
+2026-09-30T11:19:51.4196307Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.<>c__DisplayClass1_0.<Open_retains_admission_when_a_callback_disposes_the_connection>b__1() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedAdmissionLifetime_Tests.cs:line 78
+2026-09-30T11:19:51.4197737Z    at LiteDB.SharedEngine.CreateEngine(Boolean recoveredAbandonedOwner, EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 158
+2026-09-30T11:19:51.4198980Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 41
+2026-09-30T11:19:51.4200325Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 134
+2026-09-30T11:19:51.4201508Z    at LiteDB.SharedEngine.<>c__DisplayClass7_0`1.<QueryDatabase>b__0() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 44
+2026-09-30T11:19:51.4202406Z    at LiteDB.SharedEngine.Call[T](Func`1 call) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 61
+2026-09-30T11:19:51.4203274Z    at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 42
+2026-09-30T11:19:51.4204206Z    at LiteDB.SharedEngine.Pragma(String name) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 345
+2026-09-30T11:19:51.4205406Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.<>c__DisplayClass1_0.<Open_retains_admission_when_a_callback_disposes_the_connection>b__2() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedAdmissionLifetime_Tests.cs:line 82
+2026-09-30T11:19:51.4206447Z    at FluentAssertions.Specialized.ActionAssertions.InvokeSubject()
+2026-09-30T11:19:51.4206980Z    at FluentAssertions.Specialized.DelegateAssertions`2.InvokeSubjectWithInterception().
+2026-09-30T11:19:51.4207398Z   Stack Trace:
+2026-09-30T11:19:51.4207701Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-09-30T11:19:51.4208213Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-09-30T11:19:51.4208780Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-09-30T11:19:51.4209356Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-09-30T11:19:51.4210801Z    at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)
+2026-09-30T11:19:51.4211703Z    at FluentAssertions.Specialized.DelegateAssertions`2.Throw[TException](String because, Object[] becauseArgs)
+2026-09-30T11:19:51.4212791Z    at LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Open_retains_admission_when_a_callback_disposes_the_connection() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedAdmissionLifetime_Tests.cs:line 83
+2026-09-30T11:19:51.4213880Z    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+2026-09-30T11:19:51.4214822Z    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+2026-09-30T11:19:59.5112237Z [xUnit.net 00:00:18.96]     LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [SKIP]
+2026-09-30T11:19:59.6989132Z   Skipped LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [1 ms]
+2026-09-30T11:20:02.4121468Z Results File: /results/NativeAdmission-glibc231-arm64-remaining.trx
+2026-09-30T11:20:02.4125189Z 
+2026-09-30T11:20:02.4169535Z Failed!  - Failed:     1, Passed:   217, Skipped:     1, Total:   219, Duration: 20 s - LiteDB.Tests.dll (net8.0)
+2026-09-30T11:20:02.5038796Z ##[error]Process completed with exit code 1.
+2026-09-30T11:20:02.5122814Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T11:20:02.5123153Z with:
+2026-09-30T11:20:02.5123357Z   name: test-results-test-native-glibc231-1
+2026-09-30T11:20:02.5124818Z   path: LiteDB.Tests/TestResults/NativeAdmission-glibc231-*.trx
+LiteDB.Tests/TestResults/NativeAdmission-bind-*
+LiteDB.Tests/TestResults/evidence-leg.json
+LiteDB.Tests/TestResults/discovered-tests.txt
+LiteDB.Tests/TestResults/native-partitions.json
+
+2026-09-30T11:20:02.5125837Z   if-no-files-found: warn
+2026-09-30T11:20:02.5126045Z   compression-level: 6
+2026-09-30T11:20:02.5126256Z   overwrite: false
+2026-09-30T11:20:02.5126446Z   include-hidden-files: false
+2026-09-30T11:20:02.5126661Z env:
+2026-09-30T11:20:02.5127026Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:20:02.5127464Z ##[endgroup]
+2026-09-30T11:20:02.6574596Z (node:9041) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:20:02.6575290Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:20:02.6630868Z With the provided path, there will be 6 files uploaded
+2026-09-30T11:20:02.6638154Z Artifact name is valid!
+2026-09-30T11:20:02.6638573Z Root directory input is valid!
+2026-09-30T11:20:02.9619300Z Beginning upload of artifact content to blob storage
+2026-09-30T11:20:02.9983134Z (node:9041) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-30T11:20:03.3173866Z Uploaded bytes 161517
+2026-09-30T11:20:03.3729887Z Finished uploading artifact content to blob storage!
+2026-09-30T11:20:03.3730477Z SHA256 digest of uploaded artifact zip is 8fcb949b65ade442aa8095eeca97fbdf69024d13dd4d46f77b189db90039b20a
+2026-09-30T11:20:03.3731278Z Finalizing artifact upload
+2026-09-30T11:20:03.6997207Z Artifact test-results-test-native-glibc231-1.zip successfully finalized. Artifact ID 11091749870
+2026-09-30T11:20:03.6998013Z Artifact test-results-test-native-glibc231-1 has been successfully uploaded! Final size is 161517 bytes. Artifact ID is 11091749870
+2026-09-30T11:20:03.7003176Z Artifact download URL: https://github.com/JKamsker/LiteDB/actions/runs/36705044676/artifacts/11091749870
+2026-09-30T11:20:03.7149762Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T11:20:03.7150058Z with:
+2026-09-30T11:20:03.7150279Z   name: retained-fixtures-glibc-ubuntu-24.04-arm
+2026-09-30T11:20:03.7150862Z   path: LiteDB.Tests/TestResults/retained-fixtures/
+2026-09-30T11:20:03.7151156Z   if-no-files-found: ignore
+2026-09-30T11:20:03.7151370Z   compression-level: 6
+2026-09-30T11:20:03.7151564Z   overwrite: false
+2026-09-30T11:20:03.7151763Z   include-hidden-files: false
+2026-09-30T11:20:03.7151973Z env:
+2026-09-30T11:20:03.7152346Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-09-30T11:20:03.7152792Z ##[endgroup]
+2026-09-30T11:20:03.8620638Z (node:9053) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T11:20:03.8621320Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T11:20:03.8638400Z No files were found with the provided path: LiteDB.Tests/TestResults/retained-fixtures/. No artifacts will be uploaded.
+2026-09-30T11:20:03.8821035Z Post job cleanup.
+2026-09-30T11:20:03.9555834Z [command]/usr/bin/git version
+2026-09-30T11:20:03.9593447Z git version 2.55.0
+2026-09-30T11:20:03.9633861Z Temporarily overriding HOME='__CI_HOME__/work/_temp/98f257b4-084e-4a33-86d0-5b85ea1e6bdc' before making global git config changes
+2026-09-30T11:20:03.9642966Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T11:20:03.9643823Z [command]/usr/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T11:20:03.9675368Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T11:20:03.9710050Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-30T11:20:03.9926322Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T11:20:03.9955666Z http.https://github.com/.extraheader
+2026-09-30T11:20:03.9960577Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-30T11:20:03.9997303Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-30T11:20:04.0206940Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T11:20:04.0243041Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-30T11:20:04.0595872Z Cleaning up orphan processes
+2026-09-30T11:20:04.0967236Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

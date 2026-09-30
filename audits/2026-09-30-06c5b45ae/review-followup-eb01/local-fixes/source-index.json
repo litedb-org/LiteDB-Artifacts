@@ -1,0 +1,81 @@
+{
+  "capturedUtc": "2026-09-30T10:31:49.283413+00:00",
+  "status": "separate local candidates; no final integrated source or qualification",
+  "groups": {
+    "raw-close": {
+      "finalSource": "e584847ed80b3f030a21ccafcb07733c240f9cfc",
+      "beforeSource": "eb01f346e",
+      "baseControl": "49c327cf1",
+      "finalScope": "25 passed and 1 existing culture skip on each runtime; before callback guard fails each runtime; strict black-box before/after and base outputs retained"
+    },
+    "callback-self-wait": {
+      "firstFixSource": "d2edc140692d677c9482e4bdc2843211099a03ff",
+      "correctedSource": "4248035ba",
+      "independentReviewCheckout": "5bc6e778b47e3b381d27ca91e3266e7544549313",
+      "before": "eb014fail6controls; d2 realhandoff4fail",
+      "final": "63pass/runtime implementation;51pass/runtime independent, overlapping; plain/encrypted callback, handoff and genuinefailure controls",
+      "unconfirmedClaim": "Commit pre-persist leak was not established; existing precondition/retry controls pass before and after; production Commit semantics unchanged",
+      "independentReviewFullTreeMatches424": true
+    },
+    "shared-close": {
+      "finalSource": "d1f4bd414",
+      "independentSource": "85ad2828f1e4f661b301a5404a102db3299bcc78",
+      "beforeSource": "eb01f346e",
+      "before": "4fail2pass controls",
+      "final": "28pass/runtime, plain/encrypted; independent22pass net10 overlaps",
+      "intermediateFailure": "String GTE plan expected INDEX SEEK but actual supported plan is INDEX SCAN; df7fcd309 added correct range-plan assertion and separate equality seek. No earlier failure dropped.",
+      "parentCheckpointContract": "Historical Shared parent final checkpoint remains documented best-effort; fault tests verify recovery rather than inventing propagation guarantee.",
+      "remaining": "Additional raw callback close audit and final integration gate remain outstanding"
+    },
+    "waits": {
+      "initialRun": {
+        "files": [
+          "review-waits-net8.trx"
+        ],
+        "result": "29passed1failed premature observer",
+        "checkoutHead": "eb01f346e",
+        "source": "uncommitted draft; exact draft hash not retained",
+        "provenanceLimit": "Incomplete source provenance; retained diagnostic failure, not exact candidate evidence"
+      },
+      "broadRun": {
+        "files": [
+          "review-waits-net8-final.trx",
+          "review-waits-net10-final.trx"
+        ],
+        "result": "34passed each",
+        "checkoutHead": "eb01f346e",
+        "sourceContentLaterCommittedAs": "47edadeff",
+        "qualification": "Same production/test blobs per parent attribution; binaries built while source uncommitted, not commit47 metadata"
+      },
+      "scopedRun": {
+        "files": [
+          "review-waits-scoped-net8.trx",
+          "review-waits-scoped-net10.trx"
+        ],
+        "result": "9passed each",
+        "checkoutHead": "9e2e377b3",
+        "sourceContentLaterCommittedAs": "e22281057",
+        "qualification": "Uncommitted patch tree matched later e222 per parent attribution; final integrated source will rerun"
+      }
+    },
+    "read-policy": {
+      "testSource": "eb01f346e product plus new test file subsequently committed unchanged as f6f1ad574",
+      "integratedTestCommit": "cb36c346e per parent attribution",
+      "testCases": "16 each runtime:4new read-policy tests plus existing child lifetime/settings lifetime; overlapping broader suites",
+      "baseline": {
+        "source": "c8c0cfab623a22880b1d71eb966b09e89f9153b9",
+        "TestingEnabled": false,
+        "sha256": "dc319b9c8f7774ede2898ae315c7b339a880ddaa282e362491e9cd18834373da"
+      },
+      "candidate": {
+        "source": "eb01f346e",
+        "TestingEnabled": true,
+        "sha256": "f3127aebe2c6965f77c6e01ddad7b7edbb883507f7ba782e44e031ddcf999ab8"
+      },
+      "finding": "Bounded allegation refuted: both ordinary and handle reads retain constructor-snapshotted delegate; changing mutable target of retained delegate remains observed. Caller settings delegate replacement does not update either API.",
+      "limits": "Probe compares differently instrumented libraries and establishes behavior only; not performance evidence. No final integrated qualification inferred."
+    }
+  },
+  "overlap": "Do not sum any scopes or repeat runs; runtime and test-method cases are listed in trx-index.json.",
+  "hostedAppend": "eb01 proof13jobs success; shared-slot8jobs success2configuredoptional skips; original12leg full-CI cutoff remains unchanged."
+}

@@ -1,0 +1,13 @@
+{
+  "repro": "Issue_133_RawCloseCallbackDependency",
+  "knownBad": {
+    "kind": "pr-commit",
+    "commit": "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee",
+    "reason": "Introduced in fork PR133 maintenance drain before upstream integration; no published package contains this behavior.",
+    "pr": 133
+  },
+  "permanentGuard": [
+    "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Raw_close_rejects_fresh_callback_dependency_before_draining_callback",
+    "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Close_wakes_fresh_work_already_waiting_behind_rebuild"
+  ]
+}

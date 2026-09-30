@@ -1,0 +1,345 @@
+﻿2026-09-30T10:48:40.2810706Z Current runner version: '2.337.0'
+2026-09-30T10:48:40.2837108Z ##[group]Runner Image Provisioner
+2026-09-30T10:48:40.2837888Z Hosted Compute Agent
+2026-09-30T10:48:40.2838402Z Version: 20260828.587
+2026-09-30T10:48:40.2838912Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-30T10:48:40.2839566Z Build Date: 2026-08-28T16:44:25Z
+2026-09-30T10:48:40.2840134Z Worker ID: {d54f7b7d-31b2-48d6-acde-c0434347e4f4}
+2026-09-30T10:48:40.2840799Z Azure Region: westus3
+2026-09-30T10:48:40.2841290Z ##[endgroup]
+2026-09-30T10:48:40.2842593Z ##[group]Operating System
+2026-09-30T10:48:40.2843204Z Microsoft Windows Server 2022
+2026-09-30T10:48:40.2843702Z 10.0.20348
+2026-09-30T10:48:40.2844118Z Datacenter
+2026-09-30T10:48:40.2844570Z ##[endgroup]
+2026-09-30T10:48:40.2845004Z ##[group]Runner Image
+2026-09-30T10:48:40.2845489Z Image: windows-2022
+2026-09-30T10:48:40.2845940Z Version: 20260920.314.1
+2026-09-30T10:48:40.2847276Z Included Software: https://github.com/actions/runner-images/blob/win22/20260920.314/images/windows/Windows2022-Readme.md
+2026-09-30T10:48:40.2848668Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20260920.314
+2026-09-30T10:48:40.2849455Z ##[endgroup]
+2026-09-30T10:48:40.2852302Z ##[group]GITHUB_TOKEN Permissions
+2026-09-30T10:48:40.2854397Z Actions: write
+2026-09-30T10:48:40.2854886Z ArtifactMetadata: write
+2026-09-30T10:48:40.2855449Z Attestations: write
+2026-09-30T10:48:40.2855930Z Checks: write
+2026-09-30T10:48:40.2856366Z CodeQuality: write
+2026-09-30T10:48:40.2856862Z Contents: write
+2026-09-30T10:48:40.2857308Z CopilotRequests: write
+2026-09-30T10:48:40.2857778Z Deployments: write
+2026-09-30T10:48:40.2858241Z Discussions: write
+2026-09-30T10:48:40.2858679Z Drives: write
+2026-09-30T10:48:40.2859113Z Issues: write
+2026-09-30T10:48:40.2859537Z Metadata: read
+2026-09-30T10:48:40.2860019Z Models: read
+2026-09-30T10:48:40.2860458Z Packages: write
+2026-09-30T10:48:40.2860911Z Pages: write
+2026-09-30T10:48:40.2861380Z PullRequests: write
+2026-09-30T10:48:40.2861868Z RepositoryProjects: write
+2026-09-30T10:48:40.2862354Z SecurityEvents: write
+2026-09-30T10:48:40.2862842Z Statuses: write
+2026-09-30T10:48:40.2863284Z VulnerabilityAlerts: read
+2026-09-30T10:48:40.2863767Z ##[endgroup]
+2026-09-30T10:48:40.2865915Z Secret source: Actions
+2026-09-30T10:48:40.2866687Z Cache mode: write
+2026-09-30T10:48:40.2867330Z Prepare workflow directory
+2026-09-30T10:48:40.3191111Z Prepare all required actions
+2026-09-30T10:48:40.3243777Z Getting action download info
+2026-09-30T10:48:40.7146559Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-30T10:48:40.8328686Z Download action repository 'actions/setup-dotnet@v4' (SHA:67a3573c9a986a3f9c594539f4ab511d57bb3ce9)
+2026-09-30T10:48:41.5338949Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-30T10:48:42.1915373Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-09-30T10:48:42.5137606Z Uses: JKamsker/LiteDB/.github/workflows/reprorunner.yml@refs/pull/133/merge (67fd0a2bb892d86cfd7c06b2f3924a4ca31d81a6)
+2026-09-30T10:48:42.5142670Z ##[group] Inputs
+2026-09-30T10:48:42.5143499Z   filter: 
+2026-09-30T10:48:42.5144218Z   ref: 
+2026-09-30T10:48:42.5144905Z   tier: full
+2026-09-30T10:48:42.5145632Z ##[endgroup]
+2026-09-30T10:48:42.5146865Z Complete job name: repro-runner / Run Issue_3067_HandleCallbackSelfWait on windows-2022
+2026-09-30T10:48:42.6993970Z ##[group]Run actions/checkout@v4
+2026-09-30T10:48:42.6995585Z with:
+2026-09-30T10:48:42.6996369Z   ref: refs/pull/133/merge
+2026-09-30T10:48:42.6997308Z   repository: JKamsker/LiteDB
+2026-09-30T10:48:42.7004140Z   token: ***
+2026-09-30T10:48:42.7004924Z   ssh-strict: true
+2026-09-30T10:48:42.7005692Z   ssh-user: git
+2026-09-30T10:48:42.7006491Z   persist-credentials: true
+2026-09-30T10:48:42.7007373Z   clean: true
+2026-09-30T10:48:42.7008196Z   sparse-checkout-cone-mode: true
+2026-09-30T10:48:42.7010700Z   fetch-depth: 1
+2026-09-30T10:48:42.7011445Z   fetch-tags: false
+2026-09-30T10:48:42.7012272Z   show-progress: true
+2026-09-30T10:48:42.7013056Z   lfs: false
+2026-09-30T10:48:42.7013784Z   submodules: false
+2026-09-30T10:48:42.7014629Z   set-safe-directory: true
+2026-09-30T10:48:42.7015545Z   allow-unsafe-pr-checkout: false
+2026-09-30T10:48:42.7016892Z ##[endgroup]
+2026-09-30T10:48:42.8445367Z Syncing repository: JKamsker/LiteDB
+2026-09-30T10:48:42.8448027Z ##[group]Getting Git version info
+2026-09-30T10:48:42.8449103Z Working directory is '__CI_HOME__/work\LiteDB\LiteDB'
+2026-09-30T10:48:42.9427174Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-30T10:48:43.3108508Z git version 2.55.0.windows.5
+2026-09-30T10:48:43.3149164Z ##[endgroup]
+2026-09-30T10:48:43.3170062Z Temporarily overriding HOME='__CI_HOME__/work\_temp\965998e3-1c12-48ba-bbd3-e651c011a080' before making global git config changes
+2026-09-30T10:48:43.3174147Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T10:48:43.3184134Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T10:48:43.3753091Z Deleting the contents of '__CI_HOME__/work\LiteDB\LiteDB'
+2026-09-30T10:48:43.3759400Z ##[group]Initializing the repository
+2026-09-30T10:48:43.3772274Z [command]"C:\Program Files\Git\bin\git.exe" init __CI_WORKSPACE__
+2026-09-30T10:48:43.4526664Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-09-30T10:48:43.4570852Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/JKamsker/LiteDB
+2026-09-30T10:48:43.5113887Z ##[endgroup]
+2026-09-30T10:48:43.5115559Z ##[group]Disabling automatic garbage collection
+2026-09-30T10:48:43.5122314Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-09-30T10:48:43.5380278Z ##[endgroup]
+2026-09-30T10:48:43.5381615Z ##[group]Setting up auth
+2026-09-30T10:48:43.5383202Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T10:48:43.5628195Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-30T10:48:44.9159198Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T10:48:44.9404553Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-30T10:48:45.4142885Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T10:48:45.4389741Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-30T10:48:45.9301145Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-30T10:48:45.9549786Z ##[endgroup]
+2026-09-30T10:48:45.9550763Z ##[group]Fetching the repository
+2026-09-30T10:48:45.9562617Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/pull/133/merge:refs/remotes/pull/133/merge
+2026-09-30T10:48:48.0109007Z From https://github.com/JKamsker/LiteDB
+2026-09-30T10:48:48.0110254Z  * [new ref]         refs/pull/133/merge -> pull/133/merge
+2026-09-30T10:48:48.0152142Z ##[endgroup]
+2026-09-30T10:48:48.0152781Z ##[group]Determining the checkout info
+2026-09-30T10:48:48.0153967Z ##[endgroup]
+2026-09-30T10:48:48.0163029Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-09-30T10:48:48.0571840Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-09-30T10:48:48.0820487Z ##[group]Checking out the ref
+2026-09-30T10:48:48.0832556Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/133/merge
+2026-09-30T10:48:48.4741721Z Note: switching to 'refs/remotes/pull/133/merge'.
+2026-09-30T10:48:48.4742561Z 
+2026-09-30T10:48:48.4742878Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-30T10:48:48.4743773Z changes and commit them, and you can discard any commits you make in this
+2026-09-30T10:48:48.4744507Z state without impacting any branches by switching back to a branch.
+2026-09-30T10:48:48.4744802Z 
+2026-09-30T10:48:48.4745030Z If you want to create a new branch to retain commits you create, you may
+2026-09-30T10:48:48.4746527Z do so (now or later) by using -c with the switch command. Example:
+2026-09-30T10:48:48.4746828Z 
+2026-09-30T10:48:48.4746968Z   git switch -c <new-branch-name>
+2026-09-30T10:48:48.4747182Z 
+2026-09-30T10:48:48.4747313Z Or undo this operation with:
+2026-09-30T10:48:48.4747563Z 
+2026-09-30T10:48:48.4747718Z   git switch -
+2026-09-30T10:48:48.4747878Z 
+2026-09-30T10:48:48.4748124Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-30T10:48:48.4748427Z 
+2026-09-30T10:48:48.4748865Z HEAD is now at 67fd0a2 Merge 7e13e58e5f4e40642492ce768b49018e4a958c8b into 5dd942a7367c361fadd600be4ce10aace2768b27
+2026-09-30T10:48:48.4849072Z ##[endgroup]
+2026-09-30T10:48:48.5158735Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-09-30T10:48:48.5368045Z 67fd0a2bb892d86cfd7c06b2f3924a4ca31d81a6
+2026-09-30T10:48:48.5819490Z ##[group]Run actions/setup-dotnet@v4
+2026-09-30T10:48:48.5819905Z with:
+2026-09-30T10:48:48.5820217Z   dotnet-version: 8.0.x
+2026-09-30T10:48:48.5820529Z   cache: false
+2026-09-30T10:48:48.5820795Z ##[endgroup]
+2026-09-30T10:48:48.7514278Z (node:2852) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T10:48:48.7515064Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T10:48:48.8526237Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '__CI_HOME__/work\_actions\actions\setup-dotnet\v4\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Runtime dotnet -Channel LTS
+2026-09-30T10:48:50.0826606Z dotnet-install: .NET Core Runtime with version '10.0.12' is already installed.
+2026-09-30T10:48:50.2216630Z [command]"C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '__CI_HOME__/work\_actions\actions\setup-dotnet\v4\externals\install-dotnet.ps1' -SkipNonVersionedFiles -Channel 8.0
+2026-09-30T10:48:50.9752057Z dotnet-install: .NET Core SDK with version '8.0.425' is already installed.
+2026-09-30T10:48:51.0814225Z ##[group]Run actions/download-artifact@v4
+2026-09-30T10:48:51.0814592Z with:
+2026-09-30T10:48:51.0814788Z   name: reprorunner-cli
+2026-09-30T10:48:51.0815029Z   merge-multiple: false
+2026-09-30T10:48:51.0815246Z   repository: JKamsker/LiteDB
+2026-09-30T10:48:51.0815472Z   run-id: 36704366871
+2026-09-30T10:48:51.0815682Z env:
+2026-09-30T10:48:51.0815867Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T10:48:51.0816111Z ##[endgroup]
+2026-09-30T10:48:51.2592250Z Downloading single artifact
+2026-09-30T10:48:51.2789510Z (node:6484) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T10:48:51.2790564Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T10:48:51.4947243Z Preparing to download the following artifacts:
+2026-09-30T10:48:51.4948176Z - reprorunner-cli (ID: 11090724160, Size: 609762, Expected Digest: sha256:5e6b5ef8c6889ee503553b100e2f74e011f782ed82ae827d8fef114846153ad8)
+2026-09-30T10:48:51.7038351Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/10822c21-6f1b-801d-bbf9-b6a7950314c3/workflow-job-run-7d283849-09d3-5db8-8f6f-3eb136f94f44/artifacts/39c7c4ce616b9b23fee9439e3a83ee9dbc6ff20c3990796b2e7f27cad974c831.zip
+2026-09-30T10:48:51.7040617Z Starting download of artifact to: __CI_WORKSPACE__
+2026-09-30T10:48:51.9604394Z (node:6484) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-30T10:48:52.1640237Z SHA256 digest of downloaded artifact is 5e6b5ef8c6889ee503553b100e2f74e011f782ed82ae827d8fef114846153ad8
+2026-09-30T10:48:52.1641330Z Artifact download completed successfully.
+2026-09-30T10:48:52.1641657Z Total of 1 artifact(s) downloaded
+2026-09-30T10:48:52.1648804Z Download artifact has finished successfully
+2026-09-30T10:48:52.1984190Z ##[group]Run mkdir -p reprorunner-cli
+2026-09-30T10:48:52.1984664Z [36;1mmkdir -p reprorunner-cli[0m
+2026-09-30T10:48:52.1985011Z [36;1mtar -xzf reprorunner-cli.tar.gz -C reprorunner-cli[0m
+2026-09-30T10:48:52.2000110Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-30T10:48:52.2000480Z env:
+2026-09-30T10:48:52.2000679Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T10:48:52.2000934Z ##[endgroup]
+2026-09-30T10:48:52.5220486Z ##[group]Run set -euo pipefail
+2026-09-30T10:48:52.5220877Z [36;1mset -euo pipefail[0m
+2026-09-30T10:48:52.5221217Z [36;1mdotnet reprorunner-cli/LiteDB.ReproRunner.Cli.dll \[0m
+2026-09-30T10:48:52.5221696Z [36;1m  run Issue_3067_HandleCallbackSelfWait --ci --target-os "windows-2022"[0m
+2026-09-30T10:48:52.5233197Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-30T10:48:52.5233575Z env:
+2026-09-30T10:48:52.5233782Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T10:48:52.5234027Z ##[endgroup]
+2026-09-30T10:48:55.2215591Z Discovered repro: Issue_3067_HandleCallbackSelfWait
+2026-09-30T10:48:55.2220365Z BUILD: Starting build for 2 variants across 1 repros
+2026-09-30T10:49:25.1678726Z BUILD: Build completed. Processing 2 results
+2026-09-30T10:49:25.1687224Z BUILD: Package build failed for Issue_3067_HandleCallbackSelfWait 
+2026-09-30T10:49:25.1687919Z (0.0.0-knownbad.eb01f346eb7d)
+2026-09-30T10:49:26.1737809Z FAIL: Issue_3067_HandleCallbackSelfWait package - Variant did not execute.
+2026-09-30T10:49:26.1776163Z Completed execution for Issue_3067_HandleCallbackSelfWait
+2026-09-30T10:49:26.1784089Z 
+2026-09-30T10:49:26.2297424Z ╭─────────────────┬────────────────┬────────────────┬────────────────┬─────────╮
+2026-09-30T10:49:26.2298699Z │ Repro           │ Repro Version  │ Package check  │ Source check   │ Overall │
+2026-09-30T10:49:26.2299808Z ├─────────────────┼────────────────┼────────────────┼────────────────┼─────────┤
+2026-09-30T10:49:26.2301368Z │ Issue_3067_Hand │ 0.0.0-knownbad │ [38;5;11m⚠️[0m no-run [2m(exp [0m │ [38;5;2m✅[0m exit 10     │ [38;5;9m❌[0m [38;5;9mred[0m  │
+2026-09-30T10:49:26.2302898Z │ leCallbackSelfW │ .eb01f346eb7d  │ [2mrepro)[0m         │ [2m(exp no-repro)[0m │         │
+2026-09-30T10:49:26.2304068Z │ ait             │                │                │                │         │
+2026-09-30T10:49:26.2305090Z ╰─────────────────┴────────────────┴────────────────┴────────────────┴─────────╯
+2026-09-30T10:49:26.2305781Z 
+2026-09-30T10:49:26.2307309Z [38;5;9mBuild failed for Issue_3067_HandleCallbackSelfWait [0m
+2026-09-30T10:49:26.2323070Z [38;5;9m(0.0.0-knownbad.eb01f346eb7d).[0m
+2026-09-30T10:49:26.2323850Z   Determining projects to restore...
+2026-09-30T10:49:26.2324554Z   Restored 
+2026-09-30T10:49:26.2325252Z __CI_WORKSPACE__\LiteDB.ReproRunner\LiteDB.ReproRunner.Shared\LiteDB.ReproRunn
+2026-09-30T10:49:26.2326178Z er.Shared.csproj (in 122 ms).
+2026-09-30T10:49:26.2341505Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2342631Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1603: 
+2026-09-30T10:49:26.2343484Z Issue_3067_HandleCallbackSelfWait depends on LiteDB (>= 
+2026-09-30T10:49:26.2344869Z 0.0.0-knownbad.eb01f346eb7d) but LiteDB 0.0.0-knownbad.eb01f346eb7d was not 
+2026-09-30T10:49:26.2345675Z found. LiteDB 0.5.0 was resolved instead.
+2026-09-30T10:49:26.2346612Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2347714Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1904: Package 'LiteDB' 0.5.0
+2026-09-30T10:49:26.2348675Z has a known critical severity vulnerability, 
+2026-09-30T10:49:26.2349402Z https://github.com/advisories/GHSA-3x49-g6rc-c284
+2026-09-30T10:49:26.2350331Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2351425Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1701: Package 'LiteDB 0.5.0'
+2026-09-30T10:49:26.2352542Z was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, 
+2026-09-30T10:49:26.2353510Z .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, 
+2026-09-30T10:49:26.2354361Z .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, 
+2026-09-30T10:49:26.2355369Z .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. 
+2026-09-30T10:49:26.2356358Z This package may not be fully compatible with your project.
+2026-09-30T10:49:26.2362022Z   Restored 
+2026-09-30T10:49:26.2362910Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2363659Z ssue_3067_HandleCallbackSelfWait.csproj (in 861 ms).
+2026-09-30T10:49:26.2364405Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2365200Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1603: 
+2026-09-30T10:49:26.2365892Z Issue_3067_HandleCallbackSelfWait depends on LiteDB (>= 
+2026-09-30T10:49:26.2366657Z 0.0.0-knownbad.eb01f346eb7d) but LiteDB 0.0.0-knownbad.eb01f346eb7d was not 
+2026-09-30T10:49:26.2367354Z found. LiteDB 0.5.0 was resolved instead.
+2026-09-30T10:49:26.2368073Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2369066Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1904: Package 'LiteDB' 0.5.0
+2026-09-30T10:49:26.2369811Z has a known critical severity vulnerability, 
+2026-09-30T10:49:26.2370362Z https://github.com/advisories/GHSA-3x49-g6rc-c284
+2026-09-30T10:49:26.2371099Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2371985Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1701: Package 'LiteDB 0.5.0'
+2026-09-30T10:49:26.2372894Z was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, 
+2026-09-30T10:49:26.2373669Z .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, 
+2026-09-30T10:49:26.2374347Z .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, 
+2026-09-30T10:49:26.2375100Z .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. 
+2026-09-30T10:49:26.2375899Z This package may not be fully compatible with your project.
+2026-09-30T10:49:26.2376492Z   LiteDB.ReproRunner.Shared -> 
+2026-09-30T10:49:26.2377168Z __CI_WORKSPACE__\reprorunner-cli\runs\Issue_3067_HandleCallbackSelfWait\ver_0_
+2026-09-30T10:49:26.2378005Z 0_0_knownbad_eb01f346eb7d\build\LiteDB.ReproRunner.Shared.dll
+2026-09-30T10:49:26.2378848Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\P
+2026-09-30T10:49:26.2379966Z rogram.cs(72,6): error CS0616: 'BsonIgnoreAttribute' is not an attribute class 
+2026-09-30T10:49:26.2380872Z [__CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\
+2026-09-30T10:49:26.2381544Z Issue_3067_HandleCallbackSelfWait.csproj]
+2026-09-30T10:49:26.2381870Z 
+2026-09-30T10:49:26.2382013Z Build FAILED.
+2026-09-30T10:49:26.2382188Z 
+2026-09-30T10:49:26.2382597Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2383393Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1603: 
+2026-09-30T10:49:26.2384082Z Issue_3067_HandleCallbackSelfWait depends on LiteDB (>= 
+2026-09-30T10:49:26.2386375Z 0.0.0-knownbad.eb01f346eb7d) but LiteDB 0.0.0-knownbad.eb01f346eb7d was not 
+2026-09-30T10:49:26.2387054Z found. LiteDB 0.5.0 was resolved instead.
+2026-09-30T10:49:26.2387840Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2388802Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1904: Package 'LiteDB' 0.5.0
+2026-09-30T10:49:26.2389654Z has a known critical severity vulnerability, 
+2026-09-30T10:49:26.2390298Z https://github.com/advisories/GHSA-3x49-g6rc-c284
+2026-09-30T10:49:26.2391603Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2392625Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1701: Package 'LiteDB 0.5.0'
+2026-09-30T10:49:26.2396447Z was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, 
+2026-09-30T10:49:26.2397684Z .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, 
+2026-09-30T10:49:26.2398614Z .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, 
+2026-09-30T10:49:26.2399597Z .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. 
+2026-09-30T10:49:26.2401628Z This package may not be fully compatible with your project.
+2026-09-30T10:49:26.2402741Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2403764Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1603: 
+2026-09-30T10:49:26.2404610Z Issue_3067_HandleCallbackSelfWait depends on LiteDB (>= 
+2026-09-30T10:49:26.2405600Z 0.0.0-knownbad.eb01f346eb7d) but LiteDB 0.0.0-knownbad.eb01f346eb7d was not 
+2026-09-30T10:49:26.2406477Z found. LiteDB 0.5.0 was resolved instead.
+2026-09-30T10:49:26.2407312Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2411658Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1904: Package 'LiteDB' 0.5.0
+2026-09-30T10:49:26.2412669Z has a known critical severity vulnerability, 
+2026-09-30T10:49:26.2413443Z https://github.com/advisories/GHSA-3x49-g6rc-c284
+2026-09-30T10:49:26.2414313Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\I
+2026-09-30T10:49:26.2415455Z ssue_3067_HandleCallbackSelfWait.csproj : warning NU1701: Package 'LiteDB 0.5.0'
+2026-09-30T10:49:26.2416623Z was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, 
+2026-09-30T10:49:26.2417714Z .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, 
+2026-09-30T10:49:26.2418559Z .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, 
+2026-09-30T10:49:26.2419605Z .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. 
+2026-09-30T10:49:26.2420610Z This package may not be fully compatible with your project.
+2026-09-30T10:49:26.2421640Z __CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\P
+2026-09-30T10:49:26.2422871Z rogram.cs(72,6): error CS0616: 'BsonIgnoreAttribute' is not an attribute class 
+2026-09-30T10:49:26.2424020Z [__CI_WORKSPACE__\LiteDB.ReproRunner\Repros\Issue_3067_HandleCallbackSelfWait\
+2026-09-30T10:49:26.2424948Z Issue_3067_HandleCallbackSelfWait.csproj]
+2026-09-30T10:49:26.2425568Z     6 Warning(s)
+2026-09-30T10:49:26.2426061Z     1 Error(s)
+2026-09-30T10:49:26.2426392Z 
+2026-09-30T10:49:26.2426699Z Time Elapsed 00:00:12.26
+2026-09-30T10:49:26.2427158Z 
+2026-09-30T10:49:26.2654316Z ##[error]Process completed with exit code 1.
+2026-09-30T10:49:26.2902961Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T10:49:26.2903585Z with:
+2026-09-30T10:49:26.2904041Z   name: logs-Issue_3067_HandleCallbackSelfWait-windows-2022
+2026-09-30T10:49:26.2904928Z   path: artifacts
+reprorunner-cli/runs
+LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/**/runs
+
+2026-09-30T10:49:26.2905747Z   if-no-files-found: ignore
+2026-09-30T10:49:26.2906184Z   compression-level: 6
+2026-09-30T10:49:26.2906564Z   overwrite: false
+2026-09-30T10:49:26.2906942Z   include-hidden-files: false
+2026-09-30T10:49:26.2907336Z env:
+2026-09-30T10:49:26.2907989Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T10:49:26.2908455Z ##[endgroup]
+2026-09-30T10:49:26.5283013Z (node:6376) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T10:49:26.5284527Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T10:49:26.5343430Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-30T10:49:26.5347975Z The least common ancestor is __CI_HOME__/work\LiteDB\LiteDB. This will be the root directory of the artifact
+2026-09-30T10:49:26.5349118Z No files were found with the provided path: artifacts
+2026-09-30T10:49:26.5349815Z reprorunner-cli/runs
+2026-09-30T10:49:26.5350631Z LiteDB.ReproRunner/LiteDB.ReproRunner.Cli/bin/**/runs. No artifacts will be uploaded.
+2026-09-30T10:49:26.5709839Z ##[group]Run status="failure"
+2026-09-30T10:49:26.5710482Z [36;1mstatus="failure"[0m
+2026-09-30T10:49:26.5710865Z [36;1m{[0m
+2026-09-30T10:49:26.5711365Z [36;1m  echo "### Issue_3067_HandleCallbackSelfWait (windows-2022)"[0m
+2026-09-30T10:49:26.5711993Z [36;1m  echo "- Result: ${status}"[0m
+2026-09-30T10:49:26.5712686Z [36;1m  echo "- Artifacts: logs-Issue_3067_HandleCallbackSelfWait-windows-2022"[0m
+2026-09-30T10:49:26.5713363Z [36;1m} >> "${GITHUB_STEP_SUMMARY}"[0m
+2026-09-30T10:49:26.5732043Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-09-30T10:49:26.5732695Z env:
+2026-09-30T10:49:26.5733045Z   DOTNET_ROOT: C:\Program Files\dotnet
+2026-09-30T10:49:26.5733480Z ##[endgroup]
+2026-09-30T10:49:26.6433129Z Post job cleanup.
+2026-09-30T10:49:26.9098885Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-30T10:49:26.9437471Z git version 2.55.0.windows.5
+2026-09-30T10:49:26.9561579Z Temporarily overriding HOME='__CI_HOME__/work\_temp\9a5aa492-b786-453a-9e97-2a2254d60a25' before making global git config changes
+2026-09-30T10:49:26.9563103Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T10:49:26.9564556Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory __CI_WORKSPACE__
+2026-09-30T10:49:26.9939389Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T10:49:27.0314240Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-30T10:49:27.6372541Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T10:49:27.6628092Z http.https://github.com/.extraheader
+2026-09-30T10:49:27.6696867Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-09-30T10:49:27.6967499Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-30T10:49:28.2316916Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T10:49:28.2633131Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-30T10:49:28.8450638Z Cleaning up orphan processes
+2026-09-30T10:49:28.8755362Z Terminate orphan process: pid (7760) (VBCSCompiler)
+2026-09-30T10:49:28.8893821Z Terminate orphan process: pid (7752) (conhost)
+2026-09-30T10:49:28.9052172Z Terminate orphan process: pid (728) (dotnet)
+2026-09-30T10:49:28.9324000Z Terminate orphan process: pid (6608) (conhost)
+2026-09-30T10:49:28.9482099Z Terminate orphan process: pid (6184) (dotnet)
+2026-09-30T10:49:28.9658851Z Terminate orphan process: pid (8104) (conhost)
+2026-09-30T10:49:28.9668899Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-dotnet@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

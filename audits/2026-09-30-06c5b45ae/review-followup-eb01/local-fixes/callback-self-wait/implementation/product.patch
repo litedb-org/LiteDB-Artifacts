@@ -1,0 +1,83 @@
+diff --git a/LiteDB/Engine/Services/CollectionLock.cs b/LiteDB/Engine/Services/CollectionLock.cs
+index 386b5f0a4..f6ee896fb 100644
+--- a/LiteDB/Engine/Services/CollectionLock.cs
++++ b/LiteDB/Engine/Services/CollectionLock.cs
+@@ -11,6 +11,7 @@ namespace LiteDB.Engine
+         private readonly object _lock = new object();
+         private object _owner;
+         private Thread _thread;
++        private TransactionContext _handle;
+         private int _depth;
+         private bool _stopping;
+ #if DEBUG || TESTING
+@@ -26,7 +27,8 @@ namespace LiteDB.Engine
+                 while (_owner != null && !ReferenceEquals(_owner, owner))
+                 {
+                     // Waiting for another session on this thread cannot make progress.
+-                    if (ReferenceEquals(_thread, Thread.CurrentThread)) return false;
++                    if (ReferenceEquals(_thread, Thread.CurrentThread) ||
++                        ReferenceEquals(_handle?.ExecutingThread, Thread.CurrentThread)) return false;
+                     var elapsed = (System.Diagnostics.Stopwatch.GetTimestamp() - started) / (double)System.Diagnostics.Stopwatch.Frequency;
+                     var remaining = timeout - TimeSpan.FromSeconds(elapsed);
+                     if (remaining <= TimeSpan.Zero) return false;
+@@ -38,6 +40,7 @@ namespace LiteDB.Engine
+                 }
+                 _owner = owner;
+                 _thread = TransactionContext.AdmissionOwner as Thread;
++                _handle = TransactionContext.AdmissionOwner as TransactionContext;
+                 _depth++;
+                 return true;
+             }
+@@ -60,6 +63,7 @@ namespace LiteDB.Engine
+                 if (--_depth != 0) return;
+                 _owner = null;
+                 _thread = null;
++                _handle = null;
+                 Monitor.PulseAll(_lock);
+             }
+         }
+diff --git a/LiteDB/Engine/TransactionContext.cs b/LiteDB/Engine/TransactionContext.cs
+index 18f684481..87c32144c 100644
+--- a/LiteDB/Engine/TransactionContext.cs
++++ b/LiteDB/Engine/TransactionContext.cs
+@@ -1,4 +1,5 @@
+ using System;
++using System.Threading;
+ 
+ namespace LiteDB.Engine
+ {
+@@ -13,6 +14,9 @@ namespace LiteDB.Engine
+         internal readonly EngineContext.TransactionSlot Slot = new EngineContext.TransactionSlot();
+         internal TransactionService Transaction;
+         internal volatile LiteTransactionState Outcome = LiteTransactionState.Active;
++        // Ordinary callbacks suppress binding, but still depend on this executing
++        // handle returning before its locks can be released.
++        internal volatile Thread ExecutingThread;
+ 
+         internal TransactionContext(LiteEngine engine, EngineContext session)
+         { Engine = engine; Session = session; Policy = session.Policy.Clone(); }
+@@ -40,9 +44,21 @@ namespace LiteDB.Engine
+ 
+         internal readonly struct Scope : IDisposable
+         {
+-            private readonly TransactionContext _previous;
+-            internal Scope(TransactionContext transaction) { _previous = _executing; _executing = transaction; }
+-            public void Dispose() => _executing = _previous;
++            private readonly TransactionContext _previous, _transaction;
++            private readonly Thread _previousThread;
++            internal Scope(TransactionContext transaction)
++            {
++                _previous = _executing;
++                _transaction = transaction;
++                _previousThread = transaction?.ExecutingThread;
++                if (transaction != null) transaction.ExecutingThread = Thread.CurrentThread;
++                _executing = transaction;
++            }
++            public void Dispose()
++            {
++                _executing = _previous;
++                if (_transaction != null) _transaction.ExecutingThread = _previousThread;
++            }
+         }
+     }
+ }
