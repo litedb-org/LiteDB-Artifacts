@@ -1,0 +1,103 @@
+{
+  "candidate": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+  "status": "NOT ACCEPTED: local affected qualification complete; hosted failure unresolved, hostedmatrix and freshbenchmarks pending.",
+  "decision": "No merge, final safety acceptance or performance acceptance claimed.",
+  "local": {
+    "partitionCasesEachRuntime": 1375,
+    "runtimes": [
+      "net8.0",
+      "net10.0"
+    ],
+    "failures": 0,
+    "skips": 0,
+    "duplicates": 0,
+    "missing": 0,
+    "extra": 0,
+    "sessionsEachRuntime": 10,
+    "builtSource": "dded8c934ec92930d42e3d13158f04b85f1972ee",
+    "sameProductionAndTestTreesAsCandidate": true,
+    "validation": "review-5368851720/independent-partition-validation.json",
+    "independentFinalProductionCasesEachRuntime": 10,
+    "independentFinalProductionRuntimes": [
+      ".NET8.0.30",
+      ".NET10.0.11"
+    ],
+    "framework": "net462 compilation locally; no current hostedFramework completion asserted here."
+  },
+  "proof": {
+    "registered": 21,
+    "newComparisons": [
+      "Issue_3067_SharedPinCallbackWrite",
+      "Issue_3067_SharedOrdinaryCallbackBegin"
+    ],
+    "actualKnownBad": "569ba13c3b3867131c8687e7884bed65131edfbf",
+    "localSource": "3260e236577b4c0860aa34a2a69786f91cd95ca8",
+    "productionTree": "4c82e64ec435862987ccb0d1061dc6eadc34510f",
+    "state": "Strengthened standalone package/candidate outcomes audited; original package executables unavailable. New additive exact-candidate completebinary capture pending after benchmark. Hosted21proofmatrix still pending.",
+    "independentNegativeControl": "False-native-predicate mutation failsunexpectedexit2 and preservesdiagnostics; cannot impersonate native reproduction."
+  },
+  "performance": {
+    "candidate": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+    "status": "Fresh final7 campaign running/pending analysis and independent audit.",
+    "plannedProcesses": 116,
+    "plannedWindows": 580,
+    "countsArePlanNotResults": true,
+    "historical": "Prior569 performance-final6 belongs to previouscandidate; no prior measurement relabeled as e855. Historical4.69x child-proof result remains unclaimed unless reproduced."
+  },
+  "hosted": {
+    "head": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+    "snapshotUtc": "2026-09-30T17:40:21.383769+00:00",
+    "runs": {
+      "ci": 36750796590,
+      "proof": 36750795840,
+      "fuzz": 36750795998,
+      "index": 36750795906,
+      "shared-slot": 36750795889
+    },
+    "expectedProofs": 21,
+    "status": "Incomplete; one current macOS Intel test failure under investigation. Latest lifecycle snapshots belong to CI collector.",
+    "unresolvedFinding": {
+      "id": "macos-intel-handoff-deadline",
+      "status": "unresolved; cause under investigation",
+      "source": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+      "platform": "macOS Intel x64 net10.0",
+      "ciRun": 36750796590,
+      "jobId": 110008599282,
+      "test": "LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(shared: True, password: null)",
+      "observation": "Assert.Empty found four \"handoff deadline\" entries after15s. The failing handles partition reported324passed/1failed.",
+      "rawLogSource": "__WORKSPACE__/artifacts_temp/final11-failed-job-110008599282.log",
+      "interpretationLimit": "This establishes failure to complete the per-worker workload by its15s deadline. It does not identify runtime contention, host load, starvation, a production ownership defect, or a harness defect. No classification or fix claimed.",
+      "acceptance": "Blocks successful current-candidate qualification while unresolved; no waiver, retry-based dismissal or timeout relaxation claimed."
+    },
+    "snapshotConclusions": {
+      "ci": {
+        "status": "queued",
+        "conclusion": null
+      },
+      "proof": {
+        "status": "queued",
+        "conclusion": null
+      },
+      "fuzz": {
+        "status": "completed",
+        "conclusion": "success"
+      },
+      "index": {
+        "status": "completed",
+        "conclusion": "success"
+      },
+      "shared-slot": {
+        "status": "in_progress",
+        "conclusion": null
+      }
+    }
+  },
+  "scope": "Bounded PR133 contract/ownership/admission/durability-regression evidence; not completion of wholeissue3034 roadmap, repository protection settings, physicaldevice powercut qualification or postmerge execution.",
+  "publication": "Unpublished raw staging; normalization, final checksums, fresh completed CI/proof/performance review remain parent-owned pending work.",
+  "successorCandidate": {
+    "status": "Expected, not yet declared",
+    "scope": "Proposed test-only handoff correction; no product change asserted. Requires validation and fresh source identity.",
+    "originalFailureCause": "Still unknown; original deadline does not distinguish throughput from stalled progress.",
+    "performanceAttribution": "The running campaign measures exacte855 production. A later test-only source may establish production-tree equivalence; never relabel measured binaries or commit metadata."
+  }
+}

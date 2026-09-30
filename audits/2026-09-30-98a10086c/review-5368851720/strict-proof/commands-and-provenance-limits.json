@@ -1,0 +1,103 @@
+{
+  "proofSourceCommit": "3260e236577b4c0860aa34a2a69786f91cd95ca8",
+  "productionCommit": "dded8c934ec92930d42e3d13158f04b85f1972ee",
+  "finalCandidate": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+  "productionAndTestTreesMatchFinal": true,
+  "commands": [
+    {
+      "project": "Issue_3067_SharedPinCallbackWrite",
+      "variant": "package",
+      "cwd": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback",
+      "buildArgv": [
+        "dotnet",
+        "build",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedPinCallbackWrite",
+        "-c",
+        "Release",
+        "-p:TestingEnabled=false",
+        "-p:UseProjectReference=false",
+        "-p:RestoreAdditionalProjectSources=__WORKSPACE__/artifacts_temp/review536885-knownbad-feed"
+      ],
+      "buildExit": 0,
+      "runArgv": [
+        "dotnet",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedPinCallbackWrite/bin/Release/net8.0/Issue_3067_SharedPinCallbackWrite.dll"
+      ],
+      "runExit": 0,
+      "exitSource": "Author explicitly reported both builds0, packages0, candidates10 asserted in shell. Standalone variant execution; hostedCLI matrix separate."
+    },
+    {
+      "project": "Issue_3067_SharedPinCallbackWrite",
+      "variant": "candidate",
+      "cwd": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback",
+      "buildArgv": [
+        "dotnet",
+        "build",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedPinCallbackWrite",
+        "-c",
+        "Release",
+        "-p:TestingEnabled=false",
+        "-p:UseProjectReference=true"
+      ],
+      "buildExit": 0,
+      "runArgv": [
+        "dotnet",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedPinCallbackWrite/bin/Release/net8.0/Issue_3067_SharedPinCallbackWrite.dll"
+      ],
+      "runExit": 10,
+      "exitSource": "Author explicitly reported both builds0, packages0, candidates10 asserted in shell. Standalone variant execution; hostedCLI matrix separate."
+    },
+    {
+      "project": "Issue_3067_SharedOrdinaryCallbackBegin",
+      "variant": "package",
+      "cwd": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback",
+      "buildArgv": [
+        "dotnet",
+        "build",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedOrdinaryCallbackBegin",
+        "-c",
+        "Release",
+        "-p:TestingEnabled=false",
+        "-p:UseProjectReference=false"
+      ],
+      "buildExit": 0,
+      "runArgv": [
+        "dotnet",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedOrdinaryCallbackBegin/bin/Release/net8.0/Issue_3067_SharedOrdinaryCallbackBegin.dll"
+      ],
+      "runExit": 0,
+      "exitSource": "Author explicitly reported both builds0, packages0, candidates10 asserted in shell. Standalone variant execution; hostedCLI matrix separate."
+    },
+    {
+      "project": "Issue_3067_SharedOrdinaryCallbackBegin",
+      "variant": "candidate",
+      "cwd": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback",
+      "buildArgv": [
+        "dotnet",
+        "build",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedOrdinaryCallbackBegin",
+        "-c",
+        "Release",
+        "-p:TestingEnabled=false",
+        "-p:UseProjectReference=true"
+      ],
+      "buildExit": 0,
+      "runArgv": [
+        "dotnet",
+        "LiteDB.ReproRunner/Repros/Issue_3067_SharedOrdinaryCallbackBegin/bin/Release/net8.0/Issue_3067_SharedOrdinaryCallbackBegin.dll"
+      ],
+      "runExit": 10,
+      "exitSource": "Author explicitly reported both builds0, packages0, candidates10 asserted in shell. Standalone variant execution; hostedCLI matrix separate."
+    }
+  ],
+  "runtimeLimit": "Targetnet8.0; actual executed patch not separately recorded in author logs. Independent finalproduction probe records its own8.0.30/10.0.11 runtime, not a substitute for author run identity.",
+  "baselineExecutableLimit": "Author original package-run executables overwritten by candidate builds. Knownbadnupkg retained; do not label candidate or synthetic mutant runners as original baseline.",
+  "baselineSourceLimit": "Final F1 baseline source predates only final F2 SessionEntered helper/predicate addition; F1 executed branch unchanged. Final F2 baseline and both candidates use final source.",
+  "originalDatabaseRoots": {
+    "baselineF1": "__WORKSPACE__/temporary/p133-pin-proof-765b15d6735a47b49cd3a5f4eac8ea73",
+    "baselineF2": "__WORKSPACE__/temporary/p133-pin-proof-5afd547bc4db410eb3292b354c64611a",
+    "candidateF1": "__WORKSPACE__/temporary/p133-pin-proof-2c92227181a94018908197bf26e0c73b",
+    "candidateF2": "__WORKSPACE__/temporary/p133-pin-proof-4cf7836247a341d69f4da80350bbbee0"
+  },
+  "copyStatus": "Completed post-freeze copy of author original candidate runners, knownbad package and all database roots referenced by original attempt logs. Original baseline runner executables remain unavailable. Additive new exact-successor four-run capture pending."
+}

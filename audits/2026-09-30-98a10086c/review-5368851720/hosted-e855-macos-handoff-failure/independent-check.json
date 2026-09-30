@@ -1,0 +1,58 @@
+{
+  "head": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+  "jobId": 110008599282,
+  "artifactId": 11114678436,
+  "zipSHA256": "7729b551873f5866c571165f524b873e02b350d482db41ab5880770239d2c48a",
+  "matchesGitHubArtifactDigest": true,
+  "artifactFiles": [
+    "NativeAdmission-admission.trx",
+    "NativeAdmission-remaining.trx",
+    "evidence-leg.json",
+    "NativeAdmission-handles.trx",
+    "native-partitions.json",
+    "discovered-tests.txt"
+  ],
+  "fixtureOrPerWorkerProgressDiagnosticsAvailable": false,
+  "trxs": [
+    {
+      "path": "NativeAdmission-admission.trx",
+      "summary": "Completed",
+      "outcomes": {
+        "Passed": 202
+      }
+    },
+    {
+      "path": "NativeAdmission-remaining.trx",
+      "summary": "Completed",
+      "outcomes": {
+        "Passed": 237,
+        "NotExecuted": 1
+      }
+    },
+    {
+      "path": "NativeAdmission-handles.trx",
+      "summary": "Failed",
+      "outcomes": {
+        "Passed": 324,
+        "Failed": 1
+      }
+    }
+  ],
+  "failures": [
+    {
+      "case": "LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(shared: True, password: null)",
+      "outcome": "Failed",
+      "duration": "00:00:15.5091467",
+      "error": "Assert.Empty() Failure: Collection was not empty\nCollection: [\"handoff deadline\", \"handoff deadline\", \"handoff deadline\", \"handoff deadline\"]"
+    }
+  ],
+  "notExecuted": [
+    {
+      "case": "LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error",
+      "outcome": "NotExecuted",
+      "duration": "00:00:00.0010000",
+      "error": "Not supported yet: rebuilding 'ana'/'ANA' from en-US/None to en-US/IgnoreCase throws LiteException 'Cannot insert duplicate key in unique index '_id'' from RebuildContent instead of recording the collision in _rebuild_errors and keeping en-US/None."
+    }
+  ],
+  "classification": "Unresolved15sworkloaddeadline observation. No original perworker completion counts or blockingstage; cannot classify throughput,starvation,hostload,production/harnessbug fromthisartifact. Existing skippedRebuildculture case remainsseparate."
+}

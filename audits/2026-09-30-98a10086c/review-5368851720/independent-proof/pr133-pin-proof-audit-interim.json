@@ -1,0 +1,42 @@
+{
+  "review": "5368851720",
+  "interimSourceCommit": "uncommitted source on569ba13c3b3867131c8687e7884bed65131edfbf",
+  "baselineLogs": {
+    "write": {
+      "path": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-baseline/write-run-first.log",
+      "knownBadMarker": 1,
+      "caseMarkers": 4,
+      "controlMarkers": 8,
+      "peerCommits": 12,
+      "status": "observed original parent pin native-wait boundary; later proof changes still require rerun"
+    },
+    "begin": {
+      "path": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-baseline/begin-run-first.log",
+      "knownBadMarker": 1,
+      "caseMarkers": 8,
+      "controlMarkers": 6,
+      "peerCommits": 14,
+      "status": "interim only; begin oracle did not observe child native-admission entry"
+    }
+  },
+  "findings": [
+    {
+      "id": "F2-oracle",
+      "severity": "blocking evidence gap",
+      "detail": "Gate0 + native exclusion + waiting caller and shared admission timeout text do not establish child native admission; worker startup can account for timeout. Author now retaining prewarmed child and observing its _mutexWaiters during default infinite begin."
+    },
+    {
+      "id": "fixed-exclusion",
+      "detail": "Fast fixed refusal can finish before monitor probes native exclusion. Author adding independent-thread probes within callback before and after refusal."
+    },
+    {
+      "id": "reflection",
+      "detail": "Missing field metadata must fail rather than look like valid null state."
+    }
+  ],
+  "independentSelectorTests": {
+    "count": 15,
+    "passed": true,
+    "log": "__WORKSPACE__/temporary/pr133-pin-proof-selector-audit.log"
+  }
+}

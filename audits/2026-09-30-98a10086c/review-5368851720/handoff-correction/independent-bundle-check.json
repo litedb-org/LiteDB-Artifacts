@@ -1,0 +1,94 @@
+{
+  "authorChecksumsVerified": 72,
+  "runs": [
+    {
+      "file": "handoff-mutant-unexpected-error.trx",
+      "runSummary": "Failed",
+      "outcomes": {
+        "Failed": 1
+      },
+      "messages": [
+        "Callback marker was not restored before releasing public admission."
+      ]
+    },
+    {
+      "file": "handoff-mutant-blocked-worker-final.trx",
+      "runSummary": "Failed",
+      "outcomes": {
+        "Failed": 1
+      },
+      "messages": [
+        "System.InvalidOperationException : Handoff worker did not drain; live fixture retained at __WORKSPACE__/temporary/litedb-ab1153bd358b4e52b600f9b3a64d5c57.db\n---- Assert.Empty() Failure: Collection was not empty\nCollection: [\"Worker 0 made no successful handoff for 15s. elaps\"\u00b7\u00b7\u00b7, \"Worker still inside Run after stop; storage retain\"\u00b7\u00b7\u00b7, \"Incomplete handoffs. elapsedMs=20008; worker=0, co\"\u00b7\u00b7\u00b7]"
+      ]
+    },
+    {
+      "file": "handoff-correction-net10.trx",
+      "runSummary": "Completed",
+      "outcomes": {
+        "Passed": 8
+      },
+      "messages": []
+    },
+    {
+      "file": "handoff-mutant-unexpected-error-final.trx",
+      "runSummary": "Failed",
+      "outcomes": {
+        "Failed": 1
+      },
+      "messages": [
+        "Assert.Empty() Failure: Collection was not empty\nCollection: [\"worker 3, callbackEntered=False: System.InvalidOpe\"\u00b7\u00b7\u00b7, \"worker 2, callbackEntered=False: System.InvalidOpe\"\u00b7\u00b7\u00b7, \"worker 1, callbackEntered=False: System.InvalidOpe\"\u00b7\u00b7\u00b7, \"worker 0, callbackEntered=True: System.InvalidOper\"\u00b7\u00b7\u00b7, \"Incomplete handoffs. elapsedMs=16; worker=0, compl\"\u00b7\u00b7\u00b7]"
+      ]
+    },
+    {
+      "file": "handoff-mutant-old-order.trx",
+      "runSummary": "Failed",
+      "outcomes": {
+        "Failed": 1
+      },
+      "messages": [
+        "System.InvalidOperationException : Handoff worker did not drain; live fixture retained at __WORKSPACE__/temporary/litedb-cfffd76ac5734010945e2639208c8415.db\n---- Callback marker was not restored before releasing public admission."
+      ]
+    },
+    {
+      "file": "handoff-final-net8.trx",
+      "runSummary": "Completed",
+      "outcomes": {
+        "Passed": 8
+      },
+      "messages": []
+    },
+    {
+      "file": "handoff-correction-net8.trx",
+      "runSummary": "Completed",
+      "outcomes": {
+        "Passed": 8
+      },
+      "messages": []
+    },
+    {
+      "file": "handoff-final-net10.trx",
+      "runSummary": "Completed",
+      "outcomes": {
+        "Passed": 8
+      },
+      "messages": []
+    },
+    {
+      "file": "handoff-mutant-old-order-final.trx",
+      "runSummary": "Failed",
+      "outcomes": {
+        "Failed": 1
+      },
+      "messages": [
+        "Callback marker was not restored before releasing public admission."
+      ]
+    }
+  ],
+  "productionDLLIdentity": {
+    "mutant-old-order": "17eebde71c884d2157a38ad1c77549c5a84b31e9f9427389dd2e9e021e3c0ea1",
+    "mutant-unexpected-error": "478e0c0207b1ecfa5655d74fe4bcebc00158f021d855c5d9e32b9a03db66f10a",
+    "mutant-blocked-worker": "478e0c0207b1ecfa5655d74fe4bcebc00158f021d855c5d9e32b9a03db66f10a",
+    "final-net10.0": "478e0c0207b1ecfa5655d74fe4bcebc00158f021d855c5d9e32b9a03db66f10a"
+  },
+  "limits": "Synthetic mutants establish ordering/error/watchdog oracle sensitivity, not historical macOS cause. Corrected source was uncommitted integration overlay on e855 when executed; successor sourceidentity pending. Initial stale and badcatch binaries unavailable. Blockedhostexit beforefixturecopy is author-recorded; no extra hostexecution bystager."
+}

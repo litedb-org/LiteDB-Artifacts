@@ -1,0 +1,89 @@
+{
+  "review": "5368851720",
+  "reviewedProofCommit": "3260e236577b4c0860aa34a2a69786f91cd95ca8",
+  "knownBadProductionCommit": "569ba13c3b3867131c8687e7884bed65131edfbf",
+  "candidateProductionCommit": "dded8c934ec92930d42e3d13158f04b85f1972ee",
+  "candidateProductionTree": "4c82e64ec435862987ccb0d1061dc6eadc34510f",
+  "finalSourceHashComparison": {
+    "comparedFiles": 12,
+    "mismatches": []
+  },
+  "independentlyInspectedAuthorTranscripts": {
+    "package": {
+      "begin": {
+        "log": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-baseline/begin-run-strict.log",
+        "nativeCases": 8,
+        "fixedCaseAndControlMarkers": 6,
+        "controls": 6,
+        "peerCommits": 14,
+        "callbackNativeExclusion": 8,
+        "knownBadMarker": 1,
+        "fixedMarker": 0
+      },
+      "write": {
+        "log": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-baseline/write-run-strict.log",
+        "nativeCases": 4,
+        "fixedCaseAndControlMarkers": 8,
+        "controls": 8,
+        "peerCommits": 12,
+        "callbackNativeExclusion": 4,
+        "knownBadMarker": 1,
+        "fixedMarker": 0
+      }
+    },
+    "candidate": {
+      "begin": {
+        "log": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-candidate/begin-run.log",
+        "nativeCases": 0,
+        "fixedCaseAndControlMarkers": 14,
+        "controls": 6,
+        "peerCommits": 14,
+        "callbackNativeExclusion": 16,
+        "knownBadMarker": 0,
+        "fixedMarker": 1
+      },
+      "write": {
+        "log": "__WORKSPACE__/artifacts_temp/proof-shared-pin-callback/artifacts_temp/pin-proof-candidate/write-run.log",
+        "nativeCases": 0,
+        "fixedCaseAndControlMarkers": 12,
+        "controls": 8,
+        "peerCommits": 12,
+        "callbackNativeExclusion": 8,
+        "knownBadMarker": 0,
+        "fixedMarker": 1
+      }
+    }
+  },
+  "independentRuns": {
+    "finalF2ProductionCandidate": "__WORKSPACE__/temporary/pr133-pin-proof-audit-final-fixed/report.json",
+    "negativeNativeOracleMutation": "__WORKSPACE__/temporary/pr133-pin-proof-audit-negative-native-oracle/report.json",
+    "selectorTests": "15/15; __WORKSPACE__/temporary/pr133-pin-proof-selector-audit.log"
+  },
+  "findings": [
+    {
+      "id": "F2-native-oracle",
+      "resolution": "Retain actual prewarmed cached child and require its native waiter count while checked out, local gate occupied, native ownership excluded and caller blocked. Default infinite begin only in final proof; bounded/fresh admission remains unit coverage."
+    },
+    {
+      "id": "fixed-exclusion",
+      "resolution": "Independent-thread native probe inside callback before and after caught refusal."
+    },
+    {
+      "id": "strict-reflection",
+      "resolution": "Missing field metadata throws and cannot impersonate null state."
+    },
+    {
+      "id": "idle-positive-control",
+      "resolution": "Begin caller confirmed in session lifetime before waiting; caller later commits its own row after independent completion."
+    }
+  ],
+  "remainingFindings": [],
+  "limits": [
+    "Local execution Linux x64/net8 Release production; no Windows, Framework runtime or power-failure testing in this audit.",
+    "Synthetic constant-false native predicate mutation validates oracle failure classification only; not a historical known-bad source.",
+    "Final F2 intentionally warms an empty handle to identify the exact cached wrapper; permanent unit tests retain fresh/bounded admission coverage.",
+    "Author logs audited directly; hosted ReproRunner proof matrix remains parent task.",
+    "Initial incomplete-oracle package runs retained and classified in __WORKSPACE__/temporary/pr133-pin-proof-audit-interim.json; not substituted for final native-boundary proof.",
+    "First independent candidate F2 exploratory transcript retained at __WORKSPACE__/temporary/pr133-pin-proof-audit-fixed.log; its executable was replaced by mutation build, so repeated final source run retains exact executable and dependencies in final-fixed/binaries."
+  ]
+}

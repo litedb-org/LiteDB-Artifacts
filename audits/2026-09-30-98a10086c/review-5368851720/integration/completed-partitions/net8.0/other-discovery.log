@@ -1,0 +1,365 @@
+Test run for __WORKSPACE__/artifacts_temp/safety-net8/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll (.NETCoreApp,Version=v8.0)
+The following Tests are available:
+    LiteDB.Internals.AesLifecycle_Tests.Constructor_LengthFailure_ClosesOwnedStream
+    LiteDB.Internals.BufferLease_Tests.Reader_Failure_DoesNotLeakBuffers(operation: "number")
+    LiteDB.Internals.BufferLease_Tests.Reader_Failure_DoesNotLeakBuffers(operation: "objectId")
+    LiteDB.Internals.BufferLease_Tests.Reader_Failure_DoesNotLeakBuffers(operation: "string")
+    LiteDB.Internals.BufferLease_Tests.Reader_Failure_DoesNotLeakBuffers(operation: "cstring")
+    LiteDB.Internals.BufferLease_Tests.Writer_Failure_DoesNotLeakBuffers(operation: "number")
+    LiteDB.Internals.BufferLease_Tests.Writer_Failure_DoesNotLeakBuffers(operation: "objectId")
+    LiteDB.Internals.BufferLease_Tests.Writer_Failure_DoesNotLeakBuffers(operation: "string")
+    LiteDB.Internals.BufferLease_Tests.Writer_Failure_DoesNotLeakBuffers(operation: "cstring")
+    LiteDB.Internals.BufferLease_Tests.Constructor_Failure_DisposesBufferSource(writer: False)
+    LiteDB.Internals.BufferLease_Tests.Constructor_Failure_DisposesBufferSource(writer: True)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 1, unsupported: False)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 2, unsupported: False)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 3, unsupported: False)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 1, unsupported: True)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 2, unsupported: True)
+    LiteDB.Internals.EncryptedWalCreationFailure_Tests.FailedPreambleBarrier_StopsWritesAndPreservesRecoverableSources(failAt: 3, unsupported: True)
+    LiteDB.Internals.FrameFailure_Tests.WritableCopy_TestHookThrows_ReturnsFrameAndSourcePin
+    LiteDB.Internals.FrameFailure_Tests.WritableCopy_FullCache_DoesNotEvictReadableSource
+    LiteDB.Internals.FrameFailure_Tests.WritableCopy_Failure_ReturnsDestinationAndUnpinsSource
+    LiteDB.Internals.FrameFailure_Tests.WritableCopy_FullCache_KeepsSourceUntilCopied
+    LiteDB.Internals.FrameFailure_Tests.LogPublication_Failure_DiscardsUnpublishedFrame
+    LiteDB.Internals.FrameFailure_Tests.ReadHook_Failure_ReleasesAcquiredFrame(writable: False)
+    LiteDB.Internals.FrameFailure_Tests.ReadHook_Failure_ReleasesAcquiredFrame(writable: True)
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedConversionBackupSync_CannotPublishAPartialLegacyTransaction(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedConversionBackupSync_CannotPublishAPartialLegacyTransaction(password: "secret")
+    LiteDB.Internals.HeaderJournalFailure_Tests.DisposingAfterCheckpoint_DoesNotReextendTheTruncatedWal(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.DisposingAfterCheckpoint_DoesNotReextendTheTruncatedWal(password: "secret")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: null, failure: "journal-write")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: "secret", failure: "journal-write")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: null, failure: "journal-partial")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: "secret", failure: "journal-partial")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: null, failure: "journal-sync")
+    LiteDB.Internals.HeaderJournalFailure_Tests.JournalMustBeDurableBeforeCheckpointTouchesData(password: "secret", failure: "journal-sync")
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedHeaderRepair_PreservesRecoveryJournalForAnotherOpen(password: null, failure: "header-write")
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedHeaderRepair_PreservesRecoveryJournalForAnotherOpen(password: "secret", failure: "header-write")
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedHeaderRepair_PreservesRecoveryJournalForAnotherOpen(password: null, failure: "header-sync")
+    LiteDB.Internals.HeaderJournalFailure_Tests.FailedHeaderRepair_PreservesRecoveryJournalForAnotherOpen(password: "secret", failure: "header-sync")
+    LiteDB.Internals.HeaderJournalFailure_Tests.RecoveryJournalSyncFailure_MustNotOverwriteTheDamagedPrimary(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.RecoveryJournalSyncFailure_MustNotOverwriteTheDamagedPrimary(password: "secret")
+    LiteDB.Internals.HeaderJournalFailure_Tests.RebuildReader_UsesJournalWithoutMutatingTheSources(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.RebuildReader_UsesJournalWithoutMutatingTheSources(password: "secret")
+    LiteDB.Internals.HeaderJournalFailure_Tests.CorruptedRecoveryCopy_CannotCertifyADamagedHeader(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.CorruptedRecoveryCopy_CannotCertifyADamagedHeader(password: "secret")
+    LiteDB.Internals.HeaderJournalFailure_Tests.InterruptedJournalRemoval_KeepsTheSyncedHeaderAndRedo(password: null, failure: "truncate-before")
+    LiteDB.Internals.HeaderJournalFailure_Tests.InterruptedJournalRemoval_KeepsTheSyncedHeaderAndRedo(password: "secret", failure: "truncate-before")
+    LiteDB.Internals.HeaderJournalFailure_Tests.InterruptedJournalRemoval_KeepsTheSyncedHeaderAndRedo(password: null, failure: "truncate-after")
+    LiteDB.Internals.HeaderJournalFailure_Tests.InterruptedJournalRemoval_KeepsTheSyncedHeaderAndRedo(password: "secret", failure: "truncate-after")
+    LiteDB.Internals.HeaderJournalFailure_Tests.FileBackedRecovery_PreservesReadOnlyImagesAndRepairsWritableOpens(password: null)
+    LiteDB.Internals.HeaderJournalFailure_Tests.FileBackedRecovery_PreservesReadOnlyImagesAndRepairsWritableOpens(password: "secret")
+    LiteDB.Internals.RecoveryMarker_Tests.MarkerWriteFailure_StillClosesOwnedResources
+    LiteDB.Internals.StreamOwnership_Tests.HiddenFile_SetAttributesFailure_DisposesStream
+    LiteDB.Internals.StreamOwnership_Tests.DiskServiceCtor_Failure_DisposesWrappers_ButNotCallerStreams
+    LiteDB.Internals.TransactionCleanupBoundary_Tests.RepeatedCleanupFailures_DoNotExhaustRegistrationOrRetainFrames(writable: False)
+    LiteDB.Internals.TransactionCleanupBoundary_Tests.RepeatedCleanupFailures_DoNotExhaustRegistrationOrRetainFrames(writable: True)
+    LiteDB.Internals.TransactionCleanup_Tests.AbandonedTransaction_OnExitedThread_IsCleanedByExplicitEngineClose
+    LiteDB.Internals.TransactionCleanup_Tests.AbandonedEngine_WithDamagedTransaction_IsCollectibleWithoutFinalizerCleanup
+    LiteDB.Internals.WalChecksumFailure_Tests.RebuildReader_UsesTheSameVerifiedCommittedPrefix(password: null)
+    LiteDB.Internals.WalChecksumFailure_Tests.RebuildReader_UsesTheSameVerifiedCommittedPrefix(password: "secret")
+    LiteDB.Internals.WalChecksumFailure_Tests.FailedGenerationPublication_StopsWrites_AndCanRecover(password: null, flush: False)
+    LiteDB.Internals.WalChecksumFailure_Tests.FailedGenerationPublication_StopsWrites_AndCanRecover(password: null, flush: True)
+    LiteDB.Internals.WalChecksumFailure_Tests.FailedGenerationPublication_StopsWrites_AndCanRecover(password: "secret", flush: False)
+    LiteDB.Internals.WalChecksumFailure_Tests.FailedGenerationPublication_StopsWrites_AndCanRecover(password: "secret", flush: True)
+    LiteDB.Internals.WalChecksumFailure_Tests.OperationalReadError_DoesNotTruncateTheWal
+    LiteDB.Internals.WalChecksumFailure_Tests.ReadOnlyOpen_PreservesAPartialWalEvenWhenNoFrameCanBeRead
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: 1, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: 3, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: 0, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: -1, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: 1, transactionPages: 4)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: null, failAt: 3, transactionPages: 4)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: 1, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: 3, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: 0, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: -1, transactionPages: 1000)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: 1, transactionPages: 4)
+    LiteDB.Internals.WalFailureCleanup_Tests.FailedWrite_ReleasesAllFrames_AndPreservesCommittedData(password: "secret", failAt: 3, transactionPages: 4)
+    LiteDB.Internals.WalFailureCleanup_Tests.Dispose_WithOneStaleLease_ReleasesOtherWritableFrames
+    LiteDB.Tests.Mapper.LinqBindingEvaluator_Tests.Cached_method_and_member_failures_match_uncached_exception_chains(mode: 0)
+    LiteDB.Tests.Mapper.LinqBindingEvaluator_Tests.Cached_method_and_member_failures_match_uncached_exception_chains(mode: 1)
+    LiteDB.Tests.Mapper.LinqBindingEvaluator_Tests.Cached_method_and_member_failures_match_uncached_exception_chains(mode: 2)
+    LiteDB.Tests.Mapper.LinqBindingEvaluator_Tests.Cached_method_and_member_failures_match_uncached_exception_chains(mode: 3)
+    LiteDB.Tests.Mapper.LinqCacheRebinding_Tests.Capture_failures_have_the_same_exception_type_on_cold_and_warm_paths
+    LiteDB.Tests.QueryTest.Int32IdAssertions_Tests.MembershipAndMultiplicityFailures_AgreeWithOriginalAssertion(damage: "missing")
+    LiteDB.Tests.QueryTest.Int32IdAssertions_Tests.MembershipAndMultiplicityFailures_AgreeWithOriginalAssertion(damage: "extra")
+    LiteDB.Tests.QueryTest.Int32IdAssertions_Tests.MembershipAndMultiplicityFailures_AgreeWithOriginalAssertion(damage: "duplicate-and-drop")
+    LiteDB.Tests.QueryTest.Int32IdAssertions_Tests.MembershipAndMultiplicityFailures_AgreeWithOriginalAssertion(damage: "wrong-member")
+    LiteDB.Tests.Issues.FuzzingContract_Tests.Failure_after_password_rebuild_install_restores_the_original_data_and_wal_pair
+    LiteDB.Tests.Issues.Issue1940_RecoverySafety_Tests.Healing_must_not_commit_pages_from_an_abandoned_WAL_transaction
+    LiteDB.Tests.Issues.Issue2357InvalidTime_Tests.On_failure_rolls_back_the_batch_and_the_database_remains_usable
+    LiteDB.Tests.Issues.Issue2806CallerTransaction_Tests.Source_failure_inside_a_caller_transaction_undoes_only_the_upload(connection: Direct, replacesFile: True)
+    LiteDB.Tests.Issues.Issue2806CallerTransaction_Tests.Source_failure_inside_a_caller_transaction_undoes_only_the_upload(connection: Shared, replacesFile: True)
+    LiteDB.Tests.Issues.Issue2806CallerTransaction_Tests.Source_failure_inside_a_caller_transaction_undoes_only_the_upload(connection: Direct, replacesFile: False)
+    LiteDB.Tests.Issues.Issue2806EngineFailure_Tests.Engine_failure_inside_a_caller_transaction_leaves_no_chunks_to_commit(replacesFile: False)
+    LiteDB.Tests.Issues.Issue2806EngineFailure_Tests.Engine_failure_inside_a_caller_transaction_leaves_no_chunks_to_commit(replacesFile: True)
+    LiteDB.Tests.Issues.Issue2806UndoFailure_Tests.Rollback_failure_of_an_upload_owned_transaction_is_reported_with_the_upload_error
+    LiteDB.Tests.Issues.Issue2806UndoFailure_Tests.Failure_to_undo_an_upload_inside_a_caller_transaction_says_the_transaction_is_gone
+    LiteDB.Tests.Issues.Issue2814Admission_Tests.Checkpoint_request_waits_for_existing_readers_instead_of_skipping
+    LiteDB.Tests.Issues.Issue2814Admission_Tests.Current_thread_transaction_cannot_upgrade_and_nonwaiting_call_still_skips_readers
+    LiteDB.Tests.Issues.Issue2814Admission_Tests.Other_thread_reader_times_out_and_restores_reader_admission
+    LiteDB.Tests.Issues.Issue2814Backoff_Tests.Commits_under_a_long_lived_reader_do_not_each_wait_for_checkpoint_admission
+    LiteDB.Tests.Issues.Issue2814TransactionIds_Tests.Waiting_transaction_reserves_its_ID_only_after_checkpoint_admission
+    LiteDB.Tests.Issues.Issue2814TransactionIds_Tests.Construction_failure_releases_the_admitted_read_lease
+    LiteDB.Tests.Issues.Issue2821_Tests.Closed_instance_explains_recovery_after_a_transient_disk_full_failure
+    LiteDB.Tests.Issues.Issue2848_Tests.Non_io_completion_failure_tells_other_threads_to_dispose_and_reopen(phase: "commit")
+    LiteDB.Tests.Issues.Issue2848_Tests.Non_io_completion_failure_tells_other_threads_to_dispose_and_reopen(phase: "rollback")
+    LiteDB.Tests.Issues.Issue2848_Tests.Completion_failure_caused_by_disposing_the_engine_still_reports_a_disposed_engine
+    LiteDB.Tests.Issues.Issue2870_Tests.FileReaderV8_preserves_the_original_stream_failure_frame
+    LiteDB.Tests.Issues.Issue2894Messages_Tests.Nested_serialization_failure_is_one_sentence_with_the_member_path_and_the_original_error
+    LiteDB.Tests.Issues.Issue2894Messages_Tests.Deserialization_failure_names_the_member_and_the_stored_type
+    LiteDB.Tests.Issues.Issue2894_Tests.Stream_member_failure_names_the_entity_and_member
+    LiteDB.Tests.Issues.Issue2894_Tests.Nested_getter_failure_preserves_member_chain_and_original_exception
+    LiteDB.Tests.Issues.Issue2894_Tests.Mapping_initialization_failure_preserves_original_exception_and_literal_braces
+    LiteDB.Tests.Issues.Issue2894_Tests.Custom_member_serializer_failure_is_contextual_and_keeps_original_error_code
+    LiteDB.Tests.Issues.Issue2968_Tests.Open_retries_a_transient_sharing_failure_after_mutex_owner_death
+    LiteDB.Tests.Issues.Issue2968_Tests.Ordinary_open_failure_is_not_retried
+    LiteDB.Tests.Issues.Issue2968_Tests.Abandoned_owner_does_not_retry_an_unrelated_io_failure
+    LiteDB.Tests.Issues.Issue3005_AbandonedOrphan_Tests.Orphaned_engine_is_discarded_without_checkpointing_a_stale_view(password: null, readerHeldThroughout: False)
+    LiteDB.Tests.Issues.Issue3005_AbandonedOrphan_Tests.Orphaned_engine_is_discarded_without_checkpointing_a_stale_view(password: "secret", readerHeldThroughout: False)
+    LiteDB.Tests.Issues.Issue3005_AbandonedOrphan_Tests.Orphaned_engine_is_discarded_without_checkpointing_a_stale_view(password: null, readerHeldThroughout: True)
+    LiteDB.Tests.Issues.Issue3005_AbandonedOrphan_Tests.Orphaned_engine_is_discarded_without_checkpointing_a_stale_view(password: "secret", readerHeldThroughout: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionDirectPoolProcess_Tests.Final_database_and_reader_release_admits_other_processes(fallback: False)
+    LiteDB.Tests.Internals.NativeAdmissionDirectPoolProcess_Tests.Final_database_and_reader_release_admits_other_processes(fallback: True)
+    LiteDB.Tests.Internals.NativeAdmissionDirectPoolProcess_Tests.Killed_process_releases_pooled_engine_and_preserves_both_owners_commits
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct", contender: "direct", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct", contender: "shared", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared", contender: "direct", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct", contender: "direct-readonly", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct-readonly", contender: "direct", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct-readonly", contender: "shared", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared", contender: "direct-readonly", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared", contender: "shared-sha1", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared-sha1", contender: "shared", compatible: False)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared", contender: "shared", compatible: True)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "shared-readonly", contender: "shared", compatible: True)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Host_authority_enforces_cross_process_families_and_releases_after_death(owner: "direct-readonly", contender: "direct-readonly", compatible: True)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Fallback_streaming_reader_prevents_another_process_from_writing_or_checkpointing
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Fallback_replacement_never_publishes_an_unlocked_authority(stage: "before-log-backup")
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Fallback_replacement_never_publishes_an_unlocked_authority(stage: "after-source-backup")
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Fallback_replacement_never_publishes_an_unlocked_authority(stage: "after-temp-install")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker", shared: False, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker", shared: False, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker", shared: True, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker", shared: True, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-source-backup", shared: False, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-source-backup", shared: False, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-source-backup", shared: True, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-source-backup", shared: True, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-temp-install", shared: False, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-temp-install", shared: False, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-temp-install", shared: True, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "after-temp-install", shared: True, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker-delete", shared: False, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker-delete", shared: False, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker-delete", shared: True, password: null)
+    LiteDB.Tests.Internals.NativeAdmissionHandoffProof_Tests.Both_inodes_are_locked_through_publication_and_only_the_live_inode_remains_owned(stage: "before-recovery-marker-delete", shared: True, password: "secret")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Storage_streams_preserve_native_admission_and_family_compatibility(shared: False)
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Storage_streams_preserve_native_admission_and_family_compatibility(shared: True)
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "direct", contender: "direct")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "direct", contender: "shared")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "shared", contender: "direct")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "direct", contender: "direct-readonly")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "direct-readonly", contender: "direct")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "shared-readonly", contender: "direct")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Incompatible_processes_cannot_mutate_storage_and_owner_death_releases_admission(owner: "direct-readonly", contender: "shared")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Remaining_local_reference_excludes_other_processes_after_engine_disposal
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Replacement_never_exposes_an_unlocked_live_file(stage: "before-log-backup")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Replacement_never_exposes_an_unlocked_live_file(stage: "after-source-backup")
+    LiteDB.Tests.Internals.NativeAdmissionProcess_Tests.Replacement_never_exposes_an_unlocked_live_file(stage: "after-temp-install")
+    LiteDB.Tests.Internals.TransactionCompletion_Tests.Later_concurrent_failures_preserve_the_first_fatal_cause
+    LiteDB.Tests.Internals.TransactionCompletion_Tests.Non_io_completion_failure_closes_engine_and_releases_transactions(phase: "commit")
+    LiteDB.Tests.Internals.TransactionCompletion_Tests.Non_io_completion_failure_closes_engine_and_releases_transactions(phase: "rollback")
+    LiteDB.Tests.Internals.TransactionCompletion_Tests.Non_io_completion_failure_closes_engine_and_releases_transactions(phase: "automatic rollback")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "ARRAY(MAP([1,2] => @ + @delta))")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "ARRAY(FILTER([1,2,3] => @ > @delta))")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "ARRAY(SORT([2,1] => @ + @delta))")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "Values[@index]")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "ARRAY(Values[@ > @delta])")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Rebinding_nested_expressions_releases_the_original_parameter_document(source: "ARRAY(MAP([[1,2],[3,4]] => ARRAY(MAP(@ => @ + @del"···)
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Automatic_linq_templates_release_the_first_serialized_array
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Explicitly_null_parameter_documents_keep_their_error_behavior(source: "MAP([1] => @missing)")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Explicitly_null_parameter_documents_keep_their_error_behavior(source: "FILTER([1] => @missing)")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Explicitly_null_parameter_documents_keep_their_error_behavior(source: "SORT([1] => @missing)")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Explicitly_null_parameter_documents_keep_their_error_behavior(source: "Values[@missing]")
+    LiteDB.Tests.Expressions.ExpressionParameterLifetime_Tests.Explicitly_null_parameter_documents_keep_their_error_behavior(source: "ARRAY(Values[@ > @missing])")
+    LiteDB.Tests.Expressions.ParsedExpressionCache_Tests.Admission_copies_recurring_templates_before_callers_can_mutate_them
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.Control_HookSeesEveryBackfilledDataPage(password: null)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.Control_HookSeesEveryBackfilledDataPage(password: "secret")
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit(password: null, failingWrite: 1)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit(password: null, failingWrite: 5)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit(password: "secret", failingWrite: 1)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedDataPageWrite_StopsTheEngine_AndTheWalRecoversEveryCommit(password: "secret", failingWrite: 5)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedCloseCheckpoint_LeavesTheWalToRecoverEveryCommit(password: null)
+    LiteDB.Tests.Engine.CheckpointDataWriteFailure_Tests.FailedCloseCheckpoint_LeavesTheWalToRecoverEveryCommit(password: "secret")
+    LiteDB.Tests.Engine.CompactStorageAdmission_Tests.Updating_one_off_shapes_does_not_create_catalogs
+    LiteDB.Tests.Engine.CompactStorageAdmission_Tests.Oversized_logical_bson_remains_invalid_even_with_compact_enabled
+    LiteDB.Tests.Engine.CompactStorageAdmission_Tests.Malformed_unicode_is_rejected_just_as_in_public_bson
+    LiteDB.Tests.Engine.CompactStorageFault_Tests.Failure_at_each_wal_page_boundary_never_publishes_partial_documents_or_schemas(password: null)
+    LiteDB.Tests.Engine.CompactStorageFault_Tests.Failure_at_each_wal_page_boundary_never_publishes_partial_documents_or_schemas(password: "password")
+    LiteDB.Tests.Engine.CoordinatorPlatform_Tests.A_pipe_failure_during_stop_ends_the_accept_loop
+    LiteDB.Tests.Engine.CoordinatorSafety_Tests.A_takeover_without_an_abandoned_mutex_never_serves_the_dead_coordinators_snapshot
+    LiteDB.Tests.Engine.DirectModeAdmission_Tests.Missing_directory_retains_ordinary_path_exception
+    LiteDB.Tests.Engine.DirectModeAdmission_Tests.Existing_read_only_guard_and_participation_files_still_exclude_conflicting_connections
+    LiteDB.Tests.Engine.DirectModeAdmission_Tests.Orphan_authority_error_names_file_and_offline_recovery_preserves_data
+    LiteDB.Tests.Engine.DirectModeAdmission_Tests.Read_only_connection_works_in_non_writable_directory_without_creating_guard
+    LiteDB.Tests.Engine.Issue2881_VectorPromotionFailure_Tests.Failed_header_write_or_flush_prevents_checksum_conversion(failFlush: False)
+    LiteDB.Tests.Engine.Issue2881_VectorPromotionFailure_Tests.Failed_header_write_or_flush_prevents_checksum_conversion(failFlush: True)
+    LiteDB.Tests.Engine.MemoryLifecycle_Tests.CollectionCreation_Failure_DiscardsUnregisteredSnapshotPages
+    LiteDB.Tests.Engine.MemoryLifecycle_Tests.PageConstruction_Failure_ReturnsUntrackedBuffer(writable: False)
+    LiteDB.Tests.Engine.MemoryLifecycle_Tests.PageConstruction_Failure_ReturnsUntrackedBuffer(writable: True)
+    LiteDB.Tests.Engine.MemoryLifecycle_Tests.FirstResult_TransformFailure_ReleasesTransaction
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Windows_paths_beyond_MAX_PATH_preserve_admission_and_read_only_access(shared: False)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Windows_paths_beyond_MAX_PATH_preserve_admission_and_read_only_access(shared: True)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Overlong_native_paths_preserve_the_path_length_diagnostic
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Canonical_path_aliases_cannot_bypass_a_direct_owner
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Symlink_aliases_bind_storage_and_admission_to_the_target(directoryLink: False)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Symlink_aliases_bind_storage_and_admission_to_the_target(directoryLink: True)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Directory_alias_preserves_maximum_length_read_only_filenames
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Hard_links_are_rejected_before_a_second_WAL_can_be_selected
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Normalizing_an_old_file_alias_never_discards_its_WAL_or_recovery_marker
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Read_only_file_and_directory_need_no_writable_admission_storage(shared: False)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.Read_only_file_and_directory_need_no_writable_admission_storage(shared: True)
+    LiteDB.Tests.Engine.NativeAdmissionAliases_Tests.A_dangling_symlink_cannot_create_a_target_guarded_by_a_rebuild_marker
+    LiteDB.Tests.Engine.NativeAdmissionDirectCase_Tests.Distinct_case_sensitive_files_keep_independent_engines_and_committed_indexes
+    LiteDB.Tests.Engine.NativeAdmissionDirectCase_Tests.Windows_case_insensitive_aliases_use_stored_spelling_and_share_the_engine
+    LiteDB.Tests.Engine.NativeAdmissionDirectCase_Tests.Case_only_file_symlink_cannot_abandon_a_separate_committed_WAL
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Rebuild_waits_for_transactions_in_every_context
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Checkpoint_from_another_context_preserves_the_live_transactions_wal
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Abandoned_explicit_context_is_rolled_back_by_the_next_live_owner_operation
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Concurrent_siblings_drain_multiple_abandoned_transactions_without_losing_commits
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Foreign_reader_disposal_preserves_each_contexts_transaction(closeOwner: False)
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Foreign_reader_disposal_preserves_each_contexts_transaction(closeOwner: True)
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Foreign_context_disposal_wakes_a_sibling_already_waiting_for_its_collection
+    LiteDB.Tests.Engine.NativeAdmissionDirectContextLifetime_Tests.Failed_context_rollback_stops_all_contexts_and_preserves_committed_state
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "insert")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "update")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "upsert")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "delete")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "drop")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "rename")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "index")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "begin")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "pragma")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "rebuild")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "for-update")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "into")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_context_rejects_writes_without_stopping_its_writable_host(operation: "nested-sql")
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Invalid_context_page_limit_is_rejected_on_creation_and_attachment(limit: 0)
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Invalid_context_page_limit_is_rejected_on_creation_and_attachment(limit: -1)
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Read_only_existing_index_does_not_checkpoint_a_writable_hosts_eligible_wal
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Foreign_context_disposal_rolls_back_only_its_work_and_releases_collection_locks
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Per_context_page_limits_and_invalid_time_policy_coexist
+    LiteDB.Tests.Engine.NativeAdmissionDirectContext_Tests.Lazy_transforms_keep_their_context_across_interleaving_and_nested_callbacks
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFailure_Tests.Failed_write_stops_all_pooled_owners_and_reopen_preserves_committed_state
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFailure_Tests.Failed_replacement_cannot_resurrect_a_stopped_pooled_engine(stage: "before-log-backup")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFailure_Tests.Failed_replacement_cannot_resurrect_a_stopped_pooled_engine(stage: "after-source-backup")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFailure_Tests.Failed_replacement_cannot_resurrect_a_stopped_pooled_engine(stage: "after-temp-install")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFailure_Tests.Read_transform_can_wait_for_foreign_reader_disposal_without_releasing_its_active_call
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFinalizer_Tests.Abandoned_owner_does_not_close_a_retained_owner
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFinalizer_Tests.Weak_registry_does_not_root_engine_callback_database_cycles
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolFinalizer_Tests.Live_collection_retains_engine_after_database_object_is_collected
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "durability")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "fallback")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "compact")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "legacy")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "upgrade")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "rebuild")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "cache")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "migration-limit")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Incompatible_settings_preserve_the_live_owner_and_database_bytes(setting: "collation")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Password_mismatch_cannot_attach_and_null_is_distinct_from_empty(password: null, rejectedPassword: "")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Password_mismatch_cannot_attach_and_null_is_distinct_from_empty(password: "", rejectedPassword: null)
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Password_mismatch_cannot_attach_and_null_is_distinct_from_empty(password: "secret", rejectedPassword: "wrong")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Read_only_owners_share_engine_but_cannot_admit_a_writable_owner
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Rebuild_authenticates_new_owners_against_the_live_password(password: "new-password")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Rebuild_authenticates_new_owners_against_the_live_password(password: "")
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Rebuild_authenticates_new_owners_against_the_live_password(password: null)
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Same_thread_connections_own_independent_transactions_and_write_locks
+    LiteDB.Tests.Engine.NativeAdmissionDirectPoolSettings_Tests.Foreign_thread_completion_preserves_the_owners_explicit_transaction
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Owners_share_actual_engine_and_only_final_owner_releases_storage
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Concurrent_first_opens_share_engine_and_all_acknowledged_writes_survive
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_is_rejected_before_affecting_the_session
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Final_close_reservation_prevents_reopening_during_stream_cleanup
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Failed_first_open_does_not_strand_a_pool_reservation
+    LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Memory_databases_remain_independent
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Option_parses_alone_roundtrips_and_qualified_volume_stays_native
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Opt_in_changes_lock_authority_and_preserves_commits_rollback_indexes_and_stale_files(shared: False)
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Opt_in_changes_lock_authority_and_preserves_commits_rollback_indexes_and_stale_files(shared: True)
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Wrong_password_opens_release_host_authority_and_allow_retry(shared: False)
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Wrong_password_opens_release_host_authority_and_allow_retry(shared: True)
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Reentrant_read_transform_cannot_write_before_streaming_snapshot_publication
+    LiteDB.Tests.Engine.NativeAdmissionFinalizer_Tests.Abandoned_admission_outlives_ordinary_buffer_finalizers(reverseAllocation: False)
+    LiteDB.Tests.Engine.NativeAdmissionFinalizer_Tests.Abandoned_admission_outlives_ordinary_buffer_finalizers(reverseAllocation: True)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: False, youngFirst: False, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: False, youngFirst: True, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: True, youngFirst: False, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: True, youngFirst: True, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: False, youngFirst: False, fallback: True)
+    LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(shared: False, youngFirst: True, fallback: True)
+    LiteDB.Tests.Engine.NativeAdmissionIsolation_Tests.Identity_wait_delays_unrelated_admission_and_release_but_both_resume
+    LiteDB.Tests.Engine.NativeAdmissionNamespaceSecurity_Tests.Unix_writable_nonsticky_ancestor_cannot_split_authority
+    LiteDB.Tests.Engine.NativeAdmissionNamespaceSecurity_Tests.Darwin_extended_acl_is_refused_and_empty_acl_is_accepted
+    LiteDB.Tests.Engine.NativeAdmissionNamespaceSecurity_Tests.Windows_ancestor_delete_grant_cannot_split_authority
+    LiteDB.Tests.Engine.NativeAdmissionNamespaceSecurity_Tests.Windows_private_directory_reopens_but_inherited_acl_is_not_repaired
+    LiteDB.Tests.Engine.NativeAdmissionOwnershipProof_Tests.Last_release_overlapping_reference_publication_preserves_exact_native_ownership(shared: False, failPublication: False)
+    LiteDB.Tests.Engine.NativeAdmissionOwnershipProof_Tests.Last_release_overlapping_reference_publication_preserves_exact_native_ownership(shared: False, failPublication: True)
+    LiteDB.Tests.Engine.NativeAdmissionOwnershipProof_Tests.Last_release_overlapping_reference_publication_preserves_exact_native_ownership(shared: True, failPublication: False)
+    LiteDB.Tests.Engine.NativeAdmissionOwnershipProof_Tests.Last_release_overlapping_reference_publication_preserves_exact_native_ownership(shared: True, failPublication: True)
+    LiteDB.Tests.Engine.NativeAdmissionPathProof_Tests.Racing_different_fingerprints_cannot_both_be_admitted
+    LiteDB.Tests.Engine.NativeAdmissionPathProof_Tests.Fingerprint_range_endpoints_allow_matching_owners_and_reject_every_different_domain(lastByte: False)
+    LiteDB.Tests.Engine.NativeAdmissionPathProof_Tests.Fingerprint_range_endpoints_allow_matching_owners_and_reject_every_different_domain(lastByte: True)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Local_connections_follow_replacement_even_when_the_first_admission_was_read_only(readOnly: False)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Local_connections_follow_replacement_even_when_the_first_admission_was_read_only(readOnly: True)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Failed_downgrade_retains_exclusion_and_faults_cached_admission(installationFails: False, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Failed_downgrade_retains_exclusion_and_faults_cached_admission(installationFails: True, fallback: False)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Failed_downgrade_retains_exclusion_and_faults_cached_admission(installationFails: False, fallback: True)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.Failed_downgrade_retains_exclusion_and_faults_cached_admission(installationFails: True, fallback: True)
+    LiteDB.Tests.Engine.NativeAdmissionReplacement_Tests.An_opener_that_checked_before_replacement_cannot_create_in_the_rename_gap
+    LiteDB.Tests.Engine.NativeAdmissionWindowsPermissions_Tests.Read_only_admission_works_with_file_and_directory_write_access_denied(shared: False)
+    LiteDB.Tests.Engine.NativeAdmissionWindowsPermissions_Tests.Read_only_admission_works_with_file_and_directory_write_access_denied(shared: True)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Compatible_references_share_one_handle_and_final_release_can_change_threads(shared: False)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Compatible_references_share_one_handle_and_final_release_can_change_threads(shared: True)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Independent_direct_writers_remain_incompatible_before_mutation
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Read_only_direct_objects_share_admission_and_leave_bytes_unchanged
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Unsupported_locking_fails_before_existing_database_or_WAL_mutation(shared: False)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Unsupported_locking_fails_before_existing_database_or_WAL_mutation(shared: True)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Forgotten_references_do_not_strand_the_registry
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Failure_publishing_a_reference_unwinds_without_releasing_a_live_owner(existingOwner: False)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Failure_publishing_a_reference_unwinds_without_releasing_a_live_owner(existingOwner: True)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Forgotten_database_and_engine_release_process_admission(shared: False)
+    LiteDB.Tests.Engine.NativeAdmission_Tests.Forgotten_database_and_engine_release_process_admission(shared: True)
+    LiteDB.Tests.Engine.PageBufferAbandonment_Tests.Live_cache_and_standalone_frames_keep_strict_leak_diagnostic
+    LiteDB.Tests.Engine.PageBufferAbandonment_Tests.Abandoned_dirty_legacy_Direct_graph_preserves_committed_state(promote: False)
+    LiteDB.Tests.Engine.PageBufferAbandonment_Tests.Abandoned_dirty_legacy_Direct_graph_preserves_committed_state(promote: True)
+    LiteDB.Tests.Engine.RebuildRecoveryMarker_Tests.Marker_creation_failure_does_not_move_the_original_files(conflictingMarker: False)
+    LiteDB.Tests.Engine.RebuildRecoveryMarker_Tests.Marker_creation_failure_does_not_move_the_original_files(conflictingMarker: True)
+    LiteDB.Tests.Engine.RebuildRecoveryMarker_Tests.Marker_flush_failure_leaves_the_original_pair_untouched_and_access_blocked
+    LiteDB.Tests.Engine.SortDiskCleanup_Tests.Failed_alias_admission_cannot_delete_live_owners_sort_file(encrypted: False)
+    LiteDB.Tests.Engine.SortDiskCleanup_Tests.Failed_alias_admission_cannot_delete_live_owners_sort_file(encrypted: True)

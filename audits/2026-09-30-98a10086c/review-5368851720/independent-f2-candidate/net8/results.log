@@ -1,0 +1,44 @@
+setup encrypted=False peer=False localReaders=1 noPin=True
+callback operations=1 holds=0
+result=InvalidOperationException elapsedMs=1
+cold ordinary=1 rows=2
+setup encrypted=False peer=True localReaders=1 noPin=True
+callback operations=1 holds=0
+result=InvalidOperationException elapsedMs=0
+cold ordinary=1 rows=2
+setup encrypted=True peer=False localReaders=1 noPin=True
+callback operations=1 holds=0
+result=InvalidOperationException elapsedMs=0
+cold ordinary=1 rows=2
+setup encrypted=True peer=True localReaders=1 noPin=True
+callback operations=1 holds=0
+result=InvalidOperationException elapsedMs=0
+cold ordinary=1 rows=2
+reader setup encrypted=False peer=False
+reader-first=True
+reader result=InvalidOperationException elapsedMs=0
+reader-second=True
+reader-callback-count=1
+reader-cold rows=2
+reader setup encrypted=False peer=True
+reader-first=True
+reader result=InvalidOperationException elapsedMs=0
+reader-second=True
+reader-callback-count=1
+reader-cold rows=2
+reader setup encrypted=True peer=False
+reader-first=True
+reader result=InvalidOperationException elapsedMs=0
+reader-second=True
+reader-callback-count=1
+reader-cold rows=2
+reader setup encrypted=True peer=True
+reader-first=True
+reader result=InvalidOperationException elapsedMs=0
+reader-second=True
+reader-callback-count=1
+reader-cold rows=2
+prefetch encrypted=False result=InvalidOperationException elapsedMs=0
+prefetch read=True leased=True
+prefetch encrypted=True result=InvalidOperationException elapsedMs=0
+prefetch read=True leased=True

@@ -1,0 +1,212 @@
+{
+  "review": "5368851720",
+  "scope": "Fresh independent review of CallbackScope lifetime, retained roots, nested exception restoration, thread handoff and independent leased-reader admission; F1 common write preflight inspected after integration.",
+  "candidate_production_tree": "4c82e64ec435862987ccb0d1061dc6eadc34510f",
+  "retention_test_commit": "2abe73ce2d6c39dc1490eefc849c018b63b9b83b",
+  "findings": [],
+  "conclusions": [
+    "CallbackScope synchronous using scope covers exceptional Call unwind including EndAdmissions; tail removal clears strong engine reference.",
+    "Two mutex-backed SharedDataReader constructors already retain their SharedEngine in existing disposal closures; additional owner field does not add a new application graph lifetime.",
+    "Independent leased/coordinated readers do not enter the mutex-backed CallbackScope; author positive controls passed.",
+    "Nested ordinary calls and late handed-off reader exceptions restore outer scopes and leave no stale namespace refusal.",
+    "Four independent probes confirm database, SharedEngine, settings and captured ReadTransform state collect while original caller thread remains alive, for plain/encrypted successful/throwing pinned input. ThreadStatic list backing slots are also all null. Cold indexed state is verified."
+  ],
+  "test_runs": [
+    {
+      "file": "review-callback-scope-combined-net8.trx",
+      "counts": {
+        "total": "89",
+        "executed": "89",
+        "passed": "89",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "file": "callback-scope-retention-final-net10.trx",
+      "counts": {
+        "total": "4",
+        "executed": "4",
+        "passed": "4",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "file": "review-callback-scope-net8.trx",
+      "counts": {
+        "total": "75",
+        "executed": "75",
+        "passed": "75",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "file": "review-callback-scope-combined-net10.trx",
+      "counts": {
+        "total": "89",
+        "executed": "89",
+        "passed": "89",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "file": "callback-scope-retention-final-net8.trx",
+      "counts": {
+        "total": "4",
+        "executed": "4",
+        "passed": "4",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    }
+  ],
+  "net462": "Compilation succeeded with zero errors; Framework execution not performed by this reviewer. No target conditional or skip in new guard.",
+  "provenance": [
+    "Initial review-callback-scope-net8.trx is F2-only candidate 5b9eef127, with 75 passed.",
+    "Combined review-callback-scope-combined-net8/net10.trx use 0fe864cce and the exact combined production tree, with 89 passed each including 4 then-untracked IndependentCallbackScopeRetention tests.",
+    "Promoted guard renamed class/file, used Assert.Empty instead of a count assertion, and marked the caller worker as background; the final named 4 tests passed on each runtime and net462 compiled.",
+    "Retained binary hashes describe final promoted guard builds. Earlier test assemblies were overwritten during the final guard build; their TRX and logs are retained, and production source tree is unchanged.",
+    "No product defects or failing test runs observed in this review; existing analyzer warnings are retained in logs.",
+    "Evidence is local Linux testing with TestingEnabled=true, not hosted CI or production performance evidence."
+  ],
+  "binaries": [
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.dll",
+      "sha256": "edb6dedf4a2a188f67d79f6f4f266a82583e2fc8bad6136e340cfe6e8466fe4f",
+      "bytes": 1250816
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.pdb",
+      "sha256": "066dd0d5d0e8695b42c40b2d90db8d55055eba46bab6030cdddb0f1f60b635d6",
+      "bytes": 437676
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll",
+      "sha256": "9556843db8c4ecd6ecea2203bfc46fb6e5ea2fe5fddb5d73d3d96b3ed9ac20fd",
+      "bytes": 7093248
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.pdb",
+      "sha256": "932112fabf0dbfcd39f80ea4cb02e1a827c0f7062f68a8d50d5de953ccea70aa",
+      "bytes": 909128
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.deps.json",
+      "sha256": "2cd710e943fbbb74b013f3f168be64fa1f25d2216c113a037ab6bd894f766c79",
+      "bytes": 23224
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.runtimeconfig.json",
+      "sha256": "97c9700542b659150b230c3578b29530fd76ab01ec66a92cd16945e0245713df",
+      "bytes": 328
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.dll",
+      "sha256": "096c62a23f93b4fefaa1d209ea8523f899db4541ecdc76ab6a6cdd59fe6d460e",
+      "bytes": 1251328
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.pdb",
+      "sha256": "641b81942d69e85e1c3c40c71790d878d4399b99f9907aed8d6c082b26a47d78",
+      "bytes": 437960
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll",
+      "sha256": "14d6deefcbb3080d330dd156c7f1b5fa5f6005ef3c7620809294c0a312ef435f",
+      "bytes": 7091200
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.pdb",
+      "sha256": "81e0f40f742e699645a7b37858c29cd5cf1ac81471020f63d4e733ea717d608c",
+      "bytes": 909360
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.deps.json",
+      "sha256": "08683c8441f920f208c1718e2deefb62283f84c3ceb2025792923e54197cf166",
+      "bytes": 21166
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "bytes": 330
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net462/LiteDB.dll",
+      "sha256": "0b682e6f7622f76f299d02417748e34182ff8df923177ab30d756269f569c32c",
+      "bytes": 1183232
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net462/LiteDB.pdb",
+      "sha256": "acc50d6f5e5777737f2d2dede414465eb5ccdaa4088a376b56a99935a4681676",
+      "bytes": 413440
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net462/LiteDB.Tests.dll",
+      "sha256": "164f81f4aadc1e44db218eb947dbc9231974c2681293d7024c5a45cb05e983c6",
+      "bytes": 6723072
+    },
+    {
+      "path": "__WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net462/LiteDB.Tests.pdb",
+      "sha256": "bad52e3b6d930f62cc1567efa80c8fec651707f4fb2b42087dcc8a07a0cf4ebf",
+      "bytes": 821144
+    }
+  ]
+}

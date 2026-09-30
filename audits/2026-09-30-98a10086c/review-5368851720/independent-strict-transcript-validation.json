@@ -1,0 +1,176 @@
+{
+  "baseline": {
+    "write": {
+      "log": "strict-proof/pin-proof-baseline/write-run-strict.log",
+      "cases": [
+        {
+          "scenario": "write-commit",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "write-rollback",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "write-commit",
+          "encrypted": true,
+          "exitCode": 20
+        },
+        {
+          "scenario": "write-rollback",
+          "encrypted": true,
+          "exitCode": 20
+        }
+      ],
+      "controls": 8,
+      "separatePeerCommits": 12,
+      "callbackNativeExclusion": 4,
+      "defaultBeginActualChildNativeObservations": 0,
+      "expectedTopLevelExit": 0,
+      "exitProvenance": "Author reported explicit shell assertion of expected standalone process exit; raw runner report fullmatrix handled separately."
+    },
+    "begin": {
+      "log": "strict-proof/pin-proof-baseline/begin-run-strict.log",
+      "cases": [
+        {
+          "scenario": "pin-begin-same",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "pin-begin-peer",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "reader-begin-same",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "reader-begin-peer",
+          "encrypted": false,
+          "exitCode": 20
+        },
+        {
+          "scenario": "pin-begin-same",
+          "encrypted": true,
+          "exitCode": 20
+        },
+        {
+          "scenario": "pin-begin-peer",
+          "encrypted": true,
+          "exitCode": 20
+        },
+        {
+          "scenario": "reader-begin-same",
+          "encrypted": true,
+          "exitCode": 20
+        },
+        {
+          "scenario": "reader-begin-peer",
+          "encrypted": true,
+          "exitCode": 20
+        }
+      ],
+      "controls": 6,
+      "separatePeerCommits": 14,
+      "callbackNativeExclusion": 8,
+      "defaultBeginActualChildNativeObservations": 8,
+      "expectedTopLevelExit": 0,
+      "exitProvenance": "Author reported explicit shell assertion of expected standalone process exit; raw runner report fullmatrix handled separately."
+    }
+  },
+  "candidate": {
+    "write": {
+      "log": "strict-proof/pin-proof-candidate/write-run.log",
+      "cases": [
+        {
+          "scenario": "write-commit",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "write-rollback",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "write-commit",
+          "encrypted": true,
+          "exitCode": 10
+        },
+        {
+          "scenario": "write-rollback",
+          "encrypted": true,
+          "exitCode": 10
+        }
+      ],
+      "controls": 8,
+      "separatePeerCommits": 12,
+      "callbackNativeExclusion": 8,
+      "defaultBeginActualChildNativeObservations": 0,
+      "expectedTopLevelExit": 10,
+      "exitProvenance": "Author reported explicit shell assertion of expected standalone process exit; raw runner report fullmatrix handled separately."
+    },
+    "begin": {
+      "log": "strict-proof/pin-proof-candidate/begin-run.log",
+      "cases": [
+        {
+          "scenario": "pin-begin-same",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "pin-begin-peer",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "reader-begin-same",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "reader-begin-peer",
+          "encrypted": false,
+          "exitCode": 10
+        },
+        {
+          "scenario": "pin-begin-same",
+          "encrypted": true,
+          "exitCode": 10
+        },
+        {
+          "scenario": "pin-begin-peer",
+          "encrypted": true,
+          "exitCode": 10
+        },
+        {
+          "scenario": "reader-begin-same",
+          "encrypted": true,
+          "exitCode": 10
+        },
+        {
+          "scenario": "reader-begin-peer",
+          "encrypted": true,
+          "exitCode": 10
+        }
+      ],
+      "controls": 6,
+      "separatePeerCommits": 14,
+      "callbackNativeExclusion": 16,
+      "defaultBeginActualChildNativeObservations": 0,
+      "expectedTopLevelExit": 10,
+      "exitProvenance": "Author reported explicit shell assertion of expected standalone process exit; raw runner report fullmatrix handled separately."
+    }
+  },
+  "limits": [
+    "Final F2 baseline requires prewarmed exact cached child checked out, actual child native waiter, local gate acquired, native excluded and blocked caller; first weaker oracle logs are not native-boundary proof.",
+    "Author original baseline runner binaries overwritten; original baseline logs/source lineage and knownbad package remain. Final F1 baseline source predates only an F2-specific helper/predicate change, not its executed branch.",
+    "Current author candidate runners and four raw database fixture roots require post-benchmark copy. Independent final F2 candidate and synthetic negative-oracle exact binaries already staged.",
+    "Standalone expected-marker/exit comparisons are not a claim that the hosted CLI matrix finished."
+  ]
+}

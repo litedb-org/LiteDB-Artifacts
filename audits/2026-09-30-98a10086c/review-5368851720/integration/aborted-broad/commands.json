@@ -1,0 +1,46 @@
+[
+  {
+    "source": "ab8aa1ed14916710203c48b556f0bf0650539aca",
+    "cwd": "__WORKSPACE__/artifacts_temp/safety-net8",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests/LiteDB.Tests.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~Shared|FullyQualifiedName~Lifetime|FullyQualifiedName~Abandon|FullyQualifiedName~Admission|FullyQualifiedName~ProcessDeath|FullyQualifiedName~Failure",
+      "--logger",
+      "trx;LogFileName=review536885-broad-net8.trx"
+    ],
+    "stdoutAndStderr": "__WORKSPACE__/artifacts_temp/review536885-broad-net8.log",
+    "sourceOfCommand": "Root supplied exact original argv and cwd after run; no inference from partition script."
+  },
+  {
+    "source": "ab8aa1ed14916710203c48b556f0bf0650539aca",
+    "cwd": "__WORKSPACE__/artifacts_temp/integration",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests/LiteDB.Tests.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~Shared|FullyQualifiedName~Lifetime|FullyQualifiedName~Abandon|FullyQualifiedName~Admission|FullyQualifiedName~ProcessDeath|FullyQualifiedName~Failure",
+      "--logger",
+      "trx;LogFileName=review536885-broad-net10.trx"
+    ],
+    "stdoutAndStderr": "__WORKSPACE__/artifacts_temp/review536885-broad-net10.log",
+    "sourceOfCommand": "Root supplied exact original argv and cwd after run; no inference from partition script."
+  }
+]

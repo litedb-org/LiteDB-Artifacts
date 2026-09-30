@@ -1,0 +1,145 @@
+Test run for __WORKSPACE__/artifacts_temp/integration/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+The following Tests are available:
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "(Score = 3) = true", expected: [3])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "true = (Score = 3)", expected: [3])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "(Score = 3) != false", expected: [3])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "false != (Score = 3)", expected: [3])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "(((Score = 3) = true) = true)", expected: [3])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "(Score = 3 OR Score = 7) = true", expected: [3, 7])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "(Score BETWEEN 1 AND 9) = true AND Score > 7", expected: [8, 9])
+    LiteDB.Tests.QueryTest.BooleanPredicateOptimization_Tests.Boolean_identity_comparisons_expose_shared_index_predicates(predicate: "([1,3,5,7,9] ANY = Score) = true AND Score >= 7", expected: [7, 9])
+    LiteDB.Tests.QueryTest.IncludedBooleanPipeline_Tests.Shared_guard_values_use_the_current_collation(collation: "en-US/None", expectedIndex: "_id")
+    LiteDB.Tests.QueryTest.IncludedBooleanPipeline_Tests.Shared_guard_values_use_the_current_collation(collation: "en-US/IgnoreCase", expectedIndex: "label")
+    LiteDB.Tests.QueryTest.SharedQueryIr_Tests.Contains_normalization_is_shared_and_does_not_parse_generated_text
+    LiteDB.Tests.Issues.Issue2822SharedCompletion_Tests.Joining_an_auto_transaction_does_not_require_an_extra_completion(rollback: False)
+    LiteDB.Tests.Issues.Issue2822SharedCompletion_Tests.Joining_an_auto_transaction_does_not_require_an_extra_completion(rollback: True)
+    LiteDB.Tests.Internals.NativeAdmissionFallbackProcess_Tests.Remote_idle_shared_owner_blocks_fallback_replacement_before_marker
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests.CrossProcess_Shared_MultipleProcesses_CanAccessSameDatabase
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Oracle.CompleteRowsAndActualSecondaryIndex_Pass
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Oracle.SameIndexCounts_DoNotHideWrongMembershipOrDuplicates(duplicate: False)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Oracle.SameIndexCounts_DoNotHideWrongMembershipOrDuplicates(duplicate: True)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Watchdog.NoCompletedProgress_ExpiresIncludingSchedulingAndDisposal(stage: "queued", completed: 0)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Watchdog.NoCompletedProgress_ExpiresIncludingSchedulingAndDisposal(stage: "inserting", completed: 0)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Watchdog.NoCompletedProgress_ExpiresIncludingSchedulingAndDisposal(stage: "disposing connection", completed: 20)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Watchdog.TaskFinishingDuringExpiredIdleRead_IsObserved(fault: False)
+    LiteDB.Tests.Engine.CrossProcess_Shared_Tests_Watchdog.TaskFinishingDuringExpiredIdleRead_IsObserved(fault: True)
+    LiteDB.Tests.Engine.Issue2881_VectorPromotion_Tests.Shared_connections_observe_the_promoted_version(password: null)
+    LiteDB.Tests.Engine.Issue2881_VectorPromotion_Tests.Shared_connections_observe_the_promoted_version(password: "promotion-password")
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Shared_replacement_transfers_local_read_only_first_admission_and_password(readOnly: False)
+    LiteDB.Tests.Engine.NativeAdmissionFallback_Tests.Shared_replacement_transfers_local_read_only_first_admission_and_password(readOnly: True)
+    LiteDB.Tests.Engine.SharedAdmissionLifetime_Tests.Failed_inner_opens_release_their_references_and_connection_disposal_releases_admission
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: null, path: 0)
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: null, path: 1)
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: null, path: 2)
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: "secret", path: 0)
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: "secret", path: 1)
+    LiteDB.Tests.Engine.SharedCallbackClose_Tests.Refused_raw_callback_close_keeps_native_ownership_until_operation_returns(password: "secret", path: 2)
+    LiteDB.Tests.Engine.SharedCheckpointRationing_Tests.Closes_under_another_instance_lease_ration_partial_checkpoints(password: null)
+    LiteDB.Tests.Engine.SharedCheckpointRationing_Tests.Closes_under_another_instance_lease_ration_partial_checkpoints(password: "secret")
+    LiteDB.Tests.Engine.SharedCoordinatedLifecycle_Tests.Idle_snapshot_expires_without_checkpointing_or_retaining_a_lease
+    LiteDB.Tests.Engine.SharedCoordinatedLifecycle_Tests.Unknown_mapping_falls_back_without_altering_foreign_bytes
+    LiteDB.Tests.Engine.SharedCoordinatedReads_Tests.Revocation_preserves_open_snapshot_and_routes_new_queries_through_mutex
+    LiteDB.Tests.Engine.SharedCoordinatedResources_Tests.First_read_skips_authority_attachment_but_a_later_write_still_joins_it
+    LiteDB.Tests.Engine.SharedCoordinationArchitecture_Tests.Unqualified_architecture_revokes_admission_and_preserves_an_active_cached_reader
+    LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Releasing_one_view_preserves_published_state_for_a_live_peer(explicitlyDispose: False)
+    LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Releasing_one_view_preserves_published_state_for_a_live_peer(explicitlyDispose: True)
+    LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Steady_epoch_publication_allocates_no_managed_objects
+    LiteDB.Tests.Engine.SharedCoordinationPage_Tests.Epoch_allocation_measurement_detects_per_publication_allocations
+    LiteDB.Tests.Engine.SharedCoordinationPolicy_Tests.Unix_file_locking_switch_refuses_participation_before_creating_files
+    LiteDB.Tests.Engine.SharedCoordinationPolicy_Tests.A_native_process_with_disabled_file_locking_cannot_retire_a_live_authority(password: null, conflictingSwitch: False)
+    LiteDB.Tests.Engine.SharedCoordinationPolicy_Tests.A_native_process_with_disabled_file_locking_cannot_retire_a_live_authority(password: "secret", conflictingSwitch: False)
+    LiteDB.Tests.Engine.SharedCoordinationPolicy_Tests.A_native_process_with_disabled_file_locking_cannot_retire_a_live_authority(password: null, conflictingSwitch: True)
+    LiteDB.Tests.Engine.SharedCoordinationPolicy_Tests.A_native_process_with_disabled_file_locking_cannot_retire_a_live_authority(password: "secret", conflictingSwitch: True)
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "magic")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "newer")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "unknown-older")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "header-size")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "layout-size")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "required-capabilities")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "reserved")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "database")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "authority")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "zero-authority")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: False, field: "truncated")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "magic")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "newer")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "unknown-older")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "header-size")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "layout-size")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "required-capabilities")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "reserved")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "database")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "authority")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "zero-authority")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Unknown_or_mismatched_headers_preserve_the_entire_authority(live: True, field: "truncated")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.An_unknown_revocation_marker_prevents_partial_retirement
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Failed_retirement_is_repeatable_without_partial_authority_admission(suffix: "-shared-state")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Failed_retirement_is_repeatable_without_partial_authority_admission(suffix: "-shared-disabled")
+    LiteDB.Tests.Engine.SharedCoordinationProtocol_Tests.Failed_retirement_is_repeatable_without_partial_authority_admission(suffix: "-shared-live")
+    LiteDB.Tests.Engine.SharedCoordinationPublication_Tests.Version_reset_still_invalidates_old_snapshots
+    LiteDB.Tests.Engine.SharedCoordinationPublication_Tests.Interrupted_publisher_requires_a_protected_open_before_readmission(tornSequence: False)
+    LiteDB.Tests.Engine.SharedCoordinationPublication_Tests.Interrupted_publisher_requires_a_protected_open_before_readmission(tornSequence: True)
+    LiteDB.Tests.Engine.SharedCoordinationTemporaryFiles_Tests.Windows_sharing_violations_retry_boundedly_without_changing_publication(permanent: False)
+    LiteDB.Tests.Engine.SharedCoordinationTemporaryFiles_Tests.Windows_sharing_violations_retry_boundedly_without_changing_publication(permanent: True)
+    LiteDB.Tests.Engine.SharedLateReaderClose_Tests.Late_reader_callback_can_reenter_after_foreign_close_starts_draining(password: null, snapshot: False)
+    LiteDB.Tests.Engine.SharedLateReaderClose_Tests.Late_reader_callback_can_reenter_after_foreign_close_starts_draining(password: "secret", snapshot: False)
+    LiteDB.Tests.Engine.SharedLateReaderClose_Tests.Late_reader_callback_can_reenter_after_foreign_close_starts_draining(password: null, snapshot: True)
+    LiteDB.Tests.Engine.SharedLateReaderClose_Tests.Late_reader_callback_can_reenter_after_foreign_close_starts_draining(password: "secret", snapshot: True)
+    LiteDB.Tests.Engine.SharedLateReaderClose_Tests.own_pin_callback_can_reenter_shared_pragma
+    LiteDB.Tests.Engine.SharedLazyCheckpoint_Tests.Operations_below_the_threshold_leave_the_wal_and_dispose_checkpoints_it(password: null)
+    LiteDB.Tests.Engine.SharedLazyCheckpoint_Tests.Operations_below_the_threshold_leave_the_wal_and_dispose_checkpoints_it(password: "secret")
+    LiteDB.Tests.Engine.SharedLazyCheckpoint_Tests.A_read_only_connection_neither_checkpoints_nor_removes_the_wal
+    LiteDB.Tests.Engine.SharedModeAdmissionReview_Tests.Read_only_mapped_attachment_holds_admission_until_connection_disposal
+    LiteDB.Tests.Engine.SharedModeDiagnostics_Tests.Direct_and_different_mutex_writers_cannot_mutate_a_mapped_snapshot(password: null)
+    LiteDB.Tests.Engine.SharedModeDiagnostics_Tests.Direct_and_different_mutex_writers_cannot_mutate_a_mapped_snapshot(password: "secret")
+    LiteDB.Tests.Engine.SharedModeDiagnostics_Tests.Protected_read_only_fallback_needs_no_mode_file_and_preserves_storage
+    LiteDB.Tests.Engine.SharedModeGuardFailure_Tests.Interrupted_native_lock_acquisition_is_repeatable(stage: "mode-locking")
+    LiteDB.Tests.Engine.SharedModeGuardFailure_Tests.Interrupted_native_lock_acquisition_is_repeatable(stage: "mode-locked")
+    LiteDB.Tests.Engine.SharedModeGuardFailure_Tests.Native_lock_failure_does_not_mutate_data_or_leak_admission
+    LiteDB.Tests.Engine.SharedModeGuardFailure_Tests.Rebuild_holds_admission_through_install_and_releases_it_after_failure(fail: False)
+    LiteDB.Tests.Engine.SharedModeGuardFailure_Tests.Rebuild_holds_admission_through_install_and_releases_it_after_failure(fail: True)
+    LiteDB.Tests.Engine.SharedMutexOwnerExit_Tests.A_release_racing_the_exited_owner_cleanup_ends_the_ownership_once
+    LiteDB.Tests.Engine.SharedMutexOwnerScoped_Tests.Cleanup_of_an_acquisition_ended_by_disposal_cannot_release_a_new_owner
+    LiteDB.Tests.Engine.SharedMutexOwnership_Tests.Dispose_on_another_thread_with_an_open_unleased_reader_releases_the_mutex
+    LiteDB.Tests.Engine.SharedMutexOwnership_Tests.Transaction_owner_that_exits_lets_other_connections_write_and_is_reported
+    LiteDB.Tests.Engine.SharedOpeningMutation_Tests.Automatic_rebuild_fences_admission_before_the_external_lease_scan(password: null)
+    LiteDB.Tests.Engine.SharedOpeningMutation_Tests.Automatic_rebuild_fences_admission_before_the_external_lease_scan(password: "secret")
+    LiteDB.Tests.Engine.SharedPendingRelease_Tests.Final_close_waits_for_its_own_release_before_checkpointing
+    LiteDB.Tests.Engine.SharedPendingRelease_Tests.A_disposed_connection_holds_no_mutex_for_the_next_final_close(firstClosesFirst: False)
+    LiteDB.Tests.Engine.SharedPendingRelease_Tests.A_disposed_connection_holds_no_mutex_for_the_next_final_close(firstClosesFirst: True)
+    LiteDB.Tests.Engine.SharedPinProgress_Tests.Progress_oracle_rejects_a_writer_blocked_by_a_held_pin(password: null)
+    LiteDB.Tests.Engine.SharedPinProgress_Tests.Progress_oracle_rejects_a_writer_blocked_by_a_held_pin(password: "secret")
+    LiteDB.Tests.Engine.SharedReaderPin_Tests.Pinning_thread_that_exits_without_disposing_its_reader_releases_the_mutex
+    LiteDB.Tests.Engine.SharedReaderPin_Tests.Idle_pin_expires_for_a_live_owner_that_keeps_its_reader_open
+    LiteDB.Tests.Engine.SharedReaderPin_Tests.Write_query_reader_under_a_pin_can_be_disposed_on_another_thread
+    LiteDB.Tests.Engine.SharedReaderPin_Tests.Another_process_waits_only_while_the_pin_is_in_use
+    LiteDB.Tests.Engine.SharedReaderRegistrationFailure_Tests.Failed_rollback_retains_unknown_content_and_the_original_error(header: False)
+    LiteDB.Tests.Engine.SharedReaderRegistrationFailure_Tests.Failed_rollback_retains_unknown_content_and_the_original_error(header: True)
+    LiteDB.Tests.Engine.SharedReaderSlots_Tests.Failed_append_header_restores_the_published_readers_without_another_registration
+    LiteDB.Tests.Engine.SharedReaderWrites_Tests.Explicit_transaction_inside_iteration_balances_the_pin(rollback: False)
+    LiteDB.Tests.Engine.SharedReaderWrites_Tests.Explicit_transaction_inside_iteration_balances_the_pin(rollback: True)
+    LiteDB.Tests.Engine.SharedReaderWrites_Tests.Unusable_lease_registry_streams_under_the_mutex
+    LiteDB.Tests.Engine.SharedReadPacer_Tests.Coarse_timer_delays_are_credited_but_a_suspension_cannot_disable_future_pacing
+    LiteDB.Tests.Engine.SharedReadPath_Tests.Auto_rebuild_waits_for_a_live_snapshot_reader_and_runs_once_it_closed
+    LiteDB.Tests.Engine.SharedReadPath_Tests.A_result_at_the_value_budget_is_buffered_and_one_past_it_streams_from_the_same_snapshot(count: 100, leased: False)
+    LiteDB.Tests.Engine.SharedReadPath_Tests.A_result_at_the_value_budget_is_buffered_and_one_past_it_streams_from_the_same_snapshot(count: 101, leased: True)
+    LiteDB.Tests.Engine.SharedReadPath_Tests.A_held_slot_lease_without_its_content_makes_the_scan_fail_closed
+    LiteDB.Tests.Engine.SharedScopedCalls_Tests.Failed_registration_followed_only_by_small_reads_does_not_disable_checkpoints
+    LiteDB.Tests.Engine.SharedWorkerDumpArguments_Tests.CaptureCommand_RejectsExtraOptionsAndWrongTarget(arguments: "-accepteula -ma -r -at 5 -64 6448 \"C:\\Temp\\dire"···)
+    LiteDB.Tests.Engine.SharedWorkerDumpArguments_Tests.CaptureCommand_RejectsExtraOptionsAndWrongTarget(arguments: "-accepteula -ma -r -at 5 6448 -64 \"C:\\Temp\\dire"···)
+    LiteDB.Tests.Engine.SharedWorkerDumpArguments_Tests.CaptureCommand_RejectsExtraOptionsAndWrongTarget(arguments: "-accepteula -ma -r -at 5 6448 \"C:\\Temp\\director"···)
+    LiteDB.Tests.Engine.SharedWorkerDumpArguments_Tests.CaptureCommand_RejectsExtraOptionsAndWrongTarget(arguments: "-64 -accepteula -ma -r -at 5 6448 \"C:\\Temp\\dump"···)
+    LiteDB.Tests.Engine.SharedWorkerDumpArguments_Tests.CaptureCommand_RejectsExtraOptionsAndWrongTarget(arguments: "-accepteula -ma -r -at 5 6449 \"C:\\Temp\\dump-644"···)
+    LiteDB.Tests.Engine.SharedWorkerDump_Tests.ExpectedTempVolume_AcceptsSameDriveAndRejectsWorkspaceDrive
+    LiteDB.Tests.Engine.SharedWorkerDump_Tests.StalledTool_UsesBoundedCancellationAndLeavesTesthostAlive
+    LiteDB.Tests.Engine.SharedWorkerDumpSmoke_Tests.Smoke_NeedsMatchingStructureAndAnExplicitValidatedReport(fixture: "wrong-pid", reportValid: True)
+    LiteDB.Tests.Engine.SharedWorkerDumpSmoke_Tests.Smoke_NeedsMatchingStructureAndAnExplicitValidatedReport(fixture: "wrong-architecture", reportValid: True)
+    LiteDB.Tests.Engine.SharedWorkerDumpSmoke_Tests.Smoke_NeedsMatchingStructureAndAnExplicitValidatedReport(fixture: "truncated", reportValid: True)
+    LiteDB.Tests.Engine.SharedWorkerDumpSmoke_Tests.Smoke_NeedsMatchingStructureAndAnExplicitValidatedReport(fixture: "missing", reportValid: True)
+    LiteDB.Tests.Engine.SharedWorkerDumpSmoke_Tests.Smoke_NeedsMatchingStructureAndAnExplicitValidatedReport(fixture: "complete", reportValid: False)
+    LiteDB.Tests.Engine.SharedWriterIntent_Tests.A_fresh_connection_announces_before_writable_open_and_clears_on_close(fail: False)
+    LiteDB.Tests.Engine.SharedWriterIntent_Tests.A_fresh_connection_announces_before_writable_open_and_clears_on_close(fail: True)
+    LiteDB.Tests.Engine.SharedWriterPressure_Tests.Scheduling_precedes_leases_but_an_admitted_reader_keeps_its_generation(password: null, beforeAdmission: False)
+    LiteDB.Tests.Engine.SharedWriterPressure_Tests.Scheduling_precedes_leases_but_an_admitted_reader_keeps_its_generation(password: "secret", beforeAdmission: False)
+    LiteDB.Tests.Engine.SharedWriterPressure_Tests.Scheduling_precedes_leases_but_an_admitted_reader_keeps_its_generation(password: null, beforeAdmission: True)
+    LiteDB.Tests.Engine.SharedWriterPressure_Tests.Scheduling_precedes_leases_but_an_admitted_reader_keeps_its_generation(password: "secret", beforeAdmission: True)

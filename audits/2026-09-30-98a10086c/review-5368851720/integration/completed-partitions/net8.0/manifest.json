@@ -1,0 +1,53 @@
+{
+  "source": "dded8c934ec92930d42e3d13158f04b85f1972ee",
+  "filters": {
+    "handles": "FullyQualifiedName~TransactionHandle",
+    "shared": "FullyQualifiedName~Shared&FullyQualifiedName!~TransactionHandle",
+    "other": "(FullyQualifiedName~Lifetime|FullyQualifiedName~Abandon|FullyQualifiedName~Admission|FullyQualifiedName~ProcessDeath|FullyQualifiedName~Failure)&FullyQualifiedName!~TransactionHandle&FullyQualifiedName!~Shared"
+  },
+  "runs": [
+    {
+      "partition": "handles",
+      "command": [
+        "dotnet",
+        "test",
+        "LiteDB.Tests/LiteDB.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net8.0",
+        "-p:TestingEnabled=true",
+        "--settings",
+        "tests.runsettings",
+        "--filter",
+        "FullyQualifiedName~TransactionHandle",
+        "--logger",
+        "trx;LogFileName=review536885-handles-net8.0.trx"
+      ],
+      "started": "2026-09-30T17:01:50.372146+00:00",
+      "exit": 0
+    },
+    {
+      "partition": "shared",
+      "command": [
+        "dotnet",
+        "test",
+        "LiteDB.Tests/LiteDB.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net8.0",
+        "-p:TestingEnabled=true",
+        "--settings",
+        "tests.runsettings",
+        "--no-build",
+        "--filter",
+        "FullyQualifiedName~Shared&FullyQualifiedName!~TransactionHandle",
+        "--logger",
+        "trx;LogFileName=review536885-shared-net8.0.trx"
+      ],
+      "started": "2026-09-30T17:04:12.635937+00:00",
+      "exit": 1
+    }
+  ]
+}

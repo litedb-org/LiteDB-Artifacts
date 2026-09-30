@@ -1,0 +1,89 @@
+{
+  "review": "https://github.com/JKamsker/LiteDB/pull/133#pullrequestreview-5368851720",
+  "candidate": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+  "findings": [
+    {
+      "id": "F1",
+      "trigger": "Shared handle input callback makes an ordinary write while a leased anchor causes WriteDatabase to choose a pin.",
+      "change": "Preflight synchronous callback ownership before selecting, starting or entering the pin.",
+      "before": "Actual569 unit overlay8fail/4pass; package proof4 native-dependency cases across plain/encrypted settings.",
+      "after": "F1-only46tests per runtime; fixed proof preserves owner/refusal/native exclusion,12externalpeer commits with8controls. Combined1375selection retains guards.",
+      "status": "Locally corrected and independently reviewed; current hosted qualification remains incomplete."
+    },
+    {
+      "id": "F2",
+      "trigger": "Ordinary pinned operation or transferred mutex reader callback begins a Shared handle that depends on its enclosing native ownership, including same-file peer facades and Query prefetch.",
+      "change": "Track synchronous ordinary ownership scopes and refuse dependent handle admission before local/native waiting; restore scope on exceptions and thread handoff.",
+      "before": "Initial actual569 unit6fail/4pass; independent production10case bounded timeouts; strengthened package proof8actual child-native waits.",
+      "after": "Final22new tests perruntime; independent exacte855 production10cases perruntime; fixed proof8refusals,6controls and14externalpeer commits.",
+      "status": "Locally corrected and independently reviewed; current hosted qualification remains incomplete."
+    }
+  ],
+  "additionalControls": "Independent scope retention checks retain a live caller thread while confirming application/database/settings/callback graph collection. Four promoted guards pass both runtimes; net462 compiles only locally.",
+  "proofOracleCorrections": [
+    {
+      "attempt": "Initial F2 package comparison",
+      "disposition": "Incomplete native-boundary oracle; gate occupancy and timeout could include worker startup. Original logs retained as interim, not finalnative proof."
+    },
+    {
+      "attempt": "Strengthened F2 comparison",
+      "disposition": "Requires exact prewarmed child checkedout with actual native waiter count, localgate acquired and native exclusion. Missing field metadata fails explicitly. Fixed callbacks probe native exclusion before/after refusal."
+    },
+    {
+      "attempt": "Constant-false native predicate mutation",
+      "disposition": "Independent synthetic negative control exits2 without knownbad/fixed markers; sensitivity only, not historical production failure."
+    }
+  ],
+  "incompleteLocalAttempts": [
+    {
+      "kind": "broad",
+      "runtime": "net8",
+      "completedPasses": 635
+    },
+    {
+      "kind": "broad",
+      "runtime": "net10",
+      "completedPasses": 813
+    },
+    {
+      "kind": "Shared-only",
+      "runtime": "net8",
+      "completedPasses": 544
+    },
+    {
+      "kind": "Shared-only",
+      "runtime": "net10",
+      "completedPasses": 680
+    }
+  ],
+  "localTimeoutDisposition": "All four reached unchanged300s hostlimit and retain Failed run summaries. Later10disjoint sessions cover1375cases perruntime; no failed run becomes a pass retroactively.",
+  "discoveryCorrection": "Initial LiteDB.Tests-only prefix omitted257 older-namespace full-selection cases. The raw full-discovery comparison caught this before completion;179additional Shared cases executed in separate groups. Final full/partition/actualresult multisets match exactly.",
+  "knownMissingOriginals": [
+    "F2initial unitbaseline source/binary overwritten; logs/TRX retained.",
+    "Original broad-run binaries overwritten before partition rebuild.",
+    "Earlier4/8case independent probe binaries not retained; frozen10case baseline retained.",
+    "Independent observational probe deletes its temporary databases and omits exactGUIDpaths; original fixtures unavailable.",
+    "Author original package proof executables overwritten; knownbadpackage/log/source retained; new additive exactcapture pending.",
+    "Exact runtime patches not recorded for fixer/authorproof runs; TFM only, independent finalproduction runtime identification applies only to its own runs."
+  ],
+  "currentHostedFinding": {
+    "id": "macos-intel-handoff-deadline",
+    "status": "unresolved; cause under investigation",
+    "source": "e8559b642b34449e0843c9e74860a3eb5817d0c7",
+    "platform": "macOS Intel x64 net10.0",
+    "ciRun": 36750796590,
+    "jobId": 110008599282,
+    "test": "LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(shared: True, password: null)",
+    "observation": "Assert.Empty found four \"handoff deadline\" entries after15s. The failing handles partition reported324passed/1failed.",
+    "rawLogSource": "__WORKSPACE__/artifacts_temp/final11-failed-job-110008599282.log",
+    "interpretationLimit": "This establishes failure to complete the per-worker workload by its15s deadline. It does not identify runtime contention, host load, starvation, a production ownership defect, or a harness defect. No classification or fix claimed.",
+    "acceptance": "Blocks successful current-candidate qualification while unresolved; no waiver, retry-based dismissal or timeout relaxation claimed.",
+    "nextStep": "A test-only handoff harness correction is being implemented: preserve four workers with1,000 successful calls each; use a15-second no-success watchdog plus60-second hard cap, surface unexpected exceptions, and add a deterministic gate-hold ordering oracle. It has not yet been validated or assigned a final successor SHA in this record. This proposal does not establish the cause of the original failure.",
+    "retainedEvidence": "review-5368851720/hosted-e855-macos-handoff-failure/",
+    "artifactId": 11114678436,
+    "artifactSHA256": "7729b551873f5866c571165f524b873e02b350d482db41ab5880770239d2c48a",
+    "artifactLimit": "Sixfiles only; no databasefixture or perworker progressdiagnostics. One preexisting RebuildcultureNotExecuted case is separate from thehandoff failure."
+  },
+  "history": "Prior archives retain earlier missing-fixture and unknown-cause observations. This correction and later local passes do not explain those histories.",
+  "successorCandidate": "Expected after test-only correction validation; no new SHA or qualification claimed."
+}

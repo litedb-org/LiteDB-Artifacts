@@ -1,0 +1,11 @@
+{
+  "cwd": "__WORKSPACE__/artifacts_temp/fix-shared-write-pin",
+  "before": "dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true --settings tests.runsettings --filter 'FullyQualifiedName~TransactionHandleSharedPinCallback' --logger 'trx;LogFileName=shared-pin-callback-before-net10.trx'",
+  "fixed": {
+    "net10.0": "dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true --settings tests.runsettings --filter 'FullyQualifiedName~TransactionHandleSharedPinCallback|FullyQualifiedName~TransactionHandleSharedCallback|FullyQualifiedName~TransactionHandleSharedPinCancellation' --logger 'trx;LogFileName=shared-pin-callback-fixed-net10.trx'",
+    "net8.0": "dotnet test LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net8.0 -p:TestingEnabled=true --settings tests.runsettings --filter 'FullyQualifiedName~TransactionHandleSharedPinCallback|FullyQualifiedName~TransactionHandleSharedCallback|FullyQualifiedName~TransactionHandleSharedPinCancellation' --logger 'trx;LogFileName=shared-pin-callback-fixed-net8.trx'"
+  },
+  "frameworkCompile": "dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net462 -p:TestingEnabled=true",
+  "runtimeLimit": "Exact patch runtime not recorded in run logs/TRX; only test banner net10.0/net8.0. Do not infer installed current runtime equals executed patch.",
+  "attempts": "Author confirms no initial setup failures; firstbefore run8negativefail4controls, fixed46each passedfirstattempt."
+}

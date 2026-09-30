@@ -1,0 +1,138 @@
+diff --git a/LiteDB/Client/Shared/SharedDataReader.cs b/LiteDB/Client/Shared/SharedDataReader.cs
+index d7303de45..22d4effad 100644
+--- a/LiteDB/Client/Shared/SharedDataReader.cs
++++ b/LiteDB/Client/Shared/SharedDataReader.cs
+@@ -12,6 +12,7 @@ namespace LiteDB
+         private readonly IBsonDataReader _reader;
+         private readonly Action _dispose;
+         private readonly LiteEngine _ownedSnapshot;
++        private readonly SharedEngine _mutexOwner;
+ 
+         private int _disposed;
+ 
+@@ -19,11 +20,12 @@ namespace LiteDB
+         {
+         }
+ 
+-        internal SharedDataReader(IBsonDataReader reader, Action dispose, LiteEngine ownedSnapshot)
++        internal SharedDataReader(IBsonDataReader reader, Action dispose, LiteEngine ownedSnapshot, SharedEngine mutexOwner = null)
+         {
+             _reader = reader;
+             _dispose = dispose;
+             _ownedSnapshot = ownedSnapshot;
++            _mutexOwner = mutexOwner;
+         }
+ 
+         public BsonValue this[string field] => _reader[field];
+@@ -34,7 +36,11 @@ namespace LiteDB
+ 
+         public bool HasValues => _reader.HasValues;
+ 
+-        public bool Read() => _reader.Read();
++        public bool Read()
++        {
++            using var callback = new SharedEngine.CallbackScope(_mutexOwner);
++            return _reader.Read();
++        }
+ 
+         public void Dispose()
+         {
+diff --git a/LiteDB/Client/Shared/SharedEngine.Calls.cs b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+index bfdc68fcd..0c4e0327a 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Calls.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+@@ -18,6 +18,44 @@ namespace LiteDB
+         // publication to retire before opening/counting a replacement core.
+         private Engine.LiteEngine _closingCore;
+ 
++        // Synchronous callbacks can enter another facade for the same native
++        // namespace. Keep only executing calls, not idle owners or leased readers.
++        [ThreadStatic] private static List<SharedEngine> _executingCalls;
++
++        internal readonly struct CallbackScope : IDisposable
++        {
++            private readonly bool _entered;
++            internal CallbackScope(SharedEngine engine)
++            {
++                _entered = engine != null;
++                if (!_entered) return;
++                var calls = _executingCalls ?? (_executingCalls = new List<SharedEngine>());
++                calls.Add(engine);
++            }
++            public void Dispose()
++            {
++                // RemoveAt clears the reference as well as restoring nested scopes.
++                if (_entered) _executingCalls.RemoveAt(_executingCalls.Count - 1);
++            }
++        }
++
++        private bool CannotWaitForOwnershipOnCurrentThread() =>
++            _owner.IsOwnedByCurrentThread || _pin?.IsHeldByCurrentThread == true ||
++            this.IsExecutingOwnedCoreOnCurrentThread();
++
++        private void ThrowIfCallbackOwnershipWait()
++        {
++            var calls = _executingCalls;
++            if (calls == null) return;
++            for (var i = calls.Count - 1; i >= 0; i--)
++            {
++                var caller = calls[i];
++                if (StringComparer.Ordinal.Equals(caller._mutexName, _mutexName) &&
++                    caller.CannotWaitForOwnershipOnCurrentThread())
++                    throw new InvalidOperationException("Cannot open a transaction handle from inside an operation retaining its shared writer ownership.");
++            }
++        }
++
+         /// <summary>
+         /// Under _useLock, with the mutex owned: refuse a call once Dispose started, else count
+         /// it. Dispose closes the engine only after every counted call of another thread
+@@ -80,6 +118,7 @@ namespace LiteDB
+                 if (rollback) return default;
+                 throw new InvalidOperationException("Cannot wait for shared ownership from inside a reader executing on another ownership thread.");
+             }
++            using var callback = new CallbackScope(this);
+             var depth = this.AdmittedDepth();
+             try
+             {
+diff --git a/LiteDB/Client/Shared/SharedEngine.Query.cs b/LiteDB/Client/Shared/SharedEngine.Query.cs
+index 46f32e8fb..f6989a3bf 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Query.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Query.cs
+@@ -176,7 +176,7 @@ namespace LiteDB
+                 use?.ToHold();
+                 // Any thread may dispose the reader and so end its mutex ownership.
+                 var generation = use == null ? _owner.Generation : -1;
+-                return new SharedDataReader(reader, () => this.CloseDatabase(use, hold: true, generation));
++                return new SharedDataReader(reader, () => this.CloseDatabase(use, hold: true, generation), null, this);
+             }
+             catch
+             {
+@@ -296,7 +296,7 @@ namespace LiteDB
+                     return new SharedDataReader(continued, () =>
+                     {
+                         this.CloseMutexSnapshot(locked, () => _owner.Exit(generation));
+-                    });
++                    }, null, this);
+                 }
+ 
+                 var ownedSnapshot = snapshot;
+diff --git a/LiteDB/Client/Shared/SharedEngine.Transactions.cs b/LiteDB/Client/Shared/SharedEngine.Transactions.cs
+index 6079db4dd..da721a06a 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Transactions.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Transactions.cs
+@@ -55,13 +55,14 @@ namespace LiteDB
+             TransactionHolderContext.Validate();
+             // An executing callback cannot complete the owner while queued behind it.
+             TransactionContext.ThrowIfSharedWait(_mutexName);
++            this.ThrowIfCallbackOwnershipWait();
+             // First-use default collation must observe the caller's culture, while null
+             // settings still accept an existing database's persisted collation.
+             RuntimeHelpers.RunClassConstructor(typeof(Collation).TypeHandle);
+             lock (_useLock)
+             {
+                 if (_disposed != 0) throw new ObjectDisposedException(nameof(SharedEngine));
+-                if (_owner.IsOwnedByCurrentThread || _pin?.IsHeldByCurrentThread == true)
++                if (this.CannotWaitForOwnershipOnCurrentThread())
+                     throw new InvalidOperationException("Complete the legacy transaction or close its locking reader before opening a transaction handle.");
+             }
+             var name = _mutexName;

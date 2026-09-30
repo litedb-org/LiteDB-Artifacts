@@ -1,0 +1,15 @@
+{
+  "cwd": "__WORKSPACE__/artifacts_temp/fix-pin-begin",
+  "baseline": "dotnet test LiteDB.Tests -c Release -f net8.0 -p:TestingEnabled=true --settings tests.runsettings --filter FullyQualifiedName~TransactionHandleOrdinaryCallbackBegin --logger \"trx;LogFileName=baseline.trx\"",
+  "initialFixed": "dotnet test LiteDB.Tests -c Release -f net8.0 -p:TestingEnabled=true --no-restore --settings tests.runsettings --filter FullyQualifiedName~TransactionHandleOrdinaryCallbackBegin --logger \"trx;LogFileName=fixed.trx\"",
+  "related87": {
+    "net8.0": "dotnet test LiteDB.Tests -c Release -f net8.0 -p:TestingEnabled=true --no-restore --settings tests.runsettings --filter \"FullyQualifiedName~TransactionHandleOrdinaryCallback|FullyQualifiedName~TransactionHandleSharedCallback|FullyQualifiedName~SharedCallbackClose|FullyQualifiedName~TransactionHandleLateCallbackClose|FullyQualifiedName~SharedReaderPin\" --logger \"trx;LogFileName=focused-net8.trx\"",
+    "net10.0": "dotnet test LiteDB.Tests -c Release -f net10.0 -p:TestingEnabled=true --no-restore --settings tests.runsettings --filter \"FullyQualifiedName~TransactionHandleOrdinaryCallback|FullyQualifiedName~TransactionHandleSharedCallback|FullyQualifiedName~SharedCallbackClose|FullyQualifiedName~TransactionHandleLateCallbackClose|FullyQualifiedName~SharedReaderPin\" --logger \"trx;LogFileName=focused-net10.trx\""
+  },
+  "final22": {
+    "net8.0": "dotnet test LiteDB.Tests -c Release -f net8.0 -p:TestingEnabled=true --no-restore --settings tests.runsettings --filter FullyQualifiedName~TransactionHandleOrdinaryCallback --logger \"trx;LogFileName=final-new-net8.trx\"",
+    "net10.0": "dotnet test LiteDB.Tests -c Release -f net10.0 -p:TestingEnabled=true --no-restore --settings tests.runsettings --filter FullyQualifiedName~TransactionHandleOrdinaryCallback --logger \"trx;LogFileName=final-new-net10.trx\""
+  },
+  "frameworkCompile": "dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net462 -p:TestingEnabled=true --no-restore",
+  "runtimeLimit": "Actual executed runtime patch not captured. Logs identify net8/net10 only; current installed runtime list cannot establish historical patch."
+}

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <NoWarn>0618</NoWarn>
+    <DefineConstants Condition="'$(Handles)' == 'true'">$(DefineConstants);HANDLES</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="SteadyState.cs" />
+    <Reference Include="LiteDB"><HintPath>$(LibraryPath)</HintPath></Reference>
+  </ItemGroup>
+</Project>

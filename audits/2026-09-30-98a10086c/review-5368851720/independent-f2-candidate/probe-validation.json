@@ -1,0 +1,59 @@
+{
+  "probes_are_observational_console_programs": "This parser verifies their exact10 outcomes and branch/cold-state markers. Program exit0 alone is not the test oracle.",
+  "results": [
+    {
+      "log": "baseline-frozen/baseline-all.log",
+      "expected": "TimeoutException",
+      "cases": 10,
+      "elapsed_ms": [
+        502,
+        500,
+        500,
+        500,
+        500,
+        500,
+        500,
+        501,
+        500,
+        500
+      ],
+      "checks_passed": true
+    },
+    {
+      "log": "candidate-net8/results.log",
+      "expected": "InvalidOperationException",
+      "cases": 10,
+      "elapsed_ms": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "checks_passed": true
+    },
+    {
+      "log": "candidate-net10/results.log",
+      "expected": "InvalidOperationException",
+      "cases": 10,
+      "elapsed_ms": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "checks_passed": true
+    }
+  ]
+}

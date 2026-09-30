@@ -1,0 +1,24 @@
+Test run for __WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:21.21]     LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(shared: True, password: null) [FAIL]
+  Failed LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(shared: True, password: null) [20 s]
+  Error Message:
+   System.InvalidOperationException : Handoff worker did not drain; live fixture retained at __WORKSPACE__/temporary/litedb-ab1153bd358b4e52b600f9b3a64d5c57.db
+---- Assert.Empty() Failure: Collection was not empty
+Collection: ["Worker 0 made no successful handoff for 15s. elaps"···, "Worker still inside Run after stop; storage retain"···, "Incomplete handoffs. elapsedMs=20008; worker=0, co"···]
+  Stack Trace:
+     at LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(Boolean shared, String password) in __WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs:line 73
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleCallbackHandoff_Tests.Public_admission_handoff_preserves_current_callback_marker(Boolean shared, String password) in __WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs:line 50
+  Standard Output Messages:
+ elapsedMs=20008; worker=0, completed=0/1000, rejected=5, lastSuccessMs=6, stage=inside Run; worker=1, completed=1/1000, rejected=1298326, lastSuccessMs=9, stage=overlap refused; worker=2, completed=1/1000, rejected=1316678, lastSuccessMs=9, stage=overlap refused; worker=3, completed=1/1000, rejected=1931006, lastSuccessMs=9, stage=overlap refused
+ Worker 0 made no successful handoff for 15s. elapsedMs=15006; worker=0, completed=0/1000, rejected=5, lastSuccessMs=6, stage=inside Run; worker=1, completed=1/1000, rejected=1298325, lastSuccessMs=9, stage=overlap refused; worker=2, completed=1/1000, rejected=1316677, lastSuccessMs=9, stage=inside Run; worker=3, completed=1/1000, rejected=1931005, lastSuccessMs=9, stage=inside Run
+ Worker still inside Run after stop; storage retained. elapsedMs=20007; worker=0, completed=0/1000, rejected=5, lastSuccessMs=6, stage=inside Run; worker=1, completed=1/1000, rejected=1298326, lastSuccessMs=9, stage=overlap refused; worker=2, completed=1/1000, rejected=1316678, lastSuccessMs=9, stage=overlap refused; worker=3, completed=1/1000, rejected=1931006, lastSuccessMs=9, stage=overlap refused
+ Incomplete handoffs. elapsedMs=20008; worker=0, completed=0/1000, rejected=5, lastSuccessMs=6, stage=inside Run; worker=1, completed=1/1000, rejected=1298326, lastSuccessMs=9, stage=overlap refused; worker=2, completed=1/1000, rejected=1316678, lastSuccessMs=9, stage=overlap refused; worker=3, completed=1/1000, rejected=1931006, lastSuccessMs=9, stage=overlap refused
+
+
+Results File: __WORKSPACE__/artifacts_temp/review-callback-scope/LiteDB.Tests/TestResults/handoff-mutant-blocked-worker-final.trx
+
+Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 20 s - LiteDB.Tests.dll (net10.0)
