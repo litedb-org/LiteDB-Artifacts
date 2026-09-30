@@ -1,0 +1,15 @@
+# Review 5367523337 additive evidence staging
+
+Candidate: `569ba13c3`, production tree `f6f315315692f9992d4a1a08e776f69662354284`. This local collection is complete for the supplied fixer, independent-review and broad-test runs. It is not a published audit or a claim of final hosted acceptance.
+
+The prior audit stays at immutable artifact commit `ac04c2aab4f0443feeefa34aa00e3e4999a6b179`, path `audits/2026-09-30-12a057424`; historical-archive-link.json supplies its permanent URL. The previous 1.5GB archive has not been copied, renamed or edited. Its historical unknowns remain historical rather than being silently relabeled as current qualification.
+
+The fixer final969 and independent final969 selections pass76 and63 cases per runtime respectively, on production treef6f. Root broad tests pass705 per runtime, built from99bc2c3dd; the production/test/harness trees were independently compared with569 and are identical. Exact build metadata is retained rather than relabeled. net462 coverage here is compilation only. Case-level names, outcomes and errors are in trx-case-index.json. Overlapping selections must not be summed.
+
+The full local strict proof bundle qualifies intermediatea09 production75b against actual12a, before the final two-line nested-begin guard. The six plain/encrypted native-wait cases, eight independent controls and ten external peer commits per variant were independently checked in the transcript. All70 bundle checksums verified; the knownbad DLL is byte-identical to the package's net8 DLL. Source inspection confirms caught refusal preserves Active state and earlier writes, and twice-cold indexed rows/sentinels are checked. Exact569 hosted proof/CI results remain separate pending evidence.
+
+attempt-dispositions.json preserves compile/setup errors, the initial cancellation-control race, the first strict pair's purged binaries, the synthetic timeout control's first runtime-discovery failure, and the adjacent nested-begin defect found by independent review. Initial incomplete log snapshots remain separate from completed final logs. The draft fixer's copy-time source labels are corrected explicitly in provenance-corrections.json and its final execution map; original raw evidence has not been overwritten.
+
+raw-source-manifest.json records exact source paths, sizes, hashes and provenance. Original database paths remain unchanged on their original temporary location; only copies were staged. No device/mount identifier was captured, so none is invented. Raw machine paths and test password literals have not been normalized. Publication must create a separate normalized copy and new checksums; these raw hashes identify the originals. No compression, artifact-repository commit, source edit or publication has been performed by this staging task.
+
+staging-summary.json and independent-staging-checks.json summarize the inventory and independently checked claims. Root benchmark timing and hosted qualification are outside this snapshot; future evidence should be appended with its own exact source identity.

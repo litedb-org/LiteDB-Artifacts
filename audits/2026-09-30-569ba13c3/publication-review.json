@@ -1,0 +1,210 @@
+{
+  "reviewedUtc": "2026-09-30T15:56:52.815149+00:00",
+  "candidate": "569ba13c3b3867131c8687e7884bed65131edfbf",
+  "status": "bounded-clean-ready-to-publish",
+  "scope": "Independent artifact/provenance/numerical review, no tests or benchmarks rerun; archive read-only. Final hosted metadata and exact-head local proof capture still moving.",
+  "checks": {
+    "candidateChangedFileInventoryExact": true,
+    "candidateFilesVerified": 20,
+    "candidateFullTree": "af2b2af364f74623af7c8e4372d6072402edf5ce",
+    "productionTree": "f6f315315692f9992d4a1a08e776f69662354284",
+    "broadTestSourceDiffEmpty": true,
+    "benchmarkInventoryEntriesVerified": 32,
+    "expectedNormalizedXmlInventoryEntries": [
+      "performance-final6/bench-head/LiteDB.xml",
+      "performance-final6/bench-dev/LiteDB.xml",
+      "performance-final6/bench-parent/LiteDB.xml",
+      "performance-final6/bench-final6/LiteDB.xml"
+    ],
+    "unchangedBenchmarkInventoryEntries": 28,
+    "benchmarkProcesses": 84,
+    "benchmarkWindows": 420,
+    "benchmarkSummaryCasesRecomputed": 8,
+    "trxFilesVerified": 16,
+    "trxOutcomeCounts": {
+      "fixer/final-969/followup-final/LiteDB.Tests/TestResults/shared-callback-followup-net10.trx": {
+        "Passed": 76
+      },
+      "fixer/final-969/followup-final/LiteDB.Tests/TestResults/shared-callback-followup-net8.trx": {
+        "Passed": 76
+      },
+      "fixer/final-969/before-begin/LiteDB.Tests/TestResults/shared-callback-begin-before-net10.trx": {
+        "Failed": 4
+      },
+      "fixer/intermediate-4ce-raw/before/LiteDB.Tests/TestResults/shared-callback-before-final-overlay-net10.trx": {
+        "Failed": 18,
+        "Passed": 4
+      },
+      "fixer/intermediate-4ce-raw/fixed/LiteDB.Tests/TestResults/shared-callback-before-net10.trx": {
+        "Failed": 12
+      },
+      "fixer/intermediate-4ce-raw/fixed/LiteDB.Tests/TestResults/shared-callback-fixed-first-net10.trx": {
+        "Passed": 22
+      },
+      "fixer/intermediate-4ce-raw/fixed/LiteDB.Tests/TestResults/shared-callback-final-net8.trx": {
+        "Passed": 68
+      },
+      "independent-proof/results/native-proof-audit-net8.trx": {
+        "Passed": 22
+      },
+      "integration/completed-local/native-final-integrated-net8.trx": {
+        "Passed": 705
+      },
+      "integration/completed-local/native-final-integrated-net10.trx": {
+        "Passed": 705
+      },
+      "independent-dependency/final/results/native-dependency-net10.trx": {
+        "Passed": 55
+      },
+      "independent-dependency/final/results/native-dependency-net8.trx": {
+        "Passed": 55
+      },
+      "independent-dependency/final/results/native-dependency-followup-net10.trx": {
+        "Passed": 63
+      },
+      "independent-dependency/final/results/native-dependency-followup-net8.trx": {
+        "Passed": 63
+      },
+      "independent-dependency/intermediate/results/native-dependency-net10.trx": {
+        "Passed": 55
+      },
+      "independent-dependency/intermediate/results/native-dependency-net8.trx": {
+        "Passed": 55
+      }
+    },
+    "attemptPointersChecked": 10,
+    "missingAttemptPointers": [],
+    "rawManifestEntries": 291,
+    "missingRawManifestTargets": [],
+    "reviewBinaryPayloadsVerified": 122,
+    "normalizationCurrentHashMismatches": [],
+    "normalizationExcludedPrefixes": [
+      "hosted-final"
+    ],
+    "credentialScanFlagsFromNormalization": [],
+    "publicationPending": "Pending hosted qualification; not published",
+    "errors": []
+  },
+  "advisories": [
+    {
+      "id": "normalization-hash-label",
+      "severity": "low",
+      "finding": "publication-normalization.json hashInterpretation names manifest.json, absent in this additive audit. Actual raw identities live in candidate-source-index/source-index/raw-source-manifest files.",
+      "requested": "Use generic source manifest/index wording in final metadata."
+    },
+    {
+      "id": "archive-replay-entrypoint",
+      "severity": "low",
+      "finding": "Packaged runner-source README retains repository-relative ../../scripts paths; packaged drivers live at performance-final6 root. The archive lacks a short layout-specific replay note.",
+      "requested": "Add concise replay instructions using local drivers and remapping configuration runner paths before publication."
+    }
+  ],
+  "finalDeltaRequired": [],
+  "deltaReviews": [
+    {
+      "stage": "exact-head-proof-and-replay-delta",
+      "reviewedUtc": "2026-09-30T16:07:08.406462+00:00",
+      "status": "bounded-clean; overall hosted acceptance pending",
+      "checks": {
+        "sourceIndexEntries": 72,
+        "byteIdenticalEntries": 69,
+        "normalizedTextEntries": [
+          "review-5367523337/strict-proof/final-569/binaries/ver_latest/LiteDB.xml",
+          "review-5367523337/strict-proof/final-569/capture-script.py",
+          "review-5367523337/strict-proof/final-569/proof.json"
+        ],
+        "sourceFilesMatchExactCandidate": [
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs",
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs",
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/repro.json",
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Controls.cs",
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/README.md",
+          "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Issue_3067_SharedCallbackNativeWait.csproj"
+        ],
+        "originalNestedChecksumEntries": 71,
+        "proofVariantResults": {
+          "Package": {
+            "exit": 0,
+            "expectationMet": true,
+            "NATIVE_SELF_WAIT_VERIFIED": 6,
+            "CONTROL_VERIFIED": 8,
+            "PEER_COMMITTED": 10,
+            "CASE_FIXED": 8
+          },
+          "Latest": {
+            "exit": 10,
+            "expectationMet": true,
+            "NATIVE_SELF_WAIT_VERIFIED": 0,
+            "CONTROL_VERIFIED": 8,
+            "PEER_COMMITTED": 10,
+            "CASE_FIXED": 14
+          }
+        },
+        "knownBadPackageDllMatch": true,
+        "runtimeDependenciesAndPdbContractPresent": true,
+        "watcherExit1AndOuterCliExitUnknownExplicit": true,
+        "replayInstructionsMatchPackagedDriverAndLayout": true,
+        "hashInterpretationCorrected": true
+      },
+      "errors": [],
+      "limits": [
+        "No test, benchmark or proof rerun. Runtime file inventories checked for recorded dependencies and retained PDBs; capture cleanup exception and unknown outer CLI exit remain disclosed.",
+        "Final overall hosted acceptance and final root checksum set remain pending."
+      ]
+    },
+    {
+      "stage": "completed-hosted-and-publication-closing-review",
+      "reviewedUtc": "2026-09-30T16:13:49.334525+00:00",
+      "status": "bounded-clean-ready-to-publish",
+      "candidate": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "merge": "446ab85bb38b3a0eee28e34ee609f56d12029354",
+      "tree": "af2b2af364f74623af7c8e4372d6072402edf5ce",
+      "productionTree": "f6f315315692f9992d4a1a08e776f69662354284",
+      "checks": {
+        "workflowJobs": {
+          "ci": {
+            "success": 39
+          },
+          "proof": {
+            "success": 22
+          },
+          "fuzz": {
+            "success": 12,
+            "skipped": 2
+          },
+          "index": {
+            "success": 4
+          },
+          "shared-slot": {
+            "success": 8,
+            "skipped": 2
+          }
+        },
+        "safetyAndIndependentLegs": 29,
+        "safetyErrors": 0,
+        "safetyWarnings": 0,
+        "archivedTrxFilesParsed": 338,
+        "archivedFrameworkXmlFilesParsed": 2,
+        "archivedResultRows": {
+          "Passed": 129782,
+          "NotExecuted": 79
+        },
+        "strictProofsVerified": 19,
+        "artifactDigestRecordsVerified": 29,
+        "rootChecksumFilesVerified": 720,
+        "rootManifestSha256": "4d18e3aa1c905161dc65f90e8d11035a1e94df0d475da5a9e5645af09fff7c5c",
+        "nestedOriginalHashInventoryIncluded": true,
+        "normalizationExcludedPrefixes": [],
+        "credentialPatternFlags": [],
+        "previous12aArchiveGitUnchanged": true
+      },
+      "errors": [],
+      "limits": [
+        "No tests or benchmark reruns; this is an independent review of retained source/evidence and published byte integrity.",
+        "The root checksum set verified here precedes copying this closing report. Root must regenerate and verify checksums afterward; no future self-report hash is claimed.",
+        "Three existing never-executed quarantines and historical missing-fixture/unknown-cause limitations remain explicit; no whole-3034 roadmap or physical power-cut qualification claimed."
+      ]
+    }
+  ],
+  "closingReviewedUtc": "2026-09-30T16:13:49.334525+00:00"
+}

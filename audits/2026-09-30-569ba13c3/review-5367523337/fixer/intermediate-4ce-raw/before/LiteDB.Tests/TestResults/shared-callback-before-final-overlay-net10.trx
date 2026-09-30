@@ -1,0 +1,1100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f850d310-fa1b-4638-8571-8d00242fe73f" name="@dev-build-server 2026-09-30 15:09:57" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T15:09:57.3150037+00:00" queuing="2026-09-30T15:09:57.3150038+00:00" start="2026-09-30T15:09:55.4880420+00:00" finish="2026-09-30T15:10:01.6636770+00:00" />
+  <TestSettings name="default" id="eb83a0c4-3279-4992-bd94-af0ebb022c4f">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_15_09_57" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="52c12f99-a76d-4578-9b77-751258a3a97c" testId="2fda5d79-99eb-f247-bbde-b8c89fb4e8d0" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: null)" computerName="dev-build-server" duration="00:00:00.1482230" startTime="2026-09-30T15:10:01.2523827+00:00" endTime="2026-09-30T15:10:01.2523840+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="52c12f99-a76d-4578-9b77-751258a3a97c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : suppressed native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Inner|1&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 86
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.Client.Direct.DirectEngineLease.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Direct/DirectEngineLease.cs:line 85
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_1.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Input|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 91
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(String password) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 94
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__1_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 83
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 86</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="443d3fc6-588e-460c-a74f-20fa39ce19c8" testId="5292bc14-900b-3cd0-1244-0033ecd579b8" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: &quot;secret&quot;, otherShared: True)" computerName="dev-build-server" duration="00:00:00.2888064" startTime="2026-09-30T15:09:59.5189209+00:00" endTime="2026-09-30T15:09:59.5189210+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="443d3fc6-588e-460c-a74f-20fa39ce19c8">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : outer native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 47
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 57
+   at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 29
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="54fb6111-b4ee-4536-8fd0-95d3f7520ad1" testId="9901de2e-712b-f1b0-e77c-970bb606ebd3" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_admission_cancellation_does_not_release_an_idle_handle(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.3882064" startTime="2026-09-30T15:09:58.6530755+00:00" endTime="2026-09-30T15:09:58.6530755+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54fb6111-b4ee-4536-8fd0-95d3f7520ad1" />
+    <UnitTestResult executionId="5a22c48c-1170-4d7f-8c68-6cd9f01172dd" testId="dc80fef3-5f53-0e8f-1b8b-de8a703c1341" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: False)" computerName="dev-build-server" duration="00:00:00.1009726" startTime="2026-09-30T15:09:59.6229363+00:00" endTime="2026-09-30T15:09:59.6229363+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a22c48c-1170-4d7f-8c68-6cd9f01172dd">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : outer native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 47
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 57
+   at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 29
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="088d61b7-c1cf-4ccc-9843-330f3e2ec57a" testId="fbe48641-153c-8c05-d359-cd4d08d56116" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: False)" computerName="dev-build-server" duration="00:00:00.0846832" startTime="2026-09-30T15:09:57.9352171+00:00" endTime="2026-09-30T15:09:57.9352171+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="088d61b7-c1cf-4ccc-9843-330f3e2ec57a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8d66e00d-e660-4013-bb78-ef3b25b2c49a" testId="f4f3000e-d5ca-ddab-019f-42a8713e89c5" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_admission_cancellation_does_not_release_an_idle_handle(password: null)" computerName="dev-build-server" duration="00:00:00.1296697" startTime="2026-09-30T15:09:58.7829653+00:00" endTime="2026-09-30T15:09:58.7829654+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d66e00d-e660-4013-bb78-ef3b25b2c49a" />
+    <UnitTestResult executionId="79419497-b017-45c4-8cab-9680717b104e" testId="33d75339-5319-2c39-ea60-da1cfa54c12f" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: True)" computerName="dev-build-server" duration="00:00:00.0805230" startTime="2026-09-30T15:09:57.1444171+00:00" endTime="2026-09-30T15:09:57.1444172+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="79419497-b017-45c4-8cab-9680717b104e">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 103
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e86dd0b5-78d8-4f7c-93ac-4e662c4d8f3b" testId="de8e36f6-994d-8084-94d4-fe7a295761a8" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.3385437" startTime="2026-09-30T15:10:01.5936798+00:00" endTime="2026-09-30T15:10:01.5936798+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e86dd0b5-78d8-4f7c-93ac-4e662c4d8f3b">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : suppressed native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Inner|1&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 86
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.Client.Direct.DirectEngineLease.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Direct/DirectEngineLease.cs:line 85
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_1.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Input|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 91
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(String password) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 94
+   at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__1_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 83
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 86</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="519fd49d-025f-466e-9abf-2c041c4b5e03" testId="fb84a24f-3a34-5834-aa7c-4fd789560f7f" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: False)" computerName="dev-build-server" duration="00:00:00.0835882" startTime="2026-09-30T15:09:57.4659960+00:00" endTime="2026-09-30T15:09:57.4659963+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="519fd49d-025f-466e-9abf-2c041c4b5e03">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="44734324-2a12-44e1-b217-2e34404070a2" testId="ff379828-22c5-f016-316e-ff77021be772" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion(password: null)" computerName="dev-build-server" duration="00:00:00.6229100" startTime="2026-09-30T15:10:00.2461101+00:00" endTime="2026-09-30T15:10:00.2461102+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="44734324-2a12-44e1-b217-2e34404070a2" />
+    <UnitTestResult executionId="5d47c4bd-f8ba-4b3e-a077-37aac9bb446f" testId="bc811b1b-9072-ea15-acf7-5c0922d9b754" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: True, peerFacade: False)" computerName="dev-build-server" duration="00:00:00.1646529" startTime="2026-09-30T15:09:57.6313103+00:00" endTime="2026-09-30T15:09:57.6313103+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d47c4bd-f8ba-4b3e-a077-37aac9bb446f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="23d416e2-7dd9-4ee8-9bc7-6a6842f3be0f" testId="f517c39d-1ca5-c6d0-c758-b4854d539e3f" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: False, peerFacade: False)" computerName="dev-build-server" duration="00:00:00.1448043" startTime="2026-09-30T15:09:57.8498880+00:00" endTime="2026-09-30T15:09:57.8498881+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="23d416e2-7dd9-4ee8-9bc7-6a6842f3be0f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="07e3379e-ca3c-4de2-a855-b277e4322eae" testId="3b23eecd-6430-6b6e-6540-9ec6519f2eb3" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: False)" computerName="dev-build-server" duration="00:00:00.0800669" startTime="2026-09-30T15:09:57.0629400+00:00" endTime="2026-09-30T15:09:57.0629400+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="07e3379e-ca3c-4de2-a855-b277e4322eae">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 103
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6bfbd989-5eea-4303-935d-0ce758e12a2a" testId="c71f437c-5456-f78c-831e-87f9a17a90c3" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.8535631" startTime="2026-09-30T15:10:01.0998320+00:00" endTime="2026-09-30T15:10:01.0998321+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6bfbd989-5eea-4303-935d-0ce758e12a2a" />
+    <UnitTestResult executionId="4ea06bd8-5245-45d0-bd3c-c9c974053385" testId="13a235a1-477c-ae14-5b7a-f0ec1bdf911c" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: False, peerFacade: True)" computerName="dev-build-server" duration="00:00:00.1621555" startTime="2026-09-30T15:09:58.2602279+00:00" endTime="2026-09-30T15:09:58.2602280+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ea06bd8-5245-45d0-bd3c-c9c974053385">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="77e9ad1e-7e72-4f3b-b625-d728a8a2c6d3" testId="0ab419b9-956e-9841-393b-c6ab3667fb88" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: &quot;secret&quot;, write: False)" computerName="dev-build-server" duration="00:00:00.3254801" startTime="2026-09-30T15:09:56.9790850+00:00" endTime="2026-09-30T15:09:56.9791049+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77e9ad1e-7e72-4f3b-b625-d728a8a2c6d3">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 103
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="65297378-74cd-4737-803d-e6efa9fdeedd" testId="b35344d5-37f6-52be-ea60-fa36cf78aa40" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: True)" computerName="dev-build-server" duration="00:00:00.0897847" startTime="2026-09-30T15:09:57.3816756+00:00" endTime="2026-09-30T15:09:57.3816756+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="65297378-74cd-4737-803d-e6efa9fdeedd">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7ec5aa0f-e208-4f30-9ec2-3da47757eeff" testId="53394c02-6f52-5636-02ee-b404fb8a5092" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: True)" computerName="dev-build-server" duration="00:00:00.0720193" startTime="2026-09-30T15:09:57.7043001+00:00" endTime="2026-09-30T15:09:57.7043001+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7ec5aa0f-e208-4f30-9ec2-3da47757eeff">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b1ec8816-5866-47de-85af-bdd8761323eb" testId="7927d2d6-7c47-80e9-b034-2b8e354d6af3" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: &quot;secret&quot;, write: True)" computerName="dev-build-server" duration="00:00:00.1438765" startTime="2026-09-30T15:09:57.2889457+00:00" endTime="2026-09-30T15:09:57.2889458+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b1ec8816-5866-47de-85af-bdd8761323eb">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 103
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c86b066b-5ea1-4c9f-a182-01ca53a1cc0f" testId="5a334837-d265-6eae-f594-5bcaa7a103e9" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: &quot;secret&quot;, otherShared: False)" computerName="dev-build-server" duration="00:00:00.2744411" startTime="2026-09-30T15:09:59.0632697+00:00" endTime="2026-09-30T15:09:59.0632698+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c86b066b-5ea1-4c9f-a182-01ca53a1cc0f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : outer native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 47
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 57
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 29
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8884629f-97c6-428e-bede-dcf46d998f87" testId="c2509daf-35f0-9949-5053-3845b85f6eab" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: True, peerFacade: True)" computerName="dev-build-server" duration="00:00:00.1612467" startTime="2026-09-30T15:09:58.0974581+00:00" endTime="2026-09-30T15:09:58.0974581+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8884629f-97c6-428e-bede-dcf46d998f87">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsType() Failure: Value is not the exact type
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs:line 50
+   at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5a1862f4-b6a3-4cb0-9b4b-0e00797be4c7" testId="ebeeee7c-72db-93c7-7647-04913b039615" testName="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: True)" computerName="dev-build-server" duration="00:00:00.1601057" startTime="2026-09-30T15:09:59.2269853+00:00" endTime="2026-09-30T15:09:59.2269854+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a1862f4-b6a3-4cb0-9b4b-0e00797be4c7">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.OperationCanceledException)
+---- System.OperationCanceledException : outer native self-wait</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 47
+   at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 65
+   at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 31
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 105
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs:line 95
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs:line 21
+   at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 111
+   at LiteDB.TransactionEngine.Invoke[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs:line 11
+   at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs:line 21
+   at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 37
+   at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs:line 46
+   at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.LiteTransaction.RunCore[T](Func`1 action) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 89
+   at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs:line 74
+   at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 57
+   at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 29
+   at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 81
+   at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs:line 43
+   at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs:line 32
+   at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 75
+   at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs:line 128
+   at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs:line 32
+   at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 112
+   at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 54
+   at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 86
+   at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 52
+   at LiteDB.SharedEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs:line 359
+   at LiteDB.SessionEngine.Pragma(String name) in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs:line 59
+   at LiteDB.LiteDatabase.get_UserVersion() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs:line 361
+   at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4() in __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs:line 35</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="fbe48641-153c-8c05-d359-cd4d08d56116">
+      <Execution id="088d61b7-c1cf-4ccc-9843-330f3e2ec57a" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b35344d5-37f6-52be-ea60-fa36cf78aa40">
+      <Execution id="65297378-74cd-4737-803d-e6efa9fdeedd" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: False, peerFacade: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="f517c39d-1ca5-c6d0-c758-b4854d539e3f">
+      <Execution id="23d416e2-7dd9-4ee8-9bc7-6a6842f3be0f" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion(password: &quot;secret&quot;)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="c71f437c-5456-f78c-831e-87f9a17a90c3">
+      <Execution id="6bfbd989-5eea-4303-935d-0ce758e12a2a" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: False, peerFacade: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="13a235a1-477c-ae14-5b7a-f0ec1bdf911c">
+      <Execution id="4ea06bd8-5245-45d0-bd3c-c9c974053385" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: &quot;secret&quot;, otherShared: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="5292bc14-900b-3cd0-1244-0033ecd579b8">
+      <Execution id="443d3fc6-588e-460c-a74f-20fa39ce19c8" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Nested_other_database_handle_keeps_outer_dependency_and_restores_it" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_admission_cancellation_does_not_release_an_idle_handle(password: &quot;secret&quot;)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="9901de2e-712b-f1b0-e77c-970bb606ebd3">
+      <Execution id="54fb6111-b4ee-4536-8fd0-95d3f7520ad1" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_admission_cancellation_does_not_release_an_idle_handle" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_admission_cancellation_does_not_release_an_idle_handle(password: null)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="f4f3000e-d5ca-ddab-019f-42a8713e89c5">
+      <Execution id="8d66e00d-e660-4013-bb78-ef3b25b2c49a" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_admission_cancellation_does_not_release_an_idle_handle" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: null)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="2fda5d79-99eb-f247-bbde-b8c89fb4e8d0">
+      <Execution id="52c12f99-a76d-4578-9b77-751258a3a97c" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="fb84a24f-3a34-5834-aa7c-4fd789560f7f">
+      <Execution id="519fd49d-025f-466e-9abf-2c041c4b5e03" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="33d75339-5319-2c39-ea60-da1cfa54c12f">
+      <Execution id="79419497-b017-45c4-8cab-9680717b104e" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Late_reader_callback_refuses_native_wait_after_handoff" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: True, peerFacade: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="c2509daf-35f0-9949-5053-3845b85f6eab">
+      <Execution id="8884629f-97c6-428e-bede-dcf46d998f87" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="ebeeee7c-72db-93c7-7647-04913b039615">
+      <Execution id="5a1862f4-b6a3-4cb0-9b4b-0e00797be4c7" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Nested_other_database_handle_keeps_outer_dependency_and_restores_it" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: &quot;secret&quot;, write: True, peerFacade: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="bc811b1b-9072-ea15-acf7-5c0922d9b754">
+      <Execution id="5d47c4bd-f8ba-4b3e-a077-37aac9bb446f" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion(password: null)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="ff379828-22c5-f016-316e-ff77021be772">
+      <Execution id="44734324-2a12-44e1-b217-2e34404070a2" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: &quot;secret&quot;)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="de8e36f6-994d-8084-94d4-fe7a295761a8">
+      <Execution id="e86dd0b5-78d8-4f7c-93ac-4e662c4d8f3b" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: &quot;secret&quot;, write: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="7927d2d6-7c47-80e9-b034-2b8e354d6af3">
+      <Execution id="b1ec8816-5866-47de-85af-bdd8761323eb" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Late_reader_callback_refuses_native_wait_after_handoff" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: &quot;secret&quot;, otherShared: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="5a334837-d265-6eae-f594-5bcaa7a103e9">
+      <Execution id="c86b066b-5ea1-4c9f-a182-01ca53a1cc0f" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Nested_other_database_handle_keeps_outer_dependency_and_restores_it" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="3b23eecd-6430-6b6e-6540-9ec6519f2eb3">
+      <Execution id="07e3379e-ca3c-4de2-a855-b277e4322eae" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Late_reader_callback_refuses_native_wait_after_handoff" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: &quot;secret&quot;, write: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="0ab419b9-956e-9841-393b-c6ab3667fb88">
+      <Execution id="77e9ad1e-7e72-4f3b-b625-d728a8a2c6d3" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Late_reader_callback_refuses_native_wait_after_handoff" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="dc80fef3-5f53-0e8f-1b8b-de8a703c1341">
+      <Execution id="5a22c48c-1170-4d7f-8c68-6cd9f01172dd" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests" name="Nested_other_database_handle_keeps_outer_dependency_and_restores_it" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-shared-callback-native-before/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="53394c02-6f52-5636-02ee-b404fb8a5092">
+      <Execution id="7ec5aa0f-e208-4f30-9ec2-3da47757eeff" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests" name="Input_callback_refuses_same_namespace_before_native_wait" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="2fda5d79-99eb-f247-bbde-b8c89fb4e8d0" executionId="52c12f99-a76d-4578-9b77-751258a3a97c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5292bc14-900b-3cd0-1244-0033ecd579b8" executionId="443d3fc6-588e-460c-a74f-20fa39ce19c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9901de2e-712b-f1b0-e77c-970bb606ebd3" executionId="54fb6111-b4ee-4536-8fd0-95d3f7520ad1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dc80fef3-5f53-0e8f-1b8b-de8a703c1341" executionId="5a22c48c-1170-4d7f-8c68-6cd9f01172dd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fbe48641-153c-8c05-d359-cd4d08d56116" executionId="088d61b7-c1cf-4ccc-9843-330f3e2ec57a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4f3000e-d5ca-ddab-019f-42a8713e89c5" executionId="8d66e00d-e660-4013-bb78-ef3b25b2c49a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="33d75339-5319-2c39-ea60-da1cfa54c12f" executionId="79419497-b017-45c4-8cab-9680717b104e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="de8e36f6-994d-8084-94d4-fe7a295761a8" executionId="e86dd0b5-78d8-4f7c-93ac-4e662c4d8f3b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fb84a24f-3a34-5834-aa7c-4fd789560f7f" executionId="519fd49d-025f-466e-9abf-2c041c4b5e03" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ff379828-22c5-f016-316e-ff77021be772" executionId="44734324-2a12-44e1-b217-2e34404070a2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bc811b1b-9072-ea15-acf7-5c0922d9b754" executionId="5d47c4bd-f8ba-4b3e-a077-37aac9bb446f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f517c39d-1ca5-c6d0-c758-b4854d539e3f" executionId="23d416e2-7dd9-4ee8-9bc7-6a6842f3be0f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3b23eecd-6430-6b6e-6540-9ec6519f2eb3" executionId="07e3379e-ca3c-4de2-a855-b277e4322eae" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c71f437c-5456-f78c-831e-87f9a17a90c3" executionId="6bfbd989-5eea-4303-935d-0ce758e12a2a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="13a235a1-477c-ae14-5b7a-f0ec1bdf911c" executionId="4ea06bd8-5245-45d0-bd3c-c9c974053385" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ab419b9-956e-9841-393b-c6ab3667fb88" executionId="77e9ad1e-7e72-4f3b-b625-d728a8a2c6d3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b35344d5-37f6-52be-ea60-fa36cf78aa40" executionId="65297378-74cd-4737-803d-e6efa9fdeedd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="53394c02-6f52-5636-02ee-b404fb8a5092" executionId="7ec5aa0f-e208-4f30-9ec2-3da47757eeff" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7927d2d6-7c47-80e9-b034-2b8e354d6af3" executionId="b1ec8816-5866-47de-85af-bdd8761323eb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5a334837-d265-6eae-f594-5bcaa7a103e9" executionId="c86b066b-5ea1-4c9f-a182-01ca53a1cc0f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c2509daf-35f0-9949-5053-3845b85f6eab" executionId="8884629f-97c6-428e-bede-dcf46d998f87" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ebeeee7c-72db-93c7-7647-04913b039615" executionId="5a1862f4-b6a3-4cb0-9b4b-0e00797be4c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="22" executed="22" passed="4" failed="18" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.14]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.79]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.80]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.17]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.17]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.17]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.17]       Stack Trace:
+[xUnit.net 00:00:01.17]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(103,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write)
+[xUnit.net 00:00:01.17]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.17]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.25]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.25]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.25]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.25]       Stack Trace:
+[xUnit.net 00:00:01.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(103,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write)
+[xUnit.net 00:00:01.25]            at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+[xUnit.net 00:00:01.25]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.33]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.33]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.33]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.33]       Stack Trace:
+[xUnit.net 00:00:01.33]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(103,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write)
+[xUnit.net 00:00:01.33]            at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+[xUnit.net 00:00:01.33]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.48]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.48]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.48]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.48]       Stack Trace:
+[xUnit.net 00:00:01.48]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(103,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(String password, Boolean write)
+[xUnit.net 00:00:01.48]            at InvokeStub_TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(Object, Span`1)
+[xUnit.net 00:00:01.48]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.57]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.57]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.57]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.57]       Stack Trace:
+[xUnit.net 00:00:01.57]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:01.57]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.57]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.65]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.65]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.65]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.65]       Stack Trace:
+[xUnit.net 00:00:01.65]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:01.65]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:01.65]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.82]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.82]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.82]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.82]       Stack Trace:
+[xUnit.net 00:00:01.82]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:01.82]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:01.82]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.89]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:01.89]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:01.89]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:01.89]       Stack Trace:
+[xUnit.net 00:00:01.89]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:01.89]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:01.89]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.04]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:02.04]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:02.04]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:02.04]       Stack Trace:
+[xUnit.net 00:00:02.04]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:02.04]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:02.04]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.12]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:02.12]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:02.12]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:02.12]       Stack Trace:
+[xUnit.net 00:00:02.12]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:02.12]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:02.12]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.29]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:02.29]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:02.29]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:02.29]       Stack Trace:
+[xUnit.net 00:00:02.29]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:02.29]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:02.29]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.45]       Assert.IsType() Failure: Value is not the exact type
+[xUnit.net 00:00:02.45]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:02.45]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:02.45]       Stack Trace:
+[xUnit.net 00:00:02.45]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs(50,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(String password, Boolean write, Boolean peerFacade)
+[xUnit.net 00:00:02.45]            at InvokeStub_TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(Object, Span`1)
+[xUnit.net 00:00:02.45]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.25]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:03.25]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:03.25]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:03.25]       ---- System.OperationCanceledException : outer native self-wait
+[xUnit.net 00:00:03.25]       Stack Trace:
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(47,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(57,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared)
+[xUnit.net 00:00:03.25]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.25]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:03.25]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(29,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:03.25]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4()
+[xUnit.net 00:00:03.41]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:03.41]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:03.41]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:03.41]       ---- System.OperationCanceledException : outer native self-wait
+[xUnit.net 00:00:03.41]       Stack Trace:
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(47,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(57,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared)
+[xUnit.net 00:00:03.41]            at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+[xUnit.net 00:00:03.41]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.41]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(29,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:03.41]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:03.42]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:03.42]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:03.42]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:03.42]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4()
+[xUnit.net 00:00:03.71]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:03.71]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:03.71]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:03.71]       ---- System.OperationCanceledException : outer native self-wait
+[xUnit.net 00:00:03.71]       Stack Trace:
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(47,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(57,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared)
+[xUnit.net 00:00:03.71]            at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+[xUnit.net 00:00:03.71]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.71]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(29,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:03.71]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4()
+[xUnit.net 00:00:03.81]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:03.81]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:03.81]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:03.81]       ---- System.OperationCanceledException : outer native self-wait
+[xUnit.net 00:00:03.81]       Stack Trace:
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Nested|2&gt;d.MoveNext()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(47,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_1.&lt;&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;g__Input|3&gt;d.MoveNext()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(57,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(String password, Boolean otherShared)
+[xUnit.net 00:00:03.81]            at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(Object, Span`1)
+[xUnit.net 00:00:03.81]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.81]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(29,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__0_0(Mutex _)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:03.81]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(35,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Nested_other_database_handle_keeps_outer_dependency_and_restores_it&gt;b__4()
+[xUnit.net 00:00:05.44]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:05.44]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:05.44]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:05.44]       ---- System.OperationCanceledException : suppressed native self-wait
+[xUnit.net 00:00:05.44]       Stack Trace:
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(86,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Inner|1&gt;d.MoveNext()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Direct/DirectEngineLease.cs(85,0): at LiteDB.Client.Direct.DirectEngineLease.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(91,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_1.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Input|2&gt;d.MoveNext()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(94,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(String password)
+[xUnit.net 00:00:05.44]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:05.44]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:05.44]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(83,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__1_0(Mutex _)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:05.44]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(86,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__3()
+[xUnit.net 00:00:05.78]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:05.78]       Expected: typeof(System.InvalidOperationException)
+[xUnit.net 00:00:05.78]       Actual:   typeof(System.OperationCanceledException)
+[xUnit.net 00:00:05.78]       ---- System.OperationCanceledException : suppressed native self-wait
+[xUnit.net 00:00:05.78]       Stack Trace:
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(86,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Inner|1&gt;d.MoveNext()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Direct/DirectEngineLease.cs(85,0): at LiteDB.Client.Direct.DirectEngineLease.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(91,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_1.&lt;&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;g__Input|2&gt;d.MoveNext()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(65,0): at LiteDB.LiteCollection`1.GetBsonDocs(IEnumerable`1 documents)+MoveNext()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(31,0): at LiteDB.Engine.LiteEngine.&lt;&gt;c__DisplayClass34_0.&lt;Insert&gt;b__0(TransactionService transaction)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(105,0): at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Transaction.cs(95,0): at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Engine/Engine/Insert.cs(21,0): at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.&lt;&gt;c__DisplayClass11_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(111,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionEngine.cs(11,0): at LiteDB.TransactionEngine.Invoke[T](Func`1 action)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/EngineFacade.cs(21,0): at LiteDB.EngineFacade.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(37,0): at LiteDB.SessionEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/Collections/Insert.cs(46,0): at LiteDB.LiteCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.&lt;&gt;c__DisplayClass22_0.&lt;Insert&gt;b__0()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(89,0): at LiteDB.LiteTransaction.RunCore[T](Func`1 action)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/LiteTransaction.cs(74,0): at LiteDB.LiteTransaction.Run[T](Func`1 action, Action validate)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/TransactionCollection.cs(30,0): at LiteDB.TransactionCollection`1.Insert(IEnumerable`1 entities)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(94,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(String password)
+[xUnit.net 00:00:05.78]            at InvokeStub_TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(Object, Span`1)
+[xUnit.net 00:00:05.78]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.78]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(83,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__1_0(Mutex _)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(81,0): at LiteDB.Client.Shared.SharedMutexTurnstile.WaitCancellable(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexTurnstile.cs(43,0): at LiteDB.Client.Shared.SharedMutexTurnstile.Wait(Mutex mutex, CancellationToken closing)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexScope.cs(32,0): at LiteDB.Client.Shared.SharedMutexScope.Take(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(75,0): at LiteDB.Client.Shared.SharedMutexOwner.TakeDirect(Boolean block, Boolean&amp; abandoned, CancellationToken closing)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedMutexOwner.cs(128,0): at LiteDB.Client.Shared.SharedMutexOwner.Enter(Boolean scoped, CancellationToken closing)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Waiters.cs(32,0): at LiteDB.SharedEngine.EnterOwner(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(112,0): at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(54,0): at LiteDB.SharedEngine.&lt;&gt;c__DisplayClass8_0`1.&lt;QueryDatabase&gt;b__0()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(86,0): at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.Calls.cs(52,0): at LiteDB.SharedEngine.QueryDatabase[T](Func`1 Query)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Shared/SharedEngine.cs(359,0): at LiteDB.SharedEngine.Pragma(String name)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Transactions/SessionEngine.cs(59,0): at LiteDB.SessionEngine.Pragma(String name)
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB/Client/Database/LiteDatabase.cs(361,0): at LiteDB.LiteDatabase.get_UserVersion()
+[xUnit.net 00:00:05.78]         __WORKSPACE__/artifacts_temp/fix-shared-callback-native-before/LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs(86,0): at LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency&gt;b__3()
+[xUnit.net 00:00:05.78]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:56.9774543+00:00">
+        <Text>[xUnit.net 00:00:01.17]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: "secret", write: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.0629258+00:00">
+        <Text>[xUnit.net 00:00:01.25]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.1443925+00:00">
+        <Text>[xUnit.net 00:00:01.33]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: null, write: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.2897949+00:00">
+        <Text>[xUnit.net 00:00:01.48]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Late_reader_callback_refuses_native_wait_after_handoff(password: "secret", write: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.3817273+00:00">
+        <Text>[xUnit.net 00:00:01.57]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.4662115+00:00">
+        <Text>[xUnit.net 00:00:01.65]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.6312736+00:00">
+        <Text>[xUnit.net 00:00:01.82]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: "secret", write: True, peerFacade: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.7042545+00:00">
+        <Text>[xUnit.net 00:00:01.89]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: False, peerFacade: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.8501022+00:00">
+        <Text>[xUnit.net 00:00:02.04]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: "secret", write: False, peerFacade: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:57.9351419+00:00">
+        <Text>[xUnit.net 00:00:02.12]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: null, write: True, peerFacade: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:58.0970415+00:00">
+        <Text>[xUnit.net 00:00:02.28]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: "secret", write: True, peerFacade: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:58.2601928+00:00">
+        <Text>[xUnit.net 00:00:02.45]     LiteDB.Tests.Engine.TransactionHandleSharedCallback_Tests.Input_callback_refuses_same_namespace_before_native_wait(password: "secret", write: False, peerFacade: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:59.0597304+00:00">
+        <Text>[xUnit.net 00:00:03.25]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: "secret", otherShared: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:59.2245670+00:00">
+        <Text>[xUnit.net 00:00:03.41]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:59.5169263+00:00">
+        <Text>[xUnit.net 00:00:03.70]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: "secret", otherShared: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:09:59.6208305+00:00">
+        <Text>[xUnit.net 00:00:03.81]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Nested_other_database_handle_keeps_outer_dependency_and_restores_it(password: null, otherShared: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:10:01.2495922+00:00">
+        <Text>[xUnit.net 00:00:05.44]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: null) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T15:10:01.5920902+00:00">
+        <Text>[xUnit.net 00:00:05.78]     LiteDB.Tests.Engine.TransactionHandleSharedCallbackControl_Tests.Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency(password: "secret") [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

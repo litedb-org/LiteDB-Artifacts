@@ -1,0 +1,47 @@
+{
+  "reviewedProductionCommit": "4ce3756b7eea9400347bc399b07a9e37855e4f47",
+  "reviewedProofCommit": "7b13954174066615ccef0103b96d5e79c13c3ff7",
+  "reviewedHardeningCommit": "a09bfa294c793655e4947cd30ec05729661a3092",
+  "strictFirstPairIndependentTranscriptAudit": {
+    "Package": {
+      "met": true,
+      "exitCode": 0,
+      "nativeCases": 6,
+      "callbackEntries": 6,
+      "controlSuccess": 8,
+      "peerCommits": 10,
+      "nativeBoundaries": 10
+    },
+    "Latest": {
+      "met": true,
+      "exitCode": 10,
+      "nativeCases": 0,
+      "callbackEntries": 6,
+      "controlSuccess": 8,
+      "peerCommits": 10,
+      "nativeBoundaries": 4
+    }
+  },
+  "independentExecution": {
+    "net8Focused": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "trx": "__WORKSPACE__/temporary/pr133-native-proof-audit-results/native-proof-audit-net8.trx"
+    },
+    "net462": "compile passed, 0 errors; CLR Framework runtime not exercised",
+    "failureCaptureMutation": "__WORKSPACE__/temporary/pr133-native-proof-audit-mutation.json"
+  },
+  "findings": [
+    {
+      "finding": "Post-start child timeout lost partial transcript and fixture path",
+      "resolution": "a09bfa294 logs start/path and drains output after failure; isolated forced-stall mutation confirms exit2 with original deadline and both output streams retained"
+    }
+  ],
+  "limits": [
+    "No Windows native runtime or .NET Framework runtime execution in this independent audit",
+    "Unit-test PeerWrite uses another thread/wrapper; actual separate-process writer and indexed cold model are established by process-isolated proof",
+    "Proof does not simulate power loss",
+    "Coordinated ordinary Shared-read positive path not present in these22 unit tests or proof; guard placement allows it by inspection, and parent assigned other coverage"
+  ]
+}

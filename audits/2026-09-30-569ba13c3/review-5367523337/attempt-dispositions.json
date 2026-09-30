@@ -1,0 +1,62 @@
+[
+  {
+    "attempt": "Fixer initial test compile",
+    "evidence": "fixer/intermediate-attempt-logs/pr133-shared-callback-before-net10.log",
+    "classification": "Setup error; no tests executed",
+    "detail": "EngineSettings is not a LiteDatabase constructor argument; corrected to ConnectionString."
+  },
+  {
+    "attempt": "First12-case actual12a baseline",
+    "evidence": "fixer/intermediate-4ce-raw/fixed/LiteDB.Tests/TestResults/shared-callback-before-net10.trx",
+    "classification": "12 confirmed regression failures",
+    "detail": "Expected immediate InvalidOperationException; actual observed native wait was bounded by OperationCanceledException. Current source-at-copy label in original draft is wrong for execution. Exact initial binaries overwritten; log/TRX retained."
+  },
+  {
+    "attempt": "Final22-case actual12a baseline",
+    "evidence": "fixer/intermediate-4ce-raw/before/LiteDB.Tests/TestResults/shared-callback-before-final-overlay-net10.trx",
+    "classification": "18 confirmed regression failures plus4 passing admission controls",
+    "detail": "Dedicated actual12a production plus test overlay; exact source/binaries retained. These native-boundary observations are not generic elapsed-time failures."
+  },
+  {
+    "attempt": "Actual12a nested-begin overlay",
+    "evidence": "fixer/final-969/before-begin/LiteDB.Tests/TestResults/shared-callback-begin-before-net10.trx",
+    "classification": "4 confirmed admission dependency failures",
+    "detail": "Cancellation armed only after actual local-wait observation; expected immediate InvalidOperationException, actual OperationCanceledException. Final969 guards before local admission."
+  },
+  {
+    "attempt": "Proof initial compile",
+    "evidence": "strict-proof/baseline-attempts/pr133-native-proof-initial-build.log",
+    "classification": "Setup error; no proof executed",
+    "detail": "ILiteTransaction has no Execute API; corrected to bound query enumerator."
+  },
+  {
+    "attempt": "Proof first actual12a baseline run",
+    "evidence": "strict-proof/baseline-attempts/pr133-native-proof-source12a-first.log",
+    "classification": "Harness control failure; not passing regression proof",
+    "detail": "Same-session owner release could legitimately race cancellation and permit admission. Separate owner session retained ownership until cancellation in corrected control."
+  },
+  {
+    "attempt": "First strict pair",
+    "evidence": "strict-proof/first-pair/proof.json",
+    "classification": "Passing intermediate source-specific report with unavailable exact runner binaries",
+    "detail": "CLI auto-purged binaries. Separately retained second pair includes exact captured binaries; first run is not relabeled with second-run binary hashes."
+  },
+  {
+    "attempt": "Independent forced-stall apphost first launch",
+    "evidence": "independent-proof/pr133-native-proof-audit-mutation-attempt1-apphost.json",
+    "classification": "Runtime discovery failure exit131 before proof",
+    "detail": "Corrected launch uses dotnet DLL. First stdout/stderr and JSON retained; no knownbad/fixed marker and no mutation sensitivity claim from first launch."
+  },
+  {
+    "attempt": "Independent forced-stall corrected launch",
+    "evidence": "independent-proof/pr133-native-proof-audit-mutation.json",
+    "classification": "Successful negative oracle control exit2; synthetic only",
+    "detail": "Actual shortened-deadline stall preserves partial stdout/stderr, fixture path and original timeout; emits neither BUG_REPRODUCED nor VERIFIED_FIXED. TestingEnabled=true mutation binaries are not production proof."
+  },
+  {
+    "attempt": "Independent adjacent nested begin on4ce",
+    "evidence": "independent-dependency/final/review.json",
+    "classification": "Confirmed adjacent dependency finding, corrected969",
+    "detail": "Actual local-wait and boundary cancellation/finite timeout observed; final probes require InvalidOperationException and zero local-wait events while caught refusal preserves Active owner."
+  }
+]

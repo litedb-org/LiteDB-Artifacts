@@ -1,0 +1,354 @@
+{
+  "status": "No remaining blocker found within reviewed scope",
+  "initialSource": "4ce3756b7eea9400347bc399b07a9e37855e4f47",
+  "initialProductionTree": "75b209d9ffd1e797675e5ed8fb6d1fbc12f6155f",
+  "finalSource": "969828f92abefd52e28d6a61ab35b6bee74ed94e",
+  "finalProductionTree": "f6f315315692f9992d4a1a08e776f69662354284",
+  "environment": "Linux x64; Release TestingEnabled=true; .NET 8.0.30 and 10.0.11",
+  "productionChangesReviewed": [
+    "LiteDB/Engine/TransactionContext.cs",
+    "LiteDB/Client/Transactions/TransactionResources.cs",
+    "LiteDB/Client/Transactions/LiteTransaction.cs",
+    "LiteDB/Client/Shared/SharedEngine.cs",
+    "LiteDB/Client/Shared/SharedEngine.Waiters.cs",
+    "LiteDB/Client/Shared/SharedEngine.Transactions.cs"
+  ],
+  "finding": {
+    "trigger": "Synchronous Shared-handle input callback begins another Shared handle for the same native namespace",
+    "initialObservation": "Observe(local-wait) reached; boundary cancellation produced OperationCanceledException, finite 200ms admission produced TimeoutException, on both runtimes; outer transaction remained Active. No infinite wait was deliberately left running.",
+    "disposition": "969828f92 checks execution dependency before local queuing. Public probes now observe InvalidOperationException and zero local-wait events. Caught refusal leaves active owner unchanged; rollback and subsequent ordinary write/cold indexed data pass.",
+    "unresolved": false
+  },
+  "sourceReview": [
+    "Dependency identity is separate from binding and survives Enter(null).",
+    "Nested dispatch of the same handle does not self-link; public reentry admission excludes reentering an older linked handle.",
+    "Scope disposal restores both dependency-parent and thread-static pointers before public handle Exit admits another thread.",
+    "Cached constructed native namespace is reused for matching; guard precedes native-owner/pin/snapshot-retirement side effects.",
+    "Coordinated ordinary query fast path remains before native guard; independent probes assert hit counter and committed-only results.",
+    "No added holder-worker or asynchronous capture; dependency fields are linked only during synchronous scopes."
+  ],
+  "tests": [
+    {
+      "path": "artifacts_temp/review-results/native-dependency-followup-net10.trx",
+      "counts": {
+        "total": "63",
+        "executed": "63",
+        "passed": "63",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "path": "artifacts_temp/review-results/native-dependency-followup-net8.trx",
+      "counts": {
+        "total": "63",
+        "executed": "63",
+        "passed": "63",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "path": "artifacts_temp/review-results/native-dependency-net10.trx",
+      "counts": {
+        "total": "55",
+        "executed": "55",
+        "passed": "55",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "path": "artifacts_temp/review-results/native-dependency-net8.trx",
+      "counts": {
+        "total": "55",
+        "executed": "55",
+        "passed": "55",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    }
+  ],
+  "customProbeLogs": [
+    {
+      "path": "artifacts_temp/native-review-probe/coordinated-encrypted-net10.log",
+      "passed": true,
+      "transcript": "mode=coordinated file=__WORKSPACE__/temporary/pr133-independent-f135c9fe43104089bb2d8fcc06bfa696.db runtime=10.0.11 encrypted=True\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/coordinated-encrypted-net8.log",
+      "passed": true,
+      "transcript": "mode=coordinated file=__WORKSPACE__/temporary/pr133-independent-74104e64af4c45fb991f64700cfe7c78.db runtime=8.0.30 encrypted=True\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/coordinated-net10.log",
+      "passed": true,
+      "transcript": "mode=coordinated file=__WORKSPACE__/temporary/pr133-independent-8c932487dec947db9b944ffd475ce401.db runtime=10.0.11 encrypted=False\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/coordinated-net8.log",
+      "passed": true,
+      "transcript": "mode=coordinated file=__WORKSPACE__/temporary/pr133-independent-30f93ac26dec4034a969e367888e28c5.db runtime=8.0.30 encrypted=False\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/exception-encrypted-net10.log",
+      "passed": true,
+      "transcript": "mode=exception file=__WORKSPACE__/temporary/pr133-independent-4848dbc8ae3744d5b8536d83a7d33ca5.db runtime=10.0.11 encrypted=True\nobserved=FormatException localWaits=0 txState=Failed\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/exception-encrypted-net8.log",
+      "passed": true,
+      "transcript": "mode=exception file=__WORKSPACE__/temporary/pr133-independent-8a0691131d2646e7a3f85fb7f9be0337.db runtime=8.0.30 encrypted=True\nobserved=FormatException localWaits=0 txState=Failed\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/exception-net10.log",
+      "passed": true,
+      "transcript": "mode=exception file=__WORKSPACE__/temporary/pr133-independent-dce7652b1108489fa5c49dd2b2fb651a.db runtime=10.0.11 encrypted=False\nobserved=FormatException localWaits=0 txState=Failed\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/exception-net8.log",
+      "passed": true,
+      "transcript": "mode=exception file=__WORKSPACE__/temporary/pr133-independent-cb79d727571d4baf80ccc22192e1b9c2.db runtime=8.0.30 encrypted=False\nobserved=FormatException localWaits=0 txState=Failed\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/followup-nested-begin-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-begin file=__WORKSPACE__/temporary/pr133-independent-9fa458c44f43482da5530bdabb10c576.db runtime=10.0.11 encrypted=False\nobserved=InvalidOperationException localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/followup-nested-begin-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-begin file=__WORKSPACE__/temporary/pr133-independent-6c33f250f1cc47ccab10ba6e864a2a5e.db runtime=8.0.30 encrypted=False\nobserved=InvalidOperationException localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/followup-nested-begin-timeout-encrypted-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-begin-timeout file=__WORKSPACE__/temporary/pr133-independent-7250a9c4b6504148927d2cab7ed4403b.db runtime=10.0.11 encrypted=True\nobserved=InvalidOperationException localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/followup-nested-begin-timeout-encrypted-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-begin-timeout file=__WORKSPACE__/temporary/pr133-independent-639352262c42490e895f73fce27e5b85.db runtime=8.0.30 encrypted=True\nobserved=InvalidOperationException localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-begin-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-begin file=__WORKSPACE__/temporary/pr133-independent-5a0138b0a4654088adb1b6eeafbab732.db runtime=10.0.11 encrypted=False\nobserved=OperationCanceledException localWaits=1 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-begin-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-begin file=__WORKSPACE__/temporary/pr133-independent-10a5356bcde74c32b3829ae96031d397.db runtime=8.0.30 encrypted=False\nobserved=OperationCanceledException localWaits=1 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-begin-timeout-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-begin-timeout file=__WORKSPACE__/temporary/pr133-independent-89f462c960e348c290056fa08f36a28b.db runtime=10.0.11 encrypted=False\nobserved=TimeoutException localWaits=1 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-begin-timeout-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-begin-timeout file=__WORKSPACE__/temporary/pr133-independent-b44a636bfcf94d69af81bcc89e31ac10.db runtime=8.0.30 encrypted=False\nobserved=TimeoutException localWaits=1 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-exception-encrypted-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-exception file=__WORKSPACE__/temporary/pr133-independent-898330ed1d8545919be0fc6c556908ae.db runtime=10.0.11 encrypted=True\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-exception-encrypted-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-exception file=__WORKSPACE__/temporary/pr133-independent-20be0a2a887d4debad445e3611eb0f3c.db runtime=8.0.30 encrypted=True\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-exception-net10.log",
+      "passed": true,
+      "transcript": "mode=nested-exception file=__WORKSPACE__/temporary/pr133-independent-86c9dcbeb6204a5d96b46939be8d3f7d.db runtime=10.0.11 encrypted=False\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    },
+    {
+      "path": "artifacts_temp/native-review-probe/nested-exception-net8.log",
+      "passed": true,
+      "transcript": "mode=nested-exception file=__WORKSPACE__/temporary/pr133-independent-2d5de2b78e3f4ab281951fee5cf5d58d.db runtime=8.0.30 encrypted=False\nobserved=none localWaits=0 txState=Active\nPASS\n"
+    }
+  ],
+  "customProbeSourceVersions": {
+    "Program.initial.cs.txt": "Original coordinated, exception, boundary-canceled nested begin probes",
+    "Program.v2.cs.txt": "Adds nested Direct exception unwinding and explicit null dependency/binding checks",
+    "Program.before-followup.cs.txt": "Adds finite-budget nested begin observation",
+    "Program.cs": "Adds explicit PR133_EXPECT_CALLBACK_REFUSAL=1 expected followup outcome"
+  },
+  "fixtures": [
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-f135c9fe43104089bb2d8fcc06bfa696.db",
+      "bytes": 49152,
+      "sha256": "05198d636b92180af722dccb5fabf4a4d4e72c7d231619b3d53bd28d9efacdff"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-74104e64af4c45fb991f64700cfe7c78.db",
+      "bytes": 49152,
+      "sha256": "c16eb414e158d4ee1fbe324bed583c6c6e4720e87bc15ef00e230bf4828b9e51"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-8c932487dec947db9b944ffd475ce401.db",
+      "bytes": 40960,
+      "sha256": "4945fc94a89c25ea4f82f094a465521f5da23de952d376da9bf735b951e4587c"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-30f93ac26dec4034a969e367888e28c5.db",
+      "bytes": 40960,
+      "sha256": "01a60e4ef4a1391a0299af0f3ca4a457bdc94bae0db82422a638602022669a75"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-4848dbc8ae3744d5b8536d83a7d33ca5.db",
+      "bytes": 49152,
+      "sha256": "f894329f6cb25e2cb063e8d6271d49216fc4035a0df62732d2b2e5a04e9e2e29"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-8a0691131d2646e7a3f85fb7f9be0337.db",
+      "bytes": 49152,
+      "sha256": "420c83d1e3e67ebfadc1f3d8ebd0c5da6b2d5fac42914b169de4ffffae15cbd0"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-dce7652b1108489fa5c49dd2b2fb651a.db",
+      "bytes": 40960,
+      "sha256": "dac1353fc67d5782431e2ced14fa75cd0c239890389cd24a7c684a92515e641f"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-cb79d727571d4baf80ccc22192e1b9c2.db",
+      "bytes": 40960,
+      "sha256": "f204f774e8b5e57eecba1e03f52f238f7eedb24a6302e8822c98a5e48d20826f"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-9fa458c44f43482da5530bdabb10c576.db",
+      "bytes": 40960,
+      "sha256": "e477209caa797938ae5767f3a2f29d2a64848841448b65cc1a39b2c2c474e6fb"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-6c33f250f1cc47ccab10ba6e864a2a5e.db",
+      "bytes": 40960,
+      "sha256": "4e46148600527a4e9379a33384c093b29c9d5a4614cbf19ecf3969dc3d1580e8"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-7250a9c4b6504148927d2cab7ed4403b.db",
+      "bytes": 49152,
+      "sha256": "e0436f1adb4e743973ad9bcb03584edd837d78dcb892601f845249c05aaccfe4"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-639352262c42490e895f73fce27e5b85.db",
+      "bytes": 49152,
+      "sha256": "66c0449012bdcda429b703fcd7ba912609635b44c3a9ccd6eba4745aa2cd5999"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-5a0138b0a4654088adb1b6eeafbab732.db",
+      "bytes": 40960,
+      "sha256": "d4adab12bcbe9e5c84e871a8c19a8a5de537637b4aca0c4186a17d25abee36fd"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-10a5356bcde74c32b3829ae96031d397.db",
+      "bytes": 40960,
+      "sha256": "3d8c3c8385f8e822e8b8391249d94a956f3d9fdd3e31f2e5b27289924e7cab0a"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-89f462c960e348c290056fa08f36a28b.db",
+      "bytes": 40960,
+      "sha256": "2f7d4d08b083579656397fe9f5e499a618d8f9e8b8c09f95e246c1b4be83663a"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-b44a636bfcf94d69af81bcc89e31ac10.db",
+      "bytes": 40960,
+      "sha256": "bdcf76005cefffbe27355b9375eb569120c6871c2bb525e41adca45a07cb7da3"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-898330ed1d8545919be0fc6c556908ae.db.other",
+      "bytes": 40960,
+      "sha256": "91f838e85d514bcb6272b730c96622d48aa1bf31d5d8d41d8dc1275be2befd25"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-898330ed1d8545919be0fc6c556908ae.db",
+      "bytes": 49152,
+      "sha256": "1925533563e7e1dfe821dbb138b48218595c737aa8c22bb083b804f7f8dbaa9e"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-20be0a2a887d4debad445e3611eb0f3c.db.other",
+      "bytes": 40960,
+      "sha256": "f68830d92585183d34c6f1c292d78127da0e3acbf1efa09bfd7f1b9b52077fc6"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-20be0a2a887d4debad445e3611eb0f3c.db",
+      "bytes": 49152,
+      "sha256": "77be231f5c1f1a2b5c8d27de1bc5c0d96bbce61f010c02b71b7e887b899aa550"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-86c9dcbeb6204a5d96b46939be8d3f7d.db",
+      "bytes": 40960,
+      "sha256": "b62ac1cc5f29a7efc67634ae8c702ac09d2046937f27836b533bf9369b08bd46"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-86c9dcbeb6204a5d96b46939be8d3f7d.db.other",
+      "bytes": 32768,
+      "sha256": "b3f88d7966e3cc52f7564d539d16658bb05f78bd6dae99e96a109aa56a12650f"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-2d5de2b78e3f4ab281951fee5cf5d58d.db.other",
+      "bytes": 32768,
+      "sha256": "8304ae82eca55b6cd16863cae3e638681dddda3b280c69512bdeb24eff9aebed"
+    },
+    {
+      "path": "__WORKSPACE__/temporary/pr133-independent-2d5de2b78e3f4ab281951fee5cf5d58d.db",
+      "bytes": 40960,
+      "sha256": "94349df2cb66a188e945ecbca5c984b28f5651ff6481057c52a4efa29936c56b"
+    }
+  ],
+  "limits": [
+    "No production edits or push made by reviewer. Worktree remains source-clean.",
+    "Tests execute hook-enabled Release, not production package. Strict actual12a package proof is owned separately.",
+    "No Windows, ARM, .NET Framework, filesystem/power-fault or independent process validation was run by this reviewer.",
+    "Review covers synchronous call-stack dependency cycles, not application-created cross-thread waits such as Task.Run(...).Result.",
+    "Positive/exception custom probes were run on4ce; full affected63-test selection, including new positive/uncaught controls, and nested-begin custom probes rerun on969.",
+    "Initial net10 probe binaries retained under artifacts_temp/review-binaries/4ce-net10. Initial net8 binaries overwritten by followup builds; exact source and logs/TRX retained."
+  ]
+}

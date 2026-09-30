@@ -1,0 +1,96 @@
+{
+  "Package": {
+    "met": true,
+    "exitCode": 0,
+    "caseResults": [
+      {
+        "scenario": "input-pragma",
+        "encrypted": false,
+        "exitCode": 20
+      },
+      {
+        "scenario": "input-write",
+        "encrypted": false,
+        "exitCode": 20
+      },
+      {
+        "scenario": "late-read",
+        "encrypted": false,
+        "exitCode": 20
+      },
+      {
+        "scenario": "input-pragma",
+        "encrypted": true,
+        "exitCode": 20
+      },
+      {
+        "scenario": "input-write",
+        "encrypted": true,
+        "exitCode": 20
+      },
+      {
+        "scenario": "late-read",
+        "encrypted": true,
+        "exitCode": 20
+      }
+    ],
+    "nativeSelfWaitVerified": 6,
+    "controls": 8,
+    "peerCommits": 10
+  },
+  "Latest": {
+    "met": true,
+    "exitCode": 10,
+    "caseResults": [
+      {
+        "scenario": "input-pragma",
+        "encrypted": false,
+        "exitCode": 10
+      },
+      {
+        "scenario": "input-write",
+        "encrypted": false,
+        "exitCode": 10
+      },
+      {
+        "scenario": "late-read",
+        "encrypted": false,
+        "exitCode": 10
+      },
+      {
+        "scenario": "input-pragma",
+        "encrypted": true,
+        "exitCode": 10
+      },
+      {
+        "scenario": "input-write",
+        "encrypted": true,
+        "exitCode": 10
+      },
+      {
+        "scenario": "late-read",
+        "encrypted": true,
+        "exitCode": 10
+      }
+    ],
+    "nativeSelfWaitVerified": 0,
+    "controls": 8,
+    "peerCommits": 10
+  },
+  "binaryIdentity": {
+    "knownbadDLL": "035d016382b588dc47c23185b6a44a7177010a4fdffa560b2c8aede0d10d065f",
+    "packageMatchingEntries": [
+      "lib/net8.0/LiteDB.dll"
+    ],
+    "fixedDLL": "b6fc5ff6ec7d100b67737156078f5f78700cc01c484658f7757bb392b3d2b325",
+    "knownbadDifferentFromFixed": true
+  },
+  "checksumsVerified": 70,
+  "sourceOracleInspection": {
+    "truePlain": "Parent iterates null/secret; empty transport decodes to null in ChildMain.",
+    "caughtRefusal": "Run requires InvalidOperationException, Active state and earlier row20 visible, then explicitly commits input cases or rolls back late-read.",
+    "externalProgress": "Separate --peer process inserts row30 after release in every affected case and admission control.",
+    "coldData": "Verify reopens twice, requires exact sorted row IDs, unaffected collection count and sentinel42 value; each expected row queried through value INDEX SEEK and checked by ID.",
+    "limits": "No new executions performed by staging agent. Source inspection and strict report validate these specific intermediate-a09 outcomes, not final569 or physical power-loss."
+  }
+}

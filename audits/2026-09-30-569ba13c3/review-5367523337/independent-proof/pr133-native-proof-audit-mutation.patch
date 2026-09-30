@@ -1,0 +1,25 @@
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs b/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs
+index 27825ee0e..3242c687a 100644
+--- a/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs
+@@ -20,7 +20,7 @@ internal static class Processes
+             if (!ready.Wait(TimeSpan.FromSeconds(20)) || ready.Result != "CHILD_READY") throw new Exception("Child startup handshake failed.");
+             child.StandardInput.WriteLine("go"); child.StandardInput.Flush();
+             stdout = child.StandardOutput.ReadToEndAsync();
+-            if (!child.WaitForExit(45000)) throw new Exception("Post-start child deadline expired.");
++            if (!child.WaitForExit(250)) throw new Exception("Post-start child deadline expired.");
+             Task.WaitAll(stdout, stderr);
+             Console.WriteLine($"CHILD_RESULT mode={mode} scenario={scenario} encrypted={password != null} exit={child.ExitCode}");
+             Console.Write(stdout.Result); Console.Error.Write(stderr.Result); printed = true;
+diff --git a/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs b/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs
+index 0f5bb26b4..6ece9ebac 100644
+--- a/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs
++++ b/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs
+@@ -37,6 +37,7 @@ internal static class Program
+         {
+             Console.WriteLine("CHILD_READY");
+             if (Console.ReadLine() != "go") throw new Exception("Missing parent handshake.");
++            Console.WriteLine("AUDIT_FORCED_STAGE"); Console.Error.WriteLine("AUDIT_FORCED_STDERR"); Thread.Sleep(Timeout.Infinite);
+             var password = args[2].Length == 0 ? null : args[2];
+             if (args[0] == "--peer")
+             {

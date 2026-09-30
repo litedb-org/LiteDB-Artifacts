@@ -1,0 +1,9 @@
+# Final hosted qualification
+
+Candidate `569ba13c3b3867131c8687e7884bed65131edfbf` passed all 39 CI jobs and all 19 strict regression proofs. All 29 required test legs and 129,861 result rows are retained, with no failed rows. Hosted Safety and independent matrix/source checks report zero errors and warnings. Fuzz, Index compatibility and Shared-slot workflows passed; optional skipped jobs and three existing quarantine gaps remain explicit in the reports.
+
+Exact candidate, base, merge and tree identities are in `final10-candidate-provenance.json` and `final10-completed-summary.json`. The candidate provenance file labels its initial status snapshot; completed run metadata is retained separately. All 29 original test artifact zip hashes and the Safety artifact hash match GitHub digests. `test-results.tar.gz` retains full result files and Windows fixture-retention controls. `retention-controls/` retains Linux controls. Their deliberate sentinel failures are expected collection tests; every copied fixture length and hash was independently verified.
+
+The new native-callback proof summary records six before/fixed cases and eight controls on each side. Its cold-check conclusion follows successful markers and the exact source assertion order; the hosted artifact does not provide individual DLL hashes. This limit is explicit, alongside workflow/source/package identity and complete output logs.
+
+Successful Fuzz generated end-state databases may be omitted only with original hashes; inputs, configurations, traces and binaries remain in replay archives. Public path normalization is recorded separately. Historical failed snapshots remain in the prior immutable audit and are not replaced by later passing controls. These bounded tests do not establish device or power-loss qualification.

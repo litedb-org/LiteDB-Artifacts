@@ -1,0 +1,838 @@
+{
+  "GeneratedAt": "2026-09-30T15:13:01.5825987+00:00",
+  "Root": "__WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedCallbackNativeWait",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 16.133314,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T15:13:07.0188487\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.12a057424843\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-pragma path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/5fee8ec8-3337-4fea-a80a-904e2bc8df75.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-pragma encrypted=False exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/5fee8ec8-3337-4fea-a80a-904e2bc8df75.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-write path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/594dd0b7-66b0-4b72-8c4e-9a9bc80b2fd8.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-write encrypted=False exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/594dd0b7-66b0-4b72-8c4e-9a9bc80b2fd8.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=late-read path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/90e70e0c-29e5-40f8-9903-ea1c3637858c.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=late-read encrypted=False exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/90e70e0c-29e5-40f8-9903-ea1c3637858c.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/0ad029ec-9407-4d8d-a779-821e0b4925d9.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=direct path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/c74f6597-c782-4377-a7f2-72a62fc8572a.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=direct encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED direct"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/b7ba26e1-9035-4664-8858-5130825ed7e2.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/b7ba26e1-9035-4664-8858-5130825ed7e2.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=cancel-admission path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/8665c8ba-57ef-4668-9ab6-7ac31b2999cc.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=cancel-admission encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/8665c8ba-57ef-4668-9ab6-7ac31b2999cc.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED cancel-admission"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-pragma path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/86532af3-fc00-413d-9146-1fc9d5a7c6b4.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-pragma encrypted=True exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/86532af3-fc00-413d-9146-1fc9d5a7c6b4.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-write path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/7cd74963-66bf-47c1-8456-e0bc85435b64.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-write encrypted=True exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/7cd74963-66bf-47c1-8456-e0bc85435b64.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=late-read path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/be05dbf4-3c25-44fe-8c88-94f17cc2124a.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=late-read encrypted=True exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PARENT_NATIVE_WAIT_CONFIRMED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/be05dbf4-3c25-44fe-8c88-94f17cc2124a.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/5d8dc991-2986-4787-bd77-8246183cbdde.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=direct path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/9530cf34-d01c-482a-9408-cec0a86901d4.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=direct encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED direct"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/526b7f41-b8f5-4c97-8f4a-90012814890f.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/526b7f41-b8f5-4c97-8f4a-90012814890f.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=cancel-admission path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/6b6602b5-ed84-4f87-9b9a-42c02d86cefd.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=cancel-admission encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-84afdd41bbbb4042be6b7db39bfd318b/6b6602b5-ed84-4f87-9b9a-42c02d86cefd.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED cancel-admission"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T15:13:23.09019\u002B00:00\u0022,\u0022text\u0022:\u0022Six isolated native callback cases and eight independent-work/admission controls verified.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 10.313612,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T15:13:23.1547792\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.12a057424843\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-pragma path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/a10736cf-1a3e-4fa9-b376-1c27215bd09d.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-pragma encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/a10736cf-1a3e-4fa9-b376-1c27215bd09d.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-write path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/2892d111-8674-46f7-8f31-e14c350be36d.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-write encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/2892d111-8674-46f7-8f31-e14c350be36d.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=late-read path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/c15a6576-f24b-4ff3-9279-9782201288df.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=late-read encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/c15a6576-f24b-4ff3-9279-9782201288df.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/445657cf-007b-4cb2-bb04-07ea6044132a.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=direct path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/75cb61bc-ade8-4860-819f-6be3c04c9311.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=direct encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED direct"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/9c6f034f-bf57-4b6a-9adc-af5dbe2d828f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/9c6f034f-bf57-4b6a-9adc-af5dbe2d828f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=cancel-admission path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/7628cc57-e0e3-4634-be9c-d557251d1326.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=cancel-admission encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/7628cc57-e0e3-4634-be9c-d557251d1326.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED cancel-admission"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-pragma path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/e2ac8d10-3115-48f2-aac2-4e7efcc5888a.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-pragma encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-pragma"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/e2ac8d10-3115-48f2-aac2-4e7efcc5888a.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=input-write path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/e5b31341-4b22-46c7-9724-9d9c9beeafe1.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=input-write encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED input-write"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/e5b31341-4b22-46c7-9724-9d9c9beeafe1.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=late-read path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/6329052b-3c7c-4a4a-b3eb-fd1e72d50864.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=late-read encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_ENTERED late-read"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/6329052b-3c7c-4a4a-b3eb-fd1e72d50864.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/06f4970d-1404-41cb-95b5-7c315006bd13.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=direct path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/03b6eac4-5bd8-47cf-b4f6-166ff0ad548e.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=direct encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED direct"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/6881f252-1242-4aef-bea7-30d7adc07994.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/6881f252-1242-4aef-bea7-30d7adc07994.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=cancel-admission path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/114b9bdf-ea3d-4699-bfb2-e1e76c7e11dd.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=cancel-admission encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_BOUNDARY parentWaiters\u003E0 occupiedTurnstile callerWaiting"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-native-callback-61f9dce2b6bf4bc8bde283bef09dbdbc/114b9bdf-ea3d-4699-bfb2-e1e76c7e11dd.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED cancel-admission"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T15:13:33.4072476\u002B00:00\u0022,\u0022text\u0022:\u0022Six isolated native callback cases and eight independent-work/admission controls verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

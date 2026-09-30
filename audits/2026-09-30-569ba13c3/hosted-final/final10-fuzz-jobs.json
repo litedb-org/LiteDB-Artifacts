@@ -1,0 +1,1397 @@
+{
+  "jobs": [
+    {
+      "id": 109956852323,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBqYw",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852323",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852323",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:45Z",
+      "completed_at": "2026-09-30T15:19:57Z",
+      "name": "determinism",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:46Z",
+          "completed_at": "2026-09-30T15:18:47Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:47Z",
+          "completed_at": "2026-09-30T15:18:48Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:48Z",
+          "completed_at": "2026-09-30T15:18:49Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz.Tests/LiteDB.Fuzz.Tests.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:18:49Z",
+          "completed_at": "2026-09-30T15:19:11Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f net8.0 --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:11Z",
+          "completed_at": "2026-09-30T15:19:27Z"
+        },
+        {
+          "name": "Run dotnet test LiteDB.Fuzz.Tests/LiteDB.Fuzz.Tests.csproj -c Release --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:27Z",
+          "completed_at": "2026-09-30T15:19:47Z"
+        },
+        {
+          "name": "Run python3 scripts/test-fuzz-finding-triage.py",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-30T15:19:47Z",
+          "completed_at": "2026-09-30T15:19:47Z"
+        },
+        {
+          "name": "Run dotnet run --project LiteDB.Fuzz -c Release -f net8.0 --no-build -- --target query,index,bson,parser,mapper,value --seed 42947 --count 40 --determinism-check --artifact-dir artifacts/fuzz",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:19:47Z",
+          "completed_at": "2026-09-30T15:19:54Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-09-30T15:19:54Z",
+          "completed_at": "2026-09-30T15:19:55Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:19:55Z",
+          "completed_at": "2026-09-30T15:19:55Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-09-30T15:19:55Z",
+          "completed_at": "2026-09-30T15:19:55Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-09-30T15:19:55Z",
+          "completed_at": "2026-09-30T15:19:56Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852323",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000209678,
+      "runner_name": "GitHub Actions 1000209678",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852569,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBrWQ",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852569",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852569",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:45Z",
+      "completed_at": "2026-09-30T15:19:33Z",
+      "name": "Legacy net481 (x64)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:47Z",
+          "completed_at": "2026-09-30T15:18:50Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:50Z",
+          "completed_at": "2026-09-30T15:18:58Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:58Z",
+          "completed_at": "2026-09-30T15:19:01Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz.Legacy/LiteDB.Fuzz.Legacy.csproj -p:PlatformTarget=x64",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:19:01Z",
+          "completed_at": "2026-09-30T15:19:15Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz.Legacy/LiteDB.Fuzz.Legacy.csproj -c Release --no-restore -p:TestingEnabled=true -p:PlatformTarget=x64",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:15Z",
+          "completed_at": "2026-09-30T15:19:26Z"
+        },
+        {
+          "name": "Run netstandard serializer/index surface on .NET Framework NLS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:26Z",
+          "completed_at": "2026-09-30T15:19:29Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-09-30T15:19:29Z",
+          "completed_at": "2026-09-30T15:19:29Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-09-30T15:19:29Z",
+          "completed_at": "2026-09-30T15:19:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-09-30T15:19:31Z",
+          "completed_at": "2026-09-30T15:19:31Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852569",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000209675,
+      "runner_name": "GitHub Actions 1000209675",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852756,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBsFA",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852756",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852756",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:45Z",
+      "completed_at": "2026-09-30T15:20:23Z",
+      "name": "Smoke (linux-core-utc)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:46Z",
+          "completed_at": "2026-09-30T15:18:52Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:52Z",
+          "completed_at": "2026-09-30T15:18:55Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:55Z",
+          "completed_at": "2026-09-30T15:18:57Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:18:57Z",
+          "completed_at": "2026-09-30T15:19:01Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net8.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:01Z",
+          "completed_at": "2026-09-30T15:19:21Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:21Z",
+          "completed_at": "2026-09-30T15:20:17Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-30T15:20:17Z",
+          "completed_at": "2026-09-30T15:20:20Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:20:20Z",
+          "completed_at": "2026-09-30T15:20:21Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:20:21Z",
+          "completed_at": "2026-09-30T15:20:21Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:20:21Z",
+          "completed_at": "2026-09-30T15:20:22Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:20:22Z",
+          "completed_at": "2026-09-30T15:20:22Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852756",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000209680,
+      "runner_name": "GitHub Actions 1000209680",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852776,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBsKA",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852776",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852776",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:46Z",
+      "completed_at": "2026-09-30T15:19:31Z",
+      "name": "Legacy net481 (x86)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:47Z",
+          "completed_at": "2026-09-30T15:18:48Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:48Z",
+          "completed_at": "2026-09-30T15:18:54Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:54Z",
+          "completed_at": "2026-09-30T15:18:57Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz.Legacy/LiteDB.Fuzz.Legacy.csproj -p:PlatformTarget=x86",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:18:57Z",
+          "completed_at": "2026-09-30T15:19:12Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz.Legacy/LiteDB.Fuzz.Legacy.csproj -c Release --no-restore -p:TestingEnabled=true -p:PlatformTarget=x86",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:12Z",
+          "completed_at": "2026-09-30T15:19:22Z"
+        },
+        {
+          "name": "Run netstandard serializer/index surface on .NET Framework NLS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:22Z",
+          "completed_at": "2026-09-30T15:19:27Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-09-30T15:19:27Z",
+          "completed_at": "2026-09-30T15:19:27Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-09-30T15:19:27Z",
+          "completed_at": "2026-09-30T15:19:29Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-09-30T15:19:29Z",
+          "completed_at": "2026-09-30T15:19:29Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852776",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000209676,
+      "runner_name": "GitHub Actions 1000209676",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852822,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBsVg",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852822",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852822",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:47Z",
+      "completed_at": "2026-09-30T15:20:07Z",
+      "name": "Checksums (ubuntu-latest, net8.0)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:48Z",
+          "completed_at": "2026-09-30T15:18:49Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:49Z",
+          "completed_at": "2026-09-30T15:18:53Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:53Z",
+          "completed_at": "2026-09-30T15:18:54Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net8.0\" -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:18:54Z",
+          "completed_at": "2026-09-30T15:19:15Z"
+        },
+        {
+          "name": "Checksum smoke and deterministic replay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:15Z",
+          "completed_at": "2026-09-30T15:20:02Z"
+        },
+        {
+          "name": "Short daily checksum campaign",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-09-30T15:20:02Z",
+          "completed_at": "2026-09-30T15:20:02Z"
+        },
+        {
+          "name": "Summarize checksum findings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-30T15:20:02Z",
+          "completed_at": "2026-09-30T15:20:02Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:20:02Z",
+          "completed_at": "2026-09-30T15:20:04Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:20:04Z",
+          "completed_at": "2026-09-30T15:20:04Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:20:04Z",
+          "completed_at": "2026-09-30T15:20:04Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:20:04Z",
+          "completed_at": "2026-09-30T15:20:04Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852822",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000209679,
+      "runner_name": "GitHub Actions 1000209679",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852914,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBssg",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852914",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852914",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:50Z",
+      "completed_at": "2026-09-30T15:19:45Z",
+      "name": "Smoke (mac-storage-vector)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:50Z",
+          "completed_at": "2026-09-30T15:18:52Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:52Z",
+          "completed_at": "2026-09-30T15:18:58Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:58Z",
+          "completed_at": "2026-09-30T15:19:18Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:19:18Z",
+          "completed_at": "2026-09-30T15:19:21Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net10.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:21Z",
+          "completed_at": "2026-09-30T15:19:31Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:31Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-09-30T15:19:38Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:19:38Z",
+          "completed_at": "2026-09-30T15:19:42Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:19:42Z",
+          "completed_at": "2026-09-30T15:19:42Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:19:42Z",
+          "completed_at": "2026-09-30T15:19:42Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:19:42Z",
+          "completed_at": "2026-09-30T15:19:42Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852914",
+      "labels": [
+        "macos-latest"
+      ],
+      "runner_id": 1000209683,
+      "runner_name": "GitHub Actions 1000209683",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852966,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBs5g",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852966",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852966",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:45Z",
+      "completed_at": "2026-09-30T15:19:51Z",
+      "name": "Smoke (windows-index-sort)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:46Z",
+          "completed_at": "2026-09-30T15:18:47Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:47Z",
+          "completed_at": "2026-09-30T15:18:55Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:55Z",
+          "completed_at": "2026-09-30T15:19:01Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:19:01Z",
+          "completed_at": "2026-09-30T15:19:14Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net8.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:14Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:38Z",
+          "completed_at": "2026-09-30T15:19:45Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-09-30T15:19:45Z",
+          "completed_at": "2026-09-30T15:19:45Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:19:45Z",
+          "completed_at": "2026-09-30T15:19:46Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:19:46Z",
+          "completed_at": "2026-09-30T15:19:47Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:19:47Z",
+          "completed_at": "2026-09-30T15:19:49Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:19:49Z",
+          "completed_at": "2026-09-30T15:19:49Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852966",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000209677,
+      "runner_name": "GitHub Actions 1000209677",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956852993,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBtAQ",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956852993",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956852993",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:19:34Z",
+      "completed_at": "2026-09-30T15:20:16Z",
+      "name": "v8-differential",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:19:35Z",
+          "completed_at": "2026-09-30T15:19:37Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:19:37Z",
+          "completed_at": "2026-09-30T15:19:39Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:19:39Z",
+          "completed_at": "2026-09-30T15:19:39Z"
+        },
+        {
+          "name": "Run v5 differential",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:19:39Z",
+          "completed_at": "2026-09-30T15:20:13Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-30T15:20:13Z",
+          "completed_at": "2026-09-30T15:20:13Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:20:13Z",
+          "completed_at": "2026-09-30T15:20:13Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-09-30T15:20:13Z",
+          "completed_at": "2026-09-30T15:20:13Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956852993",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000209694,
+      "runner_name": "GitHub Actions 1000209694",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956853015,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBtFw",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956853015",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956853015",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:19:26Z",
+      "completed_at": "2026-09-30T15:20:43Z",
+      "name": "Smoke (windows-persistence)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:19:27Z",
+          "completed_at": "2026-09-30T15:19:28Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:19:28Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:19:38Z",
+          "completed_at": "2026-09-30T15:19:43Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:19:43Z",
+          "completed_at": "2026-09-30T15:19:57Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net8.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:57Z",
+          "completed_at": "2026-09-30T15:20:23Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:20:23Z",
+          "completed_at": "2026-09-30T15:20:37Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-09-30T15:20:37Z",
+          "completed_at": "2026-09-30T15:20:37Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:20:37Z",
+          "completed_at": "2026-09-30T15:20:39Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:20:39Z",
+          "completed_at": "2026-09-30T15:20:39Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:20:39Z",
+          "completed_at": "2026-09-30T15:20:41Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:20:41Z",
+          "completed_at": "2026-09-30T15:20:41Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956853015",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000209693,
+      "runner_name": "GitHub Actions 1000209693",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956853018,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBtGg",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956853018",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956853018",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:45Z",
+      "completed_at": "2026-09-30T15:19:39Z",
+      "name": "Smoke (linux-cache-vienna)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:18:46Z",
+          "completed_at": "2026-09-30T15:18:47Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:18:47Z",
+          "completed_at": "2026-09-30T15:18:50Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:18:50Z",
+          "completed_at": "2026-09-30T15:18:51Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:18:51Z",
+          "completed_at": "2026-09-30T15:19:02Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net10.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:19:02Z",
+          "completed_at": "2026-09-30T15:19:24Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:19:24Z",
+          "completed_at": "2026-09-30T15:19:36Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-09-30T15:19:36Z",
+          "completed_at": "2026-09-30T15:19:36Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:19:36Z",
+          "completed_at": "2026-09-30T15:19:37Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:19:37Z",
+          "completed_at": "2026-09-30T15:19:37Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:19:37Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:19:38Z",
+          "completed_at": "2026-09-30T15:19:38Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956853018",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000209681,
+      "runner_name": "GitHub Actions 1000209681",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956853054,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBtPg",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956853054",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956853054",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:20:25Z",
+      "completed_at": "2026-09-30T15:21:04Z",
+      "name": "Smoke (linux-arm64-core)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:20:26Z",
+          "completed_at": "2026-09-30T15:20:28Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:20:28Z",
+          "completed_at": "2026-09-30T15:20:31Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:20:31Z",
+          "completed_at": "2026-09-30T15:20:32Z"
+        },
+        {
+          "name": "Run dotnet restore LiteDB.Fuzz/LiteDB.Fuzz.csproj",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:20:32Z",
+          "completed_at": "2026-09-30T15:20:40Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net8.0\" --no-restore -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:20:40Z",
+          "completed_at": "2026-09-30T15:20:58Z"
+        },
+        {
+          "name": "Run deterministic shard",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-09-30T15:20:58Z",
+          "completed_at": "2026-09-30T15:21:00Z"
+        },
+        {
+          "name": "Verify duration artifact retention",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-09-30T15:21:00Z",
+          "completed_at": "2026-09-30T15:21:00Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:21:00Z",
+          "completed_at": "2026-09-30T15:21:02Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:21:02Z",
+          "completed_at": "2026-09-30T15:21:02Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:21:02Z",
+          "completed_at": "2026-09-30T15:21:02Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:21:02Z",
+          "completed_at": "2026-09-30T15:21:02Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956853054",
+      "labels": [
+        "ubuntu-24.04-arm"
+      ],
+      "runner_id": 1000209705,
+      "runner_name": "GitHub Actions 1000209705",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956853368,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBueA",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956853368",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956853368",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:20:06Z",
+      "completed_at": "2026-09-30T15:22:00Z",
+      "name": "Checksums (windows-latest, net10.0)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-09-30T15:20:08Z",
+          "completed_at": "2026-09-30T15:20:10Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-09-30T15:20:10Z",
+          "completed_at": "2026-09-30T15:20:23Z"
+        },
+        {
+          "name": "Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-09-30T15:20:23Z",
+          "completed_at": "2026-09-30T15:20:30Z"
+        },
+        {
+          "name": "Run dotnet build LiteDB.Fuzz/LiteDB.Fuzz.csproj -c Release -f \"net10.0\" -p:TestingEnabled=true",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-09-30T15:20:30Z",
+          "completed_at": "2026-09-30T15:21:09Z"
+        },
+        {
+          "name": "Checksum smoke and deterministic replay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-09-30T15:21:09Z",
+          "completed_at": "2026-09-30T15:21:52Z"
+        },
+        {
+          "name": "Short daily checksum campaign",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-09-30T15:21:52Z",
+          "completed_at": "2026-09-30T15:21:52Z"
+        },
+        {
+          "name": "Summarize checksum findings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-09-30T15:21:52Z",
+          "completed_at": "2026-09-30T15:21:54Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-09-30T15:21:54Z",
+          "completed_at": "2026-09-30T15:21:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-dotnet@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-09-30T15:21:56Z",
+          "completed_at": "2026-09-30T15:21:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-09-30T15:21:56Z",
+          "completed_at": "2026-09-30T15:21:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-09-30T15:21:58Z",
+          "completed_at": "2026-09-30T15:21:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956853368",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000209702,
+      "runner_name": "GitHub Actions 1000209702",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 109956854638,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfBzbg",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956854638",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956854638",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:42Z",
+      "completed_at": "2026-09-30T15:18:41Z",
+      "name": "campaign",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956854638",
+      "labels": [
+        "self-hosted",
+        "linux",
+        "x64",
+        "litedb-fuzz"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 109956854932,
+      "run_id": 36735747255,
+      "workflow_name": "Fuzz",
+      "head_branch": "codex/transaction-handles",
+      "run_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/runs/36735747255",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOLVG3ps8AAAAZmfB0lA",
+      "head_sha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/jobs/109956854932",
+      "html_url": "https://github.com/JKamsker/LiteDB/actions/runs/36735747255/job/109956854932",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-09-30T15:18:42Z",
+      "started_at": "2026-09-30T15:18:42Z",
+      "completed_at": "2026-09-30T15:18:41Z",
+      "name": "nightly",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/JKamsker/LiteDB/check-runs/109956854932",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "candidate": "569ba13c3b3867131c8687e7884bed65131edfbf",
+  "candidateMerge": "446ab85bb38b3a0eee28e34ee609f56d12029354",
+  "knownBadCommit": "12a057424843d54bf10a53318433c889a7db025d",
+  "knownBadPackage": "0.0.0-knownbad.12a057424843",
+  "proofRun": 36735747305,
+  "aggregate": {
+    "pr": 133,
+    "headSha": "569ba13c3b3867131c8687e7884bed65131edfbf",
+    "testsAdded": 267,
+    "testsRemoved": 1,
+    "proofsTotal": 19,
+    "proofsProven": 19,
+    "newProofs": 17,
+    "bug": false
+  },
+  "newProof": {
+    "Package": {
+      "runnerExit": 0,
+      "useProjectReference": false,
+      "cases": [
+        "CHILD_RESULT mode=--case scenario=input-pragma encrypted=False exit=20",
+        "CHILD_RESULT mode=--case scenario=input-write encrypted=False exit=20",
+        "CHILD_RESULT mode=--case scenario=late-read encrypted=False exit=20",
+        "CHILD_RESULT mode=--case scenario=input-pragma encrypted=True exit=20",
+        "CHILD_RESULT mode=--case scenario=input-write encrypted=True exit=20",
+        "CHILD_RESULT mode=--case scenario=late-read encrypted=True exit=20"
+      ],
+      "controls": [
+        "CONTROL_VERIFIED other-database",
+        "CONTROL_VERIFIED direct",
+        "CONTROL_VERIFIED idle-handoff",
+        "CONTROL_VERIFIED cancel-admission",
+        "CONTROL_VERIFIED other-database",
+        "CONTROL_VERIFIED direct",
+        "CONTROL_VERIFIED idle-handoff",
+        "CONTROL_VERIFIED cancel-admission"
+      ],
+      "peerCommitMarkers": 10,
+      "nativeSelfWaitMarkers": 6,
+      "fixedMarkers": 8,
+      "finalMarker": "BUG_REPRODUCED"
+    },
+    "Latest": {
+      "runnerExit": 10,
+      "useProjectReference": true,
+      "cases": [
+        "CHILD_RESULT mode=--case scenario=input-pragma encrypted=False exit=10",
+        "CHILD_RESULT mode=--case scenario=input-write encrypted=False exit=10",
+        "CHILD_RESULT mode=--case scenario=late-read encrypted=False exit=10",
+        "CHILD_RESULT mode=--case scenario=input-pragma encrypted=True exit=10",
+        "CHILD_RESULT mode=--case scenario=input-write encrypted=True exit=10",
+        "CHILD_RESULT mode=--case scenario=late-read encrypted=True exit=10"
+      ],
+      "controls": [
+        "CONTROL_VERIFIED other-database",
+        "CONTROL_VERIFIED direct",
+        "CONTROL_VERIFIED idle-handoff",
+        "CONTROL_VERIFIED cancel-admission",
+        "CONTROL_VERIFIED other-database",
+        "CONTROL_VERIFIED direct",
+        "CONTROL_VERIFIED idle-handoff",
+        "CONTROL_VERIFIED cancel-admission"
+      ],
+      "peerCommitMarkers": 10,
+      "nativeSelfWaitMarkers": 0,
+      "fixedMarkers": 14,
+      "finalMarker": "VERIFIED_FIXED"
+    }
+  },
+  "coldVerification": "Source inspection: each case/control emits its success marker only after Verify reopens twice and asserts full row IDs, indexed INDEX SEEK results and sentinel/independent-write model. Artifact logs retain markers rather than individual successful cold assertion output.",
+  "productionIdentity": "Hosted checkout log identifies candidate merge and known-bad commit/package; artifact records candidate project reference versus known-bad package reference. Repro project does not enable TestingEnabled; LiteDB.csproj enables testing code only under TestingEnabled=true. Hosted proof artifact does not supply individual DLL hashes; no extra binary-hash attestation inferred.",
+  "reproSource": [
+    {
+      "path": "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs",
+      "sha256": "0bf479eaff56bc204c5931728d36d94ca79bfc6265672dd2fd073ef796659016"
+    },
+    {
+      "path": "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Controls.cs",
+      "sha256": "4c9da40a4dc87d347e3fc383f09fdaadcc1c11ed5a41b679d18452dd51868082"
+    },
+    {
+      "path": "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs",
+      "sha256": "962e936bd2e5c349b22d377dfaab7d8c616fcf68a08a9632c21f6cb0d06f9d6d"
+    },
+    {
+      "path": "LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Issue_3067_SharedCallbackNativeWait.csproj",
+      "sha256": "94242f52d4bdc3495c30a5a955b00036c8f5c0ea50d228e58f515a0c81ebe603"
+    }
+  ]
+}

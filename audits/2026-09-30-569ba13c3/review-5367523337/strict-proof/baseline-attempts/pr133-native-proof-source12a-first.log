@@ -1,0 +1,45 @@
+{"type":"configuration","timestamp":"2026-09-30T15:07:24.4167721+00:00","payload":{"useProjectReference":true,"liteDBPackageVersion":"0.0.0-knownbad.12a057424843"}}
+DATABASE_ROOT __WORKSPACE__/temporary/p133-native-callback-395f42d3e1d84253acad9d19250126af
+CHILD_RESULT mode=--case scenario=input-pragma encrypted=False exit=20
+CALLBACK_ENTERED input-pragma
+NATIVE_BOUNDARY parentWaiters>0 occupiedTurnstile callerWaiting
+PARENT_NATIVE_WAIT_CONFIRMED input-pragma
+CHILD_RESULT mode=--peer scenario= encrypted=False exit=10
+PEER_COMMITTED
+NATIVE_SELF_WAIT_VERIFIED
+CHILD_RESULT mode=--case scenario=input-write encrypted=False exit=20
+CALLBACK_ENTERED input-write
+NATIVE_BOUNDARY parentWaiters>0 occupiedTurnstile callerWaiting
+PARENT_NATIVE_WAIT_CONFIRMED input-write
+CHILD_RESULT mode=--peer scenario= encrypted=False exit=10
+PEER_COMMITTED
+NATIVE_SELF_WAIT_VERIFIED
+CHILD_RESULT mode=--case scenario=late-read encrypted=False exit=20
+CALLBACK_ENTERED late-read
+NATIVE_BOUNDARY parentWaiters>0 occupiedTurnstile callerWaiting
+PARENT_NATIVE_WAIT_CONFIRMED late-read
+CHILD_RESULT mode=--peer scenario= encrypted=False exit=10
+PEER_COMMITTED
+NATIVE_SELF_WAIT_VERIFIED
+CHILD_RESULT mode=--control scenario=other-database encrypted=False exit=10
+CONTROL_VERIFIED other-database
+CASE_FIXED
+CHILD_RESULT mode=--control scenario=direct encrypted=False exit=10
+CONTROL_VERIFIED direct
+CASE_FIXED
+CHILD_RESULT mode=--control scenario=idle-handoff encrypted=False exit=10
+NATIVE_BOUNDARY parentWaiters>0 occupiedTurnstile callerWaiting
+CHILD_RESULT mode=--peer scenario= encrypted=False exit=10
+PEER_COMMITTED
+CONTROL_VERIFIED idle-handoff
+CASE_FIXED
+CHILD_RESULT mode=--control scenario=cancel-admission encrypted=False exit=2
+NATIVE_BOUNDARY parentWaiters>0 occupiedTurnstile callerWaiting
+System.Exception: Ordinary admission completion/cancellation failed.
+   at Issue_3067_SharedCallbackNativeWait.Controls.Admission(String path, String password, Boolean cancel) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Controls.cs:line 70
+   at Issue_3067_SharedCallbackNativeWait.Controls.Run(String path, String password, String scenario) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Controls.cs:line 10
+   at Issue_3067_SharedCallbackNativeWait.Program.ChildMain(String[] args) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs:line 48
+System.Exception: Unexpected child failure.
+   at Issue_3067_SharedCallbackNativeWait.Processes.Run(String mode, String path, String password, String scenario) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs:line 25
+   at Issue_3067_SharedCallbackNativeWait.Program.Main(String[] args) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs:line 23
+{"type":"result","timestamp":"2026-09-30T15:07:30.9035747+00:00","text":"Unexpected failure","success":false,"payload":{"error":"System.Exception: Unexpected child failure.\n   at Issue_3067_SharedCallbackNativeWait.Processes.Run(String mode, String path, String password, String scenario) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Processes.cs:line 25\n   at Issue_3067_SharedCallbackNativeWait.Program.Main(String[] args) in __WORKSPACE__/artifacts_temp/proof-shared-callback-native/LiteDB.ReproRunner/Repros/Issue_3067_SharedCallbackNativeWait/Program.cs:line 23"}}

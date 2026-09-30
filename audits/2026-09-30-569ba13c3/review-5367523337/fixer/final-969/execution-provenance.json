@@ -1,0 +1,70 @@
+{
+  "initialCompile": {
+    "log": "__WORKSPACE__/temporary/pr133-shared-callback-before-net10.log",
+    "executedTests": false,
+    "disposition": "Test setup compile error: EngineSettings is not a LiteDatabase constructor argument; corrected to ConnectionString."
+  },
+  "initialBaseline": {
+    "log": "__WORKSPACE__/temporary/pr133-shared-callback-before-corrected-net10.log",
+    "source": "12a057424843d54bf10a53318433c889a7db025d",
+    "failed": 12,
+    "passed": 0,
+    "oracle": "BeforeContendedWait observed actual contended native acquisition; observer throws OperationCanceledException to bound host. Expected InvalidOperationException fails.",
+    "limits": "Initial exact test binaries overwritten; retained TRX and log. Final overlay baseline below supersedes binary provenance."
+  },
+  "finalOverlayBaseline": {
+    "log": "__WORKSPACE__/temporary/pr133-shared-callback-before-final-overlay-net10.log",
+    "source": "12a057424843d54bf10a53318433c889a7db025d",
+    "testOverlay": "Tests from4ce3756b7, same-filename peer now uses normalized dot-component alias.",
+    "failed": 18,
+    "passed": 4,
+    "binaries": "before/LiteDB.Tests/bin/Release/net10.0",
+    "oracle": "Native wait reached in12input/late callbacks and6nested/suppressed-scope cases. Four idle-handoff and cancellation controls pass."
+  },
+  "firstFixed": {
+    "source": "4ce3756b7eea9400347bc399b07a9e37855e4f47",
+    "productionTree": "75b209d9ffd1e797675e5ed8fb6d1fbc12f6155f",
+    "net10FocusedPassed": 22,
+    "scopedPassedEachFramework": 68,
+    "logs": [
+      "__WORKSPACE__/temporary/pr133-shared-callback-fixed-first-net10.log",
+      "__WORKSPACE__/temporary/pr133-shared-callback-final-net8.log",
+      "__WORKSPACE__/temporary/pr133-shared-callback-final-net10.log"
+    ]
+  },
+  "additionalControls": {
+    "log": "__WORKSPACE__/temporary/pr133-shared-callback-controls-net10.log",
+    "productionSource": "4ce3756b7eea9400347bc399b07a9e37855e4f47",
+    "testOverlay": "Added mapped ordinary read+uncaught refusal controls before followup commit.",
+    "passed": 26,
+    "failed": 0
+  },
+  "beginBaseline": {
+    "log": "__WORKSPACE__/temporary/pr133-shared-callback-begin-before-net10.log",
+    "source": "12a057424843d54bf10a53318433c889a7db025d",
+    "failed": 4,
+    "passed": 0,
+    "oracle": "Observe(local-wait) arms30ms cancellation after reaching actual local admission boundary. Baseline reportsOperationCanceledException where immediateInvalidOperationException required.",
+    "binaries": "before-begin/LiteDB.Tests/bin/Release/net10.0",
+    "testOverlay": "Original22tests plus4callback begin tests; onlybegin4executed this run."
+  },
+  "followupFinal": {
+    "source": "969828f92abefd52e28d6a61ab35b6bee74ed94e",
+    "productionTree": "f6f315315692f9992d4a1a08e776f69662354284",
+    "passedEachFramework": 76,
+    "failed": 0,
+    "skipped": 0,
+    "frameworks": [
+      "net8.0",
+      "net10.0"
+    ],
+    "logs": [
+      "__WORKSPACE__/temporary/pr133-shared-callback-followup-net8.log",
+      "__WORKSPACE__/temporary/pr133-shared-callback-followup-net10.log"
+    ],
+    "binaries": "followup-final/LiteDB.Tests/bin/Release",
+    "newTests": 30,
+    "existingRegressionTests": 46
+  },
+  "workspaceManifestWarning": "manifest-in-progress records workspace identity at collection, not execution identity; use this per-run mapping. Its fixed/before-namedTRX was actual12a baseline."
+}

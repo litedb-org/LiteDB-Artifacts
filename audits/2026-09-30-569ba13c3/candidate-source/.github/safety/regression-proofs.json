@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "description": "Regression proofs: each ReproRunner repro pinned to a real state in which its bug existed (published package, then a dev commit, then a commit of the originating PR). Pull requests prove added or changed entries (known bad MUST FAIL, candidate MUST PASS), the push to dev proves them once on the integrated revision, then the historical comparison retires while the permanent guard stays in the ordinary suites. Maintained by .github/scripts/regression_proof.py; see docs/rules/safety-evidence.md.",
+  "proofs": [
+    {
+      "repro": "Issue_2586_RollbackTransaction",
+      "knownBad": {
+        "kind": "package",
+        "version": "5.0.20"
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/Transactions_Tests.cs#Transaction_Rollback_Should_Skip_ReadOnly_Buffers_From_Safepoint",
+        "LiteDB.Tests/Engine/Transactions_Tests.cs#Transaction_Rollback_Should_Discard_Writable_Dirty_Pages",
+        "LiteDB.Tests/Issues/Issue2586_RollbackSafety_Tests.cs#RollbackAfterSafepoint_PreservesCommittedDataOnReopen"
+      ]
+    },
+    {
+      "repro": "Issue_2614_DiskServiceDispose",
+      "knownBad": {
+        "kind": "package",
+        "version": "5.0.21"
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Issues/Issue2614_InitializationCleanup_Tests.cs#FailedInitialization_ReleasesFileHandle_AndAllowsRetry",
+        "LiteDB.Tests/Internals/StreamOwnership_Tests.cs#DiskServiceCtor_Failure_DisposesWrappers_ButNotCallerStreams"
+      ]
+    },
+    {
+      "repro": "Issue_133_MaintenanceProgress",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "The operation-lifetime drain was introduced on fork PR #133 and was never released in a package or merged to upstream dev.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs#Maintenance_progresses_under_sustained_ordinary_reads"
+      ]
+    },
+    {
+      "repro": "Issue_133_CloseCollectionWait",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "The operation-lifetime drain was introduced on fork PR #133 and was never released in a package or merged to upstream dev.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs#Raw_close_interrupts_collection_waiter_and_cold_reopen_keeps_only_committed_rows"
+      ]
+    },
+    {
+      "repro": "Issue_3034_Pr133StaleSortCleanup",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in unmerged transaction-handle PR 133 by conditional SortDisk cleanup.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SortDiskCleanup_Tests.cs#Writable_open_reclaims_stale_sort_file_without_a_new_spill"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedCloseWait",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in fork PR133 before upstream integration; no published package contains this implementation.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs#Closing_cancels_waiting_shared_call_before_draining_legacy_owner"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedNestedBegin",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in fork PR133 before upstream integration; no published package contains this implementation.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleSharedNested_Tests.cs#Handle_begin_rejects_callers_locking_reader_or_pinned_legacy_transaction"
+      ]
+    },
+    {
+      "repro": "Issue_3067_DisposedBoundObject",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in fork PR133 before upstream integration; no published package contains transaction handles.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposed_bound_objects_refuse_use_without_aborting_prior_writes",
+        "LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs#Disposal_between_child_capture_and_admission_does_not_abort_writes",
+        "LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs#Actual_reader_operation_and_disposal_failures_still_abort"
+      ]
+    },
+    {
+      "repro": "Issue_3067_DisposeDuringClose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in fork PR133 before upstream integration; no published package contains transaction handles.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposal_after_close_admission_is_revoked_does_not_mask_user_exception",
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposal_while_close_worker_rolls_back_is_idempotent"
+      ]
+    },
+    {
+      "repro": "Issue_3067_PeerFatalDispose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+        "reason": "Introduced in fork PR133 before upstream integration; no published package contains transaction handles.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error",
+        "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Deferred_fatal_teardown_does_not_repeat_peer_error_on_healthy_disposal",
+        "LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs#Cleanup_discriminates_published_peer_failure_from_its_own_failure"
+      ]
+    },
+    {
+      "repro": "Issue_133_RawCloseCallbackDependency",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee",
+        "reason": "Introduced in fork PR133 maintenance drain before upstream integration; no published package contains this behavior.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Raw_close_rejects_fresh_callback_dependency_before_draining_callback",
+        "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Close_wakes_fresh_work_already_waiting_behind_rebuild"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedPinCleanup",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee",
+        "reason": "Pin-close failures became propagated by fork PR133 before upstream integration; no released package contains this regression.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs#Pin_close_failure_finishes_connection_cleanup_and_preserves_leased_reader",
+        "LiteDB.Tests/Engine/SharedCallbackClose_Tests.cs#Refused_raw_callback_close_keeps_native_ownership_until_operation_returns"
+      ]
+    },
+    {
+      "repro": "Issue_3067_HandleCallbackSelfWait",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "eb01f346eb7d8d51925a45c2f87ef40e1c3984ee",
+        "reason": "Handle-owned collection locks and callback binding suppression were introduced on fork PR #133 and have not reached upstream dev or a published package.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Same_collection_callback_refuses_self_wait_without_enlisting_independent_work",
+        "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Original_thread_may_wait_for_idle_handle_completed_by_another_thread",
+        "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Repeated_public_handoff_restores_binding_before_admitting_next_callback",
+        "LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs#Public_admission_handoff_preserves_current_callback_marker"
+      ]
+    },
+    {
+      "repro": "Issue_133_SharedSnapshotCloseRefusal",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+        "reason": "The follow-up Shared cleanup change in fork PR133 released native protection after a late unleased snapshot refused self-close; this revision was not published or merged to dev.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_self_close_preserves_unleased_protection_or_leased_independence"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedLateReaderClose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+        "reason": "The Shared cleanup path held its connection lock while draining a late reader operation whose callback required that same lock; introduced in unmerged fork PR133.",
+        "pr": 133
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_callback_can_reenter_after_foreign_close_starts_draining"
+      ]
+    },
+    {
+      "repro": "Issue_3067_LateCallbackClose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "e821ae7479dcb83570031180b0c0e3f4fd167793",
+        "pr": 133,
+        "reason": "The facade session-drain timeout from a late reader callback was introduced within fork PR #133 and has not reached upstream dev or any published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Late_callback_close_refuses_only_a_self_dependent_drain",
+        "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Cross_thread_close_drains_late_callback_without_refusing_it"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedReaderRetirement",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "f95f0b0cd59d35d285ac72183589975751e35229",
+        "pr": 133,
+        "reason": "These ordinary Shared reader cleanup interactions were introduced by the operation-drain changes within fork PR #133 and have not reached upstream dev or a published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback",
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback",
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Independent_last_leased_reader_disposal_still_joins_pin_cleanup"
+      ]
+    },
+    {
+      "repro": "Issue_3067_LeasedReaderSelfDispose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "f95f0b0cd59d35d285ac72183589975751e35229",
+        "pr": 133,
+        "reason": "These ordinary Shared reader cleanup interactions were introduced by the operation-drain changes within fork PR #133 and have not reached upstream dev or a published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs#Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry"
+      ]
+    },
+    {
+      "repro": "Issue_3067_SharedCallbackNativeWait",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "12a057424843d54bf10a53318433c889a7db025d",
+        "pr": 133,
+        "reason": "The ordinary Shared native-admission dependency from an executing explicit handle callback was introduced within unmerged fork PR133 and has not reached upstream dev or a published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs#Input_callback_refuses_same_namespace_before_native_wait",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs#Late_reader_callback_refuses_native_wait_after_handoff",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Nested_other_database_handle_keeps_outer_dependency_and_restores_it",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_admission_cancellation_does_not_release_an_idle_handle",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Coordinated_same_database_read_stays_independent_inside_shared_callback",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Uncaught_callback_refusal_rolls_back_and_releases_execution_dependency",
+        "LiteDB.Tests/Engine/TransactionHandleSharedCallbackBegin_Tests.cs#Callback_begin_refuses_same_namespace_before_local_admission"
+      ]
+    }
+  ]
+}

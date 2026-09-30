@@ -1,0 +1,140 @@
+{
+  "Issue_2586_RollbackTransaction": {
+    "reason": "Fixed rollback regression is covered by the normal test suite.",
+    "tests": [
+      "LiteDB.Tests/Engine/Transactions_Tests.cs#Transaction_Rollback_Should_Skip_ReadOnly_Buffers_From_Safepoint",
+      "LiteDB.Tests/Engine/Transactions_Tests.cs#Transaction_Rollback_Should_Discard_Writable_Dirty_Pages",
+      "LiteDB.Tests/Issues/Issue2586_RollbackSafety_Tests.cs#RollbackAfterSafepoint_PreservesCommittedDataOnReopen"
+    ]
+  },
+  "Issue_2614_DiskServiceDispose": {
+    "reason": "Fixed initialization cleanup regression is covered by file-backed failure/retry tests and stream ownership tests.",
+    "tests": [
+      "LiteDB.Tests/Issues/Issue2614_InitializationCleanup_Tests.cs#FailedInitialization_ReleasesFileHandle_AndAllowsRetry",
+      "LiteDB.Tests/Internals/StreamOwnership_Tests.cs#DiskServiceCtor_Failure_DisposesWrappers_ButNotCallerStreams"
+    ]
+  },
+  "Issue_133_MaintenanceProgress": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs#Maintenance_progresses_under_sustained_ordinary_reads"
+    ]
+  },
+  "Issue_133_CloseCollectionWait": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs#Raw_close_interrupts_collection_waiter_and_cold_reopen_keeps_only_committed_rows"
+    ]
+  },
+  "Issue_3034_Pr133StaleSortCleanup": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SortDiskCleanup_Tests.cs#Writable_open_reclaims_stale_sort_file_without_a_new_spill"
+    ]
+  },
+  "Issue_3067_SharedCloseWait": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs#Closing_cancels_waiting_shared_call_before_draining_legacy_owner"
+    ]
+  },
+  "Issue_3067_SharedNestedBegin": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleSharedNested_Tests.cs#Handle_begin_rejects_callers_locking_reader_or_pinned_legacy_transaction"
+    ]
+  },
+  "Issue_3067_DisposedBoundObject": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposed_bound_objects_refuse_use_without_aborting_prior_writes",
+      "LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs#Disposal_between_child_capture_and_admission_does_not_abort_writes",
+      "LiteDB.Tests/Engine/TransactionHandleBoundDisposeRace_Tests.cs#Actual_reader_operation_and_disposal_failures_still_abort"
+    ]
+  },
+  "Issue_3067_DisposeDuringClose": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposal_after_close_admission_is_revoked_does_not_mask_user_exception",
+      "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposal_while_close_worker_rolls_back_is_idempotent"
+    ]
+  },
+  "Issue_3067_PeerFatalDispose": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error",
+      "LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs#Deferred_fatal_teardown_does_not_repeat_peer_error_on_healthy_disposal",
+      "LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs#Cleanup_discriminates_published_peer_failure_from_its_own_failure"
+    ]
+  },
+  "Issue_133_RawCloseCallbackDependency": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Raw_close_rejects_fresh_callback_dependency_before_draining_callback",
+      "LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs#Close_wakes_fresh_work_already_waiting_behind_rebuild"
+    ]
+  },
+  "Issue_3067_SharedPinCleanup": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs#Pin_close_failure_finishes_connection_cleanup_and_preserves_leased_reader",
+      "LiteDB.Tests/Engine/SharedCallbackClose_Tests.cs#Refused_raw_callback_close_keeps_native_ownership_until_operation_returns"
+    ]
+  },
+  "Issue_3067_HandleCallbackSelfWait": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Same_collection_callback_refuses_self_wait_without_enlisting_independent_work",
+      "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Original_thread_may_wait_for_idle_handle_completed_by_another_thread",
+      "LiteDB.Tests/Engine/TransactionHandleCallbackLock_Tests.cs#Repeated_public_handoff_restores_binding_before_admitting_next_callback",
+      "LiteDB.Tests/Engine/TransactionHandleCallbackHandoff_Tests.cs#Public_admission_handoff_preserves_current_callback_marker"
+    ]
+  },
+  "Issue_133_SharedSnapshotCloseRefusal": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_self_close_preserves_unleased_protection_or_leased_independence"
+    ]
+  },
+  "Issue_3067_SharedLateReaderClose": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedLateReaderClose_Tests.cs#Late_reader_callback_can_reenter_after_foreign_close_starts_draining"
+    ]
+  },
+  "Issue_3067_LateCallbackClose": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Late_callback_close_refuses_only_a_self_dependent_drain",
+      "LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs#Cross_thread_close_drains_late_callback_without_refusing_it"
+    ]
+  },
+  "Issue_3067_SharedReaderRetirement": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback",
+      "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback",
+      "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Independent_last_leased_reader_disposal_still_joins_pin_cleanup"
+    ]
+  },
+  "Issue_3067_LeasedReaderSelfDispose": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs#Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry"
+    ]
+  },
+  "Issue_3067_SharedCallbackNativeWait": {
+    "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+    "tests": [
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs#Input_callback_refuses_same_namespace_before_native_wait",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallback_Tests.cs#Late_reader_callback_refuses_native_wait_after_handoff",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Nested_other_database_handle_keeps_outer_dependency_and_restores_it",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_other_database_callback_cannot_erase_enclosing_shared_dependency",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_wait_for_idle_handle_can_finish_after_cross_thread_completion",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Ordinary_admission_cancellation_does_not_release_an_idle_handle",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Coordinated_same_database_read_stays_independent_inside_shared_callback",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackControl_Tests.cs#Uncaught_callback_refusal_rolls_back_and_releases_execution_dependency",
+      "LiteDB.Tests/Engine/TransactionHandleSharedCallbackBegin_Tests.cs#Callback_begin_refuses_same_namespace_before_local_admission"
+    ]
+  }
+}
