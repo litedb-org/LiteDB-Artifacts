@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="6cda456b-7c23-48bb-bcc5-56a6d8568fca" name="@dev-build-server 2026-09-30 12:40:01" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T12:40:01.6408357+00:00" queuing="2026-09-30T12:40:01.6408358+00:00" start="2026-09-30T12:39:59.8181537+00:00" finish="2026-09-30T12:40:14.5455768+00:00" />
+  <TestSettings name="default" id="deded08f-4d8d-45e9-9119-e1615b5e367f">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_12_40_01" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="1d000068-c955-480e-b8d3-d87e1481f498" testId="6251568d-a602-e6b9-94e4-e58e9cd4f726" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: False)" computerName="dev-build-server" duration="00:00:00.0564674" startTime="2026-09-30T12:40:01.8136459+00:00" endTime="2026-09-30T12:40:01.8136459+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1d000068-c955-480e-b8d3-d87e1481f498" />
+    <UnitTestResult executionId="3917435c-9e5a-4971-9e14-fc7d42208bf2" testId="d4d60a2a-97d8-0c58-cdbb-ee9f63f3892f" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: &quot;secret&quot;, ownerExit: True)" computerName="dev-build-server" duration="00:00:03.2251479" startTime="2026-09-30T12:40:14.4533202+00:00" endTime="2026-09-30T12:40:14.4533203+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3917435c-9e5a-4971-9e14-fc7d42208bf2">
+      <Output>
+        <ErrorInfo>
+          <Message>Other-reader cleanup joined the operation currently executing it.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 126
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="aff36f85-3427-4bdc-ac2e-8e60d22e665f" testId="a8652b35-7c01-9d7a-0643-e523210fabea" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True)" computerName="dev-build-server" duration="00:00:00.2113652" startTime="2026-09-30T12:40:01.1441244+00:00" endTime="2026-09-30T12:40:01.1441411+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aff36f85-3427-4bdc-ac2e-8e60d22e665f">
+      <Output>
+        <ErrorInfo>
+          <Message>The retained disposed reader must not root an unclosed snapshot.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bdca0d17-9bd5-44f0-a630-f3dbf3e8ebc4" testId="b8636fa0-83b8-a521-83df-4f488666742a" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: True)" computerName="dev-build-server" duration="00:00:00.1278179" startTime="2026-09-30T12:40:01.6931151+00:00" endTime="2026-09-30T12:40:01.6931151+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bdca0d17-9bd5-44f0-a630-f3dbf3e8ebc4">
+      <Output>
+        <ErrorInfo>
+          <Message>The retained disposed reader must not root an unclosed snapshot.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="15177975-74c6-490a-bc9e-8c4ed32cd598" testId="b1b3e675-5dcc-6f63-e1f9-aa93963c5b44" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: &quot;secret&quot;, ownerExit: False)" computerName="dev-build-server" duration="00:00:03.1738985" startTime="2026-09-30T12:40:11.2267083+00:00" endTime="2026-09-30T12:40:11.2267084+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="15177975-74c6-490a-bc9e-8c4ed32cd598">
+      <Output>
+        <ErrorInfo>
+          <Message>Other-reader cleanup joined the operation currently executing it.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 126
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="678af690-717b-449b-b126-15118c1afe05" testId="5df83795-1234-65b5-c5f7-4c1a22864571" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: False)" computerName="dev-build-server" duration="00:00:03.0844483" startTime="2026-09-30T12:40:04.9599031+00:00" endTime="2026-09-30T12:40:04.9599032+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="678af690-717b-449b-b126-15118c1afe05">
+      <Output>
+        <ErrorInfo>
+          <Message>Other-reader cleanup joined the operation currently executing it.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 126
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5b25b14d-49ac-403c-9842-5bfb5281688b" testId="08147afa-ee61-5891-4d14-b1b10aff83ee" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: True)" computerName="dev-build-server" duration="00:00:03.0894370" startTime="2026-09-30T12:40:08.0512170+00:00" endTime="2026-09-30T12:40:08.0512171+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5b25b14d-49ac-403c-9842-5bfb5281688b">
+      <Output>
+        <ErrorInfo>
+          <Message>Other-reader cleanup joined the operation currently executing it.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 126
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="8f1385d8-4311-4784-a807-430cbe094886" testId="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True)" computerName="dev-build-server" duration="00:00:00.0632253" startTime="2026-09-30T12:40:01.7570090+00:00" endTime="2026-09-30T12:40:01.7570091+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8f1385d8-4311-4784-a807-430cbe094886">
+      <Output>
+        <ErrorInfo>
+          <Message>The retained disposed reader must not root an unclosed snapshot.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="186208bc-dd2f-4541-9542-b8a88426adb1" testId="c8b5d688-58e8-ce82-e2ab-0caf039c8db7" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: False)" computerName="dev-build-server" duration="00:00:00.0594821" startTime="2026-09-30T12:40:01.8732444+00:00" endTime="2026-09-30T12:40:01.8732444+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="186208bc-dd2f-4541-9542-b8a88426adb1" />
+    <UnitTestResult executionId="987e1c85-3431-43e8-9869-a867a6e44433" testId="0df0f0b7-c2db-8493-3432-d4f8739c30b0" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: False)" computerName="dev-build-server" duration="00:00:00.1506265" startTime="2026-09-30T12:40:01.4124984+00:00" endTime="2026-09-30T12:40:01.4124985+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="987e1c85-3431-43e8-9869-a867a6e44433" />
+    <UnitTestResult executionId="74b6ae51-0e55-4871-9f66-bf3287c31780" testId="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: False)" computerName="dev-build-server" duration="00:00:00.1520696" startTime="2026-09-30T12:40:01.5647603+00:00" endTime="2026-09-30T12:40:01.5647603+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="74b6ae51-0e55-4871-9f66-bf3287c31780" />
+    <UnitTestResult executionId="da1a9760-9e1a-4351-a70e-2861f161ddc6" testId="499ee66c-d315-386d-763e-a4739167bb10" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: True)" computerName="dev-build-server" duration="00:00:00.1135302" startTime="2026-09-30T12:40:01.2611168+00:00" endTime="2026-09-30T12:40:01.2611168+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da1a9760-9e1a-4351-a70e-2861f161ddc6">
+      <Output>
+        <ErrorInfo>
+          <Message>The retained disposed reader must not root an unclosed snapshot.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: &quot;secret&quot;, ownerExit: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="d4d60a2a-97d8-0c58-cdbb-ee9f63f3892f">
+      <Execution id="3917435c-9e5a-4971-9e14-fc7d42208bf2" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="5df83795-1234-65b5-c5f7-4c1a22864571">
+      <Execution id="678af690-717b-449b-b126-15118c1afe05" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1">
+      <Execution id="74b6ae51-0e55-4871-9f66-bf3287c31780" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="a8652b35-7c01-9d7a-0643-e523210fabea">
+      <Execution id="aff36f85-3427-4bdc-ac2e-8e60d22e665f" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="08147afa-ee61-5891-4d14-b1b10aff83ee">
+      <Execution id="5b25b14d-49ac-403c-9842-5bfb5281688b" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95">
+      <Execution id="8f1385d8-4311-4784-a807-430cbe094886" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="0df0f0b7-c2db-8493-3432-d4f8739c30b0">
+      <Execution id="987e1c85-3431-43e8-9869-a867a6e44433" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b8636fa0-83b8-a521-83df-4f488666742a">
+      <Execution id="bdca0d17-9bd5-44f0-a630-f3dbf3e8ebc4" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="6251568d-a602-e6b9-94e4-e58e9cd4f726">
+      <Execution id="1d000068-c955-480e-b8d3-d87e1481f498" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="499ee66c-d315-386d-763e-a4739167bb10">
+      <Execution id="da1a9760-9e1a-4351-a70e-2861f161ddc6" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: &quot;secret&quot;, ownerExit: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b1b3e675-5dcc-6f63-e1f9-aa93963c5b44">
+      <Execution id="15177975-74c6-490a-bc9e-8c4ed32cd598" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="c8b5d688-58e8-ce82-e2ab-0caf039c8db7">
+      <Execution id="186208bc-dd2f-4541-9542-b8a88426adb1" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="6251568d-a602-e6b9-94e4-e58e9cd4f726" executionId="1d000068-c955-480e-b8d3-d87e1481f498" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d4d60a2a-97d8-0c58-cdbb-ee9f63f3892f" executionId="3917435c-9e5a-4971-9e14-fc7d42208bf2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a8652b35-7c01-9d7a-0643-e523210fabea" executionId="aff36f85-3427-4bdc-ac2e-8e60d22e665f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b8636fa0-83b8-a521-83df-4f488666742a" executionId="bdca0d17-9bd5-44f0-a630-f3dbf3e8ebc4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b1b3e675-5dcc-6f63-e1f9-aa93963c5b44" executionId="15177975-74c6-490a-bc9e-8c4ed32cd598" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5df83795-1234-65b5-c5f7-4c1a22864571" executionId="678af690-717b-449b-b126-15118c1afe05" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="08147afa-ee61-5891-4d14-b1b10aff83ee" executionId="5b25b14d-49ac-403c-9842-5bfb5281688b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95" executionId="8f1385d8-4311-4784-a807-430cbe094886" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c8b5d688-58e8-ce82-e2ab-0caf039c8db7" executionId="186208bc-dd2f-4541-9542-b8a88426adb1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0df0f0b7-c2db-8493-3432-d4f8739c30b0" executionId="987e1c85-3431-43e8-9869-a867a6e44433" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1" executionId="74b6ae51-0e55-4871-9f66-bf3287c31780" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="499ee66c-d315-386d-763e-a4739167bb10" executionId="da1a9760-9e1a-4351-a70e-2861f161ddc6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="12" executed="12" passed="4" failed="8" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.15]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.74]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.75]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.00]       The retained disposed reader must not root an unclosed snapshot.
+[xUnit.net 00:00:01.00]       Stack Trace:
+[xUnit.net 00:00:01.00]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.00]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.00]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.12]       The retained disposed reader must not root an unclosed snapshot.
+[xUnit.net 00:00:01.12]       Stack Trace:
+[xUnit.net 00:00:01.12]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.12]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.12]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.55]       The retained disposed reader must not root an unclosed snapshot.
+[xUnit.net 00:00:01.55]       Stack Trace:
+[xUnit.net 00:00:01.55]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.55]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.55]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.62]       The retained disposed reader must not root an unclosed snapshot.
+[xUnit.net 00:00:01.62]       Stack Trace:
+[xUnit.net 00:00:01.62]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.62]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.62]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.82]       Other-reader cleanup joined the operation currently executing it.
+[xUnit.net 00:00:04.82]       Stack Trace:
+[xUnit.net 00:00:04.82]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(126,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit)
+[xUnit.net 00:00:04.82]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.82]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:07.91]       Other-reader cleanup joined the operation currently executing it.
+[xUnit.net 00:00:07.91]       Stack Trace:
+[xUnit.net 00:00:07.91]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(126,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit)
+[xUnit.net 00:00:07.91]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:07.91]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:11.09]       Other-reader cleanup joined the operation currently executing it.
+[xUnit.net 00:00:11.09]       Stack Trace:
+[xUnit.net 00:00:11.09]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(126,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit)
+[xUnit.net 00:00:11.09]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:11.09]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:14.31]       Other-reader cleanup joined the operation currently executing it.
+[xUnit.net 00:00:14.31]       Stack Trace:
+[xUnit.net 00:00:14.31]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(126,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(String password, Boolean ownerExit)
+[xUnit.net 00:00:14.31]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:14.31]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:14.32]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:01.1424764+00:00">
+        <Text>[xUnit.net 00:00:01.00]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:01.2626441+00:00">
+        <Text>[xUnit.net 00:00:01.12]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: "secret", openCore: False, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:01.6945335+00:00">
+        <Text>[xUnit.net 00:00:01.55]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: "secret", openCore: True, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:01.7571052+00:00">
+        <Text>[xUnit.net 00:00:01.62]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:04.9589345+00:00">
+        <Text>[xUnit.net 00:00:04.82]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:08.0506869+00:00">
+        <Text>[xUnit.net 00:00:07.91]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: null, ownerExit: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:11.2266393+00:00">
+        <Text>[xUnit.net 00:00:11.09]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: "secret", ownerExit: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:40:14.4531818+00:00">
+        <Text>[xUnit.net 00:00:14.31]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Disposing_other_leased_reader_does_not_join_the_core_draining_this_callback(password: "secret", ownerExit: True) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

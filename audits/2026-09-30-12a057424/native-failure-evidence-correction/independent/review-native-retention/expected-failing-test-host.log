@@ -1,0 +1,390 @@
+VSTest version 18.7.0 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.55]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: False) [FAIL]
+[xUnit.net 00:00:02.07]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: False) [FAIL]
+[xUnit.net 00:00:02.69]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: False) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: False) [632 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305345 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-9699c507fdb34c28ac8d88aff3e69e30/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-flush, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-9699c507fdb34c28ac8d88aff3e69e30
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: False) [520 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305379 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-abb8dda8d38541c8b4c9cdadba2a4292/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-delete, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-abb8dda8d38541c8b4c9cdadba2a4292
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: False) [617 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305440 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-b81754830b084ee29113ef2b8dba20e2/data.db; marker exists=True
+ Crash case stage=after-temp-install, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-b81754830b084ee29113ef2b8dba20e2
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:03.17]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: True) [FAIL]
+[xUnit.net 00:00:03.81]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: True) [FAIL]
+[xUnit.net 00:00:04.40]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: True) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: null, fallback: True) [477 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305499 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-b5648459fec3486a8d660ef8025494af/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-delete, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-b5648459fec3486a8d660ef8025494af
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: True) [633 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305597 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-015ab9a9facd43318b13f7f14c37df92/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-delete, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-015ab9a9facd43318b13f7f14c37df92
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: True) [589 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305688 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-110ce9689c9f4a299d40d1a09a118a16/data.db; marker exists=False
+ Crash case stage=before-recovery-marker, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-110ce9689c9f4a299d40d1a09a118a16
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:04.84]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: False) [FAIL]
+[xUnit.net 00:00:05.27]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: True) [FAIL]
+[xUnit.net 00:00:05.84]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: True) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: False) [443 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305812 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-825a5e3f2bf941abb66a14bf2b8ee664/data.db; marker exists=False
+ Crash case stage=before-recovery-marker, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-825a5e3f2bf941abb66a14bf2b8ee664
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: null, fallback: True) [428 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305870 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-58f0431c7c134689973baa6677f7c08f/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-flush, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-58f0431c7c134689973baa6677f7c08f
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: "secret", fallback: True) [573 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305886 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-d33b36b356744d81829e087352ee09b7/data.db; marker exists=True
+ Crash case stage=after-temp-install, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-d33b36b356744d81829e087352ee09b7
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:06.29]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: True) [FAIL]
+[xUnit.net 00:00:06.87]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: False) [FAIL]
+[xUnit.net 00:00:07.43]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: False) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: null, fallback: True) [442 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2305981 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-7ce4b5cd8b514faaa26cb03fcc85f492/data.db; marker exists=False
+ Crash case stage=before-recovery-marker, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-7ce4b5cd8b514faaa26cb03fcc85f492
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker", password: "secret", fallback: False) [580 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306024 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-2c9c70f06d844b218c662e5a020e9913/data.db; marker exists=False
+ Crash case stage=before-recovery-marker, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-2c9c70f06d844b218c662e5a020e9913
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: False) [562 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306100 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-52b40baabb4b45e7b1446daed5253db5/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-flush, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-52b40baabb4b45e7b1446daed5253db5
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:07.89]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: True) [FAIL]
+[xUnit.net 00:00:08.36]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: False) [FAIL]
+[xUnit.net 00:00:08.92]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: True) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: True) [459 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306133 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-b7c21c9db1d143e7b0f1258944296cc1/data.db; marker exists=True
+ Crash case stage=after-log-backup, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-b7c21c9db1d143e7b0f1258944296cc1
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: False) [463 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306148 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-829e1180d7ae4208a990501172093cc8/data.db; marker exists=True
+ Crash case stage=after-temp-install, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-829e1180d7ae4208a990501172093cc8
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: True) [559 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306208 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-bb8ea19ff1ee4bc4985efeba5fa97550/data.db; marker exists=True
+ Crash case stage=after-log-backup, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-bb8ea19ff1ee4bc4985efeba5fa97550
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:09.46]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: True) [FAIL]
+[xUnit.net 00:00:09.93]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: True) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-flush", password: "secret", fallback: True) [545 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306376 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-3e4d8d7fb6d3485d9a11605de4eb7c75/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-flush, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-3e4d8d7fb6d3485d9a11605de4eb7c75
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-temp-install", password: null, fallback: True) [464 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306419 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-8bda4f9de8dc4fa7a6a2d0a19de65e7d/data.db; marker exists=True
+ Crash case stage=after-temp-install, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-8bda4f9de8dc4fa7a6a2d0a19de65e7d
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:10.57]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: False) [FAIL]
+[xUnit.net 00:00:11.13]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: False) [FAIL]
+[xUnit.net 00:00:11.70]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: False) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: False) [637 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306436 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-fd5873b7d6f44adfa3da592eb8ba2fc2/data-temp.db; marker exists=True
+ Crash case stage=after-source-backup, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-fd5873b7d6f44adfa3da592eb8ba2fc2
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: "secret", fallback: False) [559 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306471 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-55d8b3562fb046eea28b7e02d91e6a8a/data.db; marker exists=True
+ Crash case stage=after-log-backup, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-55d8b3562fb046eea28b7e02d91e6a8a
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "before-recovery-marker-delete", password: "secret", fallback: False) [566 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306603 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-513e722941c945fab33fcb61bb092d6f/data.db; marker exists=True
+ Crash case stage=before-recovery-marker-delete, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-513e722941c945fab33fcb61bb092d6f
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:12.14]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: True) [FAIL]
+[xUnit.net 00:00:12.59]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: False) [FAIL]
+[xUnit.net 00:00:13.04]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: False) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: True) [447 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306637 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-d40760cdb47744ad8be6f95f0dda7f1a/data-temp.db; marker exists=True
+ Crash case stage=after-source-backup, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-d40760cdb47744ad8be6f95f0dda7f1a
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-log-backup", password: null, fallback: False) [447 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306690 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-01356a98b236432e95b2d7ec1277d5b4/data.db; marker exists=True
+ Crash case stage=after-log-backup, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-01356a98b236432e95b2d7ec1277d5b4
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: null, fallback: False) [448 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306752 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-2cc12b6dcd7347748060abb2c931a758/data-temp.db; marker exists=True
+ Crash case stage=after-source-backup, encrypted=False, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-2cc12b6dcd7347748060abb2c931a758
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+[xUnit.net 00:00:13.66]     LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: True) [FAIL]
+  Failed LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: "after-source-backup", password: "secret", fallback: True) [612 ms]
+  Error Message:
+   System.InvalidOperationException : native crash retention sentinel after child exit
+  Stack Trace:
+     at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+--- End of stack trace from previous location ---
+  Standard Output Messages:
+ Child 2306829 exit observed, exit code 137
+ Native admission released for __WORKSPACE__/temporary/litedb-native-crash-d394a60a0f3749c382c21b88c729fa5d/data-temp.db; marker exists=True
+ Crash case stage=after-source-backup, encrypted=True, phase=verify recovery marker, refusal and candidate
+ Retained fixture: __WORKSPACE__/temporary/litedb-native-crash-d394a60a0f3749c382c21b88c729fa5d
+ System.InvalidOperationException: native crash retention sentinel after child exit
+    at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs:line 81
+
+
+
+Failed!  - Failed:    24, Passed:     0, Skipped:     0, Total:    24, Duration: 12 s - LiteDB.Tests.dll (net8.0)

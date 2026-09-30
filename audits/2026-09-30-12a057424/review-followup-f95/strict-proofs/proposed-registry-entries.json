@@ -1,0 +1,68 @@
+[
+  {
+    "regressionProof": {
+      "repro": "Issue_3067_SharedReaderRetirement",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "f95f0b0cd59d35d285ac72183589975751e35229",
+        "pr": 133,
+        "reason": "These ordinary Shared reader cleanup interactions were introduced by the operation-drain changes within fork PR #133 and have not reached upstream dev or a published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback",
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback",
+        "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Independent_last_leased_reader_disposal_still_joins_pin_cleanup"
+      ]
+    },
+    "reproCi": {
+      "Issue_3067_SharedReaderRetirement": {
+        "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+        "tests": [
+          "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback",
+          "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback",
+          "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Independent_last_leased_reader_disposal_still_joins_pin_cleanup"
+        ]
+      }
+    },
+    "contractEvidence": {
+      "reader-snapshot": [
+        {
+          "test": "LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs#Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback",
+          "model": "exception",
+          "proves": "A post-Query callback disposes another leased reader while forced pin/owner retirement drains its executing core; callbacks and cleanup finish, native exclusion is retained until unwind, committed indexed records and sentinel survive, and uncommitted marker is absent. Non-dependent disposal still waits and close errors retain their destination."
+        }
+      ]
+    }
+  },
+  {
+    "regressionProof": {
+      "repro": "Issue_3067_LeasedReaderSelfDispose",
+      "knownBad": {
+        "kind": "pr-commit",
+        "commit": "f95f0b0cd59d35d285ac72183589975751e35229",
+        "pr": 133,
+        "reason": "These ordinary Shared reader cleanup interactions were introduced by the operation-drain changes within fork PR #133 and have not reached upstream dev or a published package."
+      },
+      "permanentGuard": [
+        "LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs#Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry"
+      ]
+    },
+    "reproCi": {
+      "Issue_3067_LeasedReaderSelfDispose": {
+        "reason": "The dedicated Regression proof workflow packs the pinned known-bad commit and verifies both before/after variants; permanent guards run in the normal suites. Ordinary ReproRunner jobs do not create the required local package feed.",
+        "tests": [
+          "LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs#Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry"
+        ]
+      }
+    },
+    "contractEvidence": {
+      "reader-snapshot": [
+        {
+          "test": "LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs#Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry",
+          "model": "exception",
+          "proves": "Both leased snapshot construction paths refuse late callback self-disposal before latching or releasing ownership; ordinary retry disposes the snapshot and native Direct admission succeeds while the public reader is strongly retained. Plain/encrypted self and normal controls preserve cold indexed rows and sentinel."
+        }
+      ]
+    }
+  }
+]

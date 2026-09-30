@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="9986e46e-a644-48b7-a00c-f8edc3af8d98" name="@dev-build-server 2026-09-30 12:37:16" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T12:37:16.0084273+00:00" queuing="2026-09-30T12:37:16.0084273+00:00" start="2026-09-30T12:37:12.4363546+00:00" finish="2026-09-30T12:37:28.2573867+00:00" />
+  <TestSettings name="default" id="a8630c9c-67e2-4e25-8f8e-f3e5af7fc110">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_12_37_16" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="55691dad-d998-4a50-9c4d-2a83e85de64f" testId="85d135fd-2986-4699-9914-a5da0523b3c4" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: &quot;secret&quot;, failClose: True)" computerName="dev-build-server" duration="00:00:03.1701759" startTime="2026-09-30T12:37:27.8376964+00:00" endTime="2026-09-30T12:37:27.8376966+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55691dad-d998-4a50-9c4d-2a83e85de64f">
+      <Output>
+        <ErrorInfo>
+          <Message>Callback joined the pin that is draining this reader operation.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 69
+   at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="81fafd2a-8cb8-4cc1-829d-be224b3e89d4" testId="0820ff7a-50fd-5933-6e67-a8c339b98b31" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: False)" computerName="dev-build-server" duration="00:00:03.2054861" startTime="2026-09-30T12:37:18.4350830+00:00" endTime="2026-09-30T12:37:18.4350831+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="81fafd2a-8cb8-4cc1-829d-be224b3e89d4">
+      <Output>
+        <ErrorInfo>
+          <Message>Callback joined the pin that is draining this reader operation.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 69
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="adfa479b-9251-48cd-bbc4-88af3e35c1ad" testId="d8c68fe6-72ac-1521-0b52-d2b98dba3cf8" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: null)" computerName="dev-build-server" duration="00:00:00.1286371" startTime="2026-09-30T12:37:15.1976706+00:00" endTime="2026-09-30T12:37:15.1976707+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="adfa479b-9251-48cd-bbc4-88af3e35c1ad">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Null() Failure: Value is not null
+Expected: null
+Actual:   System.IO.FileNotFoundException: Could not find file '__WORKSPACE__/temporary/litedb-e2099fbc0c9543498e80f52f203cf95e.db-log'.
+File name: '__WORKSPACE__/temporary/litedb-e2099fbc0c9543498e80f52f203cf95e.db-log'
+   at System.IO.FileInfo.get_Length()
+   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 106</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(String password) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 119
+   at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="74e7302f-85b2-4ba9-b4f8-a980fc44d9a4" testId="b7638c12-61d2-eb51-ea44-cadb6ff34436" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: &quot;secret&quot;, failClose: False)" computerName="dev-build-server" duration="00:00:03.1692961" startTime="2026-09-30T12:37:24.6664071+00:00" endTime="2026-09-30T12:37:24.6664072+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="74e7302f-85b2-4ba9-b4f8-a980fc44d9a4">
+      <Output>
+        <ErrorInfo>
+          <Message>Callback joined the pin that is draining this reader operation.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 69
+   at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6a465426-934f-4cbd-a758-86beca080c54" testId="7a9d5e07-975b-6484-52ec-c584cde43dea" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Independent_last_leased_reader_disposal_still_joins_pin_cleanup(password: null)" computerName="dev-build-server" duration="00:00:00.0865886" startTime="2026-09-30T12:37:28.1636569+00:00" endTime="2026-09-30T12:37:28.1636570+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6a465426-934f-4cbd-a758-86beca080c54" />
+    <UnitTestResult executionId="2a7eb624-e0c7-4db7-99a5-d6c82a8db833" testId="f513bf4b-fd2b-059a-3582-766db8cf30e4" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Independent_last_leased_reader_disposal_still_joins_pin_cleanup(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.2382704" startTime="2026-09-30T12:37:28.0768526+00:00" endTime="2026-09-30T12:37:28.0768527+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a7eb624-e0c7-4db7-99a5-d6c82a8db833" />
+    <UnitTestResult executionId="c0107354-301d-4dd8-bd96-c4de0c177e01" testId="d478689a-9cd0-a271-a537-27a604232782" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: True)" computerName="dev-build-server" duration="00:00:03.0591465" startTime="2026-09-30T12:37:21.4960939+00:00" endTime="2026-09-30T12:37:21.4960939+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c0107354-301d-4dd8-bd96-c4de0c177e01">
+      <Output>
+        <ErrorInfo>
+          <Message>Callback joined the pin that is draining this reader operation.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 69
+   at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="907d5e8d-f7bc-4739-845a-3916eb13eb09" testId="745c3649-5ee3-9614-465b-13f67670f4b3" testName="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.5685015" startTime="2026-09-30T12:37:15.0564511+00:00" endTime="2026-09-30T12:37:15.0564784+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="907d5e8d-f7bc-4739-845a-3916eb13eb09">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Null() Failure: Value is not null
+Expected: null
+Actual:   System.IO.FileNotFoundException: Could not find file '__WORKSPACE__/temporary/litedb-3825f8e85acf4220a56204f2f227276d.db-log'.
+File name: '__WORKSPACE__/temporary/litedb-3825f8e85acf4220a56204f2f227276d.db-log'
+   at System.IO.FileInfo.get_Length()
+   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 106</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(String password) in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 119
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: &quot;secret&quot;, failClose: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b7638c12-61d2-eb51-ea44-cadb6ff34436">
+      <Execution id="74e7302f-85b2-4ba9-b4f8-a980fc44d9a4" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="0820ff7a-50fd-5933-6e67-a8c339b98b31">
+      <Execution id="81fafd2a-8cb8-4cc1-829d-be224b3e89d4" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Independent_last_leased_reader_disposal_still_joins_pin_cleanup(password: &quot;secret&quot;)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="f513bf4b-fd2b-059a-3582-766db8cf30e4">
+      <Execution id="2a7eb624-e0c7-4db7-99a5-d6c82a8db833" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Independent_last_leased_reader_disposal_still_joins_pin_cleanup" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: &quot;secret&quot;, failClose: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="85d135fd-2986-4699-9914-a5da0523b3c4">
+      <Execution id="55691dad-d998-4a50-9c4d-2a83e85de64f" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: &quot;secret&quot;)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="745c3649-5ee3-9614-465b-13f67670f4b3">
+      <Execution id="907d5e8d-f7bc-4739-845a-3916eb13eb09" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="d478689a-9cd0-a271-a537-27a604232782">
+      <Execution id="c0107354-301d-4dd8-bd96-c4de0c177e01" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Independent_last_leased_reader_disposal_still_joins_pin_cleanup(password: null)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="7a9d5e07-975b-6484-52ec-c584cde43dea">
+      <Execution id="6a465426-934f-4cbd-a758-86beca080c54" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Independent_last_leased_reader_disposal_still_joins_pin_cleanup" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: null)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-reader-retirement/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="d8c68fe6-72ac-1521-0b52-d2b98dba3cf8">
+      <Execution id="adfa479b-9251-48cd-bbc4-88af3e35c1ad" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.SharedReaderRetirement_Tests" name="Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="85d135fd-2986-4699-9914-a5da0523b3c4" executionId="55691dad-d998-4a50-9c4d-2a83e85de64f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0820ff7a-50fd-5933-6e67-a8c339b98b31" executionId="81fafd2a-8cb8-4cc1-829d-be224b3e89d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d8c68fe6-72ac-1521-0b52-d2b98dba3cf8" executionId="adfa479b-9251-48cd-bbc4-88af3e35c1ad" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b7638c12-61d2-eb51-ea44-cadb6ff34436" executionId="74e7302f-85b2-4ba9-b4f8-a980fc44d9a4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a9d5e07-975b-6484-52ec-c584cde43dea" executionId="6a465426-934f-4cbd-a758-86beca080c54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f513bf4b-fd2b-059a-3582-766db8cf30e4" executionId="2a7eb624-e0c7-4db7-99a5-d6c82a8db833" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d478689a-9cd0-a271-a537-27a604232782" executionId="c0107354-301d-4dd8-bd96-c4de0c177e01" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="745c3649-5ee3-9614-465b-13f67670f4b3" executionId="907d5e8d-f7bc-4739-845a-3916eb13eb09" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="8" executed="8" passed="2" failed="6" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.38]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:01.49]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:01.51]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:02.17]       Assert.Null() Failure: Value is not null
+[xUnit.net 00:00:02.17]       Expected: null
+[xUnit.net 00:00:02.17]       Actual:   System.IO.FileNotFoundException: Could not find file '__WORKSPACE__/temporary/litedb-3825f8e85acf4220a56204f2f227276d.db-log'.
+[xUnit.net 00:00:02.17]       File name: '__WORKSPACE__/temporary/litedb-3825f8e85acf4220a56204f2f227276d.db-log'
+[xUnit.net 00:00:02.17]          at System.IO.FileInfo.get_Length()
+[xUnit.net 00:00:02.17]          at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 106
+[xUnit.net 00:00:02.17]       Stack Trace:
+[xUnit.net 00:00:02.17]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(119,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(String password)
+[xUnit.net 00:00:02.17]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.17]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.32]       Assert.Null() Failure: Value is not null
+[xUnit.net 00:00:02.32]       Expected: null
+[xUnit.net 00:00:02.32]       Actual:   System.IO.FileNotFoundException: Could not find file '__WORKSPACE__/temporary/litedb-e2099fbc0c9543498e80f52f203cf95e.db-log'.
+[xUnit.net 00:00:02.32]       File name: '__WORKSPACE__/temporary/litedb-e2099fbc0c9543498e80f52f203cf95e.db-log'
+[xUnit.net 00:00:02.32]          at System.IO.FileInfo.get_Length()
+[xUnit.net 00:00:02.32]          at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback&gt;b__3() in __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs:line 106
+[xUnit.net 00:00:02.32]       Stack Trace:
+[xUnit.net 00:00:02.32]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(119,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(String password)
+[xUnit.net 00:00:02.32]            at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:02.32]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.55]       Callback joined the pin that is draining this reader operation.
+[xUnit.net 00:00:05.55]       Stack Trace:
+[xUnit.net 00:00:05.55]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(69,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose)
+[xUnit.net 00:00:05.55]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:05.55]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:08.61]       Callback joined the pin that is draining this reader operation.
+[xUnit.net 00:00:08.61]       Stack Trace:
+[xUnit.net 00:00:08.61]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(69,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose)
+[xUnit.net 00:00:08.62]            at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:08.62]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:11.79]       Callback joined the pin that is draining this reader operation.
+[xUnit.net 00:00:11.79]       Stack Trace:
+[xUnit.net 00:00:11.79]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(69,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose)
+[xUnit.net 00:00:11.79]            at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:11.79]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:14.96]       Callback joined the pin that is draining this reader operation.
+[xUnit.net 00:00:14.96]       Stack Trace:
+[xUnit.net 00:00:14.96]         __WORKSPACE__/artifacts_temp/fix-reader-retirement/LiteDB.Tests/Engine/SharedReaderRetirement_Tests.cs(69,0): at LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(String password, Boolean failClose)
+[xUnit.net 00:00:14.96]            at InvokeStub_SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(Object, Span`1)
+[xUnit.net 00:00:14.96]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:15.29]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:15.0540900+00:00">
+        <Text>[xUnit.net 00:00:02.17]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: "secret") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:15.2025714+00:00">
+        <Text>[xUnit.net 00:00:02.32]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_exited_owner_draining_this_callback(password: null) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:18.4344743+00:00">
+        <Text>[xUnit.net 00:00:05.55]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:21.4961629+00:00">
+        <Text>[xUnit.net 00:00:08.61]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: null, failClose: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:24.6663388+00:00">
+        <Text>[xUnit.net 00:00:11.79]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: "secret", failClose: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:37:27.8375748+00:00">
+        <Text>[xUnit.net 00:00:14.96]     LiteDB.Tests.Engine.SharedReaderRetirement_Tests.Last_other_leased_reader_cleanup_does_not_join_forced_pin_draining_this_callback(password: "secret", failClose: True) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

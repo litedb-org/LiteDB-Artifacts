@@ -1,0 +1,31 @@
+{
+  "manifest": "__WORKSPACE__/temporary/pr133-native-evidence-review/artifacts_temp/review-graph-retention/64e4f1700259466db6c3aa6193599fe6.json",
+  "files": [
+    {
+      "source": "__WORKSPACE__/temporary/litedb-19edf6d94fd742dcbcd1cc7455e852ec-log.db",
+      "copy": "64e4f1700259466db6c3aa6193599fe6/litedb-19edf6d94fd742dcbcd1cc7455e852ec-log.db",
+      "size": 57344,
+      "sha256": "08aef1da7d1b6bec855898cfb2f84bbd6afc28b2d72b3a23436670e84b0f938c"
+    },
+    {
+      "source": "__WORKSPACE__/temporary/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db",
+      "copy": "64e4f1700259466db6c3aa6193599fe6/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db",
+      "size": 507904,
+      "sha256": "20f4410df5f7fbee11f7d808e970a07fa574398eb6741c313ef148586ee28b4b"
+    },
+    {
+      "source": "__WORKSPACE__/temporary/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db-readers",
+      "copy": "64e4f1700259466db6c3aa6193599fe6/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db-readers/slots-b13694464251482093e64e6916379026.slots",
+      "size": 16,
+      "sha256": "62f9b28201616052b6e50689a42e7388d8295ff01734c91f08c691d856957c46"
+    },
+    {
+      "source": "__WORKSPACE__/temporary/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db-readers",
+      "copy": "64e4f1700259466db6c3aa6193599fe6/litedb-19edf6d94fd742dcbcd1cc7455e852ec.db-readers/slots-b13694464251482093e64e6916379026.lease",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "errors": [],
+  "primaryFailure": "System.InvalidOperationException: graph retention sentinel after real graph construction\n   at LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Exercise(TempFile file, Boolean shared, Boolean youngFirst, Boolean fallback, ITestOutputHelper output) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Engine/NativeAdmissionGraphFinalizer_Tests.cs:line 122\n   at LiteDB.Tests.Engine.NativeAdmissionGraphFinalizer_Tests.Abandoned_exhausted_reader_and_engine_retain_native_exclusion_and_committed_state(Boolean shared, Boolean youngFirst, Boolean fallback) in __WORKSPACE__/temporary/pr133-native-evidence-review/LiteDB.Tests/Engine/NativeAdmissionGraphFinalizer_Tests.cs:line 94"
+}

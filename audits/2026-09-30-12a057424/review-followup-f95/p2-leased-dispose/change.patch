@@ -1,0 +1,164 @@
+commit e0cd19dba28a7b2fed00b2696a01c2f375eb4b19
+Author: Jonas Kamsker <11245306+JKamsker@users.noreply.github.com>
+Date:   Wed Sep 30 12:38:46 2026 +0000
+
+    Keep leased snapshot reader disposal retryable after callback refusal
+
+diff --git a/LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs b/LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs
+new file mode 100644
+index 000000000..4b4279f3d
+--- /dev/null
++++ b/LiteDB.Tests/Engine/SharedLeasedReaderDispose_Tests.cs
+@@ -0,0 +1,91 @@
++using System;
++using System.Linq;
++using System.Reflection;
++using LiteDB.Engine;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class SharedLeasedReaderDispose_Tests
++    {
++        [Theory]
++        [InlineData(null, false, true)] [InlineData("secret", false, true)]
++        [InlineData(null, true, true)] [InlineData("secret", true, true)]
++        [InlineData(null, false, false)] [InlineData("secret", false, false)]
++        [InlineData(null, true, false)] [InlineData("secret", true, false)]
++        public void Leased_snapshot_disposal_refuses_callback_before_mutation_and_can_retry(
++            string password, bool queryCore, bool selfDispose)
++        {
++            using var file = new TempFile();
++            var connection = new ConnectionString { Filename = file, Password = password };
++            using (var seed = new LiteDatabase(connection))
++            {
++                seed.GetCollection("rows").Insert(Enumerable.Range(1, 5).Select(Row));
++                seed.GetCollection("rows").EnsureIndex("value");
++                seed.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 99, ["value"] = "untouched" });
++            }
++            Action callback = null;
++            using var shared = new SharedEngine(new EngineSettings
++            {
++                Filename = file, Password = password, ReadOnly = !queryCore,
++                ReadTransform = (_, value) => { callback?.Invoke(); return value; }
++            }) { PinIdleLimit = TimeSpan.FromMinutes(1), PinHoldLimit = TimeSpan.FromMinutes(1) };
++            IBsonDataReader anchor = null;
++            if (queryCore)
++            {
++                // A leased reader plus an ordinary write establishes and retains the
++                // pin, routing the next query through QueryCore's snapshot construction.
++                anchor = shared.Query("rows", new Query());
++                using var facade = new LiteDatabase(shared, disposeOnClose: false);
++                facade.GetCollection("sentinel").Update(new BsonDocument { ["_id"] = 99, ["value"] = "untouched" });
++                Assert.NotNull(Field(shared, "_pin"));
++            }
++            var reader = shared.Query("rows", new Query());
++            var inner = (BsonDataReader)Field(reader, "_reader");
++            var snapshot = (LiteEngine)Field(Field(inner, "_context"), "_engine");
++            Assert.True(((EngineSettings)Field(snapshot, "_settings")).ReadOnly);
++            Assert.NotSame(Field(shared, "_engine"), snapshot);
++            try
++            {
++                Assert.True(reader.Read());
++                Assert.Equal(1, reader.Current["_id"].AsInt32);
++                Exception refusal = null;
++                if (selfDispose) callback = () =>
++                {
++                    callback = null;
++                    refusal = Record.Exception(reader.Dispose);
++                };
++                Assert.True(reader.Read());
++                Assert.Equal(2, reader.Current["_id"].AsInt32);
++                if (selfDispose) Assert.IsType<InvalidOperationException>(refusal);
++                reader.Dispose(); // Must finish after refused self-disposal, without GC.
++                anchor?.Dispose();
++                shared.Dispose();
++                Assert.True(snapshot.IsDisposed);
++                using (var direct = new LiteDatabase(connection))
++                {
++                    direct.GetCollection("rows").Insert(Row(6));
++                }
++                GC.KeepAlive(reader);
++                using var cold = new LiteDatabase(connection);
++                var rows = cold.GetCollection("rows");
++                Assert.Equal(Enumerable.Range(1, 6), rows.FindAll().Select(row => row["_id"].AsInt32).OrderBy(id => id));
++                var indexed = rows.Query().Where(Query.GTE("value", 0));
++                Assert.Equal("value", indexed.GetPlan()["index"]["name"].AsString);
++                Assert.Equal(Enumerable.Range(1, 6), indexed.ToArray().Select(row => row["_id"].AsInt32));
++                Assert.Equal("untouched", cold.GetCollection("sentinel").FindById(99)["value"].AsString);
++                GC.KeepAlive(reader);
++            }
++            finally
++            {
++                // Failed-before assertions must not rely on finalization to release files.
++                reader.Dispose();
++                snapshot.Dispose();
++                anchor?.Dispose();
++            }
++        }
++        private static object Field(object value, string name) => value.GetType()
++            .GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value);
++        private static BsonDocument Row(int id) => new BsonDocument { ["_id"] = id, ["value"] = id };
++    }
++}
+diff --git a/LiteDB/Client/Shared/SharedDataReader.cs b/LiteDB/Client/Shared/SharedDataReader.cs
+index 2b8a2324f..d7303de45 100644
+--- a/LiteDB/Client/Shared/SharedDataReader.cs
++++ b/LiteDB/Client/Shared/SharedDataReader.cs
+@@ -11,13 +11,19 @@ namespace LiteDB
+     {
+         private readonly IBsonDataReader _reader;
+         private readonly Action _dispose;
++        private readonly LiteEngine _ownedSnapshot;
+ 
+         private int _disposed;
+ 
+-        public SharedDataReader(IBsonDataReader reader, Action dispose)
++        public SharedDataReader(IBsonDataReader reader, Action dispose) : this(reader, dispose, null)
++        {
++        }
++
++        internal SharedDataReader(IBsonDataReader reader, Action dispose, LiteEngine ownedSnapshot)
+         {
+             _reader = reader;
+             _dispose = dispose;
++            _ownedSnapshot = ownedSnapshot;
+         }
+ 
+         public BsonValue this[string field] => _reader[field];
+@@ -43,6 +49,13 @@ namespace LiteDB
+ 
+         protected virtual void Dispose(bool disposing)
+         {
++            // A leased snapshot has no parent-owned fallback for a refused core close.
++            // Refuse before mutating the cursor or latching disposal, so the caller can
++            // retry after this snapshot's executing callback has unwound.
++            if (Volatile.Read(ref _disposed) != 0) return;
++            if (disposing && _ownedSnapshot?.IsExecutingOnCurrentThread == true)
++                throw new InvalidOperationException("Cannot dispose a leased reader from inside its executing operation.");
++
+             // Atomic admission: the callback ends one mutex recursion and one engine user.
+             // Two threads disposing at once must not both run it, or the second would end
+             // another reader's ownership and could close the engine under it.
+diff --git a/LiteDB/Client/Shared/SharedEngine.Query.cs b/LiteDB/Client/Shared/SharedEngine.Query.cs
+index edcd0afdd..46f32e8fb 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Query.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Query.cs
+@@ -144,7 +144,7 @@ namespace LiteDB
+                         try { ownedLease.Dispose(); }
+                         finally { this.RemoveLocalReader(owner); }
+                     }
+-                });
++                }, ownedSnapshot);
+                 snapshot = null;
+                 lease = null;
+                 return result;
+@@ -310,7 +310,7 @@ namespace LiteDB
+                         try { ownedLease.Dispose(); }
+                         finally { this.RemoveLocalReader(owner); }
+                     }
+-                });
++                }, ownedSnapshot);
+                 snapshot = null;
+                 lease = null;
+                 reader = null;

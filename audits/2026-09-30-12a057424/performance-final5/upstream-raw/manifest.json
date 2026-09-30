@@ -1,0 +1,1146 @@
+{
+  "configuration": {
+    "versions": {
+      "dev": {
+        "runner": "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "revision": "5dd942a7367c361fadd600be4ce10aace2768b27"
+      },
+      "parent": {
+        "runner": "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "revision": "49c327cf1926fa300f9eb7477eb4bcb404f75c43"
+      },
+      "final": {
+        "runner": "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "revision": "12a057424843d54bf10a53318433c889a7db025d"
+      }
+    },
+    "groups": [
+      {
+        "name": "upstream",
+        "versions": [
+          "dev",
+          "parent",
+          "final"
+        ],
+        "rounds": 4,
+        "warmup": 5,
+        "windows": 5,
+        "cases": [
+          [
+            "direct",
+            "ordinary",
+            "read",
+            1
+          ],
+          [
+            "direct",
+            "legacy",
+            "read",
+            1
+          ],
+          [
+            "direct",
+            "ordinary",
+            "open",
+            1
+          ],
+          [
+            "shared",
+            "ordinary",
+            "read",
+            1
+          ],
+          [
+            "shared",
+            "legacy",
+            "read",
+            1
+          ]
+        ]
+      }
+    ]
+  },
+  "driver_sha256": "89f9f41b8c2bae83410f6e5518f8bcd187c15ba5f72b6e8bc5725065a3a11c81",
+  "runs": [
+    {
+      "name": "upstream-direct-ordinary-read-1-0-0-dev",
+      "started": "2026-09-30T13:20:38.568437+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-0-1-parent",
+      "started": "2026-09-30T13:20:49.095170+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-0-2-final",
+      "started": "2026-09-30T13:20:59.687687+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-0-final",
+      "started": "2026-09-30T13:21:10.294777+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-1-parent",
+      "started": "2026-09-30T13:21:20.958815+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-2-dev",
+      "started": "2026-09-30T13:21:31.564104+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-0-dev",
+      "started": "2026-09-30T13:21:42.099871+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-1-parent",
+      "started": "2026-09-30T13:21:52.653238+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-2-final",
+      "started": "2026-09-30T13:22:03.216660+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-0-final",
+      "started": "2026-09-30T13:22:13.805475+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-1-parent",
+      "started": "2026-09-30T13:22:24.381292+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-2-dev",
+      "started": "2026-09-30T13:22:35.027499+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-0-dev",
+      "started": "2026-09-30T13:22:45.587231+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-1-parent",
+      "started": "2026-09-30T13:22:56.140090+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-2-final",
+      "started": "2026-09-30T13:23:06.717743+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-0-final",
+      "started": "2026-09-30T13:23:17.324471+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-1-parent",
+      "started": "2026-09-30T13:23:27.931067+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-2-dev",
+      "started": "2026-09-30T13:23:38.523195+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-0-dev",
+      "started": "2026-09-30T13:23:49.160122+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-1-parent",
+      "started": "2026-09-30T13:23:59.756378+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-2-final",
+      "started": "2026-09-30T13:24:10.333271+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-0-final",
+      "started": "2026-09-30T13:24:20.922637+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-1-parent",
+      "started": "2026-09-30T13:24:31.524266+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-2-dev",
+      "started": "2026-09-30T13:24:42.109199+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-0-dev",
+      "started": "2026-09-30T13:24:52.683215+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-1-parent",
+      "started": "2026-09-30T13:25:03.202552+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-2-final",
+      "started": "2026-09-30T13:25:13.829038+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-0-final",
+      "started": "2026-09-30T13:25:24.437761+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-1-parent",
+      "started": "2026-09-30T13:25:35.045159+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-2-dev",
+      "started": "2026-09-30T13:25:45.604322+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-0-dev",
+      "started": "2026-09-30T13:25:56.150795+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-1-parent",
+      "started": "2026-09-30T13:26:06.677814+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-2-final",
+      "started": "2026-09-30T13:26:17.231482+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-0-final",
+      "started": "2026-09-30T13:26:27.804665+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-1-parent",
+      "started": "2026-09-30T13:26:38.390916+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-2-dev",
+      "started": "2026-09-30T13:26:49.053650+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-0-dev",
+      "started": "2026-09-30T13:26:59.586344+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-1-parent",
+      "started": "2026-09-30T13:27:11.113855+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-2-final",
+      "started": "2026-09-30T13:27:22.723227+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-0-final",
+      "started": "2026-09-30T13:27:34.445141+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-1-parent",
+      "started": "2026-09-30T13:27:45.990114+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-2-dev",
+      "started": "2026-09-30T13:27:57.634901+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-0-dev",
+      "started": "2026-09-30T13:28:09.161001+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-1-parent",
+      "started": "2026-09-30T13:28:20.704689+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-2-final",
+      "started": "2026-09-30T13:28:32.254292+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-0-final",
+      "started": "2026-09-30T13:28:43.862923+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-1-parent",
+      "started": "2026-09-30T13:28:55.398114+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-2-dev",
+      "started": "2026-09-30T13:29:06.976267+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-0-dev",
+      "started": "2026-09-30T13:29:18.502143+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-1-parent",
+      "started": "2026-09-30T13:29:29.997496+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-2-final",
+      "started": "2026-09-30T13:29:41.618889+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-0-final",
+      "started": "2026-09-30T13:29:53.145033+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-1-parent",
+      "started": "2026-09-30T13:30:04.748966+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-2-dev",
+      "started": "2026-09-30T13:30:16.285068+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-0-dev",
+      "started": "2026-09-30T13:30:27.853943+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-1-parent",
+      "started": "2026-09-30T13:30:39.358950+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-2-final",
+      "started": "2026-09-30T13:30:50.912323+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-0-final",
+      "started": "2026-09-30T13:31:02.482110+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-final5/TransactionHandleBenchmarks.dll",
+        "12a057424843d54bf10a53318433c889a7db025d",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-1-parent",
+      "started": "2026-09-30T13:31:14.022395+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-2-dev",
+      "started": "2026-09-30T13:31:25.654230+00:00",
+      "command": [
+        "dotnet",
+        "__WORKSPACE__/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    }
+  ]
+}

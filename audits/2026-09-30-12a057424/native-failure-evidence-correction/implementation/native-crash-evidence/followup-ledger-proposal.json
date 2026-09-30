@@ -1,0 +1,9 @@
+{
+  "id": "133-native-crash-failure-only-diagnostics",
+  "kind": "assertions-reduced",
+  "subjects": [
+    "LiteDB.Tests/Internals/NativeAdmissionCrash_Tests.cs"
+  ],
+  "disposition": "replaced",
+  "reason": "Intermediate d9 added two live-marker/native-admission assertions in the original 24-case crash test, introducing extra filesystem activity before strict recovery byte reads. cff follow-up removes only those new assertions to restore the original f95 critical sequence and moves the native authority probe to exception-safe failure diagnostics. All six original byte-equality/refusal/recovery assertions remain unchanged, original24 cases pass net8/net10, and the separate real24-case sentinel retention negative control still passes with20 marker files and byte-identical copies. Original Windows ARM sharing failure is not claimed fixed."
+}

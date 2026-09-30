@@ -1,0 +1,86 @@
+{
+  "GeneratedAt": "2026-09-30T12:47:17.8493736+00:00",
+  "Root": "__WORKSPACE__/temporary/pr133-reader-retirement-proofs/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_LeasedReaderSelfDispose",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 2.5223286,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T12:47:24.5758449\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.f95f0b0cd59d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-self-f212d84e55bb4ab68cbb93e37ec3f9ce"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "RETAINED_SHARED_ADMISSION core=False encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "RETAINED_SHARED_ADMISSION core=True encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "RETAINED_SHARED_ADMISSION core=False encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "RETAINED_SHARED_ADMISSION core=True encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T12:47:27.0259481\u002B00:00\u0022,\u0022text\u0022:\u0022Self-disposal retry, normal controls and native admission checked.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 3.4777578,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T12:47:27.0891297\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.f95f0b0cd59d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-self-e076ff3faa2941649cc31d9610da72ed"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T12:47:30.5066624\u002B00:00\u0022,\u0022text\u0022:\u0022Self-disposal retry, normal controls and native admission checked.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

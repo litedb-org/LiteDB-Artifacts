@@ -1,0 +1,49 @@
+{
+  "candidate": "f95f0b0cd59d35d285ac72183589975751e35229",
+  "job": 109884239520,
+  "status": "Executed crash/recovery test failure; cause under investigation, no waiver/rerun.",
+  "results": [
+    {
+      "source": "LiteDB.Tests/TestResults/NativeAdmission-arm64-admission.trx",
+      "attributes": {
+        "executionId": "7fa79388-ca13-4d9a-b4b6-82b33c79bd23",
+        "testId": "211e304b-03bb-4a11-ec59-b7feb7e227ca",
+        "testName": "LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: \"before-recovery-marker-flush\", password: \"secret\", fallback: True)",
+        "computerName": "runnervm1vfjv",
+        "duration": "00:00:00.8477904",
+        "startTime": "2026-09-30T05:27:19.5709452-07:00",
+        "endTime": "2026-09-30T05:27:19.5709455-07:00",
+        "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+        "outcome": "Failed",
+        "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+        "relativeResultsDirectory": "7fa79388-ca13-4d9a-b4b6-82b33c79bd23"
+      },
+      "output": "\n      \n        Crash case stage=before-recovery-marker-flush, encrypted=True, phase=verify recovery marker, refusal and candidate\nRetained fixture: __CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\nSystem.IO.IOException: The process cannot access the file '__CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\\data-rebuild.db' because it is being used by another process.\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)\r\n   at System.IO.File.ReadAllBytes(String path)\r\n   at System.Array.ConvertAll[TInput,TOutput](TInput[] array, Converter`2 converter)\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.VerifyRecovery(String directory, String filename, String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 88\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 62\n        \n          System.IO.IOException : The process cannot access the file '__CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\\data-rebuild.db' because it is being used by another process.\n             at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)\r\n   at System.IO.File.ReadAllBytes(String path)\r\n   at System.Array.ConvertAll[TInput,TOutput](TInput[] array, Converter`2 converter)\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.VerifyRecovery(String directory, String filename, String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 88\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 62\r\n--- End of stack trace from previous location ---\n        \n      \n    "
+    }
+  ],
+  "artifact": {
+    "artifact": {
+      "id": 11095114823,
+      "node_id": "MDg6QXJ0aWZhY3QxMTA5NTExNDgyMw==",
+      "name": "test-results-test-native-windows-arm64-0",
+      "size_in_bytes": 170948,
+      "url": "https://api.github.com/repos/JKamsker/LiteDB/actions/artifacts/11095114823",
+      "archive_download_url": "https://api.github.com/repos/JKamsker/LiteDB/actions/artifacts/11095114823/zip",
+      "expired": false,
+      "digest": "sha256:7e7ecb3ab5cb07df1c595bea7c1c2eb83ab4ef6cd91ab82cd42a20b744b88ce1",
+      "created_at": "2026-09-30T12:29:36Z",
+      "updated_at": "2026-09-30T12:29:36Z",
+      "expires_at": "2026-12-29T12:20:32Z",
+      "workflow_run": {
+        "id": 36714086574,
+        "repository_id": 760330150,
+        "head_repository_id": 760330150,
+        "head_branch": "codex/transaction-handles",
+        "head_sha": "f95f0b0cd59d35d285ac72183589975751e35229"
+      }
+    },
+    "zipSha256": "7e7ecb3ab5cb07df1c595bea7c1c2eb83ab4ef6cd91ab82cd42a20b744b88ce1",
+    "directory": "test-results-test-native-windows-arm64-0"
+  },
+  "retentionGap": "Retained fixture path printed on runner but artifact has only6metadata/TRX files. PreserveEvidence reads LITEDB_SHARED_DIAGNOSTICS absent in native job; uploaded patterns omit retained fixture. Exact file snapshot unavailable."
+}

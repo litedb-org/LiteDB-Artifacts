@@ -1,0 +1,11 @@
+{
+  "id": "133-native-crash-retention",
+  "kind": "ci-test-config-changed",
+  "subjects": [
+    ".github/workflows/_reusable-ci.yml",
+    ".github/actions/retained-fixtures/action.yml"
+  ],
+  "disposition": "strengthened",
+  "invariant": "Killed-child recovery fixtures remain on their original system-temp volume; failed assertions and complete data/WAL/replacement/marker evidence survive the test host. Existing24crash cases retain strict byte equality/refusal/recovery checks.",
+  "reason": "Fixes confirmed failure-capture gap: NativeAdmissionCrash used LITEDB_SHARED_DIAGNOSTICS, while native CI defines LITEDB_RETAINED_FIXTURES and its collector only accepted GUID basenames. Adds typed GUID directory manifests and post-host copies, refuses live hosts/children, and schedules a deliberately failing 24-case real process-death retention control on Linux and Windows ARM. Follow-up cff298b38 removes ordinary-path marker/probe I/O introduced in d9: the original child Kill/Dispose to strict VerifyRecovery sequence is preserved. Native authority diagnostics run only after failure, are exception-safe, and cannot suppress primary-failure retention. No assertion relaxation, retries, delay, threshold changes, or production changes. The original 847ms Windows ARM8 sharing failure remains unclassified: original fixture was not uploaded, so its lock owner cannot be reconstructed."
+}

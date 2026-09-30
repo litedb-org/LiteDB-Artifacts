@@ -1,0 +1,556 @@
+diff --git a/.github/safety/coverage-ledger.json b/.github/safety/coverage-ledger.json
+index 17bf86973..1b9a40b41 100644
+--- a/.github/safety/coverage-ledger.json
++++ b/.github/safety/coverage-ledger.json
+@@ -217,6 +217,19 @@
+       "disposition": "strengthened",
+       "invariant": "Killed-child recovery fixtures remain on their original system-temp volume; failed assertions and complete data/WAL/replacement/marker evidence survive the test host. Existing24crash cases retain strict byte equality/refusal/recovery checks.",
+       "reason": "Fixes confirmed failure-capture gap: NativeAdmissionCrash used LITEDB_SHARED_DIAGNOSTICS, while native CI defines LITEDB_RETAINED_FIXTURES and its collector only accepted GUID basenames. Adds typed GUID directory manifests and post-host copies, refuses live hosts/children, and schedules a deliberately failing 24-case real process-death retention control on Linux and Windows ARM. Follow-up cff298b38 removes ordinary-path marker/probe I/O introduced in d9: the original child Kill/Dispose to strict VerifyRecovery sequence is preserved. Native authority diagnostics run only after failure, are exception-safe, and cannot suppress primary-failure retention. No assertion relaxation, retries, delay, threshold changes, or production changes. The original 847ms Windows ARM8 sharing failure remains unclassified: original fixture was not uploaded, so its lock owner cannot be reconstructed."
++    },
++    {
++      "id": "133-followup-pin-progress-boundary",
++      "kind": "harness-changed",
++      "subjects": [
++        "LiteDB.Tests/Internals/SharedFollowupProcess_Tests.cs",
++        "LiteDB.Tests/Internals/MvccProcess.cs",
++        "LiteDB.Tests.SharedMutexHarness/SharedFollowupHarness.cs"
++      ],
++      "disposition": "strengthened",
++      "invariant": "A live one-minute pin owner running ordinary updates yields to an external writer which commits all twenty records within the unchanged ten-second post-go limit; cold indexed records and unrelated sentinel remain correct. A genuinely held legacy pin permits no committed write.",
++      "reason": "Windows x64/net8 job109884239743 timed out waiting for done without a child-ready or native-admission boundary, so startup, admission and commit progress cannot be distinguished retrospectively. Initialize the writer before establishing the pin, observe native-wait and each real commit, and keep the active owner loop, all twenty separate commits and ten-second budget. Require owner still alive before intentional kill so an owner crash cannot mimic yielding. Adds plain/encrypted blocked controls, cold indexed verification and original-volume post-host failure capture. No production change, assertion retry or speculative classification of the original timeout.",
++      "decision": "docs/transaction-handles-safety-review.md#pinned-writer-progress-observation"
+     }
+   ]
+ }
+diff --git a/.github/scripts/test_retained_fixtures.py b/.github/scripts/test_retained_fixtures.py
+index 20d88cdec..9f48078d7 100644
+--- a/.github/scripts/test_retained_fixtures.py
++++ b/.github/scripts/test_retained_fixtures.py
+@@ -102,6 +102,95 @@ sys.stdin.readline()
+                 self.assertEqual(retained.collect(root), 1)
+             self.assertFalse((root / 'failed/unrelated.db').exists())
+ 
++    def test_shared_followup_waits_for_host_and_keeps_raw_files_and_diagnostics(self):
++        with tempfile.TemporaryDirectory() as root:
++            root = Path(root)
++            fixture = root / ('litedb-followup-' + 'd' * 32)
++            fixture.mkdir()
++            artifacts = root / 'artifacts'
++            artifacts.mkdir()
++            files = {'data.db': b'database sentinel', 'data-log.db': b'wal sentinel',
++                     'failure-diagnostics.txt': b'child exited; native-wait; last commit 19'}
++            for name, data in files.items():
++                (fixture / name).write_bytes(data)
++            (root / 'neighbor.db').write_bytes(b'untouched')
++            host = subprocess.Popen([sys.executable, '-u', '-c',
++                'import sys; held = open(sys.argv[1], "rb"); print("ready", flush=True); sys.stdin.readline()',
++                str(fixture / 'data.db')], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
++            try:
++                self.assertEqual(host.stdout.readline().strip(), 'ready')
++                manifest = {'fixtureKind': 'shared-followup-directory', 'directory': str(fixture),
++                            'phase': 'writer progress', 'processId': host.pid, 'failure': 'original progress failure'}
++                (artifacts / 'failed.json').write_text(json.dumps(manifest))
++                self.assertEqual(retained.collect(artifacts), 1)
++                self.assertFalse((artifacts / 'failed/data.db').exists())
++                host.communicate('\n', timeout=10)
++                self.assertEqual(retained.collect(artifacts), 0)
++                report = json.loads((artifacts / 'failed/collection-report.json').read_text())
++                self.assertEqual(report['primaryFailure'], manifest['failure'])
++                self.assertEqual(len(report['files']), len(files))
++                for name, data in files.items():
++                    self.assertEqual((fixture / name).read_bytes(), data)
++                    self.assertEqual((artifacts / 'failed' / name).read_bytes(), data)
++                self.assertFalse((artifacts / 'failed/neighbor.db').exists())
++                self.assertEqual((root / 'neighbor.db').read_bytes(), b'untouched')
++            finally:
++                if host.poll() is None:
++                    host.kill()
++                    host.communicate()
++
++    def test_shared_followup_waits_for_every_child_after_host_exit(self):
++        with tempfile.TemporaryDirectory() as root:
++            root = Path(root)
++            fixture = root / ('litedb-followup-' + 'f' * 32)
++            fixture.mkdir()
++            database = fixture / 'data.db'
++            database.write_bytes(b'raw database sentinel')
++            artifacts = root / 'artifacts'
++            artifacts.mkdir()
++            children = []
++            try:
++                for _ in range(2):
++                    child = subprocess.Popen([sys.executable, '-u', '-c',
++                        'import sys; held = open(sys.argv[1], "rb"); print("ready", flush=True); sys.stdin.readline()',
++                        str(database)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
++                    children.append(child)
++                    self.assertEqual(child.stdout.readline().strip(), 'ready')
++                manifest = {'fixtureKind': 'shared-followup-directory', 'directory': str(fixture),
++                            'processId': 1, 'childPids': [child.pid for child in children], 'failure': 'primary cleanup failure'}
++                (artifacts / 'failed.json').write_text(json.dumps(manifest))
++                actual_running = retained.running
++                with patch.object(retained, 'running', side_effect=lambda pid: False if pid == 1 else actual_running(pid)):
++                    for child in children:
++                        self.assertEqual(retained.collect(artifacts), 1)
++                        self.assertFalse((artifacts / 'failed/data.db').exists())
++                        report = json.loads((artifacts / 'failed/collection-report.json').read_text())
++                        self.assertEqual(report['primaryFailure'], manifest['failure'])
++                        self.assertIn(str(child.pid), report['errors'][0])
++                        child.communicate('\n', timeout=10)
++                    self.assertEqual(retained.collect(artifacts), 0)
++                self.assertEqual(database.read_bytes(), b'raw database sentinel')
++                self.assertEqual((artifacts / 'failed/data.db').read_bytes(), database.read_bytes())
++            finally:
++                for child in children:
++                    if child.poll() is None:
++                        child.kill()
++                        child.communicate()
++
++    def test_shared_followup_cannot_capture_other_fixture_kinds_or_arbitrary_directories(self):
++        for name in ('arbitrary', 'litedb-native-crash-' + 'e' * 32, 'litedb-followup-not-a-guid'):
++            with self.subTest(name=name), tempfile.TemporaryDirectory() as root:
++                root = Path(root)
++                fixture = root / name
++                fixture.mkdir()
++                (fixture / 'data.db').write_bytes(b'untouched')
++                (root / 'failed.json').write_text(json.dumps({'fixtureKind': 'shared-followup-directory',
++                    'directory': str(fixture), 'processId': 1, 'failure': 'primary'}))
++                with patch.object(retained, 'running', return_value=False):
++                    self.assertEqual(retained.collect(root), 1)
++                self.assertFalse((root / 'failed/data.db').exists())
++                self.assertEqual((fixture / 'data.db').read_bytes(), b'untouched')
++
+     def test_copy_failure_is_separate_and_remaining_files_are_collected(self):
+         with tempfile.TemporaryDirectory() as root:
+             root = Path(root)
+diff --git a/LiteDB.Tests.SharedMutexHarness/SharedFollowupHarness.cs b/LiteDB.Tests.SharedMutexHarness/SharedFollowupHarness.cs
+index 0783ebc11..098256879 100644
+--- a/LiteDB.Tests.SharedMutexHarness/SharedFollowupHarness.cs
++++ b/LiteDB.Tests.SharedMutexHarness/SharedFollowupHarness.cs
+@@ -58,31 +58,52 @@ internal static class SharedFollowupHarness
+             Console.ReadLine();
+             owner.GetType().GetMethod("Exit")!.Invoke(owner, new object[] { -1 });
+         }
+-        else if (mode == "followup-pin")
++        else if (mode == "followup-seed-pin")
++        {
++            engine.EnsureIndex("docs", "value", "$.value", false);
++            engine.EnsureIndex("cold", "value", "$.value", false);
++            engine.Insert("untouched", new[] { new BsonDocument { ["_id"] = 1, ["value"] = "preserved" } }, BsonAutoId.Int32);
++        }
++        else if (mode == "followup-pin" || mode == "followup-held-pin")
+         {
+             typeof(SharedEngine).GetProperty("PinHoldLimit", Private)!.SetValue(engine, TimeSpan.FromMinutes(1));
+             typeof(SharedEngine).GetProperty("PinIdleLimit", Private)!.SetValue(engine, TimeSpan.FromMinutes(1));
+             using var reader = engine.Query("docs", new Query());
+             engine.Insert("pin", new[] { new BsonDocument { ["_id"] = 1, ["value"] = 0 } }, BsonAutoId.Int32);
++            if (typeof(SharedEngine).GetField("_pin", Private)!.GetValue(engine) == null)
++                throw new Exception("Write did not establish a pin");
++            if (mode == "followup-held-pin")
++            {
++                if (!engine.BeginTrans()) throw new Exception("Held-pin transaction did not begin");
++                Console.WriteLine("ready");
++                Console.ReadLine();
++                engine.Rollback();
++                Console.WriteLine("done");
++                return true;
++            }
+             Console.WriteLine("ready");
+             for (var i = 1; ; i++)
+                 engine.Update("pin", new[] { new BsonDocument { ["_id"] = 1, ["value"] = i } });
+         }
+-        else if (mode == "followup-verify-pin")
++        else if (mode == "followup-verify-pin" || mode == "followup-verify-blocked")
+         {
+             using var database = new LiteDatabase(engine, disposeOnClose: false);
+             foreach (var name in new[] { "docs", "cold" })
+             {
+                 var rows = database.GetCollection(name).FindAll().OrderBy(doc => doc["_id"].AsInt32).ToArray();
+-                if (rows.Length != (name == "docs" ? 84 : 64)) throw new Exception("Missing recovered " + name);
++                if (rows.Length != (name == "docs" && mode == "followup-verify-pin" ? 84 : 64)) throw new Exception("Missing recovered " + name);
+                 for (var id = 0; id < 64; id++)
+                     if (rows[id]["_id"].AsInt32 != id || rows[id]["value"].AsInt32 != 0 ||
+                         rows[id]["payload"].AsString != new string('x', 3000))
+                         throw new Exception("Changed seed document " + name + "/" + id);
++                var query = database.GetCollection(name).Query().Where(Query.EQ("value", 0));
++                if (query.GetPlan()["index"]["name"] != "value" || !query.GetPlan()["index"]["mode"].AsString.StartsWith("INDEX SEEK", StringComparison.Ordinal) || query.Count() != 64)
++                    throw new Exception("Changed recovered index " + name);
+                 for (var i = 64; i < rows.Length; i++)
+                     if (rows[i]["_id"].AsInt32 != i + 36 || rows[i].Count != 1)
+                         throw new Exception("Changed acknowledged insert " + i);
+             }
++            if (database.GetCollection("untouched").FindById(1)?["value"] != "preserved") throw new Exception("Changed unrelated sentinel");
+         }
+         else throw new ArgumentException(mode);
+         Console.WriteLine("done");
+diff --git a/LiteDB.Tests/Internals/MvccProcess.cs b/LiteDB.Tests/Internals/MvccProcess.cs
+index 1976e8f41..5ac2b9a85 100644
+--- a/LiteDB.Tests/Internals/MvccProcess.cs
++++ b/LiteDB.Tests/Internals/MvccProcess.cs
+@@ -3,6 +3,7 @@ using System;
+ using System.Diagnostics;
+ using System.IO;
+ using System.Runtime.InteropServices;
++using System.Text;
+ using System.Threading.Tasks;
+ using FluentAssertions;
+ 
+@@ -12,11 +13,17 @@ namespace LiteDB.Internals
+     {
+         private readonly Process _process;
+         private readonly Task<string> _errors;
++        private readonly string _mode;
++        private readonly Stopwatch _elapsed = Stopwatch.StartNew();
++        private readonly StringBuilder _output = new StringBuilder();
++        private readonly object _diagnosticGate = new object();
+ 
+         internal int Id => _process.Id;
++        internal bool HasExited => _process.HasExited;
+ 
+         internal MvccProcess(string mode, string filename, string password, string value = null, bool disableFileLocking = false, bool disableMappedReads = false)
+         {
++            _mode = mode;
+             // Use the host beside the runtime executing this test, including
+             // isolated CI installations and Windows x86. PATH may select x64
+             // or a newer major runtime even when the parent guard is correct.
+@@ -46,14 +53,40 @@ namespace LiteDB.Internals
+ 
+         internal async Task Expect(string expected)
+         {
+-            var line = await _process.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(20));
++            var line = await ReadLine(TimeSpan.FromSeconds(20));
+             if (line == null) throw new Exception(await _errors);
+             line.Should().Be(expected);
+         }
+ 
+         /// <summary>Next output line, or null once the process closed its output.</summary>
+-        internal Task<string> ReadLine(TimeSpan timeout) =>
+-            _process.StandardOutput.ReadLineAsync().WaitAsync(timeout);
++        internal async Task<string> ReadLine(TimeSpan timeout)
++        {
++            try
++            {
++                var line = await _process.StandardOutput.ReadLineAsync().WaitAsync(timeout);
++                lock (_diagnosticGate)
++                {
++                    _output.AppendLine($"{_elapsed.Elapsed}: {line ?? "<stdout closed>"}");
++                    if (_output.Length > 65536) _output.Remove(0, _output.Length - 65536);
++                }
++                return line;
++            }
++            catch (TimeoutException error)
++            {
++                throw new TimeoutException("MVCC child output deadline: " + DiagnosticSummary(), error);
++            }
++        }
++
++        internal string DiagnosticSummary()
++        {
++            lock (_diagnosticGate)
++            {
++                var state = _process.HasExited ? "exited:" + _process.ExitCode : "running";
++                var errors = _errors.IsCompletedSuccessfully ? _errors.Result : "<stderr still open>";
++                return $"mode={_mode}; pid={_process.Id}; state={state}; elapsed={_elapsed.Elapsed}; " +
++                    $"runtime={Environment.Version}; architecture={RuntimeInformation.ProcessArchitecture}\nstdout:\n{_output}stderr:\n{errors}";
++            }
++        }
+ 
+         internal void Send(string command) => _process.StandardInput.WriteLine(command);
+ 
+@@ -70,9 +103,10 @@ namespace LiteDB.Internals
+             await _process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(20));
+         }
+ 
+-        internal static async Task Run(string mode, string filename, string password, string value = null)
++        internal static async Task Run(string mode, string filename, string password, string value = null, Action<int> started = null)
+         {
+             using var process = new MvccProcess(mode, filename, password, value);
++            started?.Invoke(process.Id);
+             await process.Expect("done");
+             await process.Finish();
+         }
+diff --git a/LiteDB.Tests/Internals/SharedFollowupProcess_Tests.cs b/LiteDB.Tests/Internals/SharedFollowupProcess_Tests.cs
+index 39623f8f3..6512d66d6 100644
+--- a/LiteDB.Tests/Internals/SharedFollowupProcess_Tests.cs
++++ b/LiteDB.Tests/Internals/SharedFollowupProcess_Tests.cs
+@@ -1,21 +1,28 @@
+ #if !NETFRAMEWORK
+ using System;
++using System.Collections.Generic;
+ using System.IO;
++using System.Diagnostics;
+ using System.Threading;
+ using System.Threading.Tasks;
+ using FluentAssertions;
+ using LiteDB.Client.Shared;
+ using LiteDB.Engine;
+ using Xunit;
++using Xunit.Abstractions;
++using LiteDB.Tests;
+ 
+ namespace LiteDB.Internals
+ {
+     public class SharedFollowupProcess_Tests : IDisposable
+     {
+         private readonly string _directory = Path.Combine(Path.GetTempPath(), "litedb-followup-" + Guid.NewGuid().ToString("N"));
++        private readonly ITestOutputHelper _output;
++        private bool _retain;
+         private string Filename => Path.Combine(_directory, "test.db");
+ 
+-        public SharedFollowupProcess_Tests() => Directory.CreateDirectory(_directory);
++        public SharedFollowupProcess_Tests(ITestOutputHelper output)
++        { _output = output; Directory.CreateDirectory(_directory); }
+ 
+         [Fact]
+         public async Task Killing_a_waiter_while_it_owns_the_turnstile_does_not_abandon_the_database()
+@@ -55,25 +62,135 @@ namespace LiteDB.Internals
+             db.GetCollection("ack").FindById(1)["value"].AsInt32.Should().Be(42);
+         }
+ 
+-        [Fact]
+-        public async Task A_pinned_write_loop_yields_to_another_process_before_its_hold_limit()
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public Task A_pinned_write_loop_yields_to_another_process_before_its_hold_limit(string password) =>
++            RunPinnedWriter(password, held: false);
++
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public Task Yield_oracle_rejects_native_wait_without_a_completed_write(string password) =>
++            RunPinnedWriter(password, held: true);
++
++        private async Task RunPinnedWriter(string password, bool held)
+         {
+-            await MvccProcess.Run("seed", Filename, null);
+-            using var owner = new MvccProcess("followup-pin", Filename, null);
+-            await owner.Expect("ready");
+-            using var waiter = new MvccProcess("insert", Filename, null, "100");
+-            var done = await waiter.ReadLine(TimeSpan.FromSeconds(10));
+-            done.Should().Be("done", "a one-minute pin must yield to the queued writer");
+-            await waiter.Finish();
+-            await owner.Kill();
+-            // Recover in a fresh process through the same Shared coordination protocol,
+-            // including its mutex-protected recovery, instead of switching to Direct.
+-            await MvccProcess.Run("followup-verify-pin", Filename, null);
++            MvccProcess owner = null, waiter = null;
++            var childPids = new List<int>();
++            Exception primary = null;
++            var phase = "seed";
++            try
++            {
++                await MvccProcess.Run("seed", Filename, password, started: childPids.Add);
++                await MvccProcess.Run("followup-seed-pin", Filename, password, started: childPids.Add);
++                // Load and initialize the writer before establishing the pin. Its
++                // startup deadline never spends the existing ten-second yield budget.
++                phase = "writer startup (before pin)";
++                waiter = new MvccProcess("pin-insert-progress", Filename, password, "100");
++                childPids.Add(waiter.Id);
++                await waiter.Expect("ready");
++                phase = "owner pin establishment";
++                var ownerElapsed = Stopwatch.StartNew();
++                owner = new MvccProcess(held ? "followup-held-pin" : "followup-pin", Filename, password);
++                childPids.Add(owner.Id);
++                await owner.Expect("ready");
++                phase = "writer native admission";
++                var elapsed = Stopwatch.StartNew();
++                waiter.Send("go");
++                await ExpectBeforeDeadline(waiter, "native-wait", elapsed, TimeSpan.FromSeconds(10));
++                phase = "writer committed progress";
++                if (held)
++                {
++                    // The exact same progress oracle must reject an observed native
++                    // waiter while a real legacy-transaction pin hold remains live.
++                    var error = await Assert.ThrowsAsync<TimeoutException>(() =>
++                        CompleteWrites(waiter, Stopwatch.StartNew(), TimeSpan.FromSeconds(1)));
++                    error.Message.Should().Contain("committed:100");
++                    await waiter.Kill(); // no writes may slip through when the hold ends
++                }
++                else
++                {
++                    // Keep all twenty separately committed writes within the original
++                    // ten-second post-go budget, well before the one-minute hold limit.
++                    await CompleteWrites(waiter, elapsed, TimeSpan.FromSeconds(10));
++                    await waiter.Finish();
++                    ownerElapsed.Elapsed.Should().BeLessThan(TimeSpan.FromMinutes(1), "all twenty writes must finish before even the earliest possible pin hold limit");
++                }
++                owner.HasExited.Should().BeFalse("writer progress must occur while the pin owner remains alive: " + owner.DiagnosticSummary());
++                phase = "owner death and native release";
++                await owner.Kill();
++                phase = "cold indexed recovery";
++                await MvccProcess.Run(held ? "followup-verify-blocked" : "followup-verify-pin", Filename, password, started: childPids.Add);
++            }
++            catch (Exception error)
++            {
++                primary = error;
++                _retain = true;
++                // Stop children before publishing the post-host copy manifest. Preserve
++                // both the original failure and the last observed semantic boundary.
++                foreach (var process in new[] { waiter, owner })
++                {
++                    if (process == null) continue;
++                    try { await process.Kill(); } catch (InvalidOperationException) { }
++                    catch (Exception cleanup) { error.Data[ReferenceEquals(process, waiter) ? "writer-stop" : "owner-stop"] = cleanup; }
++                }
++                try
++                {
++                    var diagnostic = $"phase={phase}; encrypted={password != null}; held={held}\n" +
++                        $"writer:\n{waiter?.DiagnosticSummary()}\nowner:\n{owner?.DiagnosticSummary()}\n{error}";
++                    _output.WriteLine(diagnostic);
++                    File.WriteAllText(Path.Combine(_directory, "failure-diagnostics.txt"), diagnostic);
++                }
++                catch (Exception diagnostic) { error.Data["failure-diagnostics"] = diagnostic; }
++                try { RetainedTestFixture.PublishSharedFollowup(_directory, phase, error, _output, childPids.ToArray()); }
++                catch (Exception publication) { error.Data["failure-manifest"] = publication; }
++                throw;
++            }
++            finally
++            {
++                var cleanupErrors = new List<Exception>();
++                foreach (var process in new[] { waiter, owner })
++                {
++                    try { process?.Dispose(); }
++                    catch (Exception cleanup) { cleanupErrors.Add(cleanup); }
++                }
++                if (cleanupErrors.Count != 0)
++                {
++                    var cleanup = new AggregateException("Pinned-writer child disposal failed", cleanupErrors);
++                    if (primary == null) throw cleanup;
++                    primary.Data["child-final-disposal"] = cleanup;
++                }
++            }
++        }
++
++        private static async Task CompleteWrites(MvccProcess waiter, Stopwatch elapsed, TimeSpan limit)
++        {
++            for (var id = 100; id < 120; id++)
++                await ExpectBeforeDeadline(waiter, "committed:" + id, elapsed, limit);
++            await ExpectBeforeDeadline(waiter, "done", elapsed, limit);
++        }
++
++        private static async Task ExpectBeforeDeadline(MvccProcess process, string expected, Stopwatch elapsed, TimeSpan limit)
++        {
++            try
++            {
++                var remaining = limit - elapsed.Elapsed;
++                if (remaining <= TimeSpan.Zero) throw new TimeoutException();
++                var actual = await process.ReadLine(remaining);
++                actual.Should().Be(expected, process.DiagnosticSummary());
++                if (elapsed.Elapsed >= limit) throw new TimeoutException();
++            }
++            catch (TimeoutException error)
++            {
++                throw new TimeoutException($"Pinned writer stopped before '{expected}', elapsed={elapsed.Elapsed}, limit={limit}. " +
++                    "Startup and native-wait markers do not count as completed writes.\n" + process.DiagnosticSummary(), error);
++            }
+         }
+ 
+         public void Dispose()
+         {
+-            if (Directory.Exists(_directory)) Directory.Delete(_directory, true);
++            if (!_retain && Directory.Exists(_directory)) Directory.Delete(_directory, true);
+         }
+     }
+ }
+diff --git a/LiteDB.Tests/Utils/RetainedTestFixture.cs b/LiteDB.Tests/Utils/RetainedTestFixture.cs
+index 030e81979..e76519d43 100644
+--- a/LiteDB.Tests/Utils/RetainedTestFixture.cs
++++ b/LiteDB.Tests/Utils/RetainedTestFixture.cs
+@@ -24,6 +24,22 @@ namespace LiteDB.Tests
+             catch (Exception diagnostic) { ReportFailure(output, diagnostic); }
+         }
+ 
++        internal static void PublishSharedFollowup(string directory, string phase, Exception primary, ITestOutputHelper output,
++            int[] childPids = null)
++        {
++            try
++            {
++                PublishManifest(new BsonDocument
++                {
++                    ["fixtureKind"] = "shared-followup-directory",
++                    ["childPids"] = new BsonArray(Array.ConvertAll(childPids ?? new int[0], pid => new BsonValue(pid))),
++                    ["directory"] = Path.GetFullPath(directory),
++                    ["phase"] = phase
++                }, primary, output);
++            }
++            catch (Exception diagnostic) { ReportFailure(output, diagnostic); }
++        }
++
+         // Publish only a manifest in the test host. Copying must wait until the
+         // host exits; a failing finalizer assertion can leave live native handles.
+         internal static void Publish(string filename, Exception primary, ITestOutputHelper output)
+diff --git a/docs/transaction-handles-safety-review.md b/docs/transaction-handles-safety-review.md
+index 184da5020..2f6c4a585 100644
+--- a/docs/transaction-handles-safety-review.md
++++ b/docs/transaction-handles-safety-review.md
+@@ -397,7 +397,9 @@ binaries, independent controls and repeated attempts remain revision-specific.
+ 
+ Windows ARM64/net8 job109884239520 failed a strict raw read of the recovery marker
+ after child death at the before-marker-flush boundary, encrypted with fallback.
+-Its 847ms result did not establish the sharing-lock owner. The original fixture
++The initial `File.ReadAllBytes` snapshot failed after awaited child Kill/Dispose,
++before any Direct/Shared recovery reopen or replacement copy. Its 847ms result
++did not establish the sharing-lock owner. The original fixture
+ was missing from the uploaded artifact: the test used a diagnostic variable which
+ native CI did not set, and the configured collector accepted individual GUID
+ basenames rather than this test's GUID directory. That confirmed capture defect
+@@ -412,3 +414,27 @@ the success path were removed because their extra I/O could alter reproduction
+ timing. No retry, delay, threshold relaxation or production fix is used here.
+ The old fixture cannot be reconstructed and the original lock owner remains
+ unknown; a later passing run must not be described as explaining that failure.
++
++## Pinned writer progress observation
++
++Windows x64/net8 job109884239743 timed out waiting for the Shared follow-up
++writer's final output. The original test had no child-ready or native-wait
++boundary, so the failing phase cannot be reconstructed. This is distinct from
++the earlier SharedReaderPin fixture failure; no common cause is established.
++
++The revised fixture initializes the writer before establishing the pin and
++observes native admission followed by all twenty separately committed records
++within the unchanged ten-second post-go budget. The owner retains its active
++update loop and one-minute hold settings. Its process must remain alive before
++intentional termination, so a crash cannot masquerade as successful yielding.
++Plain/encrypted held-legacy-pin controls require a timeout before the first
++commit, then verify no attempted write survived; successful cases verify exact
++cold indexed records and an unrelated sentinel. Failure diagnostics preserve the
++last observed phase, child output and original exception, with database files
++retained on their original temporary volume for post-host collection.
++
++Independent review found and corrected the owner-exit false-pass risk and a
++failure-capture gap when stopping a child itself fails. Collection must refuse
++any still-live recorded child as well as a live test host. The old timeout remains
++unclassified; these changes improve its oracle and evidence, not production
++behavior.
+diff --git a/scripts/collect-retained-fixtures.py b/scripts/collect-retained-fixtures.py
+index a13f6a185..a604cbbfe 100644
+--- a/scripts/collect-retained-fixtures.py
++++ b/scripts/collect-retained-fixtures.py
+@@ -55,16 +55,22 @@ def collect(directory):
+             report['primaryFailure'] = source['failure']
+             if running(int(source['processId'])):
+                 raise RuntimeError('Fixture host is still running; refusing to copy')
+-            if source.get('fixtureKind') == 'native-crash-directory':
++            directory_prefixes = {'native-crash-directory': 'litedb-native-crash-',
++                                  'shared-followup-directory': 'litedb-followup-'}
++            if source.get('fixtureKind') in directory_prefixes:
+                 fixture = Path(source['directory'])
+-                prefix = 'litedb-native-crash-'
++                prefix = directory_prefixes[source['fixtureKind']]
+                 if not fixture.is_absolute() or not fixture.name.startswith(prefix) or len(fixture.name) != len(prefix) + 32:
+-                    raise ValueError('Expected an absolute GUID native-crash directory')
++                    raise ValueError(f'Expected an absolute GUID {source["fixtureKind"]} directory')
+                 int(fixture.name[len(prefix):], 16)
+                 if fixture.is_symlink():
+                     raise ValueError('Refusing to follow a fixture directory symlink')
+-                if source.get('childPid', 0) and running(int(source['childPid'])):
+-                    raise RuntimeError('Fixture child is still running; refusing to copy')
++                child_pids = list(source.get('childPids', []))
++                if source.get('childPid', 0):
++                    child_pids.append(source['childPid'])
++                for child_pid in child_pids:
++                    if running(int(child_pid)):
++                        raise RuntimeError(f'Fixture child {child_pid} is still running; refusing to copy')
+                 items = sorted(fixture.iterdir())
+             else:
+                 database = Path(source['database'])

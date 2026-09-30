@@ -1,0 +1,18 @@
+{
+  "review": 5366098967,
+  "reviewedHead": "f95f0b0cd",
+  "status": "P1/P2confirmedbyactualbeforetests, correctedlocalproductionpendingnewgate",
+  "findings": [
+    {
+      "P1": "A callback can join retirement draining thatsamecore, includingownerexit andoffthreadlastreader paths",
+      "before": "Correctedunitbefore6fails2controls; independent8fails4controlscopeincludesP2",
+      "fixed": "842production+57ftestonlyreleasedeadline;46cases/runtime"
+    },
+    {
+      "P2": "Leasedreader marks disposed before snapshot selfclose refuses, making retrylosecleanup",
+      "before": "4fails4controls, realf95",
+      "fixed": "e0cdretryableclosure,53cases/runtime,strongretention+incompatibleDirectadmission controls"
+    }
+  ],
+  "publicProofLimits": "StrictP1publicpin setup startsbeforewrite andrequireswrite+BeginTrans<50ms withatmost3separatelyloggedsetupattempts. Slowsetup/generictimeout isnotregression/fixedsuccess. Forcedpin onlypublicscope; nonpinownerexit haspermanentguards. Threecompleteproofattempts retainedwithoutoverwriting; no semanticfailure discarded."
+}

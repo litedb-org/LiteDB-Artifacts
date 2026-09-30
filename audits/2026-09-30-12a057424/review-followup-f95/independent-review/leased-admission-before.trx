@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7ecd7934-2bef-4cc2-8100-36203c4e9cb1" name="@dev-build-server 2026-09-30 12:41:24" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T12:41:24.6107677+00:00" queuing="2026-09-30T12:41:24.6107677+00:00" start="2026-09-30T12:41:22.8235082+00:00" finish="2026-09-30T12:41:24.9637185+00:00" />
+  <TestSettings name="default" id="995984f2-5e3e-41cc-87fe-3f69a0aba717">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_12_41_24" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="16d17b7b-cebf-4eac-a762-b09b1038a67d" testId="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True)" computerName="dev-build-server" duration="00:00:00.0571299" startTime="2026-09-30T12:41:24.7730572+00:00" endTime="2026-09-30T12:41:24.7730572+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="16d17b7b-cebf-4eac-a762-b09b1038a67d">
+      <Output>
+        <ErrorInfo>
+          <Message>Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-3093cb2cc9dd485d85cd54449d485526.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+ ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+   at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+   at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+   at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+   --- End of inner exception stack trace ---
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+   at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+   at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+   at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a5567d1f-9bf8-42dd-8c27-88729d853ec8" testId="b8636fa0-83b8-a521-83df-4f488666742a" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: True)" computerName="dev-build-server" duration="00:00:00.1245799" startTime="2026-09-30T12:41:24.7151239+00:00" endTime="2026-09-30T12:41:24.7151239+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a5567d1f-9bf8-42dd-8c27-88729d853ec8">
+      <Output>
+        <ErrorInfo>
+          <Message>Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-cf72fa03babb4be8a25ac433740a73e9.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+ ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+   at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+   at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+   at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+   --- End of inner exception stack trace ---
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+   at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+   at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+   at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="be9c202b-78d5-4066-abe2-b29a9037aa78" testId="a8652b35-7c01-9d7a-0643-e523210fabea" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True)" computerName="dev-build-server" duration="00:00:00.2421642" startTime="2026-09-30T12:41:24.1314597+00:00" endTime="2026-09-30T12:41:24.1314932+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="be9c202b-78d5-4066-abe2-b29a9037aa78">
+      <Output>
+        <ErrorInfo>
+          <Message>Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-9632b2eb10cf4633bb6a80288f6416fd.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+ ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+   at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+   at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+   at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+   --- End of inner exception stack trace ---
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+   at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+   at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+   at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="108a1d7b-290a-470e-9a50-ca330476346a" testId="6251568d-a602-e6b9-94e4-e58e9cd4f726" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: False)" computerName="dev-build-server" duration="00:00:00.0489512" startTime="2026-09-30T12:41:24.8221314+00:00" endTime="2026-09-30T12:41:24.8221314+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="108a1d7b-290a-470e-9a50-ca330476346a" />
+    <UnitTestResult executionId="8f7b129c-4798-4066-94b0-33e8b052010e" testId="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: False)" computerName="dev-build-server" duration="00:00:00.1535084" startTime="2026-09-30T12:41:24.5813119+00:00" endTime="2026-09-30T12:41:24.5813120+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8f7b129c-4798-4066-94b0-33e8b052010e" />
+    <UnitTestResult executionId="1fa24f9f-6032-4840-a7e2-7819d0e41810" testId="0df0f0b7-c2db-8493-3432-d4f8739c30b0" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: False)" computerName="dev-build-server" duration="00:00:00.1614156" startTime="2026-09-30T12:41:24.4275882+00:00" endTime="2026-09-30T12:41:24.4275882+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1fa24f9f-6032-4840-a7e2-7819d0e41810" />
+    <UnitTestResult executionId="5eed8b30-4016-410c-a2e1-64dad416a1cb" testId="c8b5d688-58e8-ce82-e2ab-0caf039c8db7" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: False)" computerName="dev-build-server" duration="00:00:00.0616271" startTime="2026-09-30T12:41:24.8838774+00:00" endTime="2026-09-30T12:41:24.8838775+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5eed8b30-4016-410c-a2e1-64dad416a1cb" />
+    <UnitTestResult executionId="36b7797e-3ff4-4560-bf33-184c232c926a" testId="499ee66c-d315-386d-763e-a4739167bb10" testName="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: True)" computerName="dev-build-server" duration="00:00:00.1281290" startTime="2026-09-30T12:41:24.2652118+00:00" endTime="2026-09-30T12:41:24.2652119+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="36b7797e-3ff4-4560-bf33-184c232c926a">
+      <Output>
+        <ErrorInfo>
+          <Message>Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-a72a28a9772f4b4db1307aef2067a9cb.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+ ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+   at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+   at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+   at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+   --- End of inner exception stack trace ---
+   at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+   at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+   at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+   at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+   at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 47
+   at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1">
+      <Execution id="8f7b129c-4798-4066-94b0-33e8b052010e" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="a8652b35-7c01-9d7a-0643-e523210fabea">
+      <Execution id="be9c202b-78d5-4066-abe2-b29a9037aa78" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95">
+      <Execution id="16d17b7b-cebf-4eac-a762-b09b1038a67d" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="0df0f0b7-c2db-8493-3432-d4f8739c30b0">
+      <Execution id="1fa24f9f-6032-4840-a7e2-7819d0e41810" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: True, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="b8636fa0-83b8-a521-83df-4f488666742a">
+      <Execution id="a5567d1f-9bf8-42dd-8c27-88729d853ec8" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="6251568d-a602-e6b9-94e4-e58e9cd4f726">
+      <Execution id="108a1d7b-290a-470e-9a50-ca330476346a" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: &quot;secret&quot;, openCore: False, self: True)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="499ee66c-d315-386d-763e-a4739167bb10">
+      <Execution id="36b7797e-3ff4-4560-bf33-184c232c926a" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: False)" storage="__WORKSPACE__/temporary/pr133-reader-cleanup-review/litedb.tests/bin/release/net10.0/litedb.tests.dll" id="c8b5d688-58e8-ce82-e2ab-0caf039c8db7">
+      <Execution id="5eed8b30-4016-410c-a2e1-64dad416a1cb" />
+      <TestMethod codeBase="__WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests" name="Leased_self_dispose_refusal_is_retryable_and_retires_native_admission" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="5451f5ec-ae20-a66b-f1d1-65ddd8fcbf95" executionId="16d17b7b-cebf-4eac-a762-b09b1038a67d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b8636fa0-83b8-a521-83df-4f488666742a" executionId="a5567d1f-9bf8-42dd-8c27-88729d853ec8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a8652b35-7c01-9d7a-0643-e523210fabea" executionId="be9c202b-78d5-4066-abe2-b29a9037aa78" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6251568d-a602-e6b9-94e4-e58e9cd4f726" executionId="108a1d7b-290a-470e-9a50-ca330476346a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1ebe1bf7-3b59-8c5a-5e93-e0077980ebd1" executionId="8f7b129c-4798-4066-94b0-33e8b052010e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0df0f0b7-c2db-8493-3432-d4f8739c30b0" executionId="1fa24f9f-6032-4840-a7e2-7819d0e41810" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c8b5d688-58e8-ce82-e2ab-0caf039c8db7" executionId="5eed8b30-4016-410c-a2e1-64dad416a1cb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="499ee66c-d315-386d-763e-a4739167bb10" executionId="36b7797e-3ff4-4560-bf33-184c232c926a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="8" executed="8" passed="4" failed="4" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 10.0.11)
+[xUnit.net 00:00:00.13]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.72]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.73]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.01]       Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-9632b2eb10cf4633bb6a80288f6416fd.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.01]        ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+[xUnit.net 00:00:01.01]          --- End of inner exception stack trace ---
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+[xUnit.net 00:00:01.01]          at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+[xUnit.net 00:00:01.01]          at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+[xUnit.net 00:00:01.01]          at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+[xUnit.net 00:00:01.01]          at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+[xUnit.net 00:00:01.01]          at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25
+[xUnit.net 00:00:01.01]       Stack Trace:
+[xUnit.net 00:00:01.01]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.01]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:01.01]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.15]       Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-a72a28a9772f4b4db1307aef2067a9cb.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.15]        ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+[xUnit.net 00:00:01.15]          --- End of inner exception stack trace ---
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+[xUnit.net 00:00:01.15]          at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+[xUnit.net 00:00:01.15]          at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+[xUnit.net 00:00:01.15]          at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+[xUnit.net 00:00:01.15]          at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+[xUnit.net 00:00:01.15]          at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25
+[xUnit.net 00:00:01.15]       Stack Trace:
+[xUnit.net 00:00:01.15]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.15]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.15]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.60]       Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-cf72fa03babb4be8a25ac433740a73e9.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.60]        ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+[xUnit.net 00:00:01.60]          --- End of inner exception stack trace ---
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+[xUnit.net 00:00:01.60]          at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+[xUnit.net 00:00:01.60]          at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+[xUnit.net 00:00:01.60]          at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+[xUnit.net 00:00:01.60]          at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+[xUnit.net 00:00:01.60]          at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25
+[xUnit.net 00:00:01.60]       Stack Trace:
+[xUnit.net 00:00:01.60]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.60]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.60]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.65]       Snapshot remained open; Direct probe: LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__WORKSPACE__/temporary/litedb-3093cb2cc9dd485d85cd54449d485526.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.65]        ---&gt; System.IO.IOException: Incompatible local database access. Independent Direct writers require one shared LiteEngine.
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 51
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.SharedModeGuard.&lt;&gt;c__DisplayClass6_0.&lt;Open&gt;b__0() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 81
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 66
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+[xUnit.net 00:00:01.65]          --- End of inner exception stack trace ---
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+[xUnit.net 00:00:01.65]          at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+[xUnit.net 00:00:01.65]          at LiteDB.Engine.LiteEngine.Open() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 121
+[xUnit.net 00:00:01.65]          at LiteDB.Engine.LiteEngine..ctor(EngineSettings settings) in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB/Engine/LiteEngine.cs:line 99
+[xUnit.net 00:00:01.65]          at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.&lt;&gt;c__DisplayClass2_0.&lt;Leased_self_dispose_refusal_is_retryable_and_retires_native_admission&gt;b__1() in __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs:line 46
+[xUnit.net 00:00:01.65]          at Xunit.Record.Exception(Action testCode) in /_/src/xunit.core/Record.cs:line 25
+[xUnit.net 00:00:01.65]       Stack Trace:
+[xUnit.net 00:00:01.65]         __WORKSPACE__/temporary/pr133-reader-cleanup-review/LiteDB.Tests/Engine/ReviewSharedReaderCleanup_Tests.cs(47,0): at LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(String password, Boolean openCore, Boolean self)
+[xUnit.net 00:00:01.65]            at InvokeStub_ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(Object, Span`1)
+[xUnit.net 00:00:01.65]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.77]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:41:24.1291823+00:00">
+        <Text>[xUnit.net 00:00:01.01]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: False, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:41:24.2660491+00:00">
+        <Text>[xUnit.net 00:00:01.15]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: "secret", openCore: False, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:41:24.7148522+00:00">
+        <Text>[xUnit.net 00:00:01.60]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: "secret", openCore: True, self: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T12:41:24.7730845+00:00">
+        <Text>[xUnit.net 00:00:01.65]     LiteDB.Tests.Engine.ReviewSharedReaderCleanup_Tests.Leased_self_dispose_refusal_is_retryable_and_retires_native_admission(password: null, openCore: True, self: True) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>
