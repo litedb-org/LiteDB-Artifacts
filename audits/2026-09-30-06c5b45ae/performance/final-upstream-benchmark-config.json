@@ -1,0 +1,61 @@
+{
+  "versions": {
+    "dev": {
+      "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+      "revision": "5dd942a7367c361fadd600be4ce10aace2768b27"
+    },
+    "parent": {
+      "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+      "revision": "49c327cf1926fa300f9eb7477eb4bcb404f75c43"
+    },
+    "final": {
+      "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+      "revision": "f84b35d9890955029e406e9fe3267ec0e3940215"
+    }
+  },
+  "groups": [
+    {
+      "name": "upstream",
+      "versions": [
+        "dev",
+        "parent",
+        "final"
+      ],
+      "rounds": 4,
+      "warmup": 5,
+      "windows": 5,
+      "cases": [
+        [
+          "direct",
+          "ordinary",
+          "read",
+          1
+        ],
+        [
+          "direct",
+          "legacy",
+          "read",
+          1
+        ],
+        [
+          "direct",
+          "ordinary",
+          "open",
+          1
+        ],
+        [
+          "shared",
+          "ordinary",
+          "read",
+          1
+        ],
+        [
+          "shared",
+          "legacy",
+          "read",
+          1
+        ]
+      ]
+    }
+  ]
+}

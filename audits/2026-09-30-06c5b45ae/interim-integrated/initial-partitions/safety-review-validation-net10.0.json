@@ -1,0 +1,82 @@
+[
+  {
+    "name": "safety-review-handles-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandle|FullyQualifiedName~TransactionCompletion|FullyQualifiedName~PageBufferAbandonment|FullyQualifiedName~SortDiskCleanup",
+      "--logger",
+      "trx;LogFileName=safety-review-handles-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "safety-review-shared-engine-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~LiteDB.Tests.Engine.Shared|FullyQualifiedName~CrossProcess_Shared",
+      "--logger",
+      "trx;LogFileName=safety-review-shared-engine-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "safety-review-native-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=safety-review-native-net10.0.trx"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "safety-review-shared-process-net10.0",
+    "command": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~Shared&FullyQualifiedName!~LiteDB.Tests.Engine.Shared&FullyQualifiedName!~CrossProcess_Shared&FullyQualifiedName!~TransactionHandle&FullyQualifiedName!~NativeAdmission",
+      "--logger",
+      "trx;LogFileName=safety-review-shared-process-net10.0.trx"
+    ],
+    "exit": 1
+  }
+]

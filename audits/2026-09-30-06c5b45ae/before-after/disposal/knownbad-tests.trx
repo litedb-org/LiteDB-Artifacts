@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="daca44b8-7ad3-42e8-9dfe-fa5fb9473791" name="@dev-build-server 2026-09-30 07:03:22" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-30T07:03:22.1066396+00:00" queuing="2026-09-30T07:03:22.1066397+00:00" start="2026-09-30T07:03:20.1953016+00:00" finish="2026-09-30T07:03:24.0097210+00:00" />
+  <TestSettings name="default" id="46570eae-4f4c-4a63-bb2a-c2cb3b51a7d7">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-09-30_07_03_22" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="300ca640-04b7-4d29-91a0-9ca66bdd54ea" testId="64aabdf6-8c94-0390-3933-4ccc9e0a0893" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: &quot;secret&quot;)" computerName="dev-build-server" duration="00:00:00.1077016" startTime="2026-09-30T07:03:21.9314027+00:00" endTime="2026-09-30T07:03:21.9314028+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="300ca640-04b7-4d29-91a0-9ca66bdd54ea">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
+---- System.IO.IOException : peer WAL write failed</Message>
+          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/EngineState.cs:line 47
+   at LiteDB.Engine.LiteEngine.Rollback() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 68
+   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__24_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 163
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 94
+   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 163
+   at LiteDB.LiteTransaction.RollbackCore() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 209
+   at LiteDB.LiteTransaction.DisposeCore() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 249
+   at LiteDB.LiteTransaction.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 225
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 143
+   at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 185
+   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
+   at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/NonClosingStream.cs:line 27
+   at System.Security.Cryptography.CryptoStream.WriteAsyncCore(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken, Boolean useAsync)
+   at System.Security.Cryptography.CryptoStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/AesStream.cs:line 213
+   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
+   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 264
+   at LiteDB.Engine.TransactionService.PersistAndConfirm() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 324
+   at LiteDB.Engine.TransactionService.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 306
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 124
+   at LiteDB.Engine.LiteEngine.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 53
+   at LiteDB.LiteTransaction.&lt;Commit&gt;b__25_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 182
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 94
+   at LiteDB.LiteTransaction.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 182</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bb7c7407-0e8b-47de-a440-c89278301218" testId="f17a2137-b22a-dff4-748f-94b9ad3a274d" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: null)" computerName="dev-build-server" duration="00:00:00.2030931" startTime="2026-09-30T07:03:21.8175149+00:00" endTime="2026-09-30T07:03:21.8175308+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bb7c7407-0e8b-47de-a440-c89278301218">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
+---- System.IO.IOException : peer WAL write failed</Message>
+          <StackTrace>   at LiteDB.Engine.EngineState.Validate() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/EngineState.cs:line 47
+   at LiteDB.Engine.LiteEngine.Rollback() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 68
+   at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__24_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 163
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 94
+   at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 163
+   at LiteDB.LiteTransaction.RollbackCore() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 209
+   at LiteDB.LiteTransaction.DisposeCore() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 249
+   at LiteDB.LiteTransaction.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 225
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 143
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 185
+   at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs:line 93
+   at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs:line 67
+   at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 201
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 87
+   at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs:line 25
+   at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 264
+   at LiteDB.Engine.TransactionService.PersistAndConfirm() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 324
+   at LiteDB.Engine.TransactionService.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs:line 306
+   at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 124
+   at LiteDB.Engine.LiteEngine.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs:line 53
+   at LiteDB.LiteTransaction.&lt;Commit&gt;b__25_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 182
+   at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 94
+   at LiteDB.LiteTransaction.Commit() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 182</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="0619bde0-9ca4-4165-bc92-fa25f6f3b19d" testId="2f0f545a-5a2a-2823-3bde-df11bafd4ba8" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: False)" computerName="dev-build-server" duration="00:00:00.0609098" startTime="2026-09-30T07:03:22.7639833+00:00" endTime="2026-09-30T07:03:22.7639834+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0619bde0-9ca4-4165-bc92-fa25f6f3b19d">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Overlapping or reentrant transaction handle use is not supported.</Message>
+          <StackTrace>   at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 51
+   at LiteDB.LiteTransaction.Run[T](Func`1 action) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 70
+   at LiteDB.TransactionEnumerable`1.Enumerator.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 110
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="72d0f4d2-395f-421e-93b9-eb124a55eea2" testId="587a7679-7294-5581-4086-a3226b36b0af" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: True)" computerName="dev-build-server" duration="00:00:00.5640833" startTime="2026-09-30T07:03:23.9047993+00:00" endTime="2026-09-30T07:03:23.9047994+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="72d0f4d2-395f-421e-93b9-eb124a55eea2">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.ObjectDisposedException)
+Actual:   typeof(System.NullReferenceException)
+---- System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 30
+   at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.GuardedTransactionReader.&lt;Read&gt;b__11_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 44
+   at LiteDB.LiteTransaction.Run[T](Func`1 action) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 73
+   at LiteDB.GuardedTransactionReader.Read() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 44
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Disposed_bound_objects_refuse_use_without_aborting_prior_writes&gt;b__0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 30</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="bb745006-3fe0-4aee-ab4e-5b6a0687dcfb" testId="9a1c6241-9609-84f9-784f-1cbcbf212bc0" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: True)" computerName="dev-build-server" duration="00:00:00.5175009" startTime="2026-09-30T07:03:23.2825654+00:00" endTime="2026-09-30T07:03:23.2825655+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bb745006-3fe0-4aee-ab4e-5b6a0687dcfb">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : Overlapping or reentrant transaction handle use is not supported.</Message>
+          <StackTrace>   at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 51
+   at LiteDB.LiteTransaction.Run[T](Func`1 action) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 70
+   at LiteDB.TransactionEnumerable`1.Enumerator.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 30
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 110
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3aee6510-caf8-4a75-beb7-01ed20df653c" testId="2037d381-3c2c-9f39-eb2e-f83c2d69ba5a" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: False)" computerName="dev-build-server" duration="00:00:00.0523844" startTime="2026-09-30T07:03:23.3364233+00:00" endTime="2026-09-30T07:03:23.3364234+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3aee6510-caf8-4a75-beb7-01ed20df653c">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.ObjectDisposedException)
+Actual:   typeof(System.NullReferenceException)
+---- System.NullReferenceException : Object reference not set to an instance of an object.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 30
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.GuardedTransactionReader.&lt;Read&gt;b__11_0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 44
+   at LiteDB.LiteTransaction.Run[T](Func`1 action) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 73
+   at LiteDB.GuardedTransactionReader.Read() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs:line 44
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Disposed_bound_objects_refuse_use_without_aborting_prior_writes&gt;b__0() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 30</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c2b988a5-e167-4670-ac0c-6490ec27e0b6" testId="a1bc0521-0a1e-5fd0-8f13-99d84f3f6e94" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: True)" computerName="dev-build-server" duration="00:00:00.7087279" startTime="2026-09-30T07:03:22.6425923+00:00" endTime="2026-09-30T07:03:22.6425925+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2b988a5-e167-4670-ac0c-6490ec27e0b6">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.ApplicationException)
+Actual:   typeof(System.ObjectDisposedException)
+---- System.ObjectDisposedException : Cannot access a disposed object.
+Object name: 'LiteDatabase'.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 69
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at LiteDB.SessionLifetime.Enter() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/SessionLifetime.cs:line 37
+   at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 55
+   at LiteDB.LiteTransaction.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 224
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Disposal_after_close_admission_is_revoked_does_not_mask_user_exception&gt;b__1() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 73</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ded8ba8d-42ca-4ee0-84cd-cbe29403f2bc" testId="76554dcd-8e3e-4528-8b04-7097eb335dcc" testName="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: False)" computerName="dev-build-server" duration="00:00:00.0569389" startTime="2026-09-30T07:03:22.7011844+00:00" endTime="2026-09-30T07:03:22.7011844+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ded8ba8d-42ca-4ee0-84cd-cbe29403f2bc">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.ApplicationException)
+Actual:   typeof(System.ObjectDisposedException)
+---- System.ObjectDisposedException : Cannot access a disposed object.
+Object name: 'LiteDatabase'.</Message>
+          <StackTrace>   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Boolean shared) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 69
+   at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at LiteDB.SessionLifetime.Enter() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/SessionLifetime.cs:line 37
+   at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed) in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 55
+   at LiteDB.LiteTransaction.Dispose() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs:line 224
+   at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Disposal_after_close_admission_is_revoked_does_not_mask_user_exception&gt;b__1() in /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs:line 73</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: False)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="2037d381-3c2c-9f39-eb2e-f83c2d69ba5a">
+      <Execution id="3aee6510-caf8-4a75-beb7-01ed20df653c" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposed_bound_objects_refuse_use_without_aborting_prior_writes" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: &quot;secret&quot;)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="64aabdf6-8c94-0390-3933-4ccc9e0a0893">
+      <Execution id="300ca640-04b7-4d29-91a0-9ca66bdd54ea" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: False)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="76554dcd-8e3e-4528-8b04-7097eb335dcc">
+      <Execution id="ded8ba8d-42ca-4ee0-84cd-cbe29403f2bc" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposal_after_close_admission_is_revoked_does_not_mask_user_exception" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: True)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="587a7679-7294-5581-4086-a3226b36b0af">
+      <Execution id="72d0f4d2-395f-421e-93b9-eb124a55eea2" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposed_bound_objects_refuse_use_without_aborting_prior_writes" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: True)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="a1bc0521-0a1e-5fd0-8f13-99d84f3f6e94">
+      <Execution id="c2b988a5-e167-4670-ac0c-6490ec27e0b6" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposal_after_close_admission_is_revoked_does_not_mask_user_exception" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: True)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="9a1c6241-9609-84f9-784f-1cbcbf212bc0">
+      <Execution id="bb745006-3fe0-4aee-ab4e-5b6a0687dcfb" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposal_while_close_worker_rolls_back_is_idempotent" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: False)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="2f0f545a-5a2a-2823-3bde-df11bafd4ba8">
+      <Execution id="0619bde0-9ca4-4165-bc92-fa25f6f3b19d" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposal_while_close_worker_rolls_back_is_idempotent" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: null)" storage="/home/jonas/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/fix-handle-dispose/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="f17a2137-b22a-dff4-748f-94b9ad3a274d">
+      <Execution id="bb7c7407-0e8b-47de-a440-c89278301218" />
+      <TestMethod codeBase="/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests" name="Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="64aabdf6-8c94-0390-3933-4ccc9e0a0893" executionId="300ca640-04b7-4d29-91a0-9ca66bdd54ea" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f17a2137-b22a-dff4-748f-94b9ad3a274d" executionId="bb7c7407-0e8b-47de-a440-c89278301218" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2f0f545a-5a2a-2823-3bde-df11bafd4ba8" executionId="0619bde0-9ca4-4165-bc92-fa25f6f3b19d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="587a7679-7294-5581-4086-a3226b36b0af" executionId="72d0f4d2-395f-421e-93b9-eb124a55eea2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a1c6241-9609-84f9-784f-1cbcbf212bc0" executionId="bb745006-3fe0-4aee-ab4e-5b6a0687dcfb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2037d381-3c2c-9f39-eb2e-f83c2d69ba5a" executionId="3aee6510-caf8-4a75-beb7-01ed20df653c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a1bc0521-0a1e-5fd0-8f13-99d84f3f6e94" executionId="c2b988a5-e167-4670-ac0c-6490ec27e0b6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76554dcd-8e3e-4528-8b04-7097eb335dcc" executionId="ded8ba8d-42ca-4ee0-84cd-cbe29403f2bc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="8" executed="8" passed="0" failed="8" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.30)
+[xUnit.net 00:00:00.17]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.96]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.97]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:01.22]       System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
+[xUnit.net 00:00:01.22]       ---- System.IO.IOException : peer WAL write failed
+[xUnit.net 00:00:01.22]       Stack Trace:
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/EngineState.cs(47,0): at LiteDB.Engine.EngineState.Validate()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(163,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__24_0()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(94,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(163,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(209,0): at LiteDB.LiteTransaction.RollbackCore()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(249,0): at LiteDB.LiteTransaction.DisposeCore()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(225,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(143,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
+[xUnit.net 00:00:01.22]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:01.22]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:01.22]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(185,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(182,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__25_0()
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(94,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.22]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(182,0): at LiteDB.LiteTransaction.Commit()
+[xUnit.net 00:00:01.34]       System.IO.IOException : Engine closed after an I/O failure. Dispose and reopen the database before retrying. peer WAL write failed
+[xUnit.net 00:00:01.34]       ---- System.IO.IOException : peer WAL write failed
+[xUnit.net 00:00:01.34]       Stack Trace:
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/EngineState.cs(47,0): at LiteDB.Engine.EngineState.Validate()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(68,0): at LiteDB.Engine.LiteEngine.Rollback()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(163,0): at LiteDB.LiteTransaction.&lt;CloseReadersAndRollback&gt;b__24_0()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(94,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(163,0): at LiteDB.LiteTransaction.CloseReadersAndRollback(Boolean onlyIfActive)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(209,0): at LiteDB.LiteTransaction.RollbackCore()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(249,0): at LiteDB.LiteTransaction.DisposeCore()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(225,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(143,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(String password)
+[xUnit.net 00:00:01.34]            at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(Object, Span`1)
+[xUnit.net 00:00:01.34]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:01.34]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(185,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.FailingLog.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ConcurrentStream.cs(93,0): at LiteDB.Engine.ConcurrentStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/NonClosingStream.cs(27,0): at LiteDB.Engine.NonClosingStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]            at System.Security.Cryptography.CryptoStream.WriteAsyncCore(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken, Boolean useAsync)
+[xUnit.net 00:00:01.34]            at System.Security.Cryptography.CryptoStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/AesStream.cs(213,0): at LiteDB.Engine.AesStream.Write(Byte[] array, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/Streams/ChecksummedWalStream.cs(67,0): at LiteDB.Engine.ChecksummedWalStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(201,0): at LiteDB.Engine.DiskService.WriteLogPage(Stream stream, PageBuffer page, Action`2 written, IReadOnlyDictionary`2 transactionPages, Boolean&amp; transactionAnchored, Boolean forceAppend, Int32&amp; count, Boolean&amp; hasConfirmation, Boolean&amp; reusePublished)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(87,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, IReadOnlyDictionary`2 transactionPages, TransactionPages transactionState, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Disk/DiskService.WalWrite.cs(25,0): at LiteDB.Engine.DiskService.WriteLogDisk(IEnumerable`1 pages, Action`2 written, TransactionPages transactionPages, Func`1 nextTransactionID)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(264,0): at LiteDB.Engine.TransactionService.PersistDirtyPages(Boolean commit)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(324,0): at LiteDB.Engine.TransactionService.PersistAndConfirm()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Services/TransactionService.cs(306,0): at LiteDB.Engine.TransactionService.Commit()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(124,0): at LiteDB.Engine.LiteEngine.CommitAndReleaseTransaction(TransactionService transaction)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Engine/Engine/Transaction.cs(53,0): at LiteDB.Engine.LiteEngine.Commit()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(182,0): at LiteDB.LiteTransaction.&lt;Commit&gt;b__25_0()
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(94,0): at LiteDB.LiteTransaction.Dispatch[T](Func`1 action, Boolean authorizeEngine)
+[xUnit.net 00:00:01.34]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(182,0): at LiteDB.LiteTransaction.Commit()
+[xUnit.net 00:00:02.05]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:02.05]       Expected: typeof(System.ApplicationException)
+[xUnit.net 00:00:02.05]       Actual:   typeof(System.ObjectDisposedException)
+[xUnit.net 00:00:02.05]       ---- System.ObjectDisposedException : Cannot access a disposed object.
+[xUnit.net 00:00:02.05]       Object name: 'LiteDatabase'.
+[xUnit.net 00:00:02.05]       Stack Trace:
+[xUnit.net 00:00:02.05]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(69,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Boolean shared)
+[xUnit.net 00:00:02.05]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:02.05]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.05]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:02.05]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/SessionLifetime.cs(37,0): at LiteDB.SessionLifetime.Enter()
+[xUnit.net 00:00:02.05]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(55,0): at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed)
+[xUnit.net 00:00:02.05]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(224,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:02.05]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(73,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Disposal_after_close_admission_is_revoked_does_not_mask_user_exception&gt;b__1()
+[xUnit.net 00:00:02.11]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:02.11]       Expected: typeof(System.ApplicationException)
+[xUnit.net 00:00:02.11]       Actual:   typeof(System.ObjectDisposedException)
+[xUnit.net 00:00:02.11]       ---- System.ObjectDisposedException : Cannot access a disposed object.
+[xUnit.net 00:00:02.11]       Object name: 'LiteDatabase'.
+[xUnit.net 00:00:02.11]       Stack Trace:
+[xUnit.net 00:00:02.11]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(69,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Boolean shared)
+[xUnit.net 00:00:02.11]            at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(Object, Span`1)
+[xUnit.net 00:00:02.11]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.11]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:02.11]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/SessionLifetime.cs(37,0): at LiteDB.SessionLifetime.Enter()
+[xUnit.net 00:00:02.11]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(55,0): at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed)
+[xUnit.net 00:00:02.11]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(224,0): at LiteDB.LiteTransaction.Dispose()
+[xUnit.net 00:00:02.11]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(73,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass1_0.&lt;Disposal_after_close_admission_is_revoked_does_not_mask_user_exception&gt;b__1()
+[xUnit.net 00:00:02.17]       System.InvalidOperationException : Overlapping or reentrant transaction handle use is not supported.
+[xUnit.net 00:00:02.17]       Stack Trace:
+[xUnit.net 00:00:02.17]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(51,0): at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed)
+[xUnit.net 00:00:02.17]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(70,0): at LiteDB.LiteTransaction.Run[T](Func`1 action)
+[xUnit.net 00:00:02.17]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(30,0): at LiteDB.TransactionEnumerable`1.Enumerator.Dispose()
+[xUnit.net 00:00:02.17]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(110,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(Boolean shared)
+[xUnit.net 00:00:02.17]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.69]       System.InvalidOperationException : Overlapping or reentrant transaction handle use is not supported.
+[xUnit.net 00:00:02.69]       Stack Trace:
+[xUnit.net 00:00:02.69]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(51,0): at LiteDB.LiteTransaction.Enter(Boolean terminalAllowed)
+[xUnit.net 00:00:02.69]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(70,0): at LiteDB.LiteTransaction.Run[T](Func`1 action)
+[xUnit.net 00:00:02.69]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(30,0): at LiteDB.TransactionEnumerable`1.Enumerator.Dispose()
+[xUnit.net 00:00:02.69]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(110,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(Boolean shared)
+[xUnit.net 00:00:02.69]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.74]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:02.74]       Expected: typeof(System.ObjectDisposedException)
+[xUnit.net 00:00:02.74]       Actual:   typeof(System.NullReferenceException)
+[xUnit.net 00:00:02.74]       ---- System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:02.74]       Stack Trace:
+[xUnit.net 00:00:02.74]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(30,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Boolean shared)
+[xUnit.net 00:00:02.74]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:02.74]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.74]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:02.74]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(44,0): at LiteDB.GuardedTransactionReader.&lt;Read&gt;b__11_0()
+[xUnit.net 00:00:02.74]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(73,0): at LiteDB.LiteTransaction.Run[T](Func`1 action)
+[xUnit.net 00:00:02.74]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(44,0): at LiteDB.GuardedTransactionReader.Read()
+[xUnit.net 00:00:02.74]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(30,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Disposed_bound_objects_refuse_use_without_aborting_prior_writes&gt;b__0()
+[xUnit.net 00:00:03.31]       Assert.Throws() Failure: Exception type was not an exact match
+[xUnit.net 00:00:03.31]       Expected: typeof(System.ObjectDisposedException)
+[xUnit.net 00:00:03.31]       Actual:   typeof(System.NullReferenceException)
+[xUnit.net 00:00:03.31]       ---- System.NullReferenceException : Object reference not set to an instance of an object.
+[xUnit.net 00:00:03.31]       Stack Trace:
+[xUnit.net 00:00:03.31]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(30,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Boolean shared)
+[xUnit.net 00:00:03.31]            at InvokeStub_TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(Object, Span`1)
+[xUnit.net 00:00:03.31]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.31]         ----- Inner Stack Trace -----
+[xUnit.net 00:00:03.31]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(44,0): at LiteDB.GuardedTransactionReader.&lt;Read&gt;b__11_0()
+[xUnit.net 00:00:03.31]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/LiteTransaction.cs(73,0): at LiteDB.LiteTransaction.Run[T](Func`1 action)
+[xUnit.net 00:00:03.31]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB/Client/Transactions/TransactionEnumerable.cs(44,0): at LiteDB.GuardedTransactionReader.Read()
+[xUnit.net 00:00:03.31]         /home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/fix-handle-dispose/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(30,0): at LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.&lt;&gt;c__DisplayClass0_0.&lt;Disposed_bound_objects_refuse_use_without_aborting_prior_writes&gt;b__0()
+[xUnit.net 00:00:03.32]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:21.8151620+00:00">
+        <Text>[xUnit.net 00:00:01.22]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: null) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:21.9300187+00:00">
+        <Text>[xUnit.net 00:00:01.34]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(password: "secret") [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:22.6426523+00:00">
+        <Text>[xUnit.net 00:00:02.05]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:22.7007401+00:00">
+        <Text>[xUnit.net 00:00:02.11]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_after_close_admission_is_revoked_does_not_mask_user_exception(shared: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:22.7653778+00:00">
+        <Text>[xUnit.net 00:00:02.17]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:23.2826064+00:00">
+        <Text>[xUnit.net 00:00:02.69]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposal_while_close_worker_rolls_back_is_idempotent(shared: True) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:23.3363051+00:00">
+        <Text>[xUnit.net 00:00:02.74]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-09-30T07:03:23.9070575+00:00">
+        <Text>[xUnit.net 00:00:03.31]     LiteDB.Tests.Engine.TransactionHandleDisposeSafety_Tests.Disposed_bound_objects_refuse_use_without_aborting_prior_writes(shared: True) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

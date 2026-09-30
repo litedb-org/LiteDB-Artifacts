@@ -1,0 +1,1146 @@
+{
+  "configuration": {
+    "versions": {
+      "dev": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "revision": "5dd942a7367c361fadd600be4ce10aace2768b27"
+      },
+      "parent": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "revision": "49c327cf1926fa300f9eb7477eb4bcb404f75c43"
+      },
+      "final": {
+        "runner": "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "revision": "f84b35d9890955029e406e9fe3267ec0e3940215"
+      }
+    },
+    "groups": [
+      {
+        "name": "upstream",
+        "versions": [
+          "dev",
+          "parent",
+          "final"
+        ],
+        "rounds": 4,
+        "warmup": 5,
+        "windows": 5,
+        "cases": [
+          [
+            "direct",
+            "ordinary",
+            "read",
+            1
+          ],
+          [
+            "direct",
+            "legacy",
+            "read",
+            1
+          ],
+          [
+            "direct",
+            "ordinary",
+            "open",
+            1
+          ],
+          [
+            "shared",
+            "ordinary",
+            "read",
+            1
+          ],
+          [
+            "shared",
+            "legacy",
+            "read",
+            1
+          ]
+        ]
+      }
+    ]
+  },
+  "driver_sha256": "89f9f41b8c2bae83410f6e5518f8bcd187c15ba5f72b6e8bc5725065a3a11c81",
+  "runs": [
+    {
+      "name": "upstream-direct-ordinary-read-1-0-0-dev",
+      "started": "2026-09-30T07:46:41.241969+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-0-1-parent",
+      "started": "2026-09-30T07:46:51.746717+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-0-2-final",
+      "started": "2026-09-30T07:47:02.271392+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-0-final",
+      "started": "2026-09-30T07:47:12.819659+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-1-parent",
+      "started": "2026-09-30T07:47:23.374741+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-1-2-dev",
+      "started": "2026-09-30T07:47:33.987744+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-0-dev",
+      "started": "2026-09-30T07:47:44.503116+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-1-parent",
+      "started": "2026-09-30T07:47:55.024196+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-2-2-final",
+      "started": "2026-09-30T07:48:05.576224+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-0-final",
+      "started": "2026-09-30T07:48:16.140032+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-1-parent",
+      "started": "2026-09-30T07:48:26.707531+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-read-1-3-2-dev",
+      "started": "2026-09-30T07:48:37.262232+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-0-dev",
+      "started": "2026-09-30T07:48:47.826263+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-1-parent",
+      "started": "2026-09-30T07:48:58.357330+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-0-2-final",
+      "started": "2026-09-30T07:49:08.883671+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-0-final",
+      "started": "2026-09-30T07:49:19.421092+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-1-parent",
+      "started": "2026-09-30T07:49:29.967528+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-1-2-dev",
+      "started": "2026-09-30T07:49:40.510514+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-0-dev",
+      "started": "2026-09-30T07:49:51.079581+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-1-parent",
+      "started": "2026-09-30T07:50:01.587123+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-2-2-final",
+      "started": "2026-09-30T07:50:12.138416+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-0-final",
+      "started": "2026-09-30T07:50:22.689366+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-1-parent",
+      "started": "2026-09-30T07:50:33.250008+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-legacy-read-1-3-2-dev",
+      "started": "2026-09-30T07:50:43.794107+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-0-dev",
+      "started": "2026-09-30T07:50:54.299504+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-1-parent",
+      "started": "2026-09-30T07:51:04.837924+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-0-2-final",
+      "started": "2026-09-30T07:51:15.379771+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-0-final",
+      "started": "2026-09-30T07:51:25.925547+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-1-parent",
+      "started": "2026-09-30T07:51:36.488025+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-1-2-dev",
+      "started": "2026-09-30T07:51:47.000061+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-0-dev",
+      "started": "2026-09-30T07:51:57.494232+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-1-parent",
+      "started": "2026-09-30T07:52:08.020296+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-2-2-final",
+      "started": "2026-09-30T07:52:18.575051+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-0-final",
+      "started": "2026-09-30T07:52:29.131856+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-1-parent",
+      "started": "2026-09-30T07:52:39.695099+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-direct-ordinary-open-1-3-2-dev",
+      "started": "2026-09-30T07:52:50.207680+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "direct",
+        "ordinary",
+        "open",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-0-dev",
+      "started": "2026-09-30T07:53:00.697179+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-1-parent",
+      "started": "2026-09-30T07:53:12.242981+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-0-2-final",
+      "started": "2026-09-30T07:53:23.728649+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-0-final",
+      "started": "2026-09-30T07:53:35.289818+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-1-parent",
+      "started": "2026-09-30T07:53:46.797663+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-1-2-dev",
+      "started": "2026-09-30T07:53:58.328141+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-0-dev",
+      "started": "2026-09-30T07:54:09.795798+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-1-parent",
+      "started": "2026-09-30T07:54:21.306658+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-2-2-final",
+      "started": "2026-09-30T07:54:32.874733+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-0-final",
+      "started": "2026-09-30T07:54:44.410624+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-1-parent",
+      "started": "2026-09-30T07:54:55.974601+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-ordinary-read-1-3-2-dev",
+      "started": "2026-09-30T07:55:07.506380+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "ordinary",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-0-dev",
+      "started": "2026-09-30T07:55:19.020225+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-1-parent",
+      "started": "2026-09-30T07:55:30.496870+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-0-2-final",
+      "started": "2026-09-30T07:55:42.033104+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-0-final",
+      "started": "2026-09-30T07:55:53.550725+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-1-parent",
+      "started": "2026-09-30T07:56:05.074768+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-1-2-dev",
+      "started": "2026-09-30T07:56:16.557709+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-0-dev",
+      "started": "2026-09-30T07:56:28.080315+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-1-parent",
+      "started": "2026-09-30T07:56:39.529920+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-2-2-final",
+      "started": "2026-09-30T07:56:51.072761+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-0-final",
+      "started": "2026-09-30T07:57:02.582928+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-final/TransactionHandleBenchmarks.dll",
+        "f84b35d9890955029e406e9fe3267ec0e3940215",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-1-parent",
+      "started": "2026-09-30T07:57:14.112451+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-parent/TransactionHandleBenchmarks.dll",
+        "49c327cf1926fa300f9eb7477eb4bcb404f75c43",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    },
+    {
+      "name": "upstream-shared-legacy-read-1-3-2-dev",
+      "started": "2026-09-30T07:57:25.627989+00:00",
+      "command": [
+        "dotnet",
+        "/home/jonas/.t3/worktrees/LiteDB/t3code-0cc13448/artifacts_temp/bench-dev/TransactionHandleBenchmarks.dll",
+        "5dd942a7367c361fadd600be4ce10aace2768b27",
+        "steady",
+        "shared",
+        "legacy",
+        "read",
+        "1",
+        "5",
+        "5"
+      ],
+      "tiered": "0",
+      "exit": 0
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+diff --git a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+index a9566299e..6bdc57ab6 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+@@ -181,6 +181,65 @@ namespace LiteDB.Tests.Engine
+             Verify(settings, new[] { 1, 2 });
+         }
+ 
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public void Deferred_fatal_teardown_does_not_repeat_peer_error_on_healthy_disposal(string password)
++        {
++            using var file = new TempFile();
++            using var enteredRead = new ManualResetEventSlim();
++            using var releaseRead = new ManualResetEventSlim();
++            var holdRead = false;
++            using var log = new FailingLog(FileHelper.GetLogFile(file));
++            using var data = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
++            using (var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log,
++                Password = password, DurableCommits = true,
++                ReadTransform = (collection, value) =>
++                {
++                    if (holdRead && collection == "sentinel")
++                    {
++                        enteredRead.Set();
++                        if (!releaseRead.Wait(TimeSpan.FromSeconds(15))) throw new TimeoutException("read barrier");
++                    }
++                    return value;
++                } }))
++            using (var db = new LiteDatabase(engine, disposeOnClose: false))
++            {
++                Seed(db);
++                var healthy = db.BeginTransaction();
++                healthy.GetCollection("other").Insert(Row(3));
++                var healthyReader = healthy.GetCollection("other").Query().ExecuteReader();
++                var healthyIterator = healthy.GetCollection("other").FindAll().GetEnumerator();
++                Assert.True(healthyReader.Read());
++                Assert.True(healthyIterator.MoveNext());
++                using var failed = db.BeginTransaction();
++                failed.GetCollection("rows").Insert(Row(2));
++                holdRead = true;
++                var concurrentRead = Task.Run(() => db.GetCollection("sentinel").FindById(9));
++                Assert.True(enteredRead.Wait(TimeSpan.FromSeconds(5)));
++                try
++                {
++                    log.Fail = true;
++                    Assert.Same(log.Failure, Assert.Throws<IOException>(failed.Commit));
++                    Assert.True(log.Reached);
++                    Assert.Equal(LiteTransactionState.Indeterminate, failed.State);
++                    healthy.Dispose();
++                    healthyReader.Dispose();
++                    healthyIterator.Dispose();
++                    healthy.Dispose();
++                    Assert.Equal(LiteTransactionState.RolledBack, healthy.State);
++                }
++                finally
++                {
++                    releaseRead.Set();
++                    try { concurrentRead.GetAwaiter().GetResult(); } catch (IOException) { }
++                }
++            }
++            log.Fail = false;
++            // Failure happens before writing any peer WAL bytes; both pending writes are absent.
++            Verify(new ConnectionString { Filename = file, Password = password }, new[] { 1 });
++        }
++
+         private static LiteEngine Core(ILiteTransaction tx) => ((TransactionResources)typeof(LiteTransaction)
+             .GetField("_resources", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tx)).Engine;
+         private static SessionLifetime Lifetime(LiteDatabase db) => (SessionLifetime)typeof(LiteDatabase)
+diff --git a/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+new file mode 100644
+index 000000000..929e85bf7
+--- /dev/null
++++ b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+@@ -0,0 +1,74 @@
++using System;
++using System.IO;
++using System.Linq;
++using System.Reflection;
++using LiteDB.Engine;
++using Xunit;
++
++namespace LiteDB.Tests.Engine
++{
++    public class TransactionHandleFatalCleanupRace_Tests
++    {
++        [Theory]
++        [InlineData(false, false)]
++        [InlineData(false, true)]
++        [InlineData(true, false)]
++        [InlineData(true, true)]
++        public void Cleanup_discriminates_published_peer_failure_from_its_own_failure(bool peer, bool invalidData)
++        {
++            using var file = new TempFile();
++            using (var engine = new LiteEngine(file.Filename))
++            using (var db = new LiteDatabase(engine, disposeOnClose: false))
++            {
++                var rows = db.GetCollection("rows");
++                rows.Insert(new BsonDocument { ["_id"] = 1, ["value"] = 10 });
++                rows.EnsureIndex("value");
++                db.GetCollection("sentinel").Insert(new BsonDocument { ["_id"] = 9 });
++                db.Checkpoint();
++                var tx = db.BeginTransaction();
++                // New pages force rollback's free-page publication through WAL I/O.
++                tx.GetCollection("other").Insert(new BsonDocument { ["_id"] = 2, ["padding"] = new string('x', 20000) });
++                var state = (EngineState)typeof(LiteEngine).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(engine);
++                Exception original = invalidData ? (Exception)new LiteException(LiteException.INVALID_DATAFILE_STATE, "cleanup fault") :
++                    new IOException("cleanup fault");
++                var reached = false;
++                engine.SimulateDiskWriteFail = page =>
++                {
++                    reached = true;
++                    engine.SimulateDiskWriteFail = null;
++                    if (peer)
++                    {
++                        // This callback is after cleanup admission. Publish the peer's
++                        // fatal latch and throw exactly what a later state check throws.
++                        state.Stop(original);
++                        state.Validate();
++                    }
++                    throw original;
++                };
++                if (peer)
++                {
++                    tx.Dispose();
++                    Assert.Equal(LiteTransactionState.RolledBack, tx.State);
++                }
++                else
++                {
++                    Assert.Same(original, Record.Exception(tx.Dispose));
++                    Assert.Equal(LiteTransactionState.Failed, tx.State);
++                }
++                Assert.True(reached);
++                tx.Dispose();
++            }
++            for (var reopen = 0; reopen < 2; reopen++)
++            {
++                using var db = new LiteDatabase(file);
++                var query = db.GetCollection("rows").Query().Where(Query.EQ("value", 10));
++                Assert.Equal("value", query.GetPlan()["index"]["name"].AsString);
++                Assert.StartsWith("INDEX SEEK", query.GetPlan()["index"]["mode"].AsString);
++                Assert.Equal(new[] { 1 }, query.ToArray().Select(row => row["_id"].AsInt32));
++                Assert.Equal(1, db.GetCollection("rows").Count());
++                Assert.Equal(0, db.GetCollection("other").Count());
++                Assert.NotNull(db.GetCollection("sentinel").FindById(9));
++            }
++        }
++    }
++}

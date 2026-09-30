@@ -1,0 +1,59 @@
+diff --git a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+index a9566299e..d03b14ef9 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+@@ -126,24 +126,53 @@ namespace LiteDB.Tests.Engine
+         public void Disposing_healthy_handle_after_peer_fatal_failure_does_not_repeat_peer_error(string password)
+         {
+             using var file = new TempFile();
++            using var enteredRead = new ManualResetEventSlim();
++            using var releaseRead = new ManualResetEventSlim();
++            var holdRead = false;
+             using var log = new FailingLog(FileHelper.GetLogFile(file));
+             using var data = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+             using (var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log,
+-                Password = password, DurableCommits = true }))
++                Password = password, DurableCommits = true,
++                ReadTransform = (collection, value) =>
++                {
++                    if (holdRead && collection == "sentinel")
++                    {
++                        enteredRead.Set();
++                        if (!releaseRead.Wait(TimeSpan.FromSeconds(15))) throw new TimeoutException("read barrier");
++                    }
++                    return value;
++                } }))
+             using (var db = new LiteDatabase(engine, disposeOnClose: false))
+             {
+                 Seed(db);
+                 var healthy = db.BeginTransaction();
+                 healthy.GetCollection("other").Insert(Row(3));
++                var healthyReader = healthy.GetCollection("other").Query().ExecuteReader();
++                var healthyIterator = healthy.GetCollection("other").FindAll().GetEnumerator();
++                Assert.True(healthyReader.Read());
++                Assert.True(healthyIterator.MoveNext());
+                 using var failed = db.BeginTransaction();
+                 failed.GetCollection("rows").Insert(Row(2));
++                holdRead = true;
++                var concurrentRead = Task.Run(() => db.GetCollection("sentinel").FindById(9));
++                Assert.True(enteredRead.Wait(TimeSpan.FromSeconds(5)));
++                try
++                {
+                 log.Fail = true;
+                 Assert.Same(log.Failure, Assert.Throws<IOException>(failed.Commit));
+                 Assert.True(log.Reached);
+                 Assert.Equal(LiteTransactionState.Indeterminate, failed.State);
+                 healthy.Dispose();
++                healthyReader.Dispose();
++                healthyIterator.Dispose();
+                 healthy.Dispose();
+                 Assert.Equal(LiteTransactionState.RolledBack, healthy.State);
++                }
++                finally
++                {
++                    releaseRead.Set();
++                    try { concurrentRead.GetAwaiter().GetResult(); } catch (IOException) { }
++                }
+             }
+             log.Fail = false;
+             // Failure happens before writing any peer WAL bytes; both pending writes are absent.

@@ -1,0 +1,54 @@
+{
+  "GeneratedAt": "2026-09-30T07:43:15.0454059+00:00",
+  "Root": "/home/runner/work/LiteDB/LiteDB/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedCloseWait",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "The bug reproduced.",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 11.4599239,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:43:25.5447905\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:43:36.9544911\u002B00:00\u0022,\u0022text\u0022:\u0022The bug reproduced.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "The bug did not reproduce.",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 0.3291138,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:43:36.9959609\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:43:37.2870121\u002B00:00\u0022,\u0022text\u0022:\u0022The bug did not reproduce.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

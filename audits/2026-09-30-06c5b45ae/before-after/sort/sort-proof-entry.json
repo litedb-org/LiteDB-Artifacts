@@ -1,0 +1,12 @@
+{
+  "repro": "Issue_3034_Pr133StaleSortCleanup",
+  "knownBad": {
+    "kind": "pr-commit",
+    "commit": "560529066aeda64c24d5cdd32d34a8aca12695ae",
+    "reason": "Introduced in unmerged transaction-handle PR 133 by conditional SortDisk cleanup.",
+    "pr": 133
+  },
+  "permanentGuard": [
+    "LiteDB.Tests/Engine/SortDiskCleanup_Tests.cs#Writable_open_reclaims_stale_sort_file_without_a_new_spill"
+  ]
+}

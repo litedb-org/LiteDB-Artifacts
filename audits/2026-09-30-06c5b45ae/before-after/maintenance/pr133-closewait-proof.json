@@ -1,0 +1,62 @@
+{
+  "GeneratedAt": "2026-09-30T07:10:04.4610183+00:00",
+  "Root": "/tmp/pr133-maintenance-proofs/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_133_CloseCollectionWait",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 3.2636666,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:10:09.1166209\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:10:12.315533\u002B00:00\u0022,\u0022text\u0022:\u0022The bug reproduced.\u0022,\u0022success\u0022:true}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 0.4409292,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:10:12.3859976\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-09-30T07:10:12.7589019\u002B00:00\u0022,\u0022text\u0022:\u0022The bug did not reproduce.\u0022,\u0022success\u0022:false}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          }
+        ]
+      }
+    }
+  ]
+}

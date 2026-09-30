@@ -1,0 +1,31 @@
+diff --git a/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+index 929e85bf7..c8a37c84f 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+@@ -10,11 +10,13 @@ namespace LiteDB.Tests.Engine
+     public class TransactionHandleFatalCleanupRace_Tests
+     {
+         [Theory]
+-        [InlineData(false, false)]
+-        [InlineData(false, true)]
+-        [InlineData(true, false)]
+-        [InlineData(true, true)]
+-        public void Cleanup_discriminates_published_peer_failure_from_its_own_failure(bool peer, bool invalidData)
++        [InlineData(false, false, false)]
++        [InlineData(false, true, false)]
++        [InlineData(true, false, false)]
++        [InlineData(true, true, false)]
++        [InlineData(false, false, true)]
++        [InlineData(false, true, true)]
++        public void Cleanup_discriminates_published_peer_failure_from_its_own_failure(bool peer, bool invalidData, bool distinctFailure)
+         {
+             using var file = new TempFile();
+             using (var engine = new LiteEngine(file.Filename))
+@@ -43,6 +45,7 @@ namespace LiteDB.Tests.Engine
+                         state.Stop(original);
+                         state.Validate();
+                     }
++                    if (distinctFailure) state.Stop(new IOException("independent peer failure"));
+                     throw original;
+                 };
+                 if (peer)

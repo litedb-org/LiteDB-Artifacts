@@ -1,0 +1,160 @@
+diff --git a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+index 6bdc57ab6..256247b1c 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs
+@@ -240,6 +240,124 @@ namespace LiteDB.Tests.Engine
+             Verify(new ConnectionString { Filename = file, Password = password }, new[] { 1 });
+         }
+ 
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public void Review_children_disposed_before_handle_during_deferred_fatal_teardown(string password)
++        {
++            using var file = new TempFile();
++            using var enteredRead = new ManualResetEventSlim();
++            using var releaseRead = new ManualResetEventSlim();
++            var holdRead = false;
++            using var log = new FailingLog(FileHelper.GetLogFile(file));
++            using var data = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
++            using (var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log,
++                Password = password, DurableCommits = true,
++                ReadTransform = (collection, value) =>
++                {
++                    if (holdRead && collection == "sentinel")
++                    {
++                        enteredRead.Set();
++                        if (!releaseRead.Wait(TimeSpan.FromSeconds(15))) throw new TimeoutException("read barrier");
++                    }
++                    return value;
++                } }))
++            using (var db = new LiteDatabase(engine, disposeOnClose: false))
++            {
++                Seed(db);
++                var healthy = db.BeginTransaction();
++                healthy.GetCollection("other").Insert(Row(3));
++                var healthyReader = healthy.GetCollection("other").Query().ExecuteReader();
++                var healthyIterator = healthy.GetCollection("other").FindAll().GetEnumerator();
++                Assert.True(healthyReader.Read());
++                Assert.True(healthyIterator.MoveNext());
++                using var failed = db.BeginTransaction();
++                failed.GetCollection("rows").Insert(Row(2));
++                holdRead = true;
++                var concurrentRead = Task.Run(() => db.GetCollection("sentinel").FindById(9));
++                Assert.True(enteredRead.Wait(TimeSpan.FromSeconds(5)));
++                try
++                {
++                    log.Fail = true;
++                    Assert.Same(log.Failure, Assert.Throws<IOException>(failed.Commit));
++                    Assert.True(log.Reached);
++                    Assert.Equal(LiteTransactionState.Indeterminate, failed.State);
++                    healthyReader.Dispose();
++                    healthyIterator.Dispose();
++                    healthy.Dispose();
++                    healthy.Dispose();
++                    Assert.Equal(LiteTransactionState.RolledBack, healthy.State);
++                }
++                finally
++                {
++                    releaseRead.Set();
++                    try { concurrentRead.GetAwaiter().GetResult(); } catch (IOException) { }
++                }
++            }
++            log.Fail = false;
++            // Failure happens before writing any peer WAL bytes; both pending writes are absent.
++            Verify(new ConnectionString { Filename = file, Password = password }, new[] { 1 });
++        }
++
++        [Theory]
++        [InlineData(null)]
++        [InlineData("secret")]
++        public void Review_explicit_rollback_still_surfaces_deferred_fatal_error(string password)
++        {
++            using var file = new TempFile();
++            using var enteredRead = new ManualResetEventSlim();
++            using var releaseRead = new ManualResetEventSlim();
++            var holdRead = false;
++            using var log = new FailingLog(FileHelper.GetLogFile(file));
++            using var data = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
++            using (var engine = new LiteEngine(new EngineSettings { DataStream = data, LogStream = log,
++                Password = password, DurableCommits = true,
++                ReadTransform = (collection, value) =>
++                {
++                    if (holdRead && collection == "sentinel")
++                    {
++                        enteredRead.Set();
++                        if (!releaseRead.Wait(TimeSpan.FromSeconds(15))) throw new TimeoutException("read barrier");
++                    }
++                    return value;
++                } }))
++            using (var db = new LiteDatabase(engine, disposeOnClose: false))
++            {
++                Seed(db);
++                var healthy = db.BeginTransaction();
++                healthy.GetCollection("other").Insert(Row(3));
++                var healthyReader = healthy.GetCollection("other").Query().ExecuteReader();
++                var healthyIterator = healthy.GetCollection("other").FindAll().GetEnumerator();
++                Assert.True(healthyReader.Read());
++                Assert.True(healthyIterator.MoveNext());
++                using var failed = db.BeginTransaction();
++                failed.GetCollection("rows").Insert(Row(2));
++                holdRead = true;
++                var concurrentRead = Task.Run(() => db.GetCollection("sentinel").FindById(9));
++                Assert.True(enteredRead.Wait(TimeSpan.FromSeconds(5)));
++                try
++                {
++                    log.Fail = true;
++                    Assert.Same(log.Failure, Assert.Throws<IOException>(failed.Commit));
++                    Assert.True(log.Reached);
++                    Assert.Equal(LiteTransactionState.Indeterminate, failed.State);
++                    Assert.Throws<IOException>(healthy.Rollback);
++                    healthyReader.Dispose();
++                    healthyIterator.Dispose();
++                    healthy.Dispose();
++                    Assert.Equal(LiteTransactionState.Failed, healthy.State);
++                }
++                finally
++                {
++                    releaseRead.Set();
++                    try { concurrentRead.GetAwaiter().GetResult(); } catch (IOException) { }
++                }
++            }
++            log.Fail = false;
++            // Failure happens before writing any peer WAL bytes; both pending writes are absent.
++            Verify(new ConnectionString { Filename = file, Password = password }, new[] { 1 });
++        }
++
+         private static LiteEngine Core(ILiteTransaction tx) => ((TransactionResources)typeof(LiteTransaction)
+             .GetField("_resources", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(tx)).Engine;
+         private static SessionLifetime Lifetime(LiteDatabase db) => (SessionLifetime)typeof(LiteDatabase)
+diff --git a/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+index 929e85bf7..c8a37c84f 100644
+--- a/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
++++ b/LiteDB.Tests/Engine/TransactionHandleFatalCleanupRace_Tests.cs
+@@ -10,11 +10,13 @@ namespace LiteDB.Tests.Engine
+     public class TransactionHandleFatalCleanupRace_Tests
+     {
+         [Theory]
+-        [InlineData(false, false)]
+-        [InlineData(false, true)]
+-        [InlineData(true, false)]
+-        [InlineData(true, true)]
+-        public void Cleanup_discriminates_published_peer_failure_from_its_own_failure(bool peer, bool invalidData)
++        [InlineData(false, false, false)]
++        [InlineData(false, true, false)]
++        [InlineData(true, false, false)]
++        [InlineData(true, true, false)]
++        [InlineData(false, false, true)]
++        [InlineData(false, true, true)]
++        public void Cleanup_discriminates_published_peer_failure_from_its_own_failure(bool peer, bool invalidData, bool distinctFailure)
+         {
+             using var file = new TempFile();
+             using (var engine = new LiteEngine(file.Filename))
+@@ -43,6 +45,7 @@ namespace LiteDB.Tests.Engine
+                         state.Stop(original);
+                         state.Validate();
+                     }
++                    if (distinctFailure) state.Stop(new IOException("independent peer failure"));
+                     throw original;
+                 };
+                 if (peer)
