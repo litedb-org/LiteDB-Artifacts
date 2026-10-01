@@ -1,0 +1,56 @@
+[
+  {
+    "libraryWorktree": "__WORKSPACE__/artifacts_temp/bench-final8-source",
+    "libraryCommand": [
+      "dotnet",
+      "build",
+      "LiteDB/LiteDB.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=false"
+    ],
+    "runnerWorktree": "__WORKSPACE__/artifacts_temp/bench-final8-source",
+    "runnerCommand": [
+      "dotnet",
+      "build",
+      "tools/TransactionHandleBenchmarks/TransactionHandleBenchmarks.csproj",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:LibraryPath=__WORKSPACE__/artifacts_temp/bench-final8-source/LiteDB/bin/Release/net10.0/LiteDB.dll",
+      "-p:Handles=true",
+      "-p:BaseIntermediateOutputPath=__WORKSPACE__/artifacts_temp/bench-final8-obj/",
+      "-o",
+      "__WORKSPACE__/artifacts_temp/bench-final8"
+    ]
+  },
+  {
+    "libraryWorktree": "__WORKSPACE__/artifacts_temp/bench-dev3075-source",
+    "libraryCommand": [
+      "dotnet",
+      "build",
+      "LiteDB/LiteDB.csproj",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=false"
+    ],
+    "runnerWorktree": "__WORKSPACE__/artifacts_temp/bench-final8-source",
+    "runnerCommand": [
+      "dotnet",
+      "build",
+      "tools/TransactionHandleBenchmarks/TransactionHandleBenchmarks.csproj",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:LibraryPath=__WORKSPACE__/artifacts_temp/bench-dev3075-source/LiteDB/bin/Release/net10.0/LiteDB.dll",
+      "-p:Handles=false",
+      "-p:BaseIntermediateOutputPath=__WORKSPACE__/artifacts_temp/bench-dev3075-obj/",
+      "-o",
+      "__WORKSPACE__/artifacts_temp/bench-dev3075"
+    ]
+  }
+]

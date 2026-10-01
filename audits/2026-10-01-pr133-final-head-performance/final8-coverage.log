@@ -1,0 +1,38 @@
+WARNING: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+WARNING: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+WARNING: Disposition for fixture-changed: LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs matches no change in this diff
+WARNING: Disposition for fixture-changed: LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs matches no change in this diff
+WARNING: Disposition for harness-changed: LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs matches no change in this diff
+WARNING: Disposition for harness-changed: LiteDB.Tests/Engine/SharedAdmissionLifetime_Tests.cs matches no change in this diff
+WARNING: Disposition for harness-changed: LiteDB.Tests/Engine/SharedReaderPin_Tests.cs matches no change in this diff
+WARNING: Disposition for harness-changed: LiteDB.Tests/Internals/SharedPinProgressProbe.cs matches no change in this diff
+WARNING: Disposition for test-removed: LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected matches no change in this diff
+WARNING: Disposition for test-removed: LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup matches no change in this diff
+## Coverage regression: passed
+
+- :warning: Disposition for assertions-reduced: LiteDB.Tests/Engine/TransactionHandleBinding_Tests.cs matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/repro-ci.json matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: .github/scripts/test_generate_repro_matrix.py matches no change in this diff
+- :warning: Disposition for ci-test-config-changed: scripts/test-native-admission-glibc.sh matches no change in this diff
+- :warning: Disposition for fixture-changed: LiteDB.Tests/Engine/SharedCoordinationPage_Tests.cs matches no change in this diff
+- :warning: Disposition for fixture-changed: LiteDB.Tests/Engine/TransactionHandleLateCallbackClose_Tests.cs matches no change in this diff
+- :warning: Disposition for harness-changed: LiteDB.Tests.SharedMutexHarness/SharedPinProgressHarness.cs matches no change in this diff
+- :warning: Disposition for harness-changed: LiteDB.Tests/Engine/SharedAdmissionLifetime_Tests.cs matches no change in this diff
+- :warning: Disposition for harness-changed: LiteDB.Tests/Engine/SharedReaderPin_Tests.cs matches no change in this diff
+- :warning: Disposition for harness-changed: LiteDB.Tests/Internals/SharedPinProgressProbe.cs matches no change in this diff
+- :warning: Disposition for test-removed: LiteDB.Tests.Engine.NativeAdmissionDirectPool_Tests.Reentrant_last_owner_disposal_keeps_operation_and_commit_protected matches no change in this diff
+- :warning: Disposition for test-removed: LiteDB.Tests.Issues.Issue2965_Tests.Rebuild_can_finish_before_transaction_release_returns_without_disposing_owner_cleanup matches no change in this diff
+
+| Kind | Subject | Detail | Disposition |
+| --- | --- | --- | --- |
+| test-removed | `LiteDB.Tests.Issues.Issue2965_Tests.Operation_queued_behind_rebuild_fails_cleanly_and_can_be_retried` | was in LiteDB.Tests/Issues/Issue2965_Tests.cs; new in that file: Operation_queued_behind_rebuild_uses_the_new_services_safely, Rebuild_waits_until_transaction_release_cleanup_returns | recorded |
+| ci-test-config-changed | `.github/safety/ci-evidence.json` | test settings modified | recorded |
+| harness-changed | `scripts/test-index-migration-recovery.py` | test or compatibility harness modified | recorded |
+| harness-changed | `tools/IndexMigrationRecovery/Program.cs` | test or compatibility harness modified | recorded |
+| ci-test-config-changed | `.github/workflows/_reusable-ci.yml` | +timeout-minutes: 15; +timeout-minutes: 15; +-Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated'; +if-no-files-found: ignore; +if-no-files-found: warn; +if-no-files-found: warn; +if-no-files-found: warn; +timeout-minutes: 25; +-Filter 'FullyQualifiedName~Transactio | recorded |
+| ci-test-config-changed | `.github/workflows/index-migration-compatibility.yml` | +if-no-files-found: ignore | recorded |
+| ci-test-config-changed | `scripts/run-ci-tests.ps1` | -engine = 'FullyQualifiedName~LiteDB.Tests.Engine.&FullyQualifiedName!~LiteDB.Tests.Engine.Rebuild&FullyQualifiedName!~LiteDB.Tests.Engine.Compact&FullyQualifiedName!~LiteDB.Tests.Engine.Index'; -'shared-process' = 'FullyQualifiedName~LiteDB.Internals.Shared&FullyQualifiedName~Process'; -engine = 'FullyQualifiedName~LiteDB.Tests.Engine.&FullyQualifiedName!~LiteDB.Tests.Engine.Rebuild&FullyQualifiedName!~LiteDB.Tests.Engine.Compact&FullyQualifiedName!~LiteDB.Tests.Engine.Index'; -'shared-process' | recorded |
+3 quarantined tests remain visible coverage gaps; see `.github/safety/coverage-ledger.json`.
+

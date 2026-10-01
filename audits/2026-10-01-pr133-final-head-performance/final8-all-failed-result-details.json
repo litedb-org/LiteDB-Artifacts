@@ -1,0 +1,38 @@
+[
+  {
+    "directory": "test-results-test-native-windows-arm64-0",
+    "source": "LiteDB.Tests/TestResults/NativeAdmission-arm64-admission.trx",
+    "attributes": {
+      "executionId": "7fa79388-ca13-4d9a-b4b6-82b33c79bd23",
+      "testId": "211e304b-03bb-4a11-ec59-b7feb7e227ca",
+      "testName": "LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(stage: \"before-recovery-marker-flush\", password: \"secret\", fallback: True)",
+      "computerName": "runnervm1vfjv",
+      "duration": "00:00:00.8477904",
+      "startTime": "2026-09-30T05:27:19.5709452-07:00",
+      "endTime": "2026-09-30T05:27:19.5709455-07:00",
+      "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+      "outcome": "Failed",
+      "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+      "relativeResultsDirectory": "7fa79388-ca13-4d9a-b4b6-82b33c79bd23"
+    },
+    "output": "\n      \n        Crash case stage=before-recovery-marker-flush, encrypted=True, phase=verify recovery marker, refusal and candidate\nRetained fixture: __CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\nSystem.IO.IOException: The process cannot access the file '__CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\\data-rebuild.db' because it is being used by another process.\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)\r\n   at System.IO.File.ReadAllBytes(String path)\r\n   at System.Array.ConvertAll[TInput,TOutput](TInput[] array, Converter`2 converter)\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.VerifyRecovery(String directory, String filename, String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 88\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 62\n        \n          System.IO.IOException : The process cannot access the file '__CI_HOME__\\AppData\\Local\\Temp\\litedb-native-crash-8e756d08a0cb415a8c84be9ded4ffe4c\\data-rebuild.db' because it is being used by another process.\n             at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)\r\n   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)\r\n   at System.IO.File.ReadAllBytes(String path)\r\n   at System.Array.ConvertAll[TInput,TOutput](TInput[] array, Converter`2 converter)\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.VerifyRecovery(String directory, String filename, String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 88\r\n   at LiteDB.Tests.Internals.NativeAdmissionCrash_Tests.Death_during_handoff_releases_native_locks_and_preserves_recoverable_data(String stage, String password, Boolean fallback) in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\NativeAdmissionCrash_Tests.cs:line 62\r\n--- End of stack trace from previous location ---\n        \n      \n    "
+  },
+  {
+    "directory": "test-results-test-windows-0",
+    "source": "TestResults-shared-process.trx",
+    "attributes": {
+      "executionId": "5d3ed8ef-0b72-410a-b969-7ea9121671d8",
+      "testId": "627cf3a0-d6ef-6052-35f4-669bf70ed967",
+      "testName": "LiteDB.Internals.SharedFollowupProcess_Tests.A_pinned_write_loop_yields_to_another_process_before_its_hold_limit",
+      "computerName": "runnervm99s1a",
+      "duration": "00:00:23.7616211",
+      "startTime": "2026-09-30T12:42:34.9829931+00:00",
+      "endTime": "2026-09-30T12:42:34.9829934+00:00",
+      "testType": "13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b",
+      "outcome": "Failed",
+      "testListId": "8c84fa94-04c1-424b-9868-57a2d4851a1d",
+      "relativeResultsDirectory": "5d3ed8ef-0b72-410a-b969-7ea9121671d8"
+    },
+    "output": "\n      \n        \n          System.TimeoutException : The operation has timed out.\n             at LiteDB.Internals.SharedFollowupProcess_Tests.A_pinned_write_loop_yields_to_another_process_before_its_hold_limit() in __CI_WORKSPACE__\\LiteDB.Tests\\Internals\\SharedFollowupProcess_Tests.cs:line 65\r\n--- End of stack trace from previous location ---\n        \n      \n    "
+  }
+]

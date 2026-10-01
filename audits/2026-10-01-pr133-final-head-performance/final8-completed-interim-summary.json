@@ -1,0 +1,79 @@
+{
+  "classification": "Completed failing interim f95 candidate reopened by review5366098967; never accepted.",
+  "head": "f95f0b0cd59d35d285ac72183589975751e35229",
+  "base": "5dd942a7367c361fadd600be4ce10aace2768b27",
+  "merge": "3c06aadd78a8ee8be66b8ba42a4cf73bd0098638",
+  "tree": "03605ef756b50c7393607a5aa37280e8d6238d55",
+  "ciRun": 36714086574,
+  "ciConclusion": "failure",
+  "testLegs": 29,
+  "all29ArtifactDigestsMatched": true,
+  "resultRows": 128564,
+  "failedResultRows": 2,
+  "safetyErrors": [
+    "Job test-native-windows-arm64 finished as 'failure', but the full tier requires 'success'",
+    "Job test-windows finished as 'failure', but the full tier requires 'success'",
+    "test-native-windows-arm64 {\"framework\": \"net8.0\", \"runtimeMajor\": 8}: partition admission did not pass cleanly (Failed, {'failed': 1})",
+    "test-windows {\"arch\": \"x64\", \"item\": {\"display\": \".NET 8\", \"framework\": \"net8.0\", \"includePrerelease\": false, \"msbuildProps\": \"\", \"runtimeMajor\": 8, \"sdk\": \"8.0.x\"}, \"os\": \"windows-latest\"}: partition shared-process did not pass cleanly (Failed, {'failed': 1})"
+  ],
+  "safetyWarnings": [],
+  "quarantinedNeverExecuted": [
+    "LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture",
+    "LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error",
+    "LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test"
+  ],
+  "proofRun": 36714086262,
+  "proofsProven": 16,
+  "proofsTotal": 16,
+  "workflowConclusions": {
+    "ci": {
+      "status": "completed",
+      "conclusion": "failure",
+      "headSha": "f95f0b0cd59d35d285ac72183589975751e35229",
+      "jobs": {
+        "success": 36,
+        "failure": 3
+      }
+    },
+    "proof": {
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "f95f0b0cd59d35d285ac72183589975751e35229",
+      "jobs": {
+        "success": 19
+      }
+    },
+    "fuzz": {
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "f95f0b0cd59d35d285ac72183589975751e35229",
+      "jobs": {
+        "success": 12,
+        "skipped": 2
+      }
+    },
+    "index": {
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "f95f0b0cd59d35d285ac72183589975751e35229",
+      "jobs": {
+        "success": 4
+      }
+    },
+    "shared-slot": {
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "f95f0b0cd59d35d285ac72183589975751e35229",
+      "jobs": {
+        "success": 8,
+        "skipped": 2
+      }
+    }
+  },
+  "ciLogArchiveSha256": "075dca9b536f7a196e1556e720ed1a6ce7e22899425146cc86d01bd31a20fc4e",
+  "failureClassification": [
+    "Native ARM64/net8 recovery File.ReadAllBytes sharing violation847ms; lockowner unknown, fixture missing due env/upload mismatch.",
+    "Windowslatest/x64/net8 pinned writer10s ReadLine timeout; startup/admission phase unknown, no diagnostics captured."
+  ],
+  "recordedUtc": "2026-09-30T13:11:03.887741+00:00"
+}
