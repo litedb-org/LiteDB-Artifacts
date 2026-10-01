@@ -1,0 +1,118 @@
+{
+  "GeneratedAt": "2026-10-01T03:23:17.6194966+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_LateCallbackClose",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "REGRESSION_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 42.5454919,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:23:32.6885208\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-facade-a0bc4d4915b24bfb9479c926b433dcce"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "raw encrypted=False: TimeoutException after 00:00:10.0001464"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-writer encrypted=False: TimeoutException after 00:00:10.0000666"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-leased encrypted=False: success after 00:00:00.0003903"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "raw encrypted=True: TimeoutException after 00:00:10.0000984"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-writer encrypted=True: TimeoutException after 00:00:10.0000893"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-leased encrypted=True: success after 00:00:00.0000688"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "REGRESSION_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:24:15.1528522\u002B00:00\u0022,\u0022text\u0022:\u0022Late callback disposition, safe lease control and cold indexed state verified.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "FIXED_STATE_VERIFIED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 2.3103581,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:24:15.2208183\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.e821ae7479dc\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-facade-b6e396f733f84a319c230952e99aff79"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "raw encrypted=False: InvalidOperationException after 00:00:00.0001367"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-writer encrypted=False: InvalidOperationException after 00:00:00.0001349"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-leased encrypted=False: success after 00:00:00.0002091"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "raw encrypted=True: InvalidOperationException after 00:00:00.0000415"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-writer encrypted=True: InvalidOperationException after 00:00:00.0000666"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "shared-leased encrypted=True: success after 00:00:00.0000879"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FIXED_STATE_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:24:17.4672346\u002B00:00\u0022,\u0022text\u0022:\u0022Late callback disposition, safe lease control and cold indexed state verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

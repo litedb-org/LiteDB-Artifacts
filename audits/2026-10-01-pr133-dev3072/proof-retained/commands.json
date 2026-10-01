@@ -1,0 +1,50 @@
+[
+  {
+    "variant": "package",
+    "buildCommand": [
+      "dotnet",
+      "build",
+      "LiteDB.ReproRunner/Repros/Issue_3071_SharedPeerCallback/Issue_3071_SharedPeerCallback.csproj",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=false",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/dev3072-proof/artifacts_temp/proof-retained/package",
+      "-p:LiteDBPackageVersion=6.0.0-prerelease.319"
+    ],
+    "command": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/dev3072-proof/artifacts_temp/proof-retained/package/Issue_3071_SharedPeerCallback.dll"
+    ],
+    "exit": 0,
+    "marker": "PROVEN_BLOCK",
+    "fixtures": [
+      "__WORKSPACE__/temporary/i3071-6ef2bc7b2eaa4e4eb52cd48bc02a74f7"
+    ],
+    "workerHostExitedBeforeCapture": true
+  },
+  {
+    "variant": "source",
+    "buildCommand": [
+      "dotnet",
+      "build",
+      "LiteDB.ReproRunner/Repros/Issue_3071_SharedPeerCallback/Issue_3071_SharedPeerCallback.csproj",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=true",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/dev3072-proof/artifacts_temp/proof-retained/source",
+      "-p:LiteDBPackageVersion=6.0.0-prerelease.319"
+    ],
+    "command": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/dev3072-proof/artifacts_temp/proof-retained/source/Issue_3071_SharedPeerCallback.dll"
+    ],
+    "exit": 2,
+    "marker": "FIXED_VERIFIED",
+    "fixtures": [
+      "__WORKSPACE__/temporary/i3071-7c7923ca36c14e52b05be65e56d4da89"
+    ],
+    "workerHostExitedBeforeCapture": true
+  }
+]

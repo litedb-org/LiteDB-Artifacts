@@ -1,0 +1,110 @@
+{
+  "GeneratedAt": "2026-10-01T03:10:07.8487917+00:00",
+  "Root": "__WORKSPACE__/artifacts_temp/dev3072-proof/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_133_SharedCloseCallbackBegin",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "NATIVE_SELF_WAIT_VERIFIED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 1.901746,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:15.6798722\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.be60d53a3508\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:15.763779\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original fixtures retained at __WORKSPACE__/temporary/i133-close-9fb7d0721d584b6ab91a111ab6df3f97\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "plain-other: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "plain-same: callback active; child native waiter; outer owner held; independent native acquisition refused"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "plain-same: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "encrypted-other: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "encrypted-same: callback active; child native waiter; outer owner held; independent native acquisition refused"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "encrypted-same: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "NATIVE_SELF_WAIT_VERIFIED: both close callbacks reached their own native dependency."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:17.4922534\u002B00:00\u0022,\u0022text\u0022:\u0022NATIVE_SELF_WAIT_VERIFIED: both close callbacks reached their own native dependency.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 2,
+        "ExpectedLogContains": "FIXED_VERIFIED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 2,
+        "DurationSeconds": 1.7705145,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:17.5622258\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.be60d53a3508\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:17.6201123\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original fixtures retained at __WORKSPACE__/temporary/i133-close-07881d6d5f1f4e818a5cac91e2e3df66\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "plain-other: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "plain-same: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "encrypted-other: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "encrypted-same: cold exact rows, indexed values and sentinel verified"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FIXED_VERIFIED: callbacks refused before waiting; controls and cold state verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:10:19.2735815\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED_VERIFIED: callbacks refused before waiting; controls and cold state verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

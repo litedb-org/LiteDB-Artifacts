@@ -1,0 +1,15 @@
+{
+  "command": [
+    "dotnet",
+    "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin/bin/Release/net8.0/Issue_133_SharedCloseCallbackBegin.dll"
+  ],
+  "exit": 0,
+  "seconds": 1.4996356019983068,
+  "stdout": "{\"type\":\"configuration\",\"timestamp\":\"2026-10-01T02:53:10.2179386+00:00\",\"payload\":{\"useProjectReference\":false,\"liteDBPackageVersion\":\"0.0.0-knownbad.be60d53a3508\"}}\n{\"type\":\"log\",\"timestamp\":\"2026-10-01T02:53:10.2911174+00:00\",\"level\":\"Information\",\"text\":\"Original fixtures retained at __WORKSPACE__/temporary/i133-close-b60e3f0fb5044f41a095e505394d3bde\"}\nplain-other: cold exact rows, indexed values and sentinel verified\nplain-same: callback active; child native waiter; outer owner held; independent native acquisition refused\nplain-same: cold exact rows, indexed values and sentinel verified\nencrypted-other: cold exact rows, indexed values and sentinel verified\nencrypted-same: callback active; child native waiter; outer owner held; independent native acquisition refused\nencrypted-same: cold exact rows, indexed values and sentinel verified\nNATIVE_SELF_WAIT_VERIFIED: both close callbacks reached their own native dependency.\n{\"type\":\"result\",\"timestamp\":\"2026-10-01T02:53:11.6639383+00:00\",\"text\":\"NATIVE_SELF_WAIT_VERIFIED: both close callbacks reached their own native dependency.\",\"success\":true}\n",
+  "stderr": "",
+  "sha256": {
+    "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin/Program.cs": "a5ad0e4ddc4ec7b8e52063b9274fe2954d3fa6bfe95fddbd82f76f4316e9f202",
+    "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin/bin/Release/net8.0/LiteDB.dll": "7ae6c5e4fa7dc89de4eb4d52cc9c0c59c9f3ee75de924d5d18b9cf4bbdca7857",
+    "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin/bin/Release/net8.0/Issue_133_SharedCloseCallbackBegin.dll": "8de3a9b443bc0b4862cc540a42ec1f93929841e2d9cc01c054697b2fa9d3f5c5"
+  }
+}

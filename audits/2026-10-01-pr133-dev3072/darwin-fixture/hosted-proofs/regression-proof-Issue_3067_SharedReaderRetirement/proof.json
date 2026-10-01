@@ -1,0 +1,110 @@
+{
+  "GeneratedAt": "2026-10-01T03:33:02.7788575+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedReaderRetirement",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 13.6128655,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:33:15.4575007\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.f95f0b0cd59d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-retire-a8183ca63e36400282a7b18ec618e78b"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "INDEPENDENT_RETIREMENT_OK"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_SETUP attempt=0 encrypted=False ms=3.046"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FORCED_PIN_RETIREMENT_BLOCKED plain"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "INDEPENDENT_RETIREMENT_OK"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_SETUP attempt=0 encrypted=True ms=13.269"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FORCED_PIN_RETIREMENT_BLOCKED encrypted"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:33:29.0049533\u002B00:00\u0022,\u0022text\u0022:\u0022Forced-pin callback retirement and independent disposal control verified.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 1.7183852,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:33:29.0716857\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.f95f0b0cd59d\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-retire-5fdba8b03fdc456ba1631a5d2ec24b18"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "INDEPENDENT_RETIREMENT_OK"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_SETUP attempt=0 encrypted=False ms=2.244"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "INDEPENDENT_RETIREMENT_OK"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_SETUP attempt=0 encrypted=True ms=12.604"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:33:30.7276792\u002B00:00\u0022,\u0022text\u0022:\u0022Forced-pin callback retirement and independent disposal control verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

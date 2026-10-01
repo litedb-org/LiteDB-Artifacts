@@ -1,0 +1,51 @@
+{
+  "trxFiles": 338,
+  "outcomes": {
+    "Passed": 124282,
+    "NotExecuted": 69
+  },
+  "notExecutedByName": {
+    "LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error": 27,
+    "LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test": 21,
+    "LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture": 21
+  },
+  "failures": [],
+  "frameworkXml": {
+    "assembly": {
+      "name": "__CI_WORKSPACE__\\LiteDB.Tests\\bin\\Release\\net462\\LiteDB.Tests.DLL",
+      "environment": "64-bit .NET 4.0.30319.42000 [collection-per-class, non-parallel]",
+      "test-framework": "xUnit.net 2.9.2.0",
+      "run-date": "2026-10-01",
+      "run-time": "03:18:42",
+      "config-file": "__CI_WORKSPACE__\\LiteDB.Tests\\bin\\Release\\net462\\LiteDB.Tests.dll.config",
+      "total": "5187",
+      "passed": "5182",
+      "failed": "0",
+      "skipped": "5",
+      "time": "1077.521",
+      "errors": "0"
+    },
+    "skipped": [
+      {
+        "name": "LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error",
+        "reason": "Not supported yet: rebuilding 'ana'/'ANA' from en-US/None to en-US/IgnoreCase throws LiteException 'Cannot insert duplicate key in unique index '_id'' from RebuildContent instead of recording the collision in _rebuild_errors and keeping en-US/None."
+      },
+      {
+        "name": "LiteDB.Tests.Issues.Issue2909_Tests.ObjectId_uses_the_current_process_and_machine_on_NETCoreApp",
+        "reason": "The report targets net8.0 and net10.0; .NET Framework retains the netstandard fallback contract."
+      },
+      {
+        "name": "LiteDB.Tests.Issues.Issue2127_Tests+ReproTests.InsertItemBackToBack_Test",
+        "reason": "Too slow for a unit test in a build process: 100 iterations with a 1 s sleep take ~102 s (passed 5/5 locally on net10.0). The DiskWriterQueue race of #2127 no longer exists; the queue was removed in 198f0a672."
+      },
+      {
+        "name": "LiteDB.Tests.Engine.Collation_Tests.Create_Database_Using_Current_Culture",
+        "reason": "Passes only as the first LiteDB use in the process (e.g. run alone locally): Collation.Default snapshots the culture once per process, so after another test created a database this gets 'de-DE/IgnoreCase' (the culture at first use) instead of 'fi/IgnoreCase'."
+      },
+      {
+        "name": "LiteDB.Tests.Issues.Issue2298_Tests.We_Dont_Need_Ctor",
+        "reason": "System.Text.Json is not supported on this target framework for this scenario."
+      }
+    ]
+  }
+}

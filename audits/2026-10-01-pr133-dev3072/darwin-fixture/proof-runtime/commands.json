@@ -1,0 +1,40 @@
+[
+  {
+    "variant": "package",
+    "build": [
+      "dotnet",
+      "build",
+      "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=false",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/darwin-fixture/proof-runtime/package"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/darwin-fixture/proof-runtime/package/Issue_133_SharedCloseCallbackBegin.dll"
+    ],
+    "exit": 0,
+    "fixture": "__WORKSPACE__/temporary/i133-close-f1fbac15847b45f0bd7e009114be3073"
+  },
+  {
+    "variant": "source",
+    "build": [
+      "dotnet",
+      "build",
+      "LiteDB.ReproRunner/Repros/Issue_133_SharedCloseCallbackBegin",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=true",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/darwin-fixture/proof-runtime/source"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/darwin-fixture/proof-runtime/source/Issue_133_SharedCloseCallbackBegin.dll"
+    ],
+    "exit": 2,
+    "fixture": "__WORKSPACE__/temporary/i133-close-090fa10d470c461b812fb433f6a9b516"
+  }
+]

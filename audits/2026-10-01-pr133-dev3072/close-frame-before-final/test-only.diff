@@ -1,0 +1,44 @@
+diff --git a/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs b/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs
+index 28839d92c..b30033d01 100644
+--- a/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs
++++ b/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs
+@@ -29,7 +29,13 @@ namespace LiteDB.Tests.Engine
+         private readonly List<IDisposable> _open = new List<IDisposable>();
+         private bool _retain;
+ 
+-        protected SharedPeerCallbackFixture() => Directory.CreateDirectory(_directory);
++        protected SharedPeerCallbackFixture()
++        {
++            Directory.CreateDirectory(_directory);
++            // Caller streams bypass filename normalization. Use the same physical
++            // namespace as the filename-backed peer (macOS temp has /var aliases).
++            _directory = Client.Shared.DatabaseFileIdentity.CanonicalPath(_directory);
++        }
+ 
+         protected string Filename => Path.Combine(_directory, "outer.db");
+ 
+@@ -71,8 +77,13 @@ namespace LiteDB.Tests.Engine
+             return this.Track(engine);
+         }
+ 
+-        protected LiteDatabase OpenPeer(string filename, bool encrypted) =>
+-            this.Track(new LiteDatabase(new SharedEngine(new EngineSettings { Filename = filename, Password = Password(encrypted) })));
++        protected LiteDatabase OpenPeer(string filename, bool encrypted) => this.OpenPeer(filename, encrypted, out _);
++
++        protected LiteDatabase OpenPeer(string filename, bool encrypted, out SharedEngine engine)
++        {
++            engine = new SharedEngine(new EngineSettings { Filename = filename, Password = Password(encrypted) });
++            return this.Track(new LiteDatabase(engine));
++        }
+ 
+         protected T Track<T>(T disposable) where T : IDisposable
+         {
+@@ -100,6 +111,8 @@ namespace LiteDB.Tests.Engine
+             return error;
+         }
+ 
++        protected void RetainFailure() => _retain = true;
++
+         protected void CloseAll()
+         {
+             for (var i = _open.Count - 1; i >= 0; i--) _open[i].Dispose();

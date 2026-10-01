@@ -1,0 +1,78 @@
+{
+  "GeneratedAt": "2026-10-01T03:38:25.0202808+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_133_MaintenanceProgress",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 7.4088676,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:38:37.7119063\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "rebuild: reproduced=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "close: reproduced=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:38:45.0510436\u002B00:00\u0022,\u0022text\u0022:\u0022The bug reproduced.\u0022,\u0022success\u0022:true}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 1.4254771,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:38:45.1140858\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.560529066aed\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "rebuild: reproduced=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "close: reproduced=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:38:46.4795989\u002B00:00\u0022,\u0022text\u0022:\u0022The bug did not reproduce.\u0022,\u0022success\u0022:false}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          }
+        ]
+      }
+    }
+  ]
+}

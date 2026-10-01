@@ -1,0 +1,677 @@
+﻿2026-10-01T03:15:59.7422880Z Current runner version: '2.337.0'
+2026-10-01T03:15:59.7487990Z ##[group]Runner Image Provisioner
+2026-10-01T03:15:59.7490550Z Hosted Compute Agent
+2026-10-01T03:15:59.7491860Z Version: 20260819.586
+2026-10-01T03:15:59.7493290Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-10-01T03:15:59.7495760Z Build Date: 2026-08-18T23:20:18Z
+2026-10-01T03:15:59.7497940Z Worker ID: {6b6508de-fb46-443f-8141-9b195c9afad5}
+2026-10-01T03:15:59.7500100Z Azure Region: westus
+2026-10-01T03:15:59.7501530Z ##[endgroup]
+2026-10-01T03:15:59.7505460Z ##[group]Operating System
+2026-10-01T03:15:59.7506780Z macOS
+2026-10-01T03:15:59.7508110Z 15.7.9
+2026-10-01T03:15:59.7509030Z 24G830
+2026-10-01T03:15:59.7510090Z ##[endgroup]
+2026-10-01T03:15:59.7511120Z ##[group]Runner Image
+2026-10-01T03:15:59.7512980Z Image: macos-15
+2026-10-01T03:15:59.7514100Z Version: 20260824.0482.1
+2026-10-01T03:15:59.7517000Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260824.0482/images/macos/macos-15-Readme.md
+2026-10-01T03:15:59.7520260Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260824.0482
+2026-10-01T03:15:59.7523140Z ##[endgroup]
+2026-10-01T03:15:59.7532050Z ##[group]GITHUB_TOKEN Permissions
+2026-10-01T03:15:59.7536820Z Actions: write
+2026-10-01T03:15:59.7538350Z ArtifactMetadata: write
+2026-10-01T03:15:59.7539570Z Attestations: write
+2026-10-01T03:15:59.7540730Z Checks: write
+2026-10-01T03:15:59.7541840Z CodeQuality: write
+2026-10-01T03:15:59.7542940Z Contents: write
+2026-10-01T03:15:59.7544020Z CopilotRequests: write
+2026-10-01T03:15:59.7545120Z Deployments: write
+2026-10-01T03:15:59.7546250Z Discussions: write
+2026-10-01T03:15:59.7547310Z Drives: write
+2026-10-01T03:15:59.7549360Z Issues: write
+2026-10-01T03:15:59.7550740Z Metadata: read
+2026-10-01T03:15:59.7552060Z Models: read
+2026-10-01T03:15:59.7553160Z Packages: write
+2026-10-01T03:15:59.7554200Z Pages: write
+2026-10-01T03:15:59.7555250Z PullRequests: write
+2026-10-01T03:15:59.7556820Z RepositoryProjects: write
+2026-10-01T03:15:59.7558390Z SecurityEvents: write
+2026-10-01T03:15:59.7559630Z Statuses: write
+2026-10-01T03:15:59.7560770Z VulnerabilityAlerts: read
+2026-10-01T03:15:59.7561980Z ##[endgroup]
+2026-10-01T03:15:59.7567800Z Secret source: Actions
+2026-10-01T03:15:59.7569630Z Cache mode: write
+2026-10-01T03:15:59.7571110Z Prepare workflow directory
+2026-10-01T03:15:59.8904150Z Prepare all required actions
+2026-10-01T03:15:59.9047270Z Getting action download info
+2026-10-01T03:16:00.3932720Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-01T03:16:01.1051230Z Download action repository 'actions/setup-dotnet@v4' (SHA:67a3573c9a986a3f9c594539f4ab511d57bb3ce9)
+2026-10-01T03:16:02.3029080Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-01T03:16:03.0526600Z Uses: JKamsker/LiteDB/.github/workflows/_reusable-ci.yml@refs/pull/133/merge (3103575fc132209b9786050af337c3fc3c3cace1)
+2026-10-01T03:16:03.0541120Z ##[group] Inputs
+2026-10-01T03:16:03.0543690Z   tier: full
+2026-10-01T03:16:03.0558440Z   sdk-matrix: [
+  { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+  { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+  { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+]
+
+2026-10-01T03:16:03.0574190Z ##[endgroup]
+2026-10-01T03:16:03.0577970Z Complete job name: build-and-test / Native admission (macOS Intel - net10.0)
+2026-10-01T03:16:03.2467810Z ##[group]Run actions/checkout@v4
+2026-10-01T03:16:03.2471420Z with:
+2026-10-01T03:16:03.2473540Z   repository: JKamsker/LiteDB
+2026-10-01T03:16:03.2502850Z   token: ***
+2026-10-01T03:16:03.2505070Z   ssh-strict: true
+2026-10-01T03:16:03.2507320Z   ssh-user: git
+2026-10-01T03:16:03.2509620Z   persist-credentials: true
+2026-10-01T03:16:03.2513580Z   clean: true
+2026-10-01T03:16:03.2515850Z   sparse-checkout-cone-mode: true
+2026-10-01T03:16:03.2518600Z   fetch-depth: 1
+2026-10-01T03:16:03.2520830Z   fetch-tags: false
+2026-10-01T03:16:03.2523140Z   show-progress: true
+2026-10-01T03:16:03.2525470Z   lfs: false
+2026-10-01T03:16:03.2527590Z   submodules: false
+2026-10-01T03:16:03.2530160Z   set-safe-directory: true
+2026-10-01T03:16:03.2532850Z   allow-unsafe-pr-checkout: false
+2026-10-01T03:16:03.2536960Z env:
+2026-10-01T03:16:03.2541240Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:16:03.2546480Z ##[endgroup]
+2026-10-01T03:16:04.6172740Z Syncing repository: JKamsker/LiteDB
+2026-10-01T03:16:04.6181410Z ##[group]Getting Git version info
+2026-10-01T03:16:04.6186090Z Working directory is '__CI_HOME__/work/LiteDB/LiteDB'
+2026-10-01T03:16:04.6193410Z [command]/usr/local/bin/git version
+2026-10-01T03:16:04.7040550Z git version 2.55.0
+2026-10-01T03:16:04.7093190Z ##[endgroup]
+2026-10-01T03:16:04.7112190Z Copying '__CI_HOME__/.gitconfig' to '__CI_HOME__/work/_temp/27c6c4d0-fcc7-492e-b0f1-b24a589c54ca/.gitconfig'
+2026-10-01T03:16:04.7142230Z Temporarily overriding HOME='__CI_HOME__/work/_temp/27c6c4d0-fcc7-492e-b0f1-b24a589c54ca' before making global git config changes
+2026-10-01T03:16:04.7153390Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-01T03:16:04.7162430Z [command]/usr/local/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-10-01T03:16:04.7366870Z Deleting the contents of '__CI_HOME__/work/LiteDB/LiteDB'
+2026-10-01T03:16:04.7377950Z ##[group]Initializing the repository
+2026-10-01T03:16:04.7388480Z [command]/usr/local/bin/git init __CI_WORKSPACE__
+2026-10-01T03:16:04.7946750Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-01T03:16:04.7952750Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-01T03:16:04.7959140Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-01T03:16:04.7963620Z hint: call:
+2026-10-01T03:16:04.7966080Z hint:
+2026-10-01T03:16:04.7969110Z hint: 	git config --global init.defaultBranch <name>
+2026-10-01T03:16:04.7972460Z hint:
+2026-10-01T03:16:04.7975620Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-01T03:16:04.7981080Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-01T03:16:04.7985390Z hint:
+2026-10-01T03:16:04.7987620Z hint: 	git branch -m <name>
+2026-10-01T03:16:04.7990190Z hint:
+2026-10-01T03:16:04.7993830Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-01T03:16:04.7999690Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-10-01T03:16:04.8008740Z [command]/usr/local/bin/git remote add origin https://github.com/JKamsker/LiteDB
+2026-10-01T03:16:04.8188060Z ##[endgroup]
+2026-10-01T03:16:04.8194020Z ##[group]Disabling automatic garbage collection
+2026-10-01T03:16:04.8199160Z [command]/usr/local/bin/git config --local gc.auto 0
+2026-10-01T03:16:04.8357910Z ##[endgroup]
+2026-10-01T03:16:04.8363390Z ##[group]Setting up auth
+2026-10-01T03:16:04.8375230Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-01T03:16:04.8563180Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-01T03:16:05.2918890Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-01T03:16:05.4569740Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-01T03:16:05.5563580Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-01T03:16:05.5809100Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-01T03:16:05.8260630Z [command]/usr/local/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-01T03:16:05.8420640Z ##[endgroup]
+2026-10-01T03:16:05.8451640Z ##[group]Fetching the repository
+2026-10-01T03:16:05.8462670Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3103575fc132209b9786050af337c3fc3c3cace1:refs/remotes/pull/133/merge
+2026-10-01T03:16:07.1077680Z From https://github.com/JKamsker/LiteDB
+2026-10-01T03:16:07.1082390Z  * [new ref]         3103575fc132209b9786050af337c3fc3c3cace1 -> pull/133/merge
+2026-10-01T03:16:07.1092520Z ##[endgroup]
+2026-10-01T03:16:07.1095070Z ##[group]Determining the checkout info
+2026-10-01T03:16:07.1098010Z ##[endgroup]
+2026-10-01T03:16:07.1109620Z [command]/usr/local/bin/git sparse-checkout disable
+2026-10-01T03:16:07.1294460Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-01T03:16:07.1457400Z ##[group]Checking out the ref
+2026-10-01T03:16:07.1461660Z [command]/usr/local/bin/git checkout --progress --force refs/remotes/pull/133/merge
+2026-10-01T03:16:08.3210200Z Updating files:  97% (1963/2018)
+2026-10-01T03:16:08.3292900Z Updating files:  98% (1978/2018)
+2026-10-01T03:16:08.3408530Z Updating files:  99% (1998/2018)
+2026-10-01T03:16:08.3430970Z Updating files: 100% (2018/2018)
+2026-10-01T03:16:08.3445120Z Updating files: 100% (2018/2018), done.
+2026-10-01T03:16:08.3554190Z HEAD is now at 3103575 Merge 3abead6dc2eb6413daf5fa81d8faed06cdf4ade7 into 5dd942a7367c361fadd600be4ce10aace2768b27
+2026-10-01T03:16:08.3665920Z ##[endgroup]
+2026-10-01T03:16:08.3909730Z [command]/usr/local/bin/git log -1 --format=%H
+2026-10-01T03:16:08.4065690Z 3103575fc132209b9786050af337c3fc3c3cace1
+2026-10-01T03:16:08.5035750Z ##[group]Run actions/setup-dotnet@v4
+2026-10-01T03:16:08.5037020Z with:
+2026-10-01T03:16:08.5037670Z   dotnet-version: 10.0.x
+8.0.x
+
+2026-10-01T03:16:08.5038490Z   cache: false
+2026-10-01T03:16:08.5039100Z env:
+2026-10-01T03:16:08.5040960Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:16:08.5043160Z ##[endgroup]
+2026-10-01T03:16:08.9466170Z (node:58185) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:16:08.9656730Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:16:08.9658990Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+2026-10-01T03:16:10.2617670Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T03:16:11.3544460Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz size is 35596837 bytes.
+2026-10-01T03:16:11.3570060Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T03:16:12.9477210Z dotnet-install: Downloaded file size is 35596837 bytes.
+2026-10-01T03:16:12.9483320Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T03:16:13.1209040Z dotnet-install: Installed version is 10.0.12
+2026-10-01T03:16:13.1718940Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T03:16:13.1793120Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T03:16:13.1855080Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T03:16:13.1928560Z dotnet-install: Installation finished successfully.
+2026-10-01T03:16:13.1981240Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --channel 10.0
+2026-10-01T03:16:14.1575510Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz
+2026-10-01T03:16:23.1879620Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz size is 238641497 bytes.
+2026-10-01T03:16:23.1944750Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz
+2026-10-01T03:16:39.5298170Z dotnet-install: Downloaded file size is 238641497 bytes.
+2026-10-01T03:16:39.5300680Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T03:16:41.0582300Z dotnet-install: Installed version is 10.0.401
+2026-10-01T03:16:41.1108570Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T03:16:41.1120470Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T03:16:41.1256970Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T03:16:41.1619410Z dotnet-install: Installation finished successfully.
+2026-10-01T03:16:41.1624150Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+2026-10-01T03:16:42.1866300Z dotnet-install: .NET Core Runtime with version '10.0.12' is already installed.
+2026-10-01T03:16:42.1894750Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --channel 8.0
+2026-10-01T03:16:43.2098820Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz
+2026-10-01T03:16:47.5767210Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz size is 215008279 bytes.
+2026-10-01T03:16:47.5776310Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz
+2026-10-01T03:17:00.4988650Z dotnet-install: Downloaded file size is 215008279 bytes.
+2026-10-01T03:17:00.4993710Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T03:17:01.7973020Z dotnet-install: Installed version is 8.0.425
+2026-10-01T03:17:01.8209640Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T03:17:01.8212740Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T03:17:01.8216760Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T03:17:01.8219960Z dotnet-install: Installation finished successfully.
+2026-10-01T03:17:01.8544930Z ##[group]Run dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true
+2026-10-01T03:17:01.8547180Z [36;1mdotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net10.0 -p:TestingEnabled=true[0m
+2026-10-01T03:17:01.8675240Z shell: /bin/bash -e {0}
+2026-10-01T03:17:01.8676100Z env:
+2026-10-01T03:17:01.8677580Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:17:01.8679120Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:17:01.8679850Z ##[endgroup]
+2026-10-01T03:17:04.2330570Z   Determining projects to restore...
+2026-10-01T03:17:06.9894410Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj]
+2026-10-01T03:17:07.2197320Z   Restored __CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj (in 235 ms).
+2026-10-01T03:17:08.8320450Z   Restored __CI_WORKSPACE__/LiteDB/LiteDB.csproj (in 1.77 sec).
+2026-10-01T03:17:11.9436210Z   Restored __CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj (in 4.99 sec).
+2026-10-01T03:17:14.5531000Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net10.0]
+2026-10-01T03:17:30.0247950Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0288100Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0060: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The constructors on Rfc2898DeriveBytes are obsolete. Use the static Pbkdf2 method instead.' (https://aka.ms/dotnet-warnings/SYSLIB0060) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0354950Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0060: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The constructors on Rfc2898DeriveBytes are obsolete. Use the static Pbkdf2 method instead.' (https://aka.ms/dotnet-warnings/SYSLIB0060) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0426380Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0463550Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0475580Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0497200Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0522070Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0538390Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0558920Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0576140Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0592800Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0610130Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0628290Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.0644390Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Sort/SortContainer.cs(141,21): warning CA2022: Avoid inexact read with 'System.IO.Stream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:17:30.1019630Z   LiteDB -> __CI_WORKSPACE__/LiteDB/bin/Release/net10.0/LiteDB.dll
+2026-10-01T03:17:30.9610220Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net8.0]
+2026-10-01T03:17:50.7000690Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7025650Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7061150Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7081640Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7103680Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7118220Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7139720Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7162930Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7187780Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7213460Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7238420Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7259990Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7274250Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7291150Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:17:50.7757850Z   LiteDB -> __CI_WORKSPACE__/LiteDB/bin/Release/net8.0/LiteDB.dll
+2026-10-01T03:17:51.9006060Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(34,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9402020Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(36,55): warning CS0618: 'LiteDatabase.Commit()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9479920Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(35,9): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9540880Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(39,9): warning CS0618: 'LiteDatabase.Rollback()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9560370Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(65,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9582590Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(85,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:51.9607320Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMappedHarness.cs(40,13): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:17:52.1868220Z   SharedMutexHarness -> __CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/bin/Release/net8.0/SharedMutexHarness.dll
+2026-10-01T03:18:39.9002420Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2265_Tests.cs(38,20): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9018130Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(91,58): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9029070Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(105,57): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9041970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(54,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9056990Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(57,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9075290Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(60,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9091910Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(140,21): warning CA2022: Avoid inexact read with 'System.Security.Cryptography.CryptoStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9108250Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/CacheAsync_Tests.cs(86,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9125290Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/TransactionHandleProcess_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9145800Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CompactSchemaCacheConcurrency_Tests.cs(96,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9175390Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1192DirectDictionary_Tests.cs(186,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9191490Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandle_Tests.cs(146,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9213210Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(56,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9230870Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(57,68): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9260830Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(66,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9280200Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(91,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9304410Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(92,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9322820Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(48,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9341750Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(49,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9359010Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(54,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9376300Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs(33,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9399700Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(81,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9416860Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2848_Tests.cs(87,89): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9436170Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(111,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9453970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(157,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9471020Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(190,31): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9491510Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814Admission_Tests.cs(56,78): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9506630Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814_Tests.cs(57,26): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9522240Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(65,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9538930Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(66,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9558470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2790ReaderLease_Tests.cs(43,37): warning xUnit1030: Test methods should not call ConfigureAwait(false), as it may bypass parallelization limits. Omit ConfigureAwait, or use ConfigureAwait(true) to avoid CA2007. (https://xunit.net/xunit.analyzers/rules/xUnit1030) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9577600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(48,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9595000Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(53,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9611770Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(54,44): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9629600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(59,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9646060Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(60,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9661860Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2324_Tests.cs(64,33): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9675650Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(21,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9691460Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9708340Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2112_Tests.cs(32,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9728590Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleContext_Tests.cs(24,46): warning CA1416: This call site is reachable on all platforms. 'WindowsIdentity.GetCurrent(bool)' is only supported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9750440Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(250,55): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9766570Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(83,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9789570Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(84,112): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9810360Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(85,62): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9853120Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(130,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9873760Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(131,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9920200Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedReadPath_Tests.cs(43,13): warning CA2022: Avoid inexact read with 'System.IO.FileStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9944610Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(71,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:39.9964700Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(72,54): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0004600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(73,49): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0054130Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(93,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0074030Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(117,23): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0093960Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(56,25): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0112270Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(65,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0139750Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectPoolFinalizer_Tests.cs(74,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0164930Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContext_Tests.cs(140,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0211990Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContextLifetime_Tests.cs(151,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0366820Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Issue2881_VectorPromotion_Tests.cs(147,13): warning CA2022: Avoid inexact read with 'System.IO.Stream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0382550Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSafety_Tests.cs(252,13): warning CA2022: Avoid inexact read with 'System.IO.FileStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0399630Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(161,28): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0416180Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(172,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0432190Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorPlatform_Tests.cs(289,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.0446520Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Coordinator_Tests.cs(262,20): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:40.6602830Z   LiteDB.Tests -> __CI_WORKSPACE__/LiteDB.Tests/bin/Release/net10.0/LiteDB.Tests.dll
+2026-10-01T03:18:41.3007270Z 
+2026-10-01T03:18:41.3047660Z Build succeeded.
+2026-10-01T03:18:41.3208990Z 
+2026-10-01T03:18:41.3541920Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net10.0]
+2026-10-01T03:18:41.3620710Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3674820Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0060: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The constructors on Rfc2898DeriveBytes are obsolete. Use the static Pbkdf2 method instead.' (https://aka.ms/dotnet-warnings/SYSLIB0060) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3739880Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0060: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The constructors on Rfc2898DeriveBytes are obsolete. Use the static Pbkdf2 method instead.' (https://aka.ms/dotnet-warnings/SYSLIB0060) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3753180Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3805520Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3821350Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3880900Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.3900220Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4079600Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4149920Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4178520Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4205860Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4230860Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4252150Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4268840Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Sort/SortContainer.cs(141,21): warning CA2022: Avoid inexact read with 'System.IO.Stream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4282660Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net8.0]
+2026-10-01T03:18:41.4295310Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4316700Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4340300Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4354990Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4363770Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4376070Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4390740Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4409560Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4427270Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4442880Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4464050Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4483910Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4503900Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4523660Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:18:41.4542540Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(34,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4556660Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(36,55): warning CS0618: 'LiteDatabase.Commit()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4568940Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(35,9): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4581450Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(39,9): warning CS0618: 'LiteDatabase.Rollback()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4593950Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(65,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4609440Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(85,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4623800Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMappedHarness.cs(40,13): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:18:41.4637110Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2265_Tests.cs(38,20): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4650590Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(91,58): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4662300Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(105,57): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4676270Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(54,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4692240Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(57,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4708520Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(60,17): warning CA2022: Avoid inexact read with 'LiteDB.Engine.AesStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4725910Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/Aes_Tests.cs(140,21): warning CA2022: Avoid inexact read with 'System.Security.Cryptography.CryptoStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4742090Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/CacheAsync_Tests.cs(86,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4758230Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/TransactionHandleProcess_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4776700Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CompactSchemaCacheConcurrency_Tests.cs(96,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4793230Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1192DirectDictionary_Tests.cs(186,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4810740Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandle_Tests.cs(146,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4828670Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(56,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4845600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(57,68): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4862950Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(66,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4879900Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(91,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4899710Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(92,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4919850Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(48,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4938240Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(49,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4957810Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(54,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4975890Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs(33,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.4996560Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(81,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5018280Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2848_Tests.cs(87,89): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5037710Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(111,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5058340Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(157,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5077650Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(190,31): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5097740Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814Admission_Tests.cs(56,78): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5115170Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814_Tests.cs(57,26): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5133680Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(65,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5151830Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(66,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5171090Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2790ReaderLease_Tests.cs(43,37): warning xUnit1030: Test methods should not call ConfigureAwait(false), as it may bypass parallelization limits. Omit ConfigureAwait, or use ConfigureAwait(true) to avoid CA2007. (https://xunit.net/xunit.analyzers/rules/xUnit1030) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5189190Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(48,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5207150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(53,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5224970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(54,44): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5244050Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(59,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5263720Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(60,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5281210Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2324_Tests.cs(64,33): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5297470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(21,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5314890Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5332270Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2112_Tests.cs(32,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5351730Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleContext_Tests.cs(24,46): warning CA1416: This call site is reachable on all platforms. 'WindowsIdentity.GetCurrent(bool)' is only supported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5372210Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(250,55): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5389490Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(83,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5408130Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(84,112): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5426360Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(85,62): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5444940Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(130,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5461510Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(131,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5478470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedReadPath_Tests.cs(43,13): warning CA2022: Avoid inexact read with 'System.IO.FileStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5496470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(71,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5514280Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(72,54): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5530970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(73,49): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5551690Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(93,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5570680Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(117,23): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5588200Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(56,25): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5606920Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(65,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5625010Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectPoolFinalizer_Tests.cs(74,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5642290Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContext_Tests.cs(140,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5657930Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContextLifetime_Tests.cs(151,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5677000Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Issue2881_VectorPromotion_Tests.cs(147,13): warning CA2022: Avoid inexact read with 'System.IO.Stream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5695270Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSafety_Tests.cs(252,13): warning CA2022: Avoid inexact read with 'System.IO.FileStream.Read(byte[], int, int)' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2022) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5713750Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(161,28): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5764850Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(172,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5779120Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorPlatform_Tests.cs(289,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5797330Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Coordinator_Tests.cs(262,20): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net10.0]
+2026-10-01T03:18:41.5804100Z     102 Warning(s)
+2026-10-01T03:18:41.5804760Z     0 Error(s)
+2026-10-01T03:18:41.5805360Z 
+2026-10-01T03:18:41.5805640Z Time Elapsed 00:01:29.25
+2026-10-01T03:18:41.5951080Z ##[group]Run printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+2026-10-01T03:18:41.5955880Z [36;1mprintf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json[0m
+2026-10-01T03:18:41.6221510Z shell: /bin/bash -e {0}
+2026-10-01T03:18:41.6222150Z env:
+2026-10-01T03:18:41.6223380Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:18:41.6225070Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:18:41.6225940Z ##[endgroup]
+2026-10-01T03:18:41.9666580Z ##[group]Run ./scripts/run-ci-tests.ps1 -RuntimeMajor 10 -Framework "net10.0" -Architecture x64 -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated' -ResultFile 'NativeAdmission.trx' -PartitionFiltered
+2026-10-01T03:18:41.9677680Z [36;1m./scripts/run-ci-tests.ps1 -RuntimeMajor 10 -Framework "net10.0" -Architecture x64 -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated' -ResultFile 'NativeAdmission.trx' -PartitionFiltered[0m
+2026-10-01T03:18:41.9699010Z shell: /usr/local/bin/pwsh -command ". '{0}'"
+2026-10-01T03:18:41.9700030Z env:
+2026-10-01T03:18:41.9701180Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:18:41.9702630Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:18:41.9703660Z   LITEDB_EVIDENCE_MATRIX: {
+  "framework": "net10.0",
+  "runtimeMajor": 10
+}
+2026-10-01T03:18:41.9704750Z ##[endgroup]
+2026-10-01T03:18:45.8282890Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T03:18:47.4357540Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz size is 35596837 bytes.
+2026-10-01T03:18:47.4364890Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T03:18:48.9307620Z dotnet-install: Downloaded file size is 35596837 bytes.
+2026-10-01T03:18:48.9311590Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T03:18:49.0200160Z dotnet-install: Installed version is 10.0.12
+2026-10-01T03:18:49.0640350Z dotnet-install: Binaries of dotnet can be found in __CI_HOME__/work/_temp/litedb-runtime-10-x64
+2026-10-01T03:18:49.0690090Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T03:18:49.0711210Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T03:18:49.0753070Z dotnet-install: Installation finished successfully.
+2026-10-01T03:18:49.1304700Z 
+2026-10-01T03:18:49.1402190Z Host:
+2026-10-01T03:18:49.1425950Z   Version:      10.0.12
+2026-10-01T03:18:49.1521780Z   Architecture: x64
+2026-10-01T03:18:49.1541820Z   Commit:       95017c711e
+2026-10-01T03:18:49.1652300Z   RID:          osx-x64
+2026-10-01T03:18:49.1670580Z 
+2026-10-01T03:18:49.1743770Z .NET SDKs installed:
+2026-10-01T03:18:49.1772330Z   No SDKs were found.
+2026-10-01T03:18:49.1788400Z 
+2026-10-01T03:18:49.1791280Z .NET runtimes installed:
+2026-10-01T03:18:49.1898630Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work/_temp/litedb-runtime-10-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:18:49.2915920Z 
+2026-10-01T03:18:49.3390080Z Other architectures found:
+2026-10-01T03:18:49.4023370Z   None
+2026-10-01T03:18:49.4045250Z 
+2026-10-01T03:18:49.4064750Z Environment variables:
+2026-10-01T03:18:49.4197550Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-10-01T03:18:49.4287490Z   DOTNET_NOLOGO                            [1]
+2026-10-01T03:18:49.4309900Z   DOTNET_ROOT                              [__CI_HOME__/.dotnet]
+2026-10-01T03:18:49.4399370Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-10-01T03:18:49.4421750Z 
+2026-10-01T03:18:49.4474680Z global.json file:
+2026-10-01T03:18:49.4519350Z   Not found
+2026-10-01T03:18:49.4531490Z 
+2026-10-01T03:18:49.4539970Z Learn more:
+2026-10-01T03:18:49.4589890Z   https://aka.ms/dotnet/info
+2026-10-01T03:18:49.4663890Z 
+2026-10-01T03:18:49.4687200Z Download .NET:
+2026-10-01T03:18:49.4741900Z   https://aka.ms/dotnet/download
+2026-10-01T03:18:59.6109480Z Running native selection partition: handles
+2026-10-01T03:18:59.6341450Z 
+2026-10-01T03:18:59.6342490Z Host:
+2026-10-01T03:18:59.6343400Z   Version:      10.0.12
+2026-10-01T03:18:59.6344350Z   Architecture: x64
+2026-10-01T03:18:59.6346460Z   Commit:       95017c711e
+2026-10-01T03:18:59.6347420Z   RID:          osx-x64
+2026-10-01T03:18:59.6347940Z 
+2026-10-01T03:18:59.6348410Z .NET SDKs installed:
+2026-10-01T03:18:59.6349300Z   No SDKs were found.
+2026-10-01T03:18:59.6349950Z 
+2026-10-01T03:18:59.6350380Z .NET runtimes installed:
+2026-10-01T03:18:59.6352240Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work/_temp/litedb-runtime-10-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:18:59.6354000Z 
+2026-10-01T03:18:59.6354460Z Other architectures found:
+2026-10-01T03:18:59.6355430Z   None
+2026-10-01T03:18:59.6355820Z 
+2026-10-01T03:18:59.6356220Z Environment variables:
+2026-10-01T03:18:59.6357220Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-10-01T03:18:59.6358450Z   DOTNET_NOLOGO                            [1]
+2026-10-01T03:18:59.6359690Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-10-01T03:18:59.6361080Z   DOTNET_ROOT                              [__CI_HOME__/.dotnet]
+2026-10-01T03:18:59.6362610Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-10-01T03:18:59.6363380Z 
+2026-10-01T03:18:59.6363690Z global.json file:
+2026-10-01T03:18:59.6364480Z   Not found
+2026-10-01T03:18:59.6364910Z 
+2026-10-01T03:18:59.6365260Z Learn more:
+2026-10-01T03:18:59.6365960Z   https://aka.ms/dotnet/info
+2026-10-01T03:18:59.6366530Z 
+2026-10-01T03:18:59.6366840Z Download .NET:
+2026-10-01T03:18:59.6367700Z   https://aka.ms/dotnet/download
+2026-10-01T03:19:00.1540430Z VSTest version 18.7.0 (x64)
+2026-10-01T03:19:00.1563840Z 
+2026-10-01T03:19:00.9450370Z Starting test execution, please wait...
+2026-10-01T03:19:01.0569140Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:21:41.3710170Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-handles.trx
+2026-10-01T03:21:41.3717810Z 
+2026-10-01T03:21:41.3832650Z Passed!  - Failed:     0, Passed:   421, Skipped:     0, Total:   421, Duration: 2 m 35 s - LiteDB.Tests.dll (net10.0)
+2026-10-01T03:21:42.2003700Z Running native selection partition: admission
+2026-10-01T03:21:42.2294520Z 
+2026-10-01T03:21:42.2297170Z Host:
+2026-10-01T03:21:42.2298680Z   Version:      10.0.12
+2026-10-01T03:21:42.2300230Z   Architecture: x64
+2026-10-01T03:21:42.2302280Z   Commit:       95017c711e
+2026-10-01T03:21:42.2303420Z   RID:          osx-x64
+2026-10-01T03:21:42.2304030Z 
+2026-10-01T03:21:42.2304560Z .NET SDKs installed:
+2026-10-01T03:21:42.2305390Z   No SDKs were found.
+2026-10-01T03:21:42.2305970Z 
+2026-10-01T03:21:42.2306520Z .NET runtimes installed:
+2026-10-01T03:21:42.2308430Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work/_temp/litedb-runtime-10-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:21:42.2310150Z 
+2026-10-01T03:21:42.2310820Z Other architectures found:
+2026-10-01T03:21:42.2311930Z   None
+2026-10-01T03:21:42.2312490Z 
+2026-10-01T03:21:42.2313020Z Environment variables:
+2026-10-01T03:21:42.2314270Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-10-01T03:21:42.2316380Z   DOTNET_NOLOGO                            [1]
+2026-10-01T03:21:42.2318120Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-10-01T03:21:42.2319850Z   DOTNET_ROOT                              [__CI_HOME__/.dotnet]
+2026-10-01T03:21:42.2321560Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-10-01T03:21:42.2322550Z 
+2026-10-01T03:21:42.2323040Z global.json file:
+2026-10-01T03:21:42.2324060Z   Not found
+2026-10-01T03:21:42.2324670Z 
+2026-10-01T03:21:42.2325070Z Learn more:
+2026-10-01T03:21:42.2326110Z   https://aka.ms/dotnet/info
+2026-10-01T03:21:42.2326620Z 
+2026-10-01T03:21:42.2327110Z Download .NET:
+2026-10-01T03:21:42.2327900Z   https://aka.ms/dotnet/download
+2026-10-01T03:21:42.7296630Z VSTest version 18.7.0 (x64)
+2026-10-01T03:21:42.7320550Z 
+2026-10-01T03:21:43.0518740Z Starting test execution, please wait...
+2026-10-01T03:21:43.1672790Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:23:47.7776430Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-admission.trx
+2026-10-01T03:23:47.7783360Z 
+2026-10-01T03:23:47.7866310Z Passed!  - Failed:     0, Passed:   202, Skipped:     0, Total:   202, Duration: 2 m - LiteDB.Tests.dll (net10.0)
+2026-10-01T03:23:47.8819560Z Running native selection partition: remaining
+2026-10-01T03:23:47.9020390Z 
+2026-10-01T03:23:47.9021270Z Host:
+2026-10-01T03:23:47.9022840Z   Version:      10.0.12
+2026-10-01T03:23:47.9023670Z   Architecture: x64
+2026-10-01T03:23:47.9024860Z   Commit:       95017c711e
+2026-10-01T03:23:47.9025650Z   RID:          osx-x64
+2026-10-01T03:23:47.9026130Z 
+2026-10-01T03:23:47.9026490Z .NET SDKs installed:
+2026-10-01T03:23:47.9027250Z   No SDKs were found.
+2026-10-01T03:23:47.9027760Z 
+2026-10-01T03:23:47.9028130Z .NET runtimes installed:
+2026-10-01T03:23:47.9029830Z   Microsoft.NETCore.App 10.0.12 [__CI_HOME__/work/_temp/litedb-runtime-10-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:23:47.9031450Z 
+2026-10-01T03:23:47.9031870Z Other architectures found:
+2026-10-01T03:23:47.9032660Z   None
+2026-10-01T03:23:47.9033060Z 
+2026-10-01T03:23:47.9033420Z Environment variables:
+2026-10-01T03:23:47.9034690Z   DOTNET_MULTILEVEL_LOOKUP                 [0]
+2026-10-01T03:23:47.9036040Z   DOTNET_NOLOGO                            [1]
+2026-10-01T03:23:47.9037210Z   DOTNET_ROLL_FORWARD                      [LatestMajor]
+2026-10-01T03:23:47.9038540Z   DOTNET_ROOT                              [__CI_HOME__/.dotnet]
+2026-10-01T03:23:47.9039710Z   DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]
+2026-10-01T03:23:47.9040500Z 
+2026-10-01T03:23:47.9041270Z global.json file:
+2026-10-01T03:23:47.9041990Z   Not found
+2026-10-01T03:23:47.9042370Z 
+2026-10-01T03:23:47.9042650Z Learn more:
+2026-10-01T03:23:47.9043390Z   https://aka.ms/dotnet/info
+2026-10-01T03:23:47.9044250Z 
+2026-10-01T03:23:47.9044620Z Download .NET:
+2026-10-01T03:23:47.9045500Z   https://aka.ms/dotnet/download
+2026-10-01T03:23:48.2842050Z VSTest version 18.7.0 (x64)
+2026-10-01T03:23:48.2862850Z 
+2026-10-01T03:23:48.4973840Z Starting test execution, please wait...
+2026-10-01T03:23:48.5812710Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:24:06.8537080Z [xUnit.net 00:00:17.52]     LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [SKIP]
+2026-10-01T03:24:07.9338710Z   Skipped LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [1 ms]
+2026-10-01T03:25:01.1256930Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-remaining.trx
+2026-10-01T03:25:01.1263780Z 
+2026-10-01T03:25:01.1336060Z Passed!  - Failed:     0, Passed:   237, Skipped:     1, Total:   238, Duration: 1 m 9 s - LiteDB.Tests.dll (net10.0)
+2026-10-01T03:25:01.4273890Z ##[group]Run actions/upload-artifact@v4
+2026-10-01T03:25:01.4275030Z with:
+2026-10-01T03:25:01.4275850Z   name: test-results-test-native-macos-intel-1
+2026-10-01T03:25:01.4278390Z   path: LiteDB.Tests/TestResults/*.trx
+LiteDB.Tests/TestResults/evidence-leg.json
+LiteDB.Tests/TestResults/discovered-tests.txt
+LiteDB.Tests/TestResults/native-partitions.json
+
+2026-10-01T03:25:01.4280640Z   if-no-files-found: warn
+2026-10-01T03:25:01.4281200Z   compression-level: 6
+2026-10-01T03:25:01.4281850Z   overwrite: false
+2026-10-01T03:25:01.4282370Z   include-hidden-files: false
+2026-10-01T03:25:01.4282920Z env:
+2026-10-01T03:25:01.4283920Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:25:01.4285210Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:25:01.4285810Z ##[endgroup]
+2026-10-01T03:25:01.9542250Z (node:72057) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:25:02.0087620Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:25:02.1766550Z With the provided path, there will be 6 files uploaded
+2026-10-01T03:25:02.1772610Z Artifact name is valid!
+2026-10-01T03:25:02.1775670Z Root directory input is valid!
+2026-10-01T03:25:02.8007320Z Beginning upload of artifact content to blob storage
+2026-10-01T03:25:03.3912800Z (node:72057) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-01T03:25:03.8927960Z Uploaded bytes 211157
+2026-10-01T03:25:03.9782900Z Finished uploading artifact content to blob storage!
+2026-10-01T03:25:03.9787680Z SHA256 digest of uploaded artifact zip is 9756635a3aa88b6ff023f4daee887543ee185145aac465c269ed5a39455103e8
+2026-10-01T03:25:03.9789790Z Finalizing artifact upload
+2026-10-01T03:25:04.2443950Z Artifact test-results-test-native-macos-intel-1.zip successfully finalized. Artifact ID 11139542300
+2026-10-01T03:25:04.2447820Z Artifact test-results-test-native-macos-intel-1 has been successfully uploaded! Final size is 211157 bytes. Artifact ID is 11139542300
+2026-10-01T03:25:04.2466640Z Artifact download URL: https://github.com/JKamsker/LiteDB/actions/runs/36809499442/artifacts/11139542300
+2026-10-01T03:25:04.2939470Z Prepare all required actions
+2026-10-01T03:25:04.2941130Z Getting action download info
+2026-10-01T03:25:04.7139240Z ##[group]Run ./.github/actions/retained-fixtures
+2026-10-01T03:25:04.7140520Z env:
+2026-10-01T03:25:04.7142140Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:25:04.7144170Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:25:04.7145220Z ##[endgroup]
+2026-10-01T03:25:04.7308600Z ##[start-action display=Collect retained fixtures;id=__self.__run]
+2026-10-01T03:25:04.7386570Z ##[group]Run if [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi
+2026-10-01T03:25:04.7388980Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi[0m
+2026-10-01T03:25:04.7391710Z [36;1m"$retained_python" scripts/collect-retained-fixtures.py "$LITEDB_RETAINED_FIXTURES"[0m
+2026-10-01T03:25:04.7909820Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-01T03:25:04.7910970Z env:
+2026-10-01T03:25:04.7912490Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:25:04.7914460Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:25:04.7915510Z ##[endgroup]
+2026-10-01T03:25:05.0294020Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=298]
+2026-10-01T03:25:05.0301120Z ##[start-action display=Upload fixture manifests and copies;id=__self.__actions_upload-artifact]
+2026-10-01T03:25:05.0465330Z ##[group]Run actions/upload-artifact@v4
+2026-10-01T03:25:05.0466800Z with:
+2026-10-01T03:25:05.0468160Z   name: retained-fixtures-test-native-macos-intel-1
+2026-10-01T03:25:05.0471520Z   path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/
+2026-10-01T03:25:05.0474190Z   if-no-files-found: ignore
+2026-10-01T03:25:05.0475540Z   retention-days: 14
+2026-10-01T03:25:05.0476620Z   compression-level: 6
+2026-10-01T03:25:05.0478140Z   overwrite: false
+2026-10-01T03:25:05.0507730Z   include-hidden-files: false
+2026-10-01T03:25:05.0509020Z env:
+2026-10-01T03:25:05.0510920Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:25:05.0512960Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:25:05.0514400Z ##[endgroup]
+2026-10-01T03:25:05.4631530Z (node:72098) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:25:05.4634770Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:25:05.4667900Z No files were found with the provided path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/. No artifacts will be uploaded.
+2026-10-01T03:25:05.4867190Z ##[end-action id=__self.__actions_upload-artifact;outcome=success;conclusion=success;duration_ms=456]
+2026-10-01T03:25:05.5144550Z Post job cleanup.
+2026-10-01T03:25:05.8471430Z (node:72102) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:25:05.8475950Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:25:05.8895290Z Post job cleanup.
+2026-10-01T03:25:06.1559520Z [command]/usr/local/bin/git version
+2026-10-01T03:25:06.1766700Z git version 2.55.0
+2026-10-01T03:25:06.1851820Z Copying '__CI_HOME__/.gitconfig' to '__CI_HOME__/work/_temp/242325b0-49c4-4d45-8cc4-d9e44108e92f/.gitconfig'
+2026-10-01T03:25:06.1885040Z Temporarily overriding HOME='__CI_HOME__/work/_temp/242325b0-49c4-4d45-8cc4-d9e44108e92f' before making global git config changes
+2026-10-01T03:25:06.1889360Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-01T03:25:06.1899250Z [command]/usr/local/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-10-01T03:25:06.2323160Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-01T03:25:06.2398760Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-01T03:25:06.4569970Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-01T03:25:06.4692420Z http.https://github.com/.extraheader
+2026-10-01T03:25:06.4717080Z [command]/usr/local/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-01T03:25:06.4911130Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-01T03:25:06.7078650Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-01T03:25:06.7258640Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-01T03:25:06.9664710Z Cleaning up orphan processes
+2026-10-01T03:25:07.3826540Z Terminate orphan process: pid (60548) (VBCSCompiler)
+2026-10-01T03:25:07.3994390Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-dotnet@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

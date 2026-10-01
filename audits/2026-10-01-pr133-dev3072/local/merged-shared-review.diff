@@ -1,0 +1,303 @@
+diff --git a/LiteDB/Client/Shared/SharedDataReader.cs b/LiteDB/Client/Shared/SharedDataReader.cs
+index 69d79d082..00cbc1d65 100644
+--- a/LiteDB/Client/Shared/SharedDataReader.cs
++++ b/LiteDB/Client/Shared/SharedDataReader.cs
+@@ -12,6 +12,8 @@ namespace LiteDB
+     {
+         private readonly IBsonDataReader _reader;
+         private readonly Action _dispose;
++        private readonly LiteEngine _ownedSnapshot;
++        private readonly SharedEngine _mutexOwner;
+         // Set when the reader streams under its connection's native ownership.
+         private readonly string _namespace;
+         private readonly object _connection;
+@@ -19,10 +21,16 @@ namespace LiteDB
+ 
+         private int _disposed;
+ 
+-        public SharedDataReader(IBsonDataReader reader, Action dispose)
++        public SharedDataReader(IBsonDataReader reader, Action dispose) : this(reader, dispose, null)
++        {
++        }
++
++        internal SharedDataReader(IBsonDataReader reader, Action dispose, LiteEngine ownedSnapshot, SharedEngine mutexOwner = null)
+         {
+             _reader = reader;
+             _dispose = dispose;
++            _ownedSnapshot = ownedSnapshot;
++            _mutexOwner = mutexOwner;
+         }
+ 
+         /// <summary>
+@@ -31,7 +39,7 @@ namespace LiteDB
+         /// for the ownership through another connection.
+         /// </summary>
+         internal SharedDataReader(IBsonDataReader reader, Action dispose, string ns, object connection, Func<bool> retains)
+-            : this(reader, dispose)
++            : this(reader, dispose, null, connection as SharedEngine)
+         {
+             _namespace = ns;
+             _connection = connection;
+@@ -48,6 +56,7 @@ namespace LiteDB
+ 
+         public bool Read()
+         {
++            using var callback = new SharedEngine.CallbackScope(_mutexOwner);
+             if (_retains == null) return _reader.Read();
+             using (SharedCallFrames.Enter(_namespace, _connection, _retains)) return _reader.Read();
+         }
+@@ -65,6 +74,13 @@ namespace LiteDB
+ 
+         protected virtual void Dispose(bool disposing)
+         {
++            // A leased snapshot has no parent-owned fallback for a refused core close.
++            // Refuse before mutating the cursor or latching disposal, so the caller can
++            // retry after this snapshot's executing callback has unwound.
++            if (Volatile.Read(ref _disposed) != 0) return;
++            if (disposing && _ownedSnapshot?.IsExecutingOnCurrentThread == true)
++                throw new InvalidOperationException("Cannot dispose a leased reader from inside its executing operation.");
++
+             // Atomic admission: the callback ends one mutex recursion and one engine user.
+             // Two threads disposing at once must not both run it, or the second would end
+             // another reader's ownership and could close the engine under it.
+diff --git a/LiteDB/Client/Shared/SharedEngine.Calls.cs b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+index e9bd17c87..2aa8bb154 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Calls.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+@@ -15,8 +15,47 @@ namespace LiteDB
+         // that have not returned yet, per thread. Guarded by _useLock.
+         private readonly Dictionary<int, int> _admitted = new Dictionary<int, int>();
+         private int _admittedCalls;
+-        // Every connection to one database shares its native mutex, and so this name.
+-        private readonly string _mutexName;
++        // A last-reader close drains outside _useLock. Fresh users wait for its
++        // publication to retire before opening/counting a replacement core.
++        private Engine.LiteEngine _closingCore;
++
++        // Synchronous callbacks can enter another facade for the same native
++        // namespace. Keep only executing calls, not idle owners or leased readers.
++        [ThreadStatic] private static List<SharedEngine> _executingCalls;
++
++        internal readonly struct CallbackScope : IDisposable
++        {
++            private readonly bool _entered;
++            internal CallbackScope(SharedEngine engine)
++            {
++                _entered = engine != null;
++                if (!_entered) return;
++                var calls = _executingCalls ?? (_executingCalls = new List<SharedEngine>());
++                calls.Add(engine);
++            }
++            public void Dispose()
++            {
++                // RemoveAt clears the reference as well as restoring nested scopes.
++                if (_entered) _executingCalls.RemoveAt(_executingCalls.Count - 1);
++            }
++        }
++
++        private bool CannotWaitForOwnershipOnCurrentThread() =>
++            _owner.IsOwnedByCurrentThread || _pin?.IsHeldByCurrentThread == true ||
++            this.IsExecutingOwnedCoreOnCurrentThread();
++
++        private void ThrowIfCallbackOwnershipWait()
++        {
++            var calls = _executingCalls;
++            if (calls == null) return;
++            for (var i = calls.Count - 1; i >= 0; i--)
++            {
++                var caller = calls[i];
++                if (StringComparer.Ordinal.Equals(caller._mutexName, _mutexName) &&
++                    caller.CannotWaitForOwnershipOnCurrentThread())
++                    throw new InvalidOperationException("Cannot open a transaction handle from inside an operation retaining its shared writer ownership.");
++            }
++        }
+         private Func<bool> _callRetains;
+ 
+         /// <summary>
+@@ -27,6 +66,13 @@ namespace LiteDB
+         /// </summary>
+         private void AdmitLocked()
+         {
++            while (_closingCore != null)
++            {
++                if (_closingCore.IsExecutingOnCurrentThread)
++                    throw new InvalidOperationException("Cannot reenter a shared core while this reader is closing it.");
++                if (Volatile.Read(ref _disposed) != 0) throw new ObjectDisposedException(nameof(SharedEngine));
++                Monitor.Wait(_useLock);
++            }
+             if (Volatile.Read(ref _disposed) != 0) throw new ObjectDisposedException(nameof(SharedEngine));
+             var thread = Environment.CurrentManagedThreadId;
+             _admitted.TryGetValue(thread, out var depth);
+@@ -57,8 +103,24 @@ namespace LiteDB
+         });
+ 
+         /// <summary>Run a public call; the admission it made, if any, ends when it returns.</summary>
+-        private T Call<T>(Func<T> call)
++        private T Call<T>(Func<T> call, bool rollback = false)
+         {
++            // A late reader callback must be refused before waiting for either
++            // connection bookkeeping or writer ownership that close is draining.
++            if (Volatile.Read(ref _disposed) != 0)
++            {
++                if (rollback) return default;
++                throw new ObjectDisposedException(nameof(SharedEngine));
++            }
++            if (this.IsForeignReaderCallback())
++            {
++                // A handed-off reader can still be running when its original owner
++                // exits. Its callback cannot wait for the native owner draining it.
++                // Unrelated new callers retain their normal admission wait/recovery.
++                if (rollback) return default;
++                throw new InvalidOperationException("Cannot wait for shared ownership from inside a reader executing on another ownership thread.");
++            }
++            using var callback = new CallbackScope(this);
+             var depth = this.AdmittedDepth();
+             var frame = this.OwnershipFrame(this.CallRetains);
+             try
+diff --git a/LiteDB/Client/Shared/SharedEngine.Disposal.cs b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+new file mode 100644
+index 000000000..6da07b788
+--- /dev/null
++++ b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+@@ -0,0 +1,141 @@
++using System;
++using System.Linq;
++using LiteDB.Engine;
++using System.Threading;
++using LiteDB.Client.Shared;
++using LiteDB.Utils;
++
++namespace LiteDB
++{
++    public partial class SharedEngine
++    {
++        // A handle's child closes its operation engine normally; the public session owns
++        // the final checkpoint policy. Durable commits remain in the authoritative WAL.
++        private bool _transactionChild;
++        protected virtual void Dispose(bool disposing)
++        {
++            if (!disposing) return;
++            lock (_useLock)
++            {
++                if (_disposed != 0) return;
++                this.ThrowIfClosingFromOperation();
++                Volatile.Write(ref _disposed, 1);
++            }
++
++            var cleanup = new TryCatch();
++            cleanup.Catch(() => this.DisposeConnection(cleanup));
++            // A failed pin/core close must not skip unrelated ownership retirement.
++            // ReturnTransactionChild refuses publication after _disposed is set.
++            SharedEngine cached;
++            lock (_useLock)
++            {
++                cached = _cachedTransactionChild;
++                _cachedTransactionChild = null;
++            }
++            cleanup.Catch(() => cached?.Dispose());
++            cleanup.Catch(_settings.SharedAdmission.Dispose);
++            ThrowSharedCleanupErrors(cleanup);
++        }
++
++        private static void ThrowSharedCleanupErrors(TryCatch cleanup)
++        {
++            if (cleanup.Exceptions.Count == 0) return;
++            var primary = cleanup.Exceptions[0];
++            var suffix = 0;
++            for (var i = 1; i < cleanup.Exceptions.Count; i++)
++            {
++                while (primary.Data.Contains("LiteDB.SharedCleanup." + suffix)) suffix++;
++                primary.Data["LiteDB.SharedCleanup." + suffix++] = cleanup.Exceptions[i];
++            }
++            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(primary).Throw();
++        }
++
++        private void DisposeConnection(TryCatch cleanup)
++        {
++            cleanup.Catch(this.RetireCoordinatedReads);
++            // Any thread can end a pin; its holder closes the engine and releases. Read
++            // under the lock that orders a starting pin's publication with this Dispose.
++            SharedMutexPin pin;
++            lock (_useLock) pin = _pin;
++            if (pin != null)
++            {
++                pin.RequestRelease(force: true);
++                if (!pin.CanWaitFrom(Thread.CurrentThread))
++                {
++                    // An executing raw-engine callback cannot join itself. ClosePin
++                    // finishes its core and coordination cleanup when that call returns.
++                    cleanup.Catch(() => _handles?.Dispose());
++                    cleanup.Catch(_readers.Dispose);
++                    return;
++                }
++                cleanup.Catch(pin.WaitReleased);
++            }
++
++            // Calls admitted before Dispose started finish first; later ones are refused.
++            cleanup.Catch(this.WaitForAdmittedCalls);
++            bool closed;
++            using (this.OwnershipFrame(() => _owner.IsHeld))
++                closed = this.CloseOwnedCores(checkpoint: true, final: true);
++            // Open readers and transactions of any thread end with the connection.
++            cleanup.Catch(_owner.ReleaseAll);
++            // Operations left a WAL below the close threshold: checkpoint it now, so
++            // the data file alone is the database again once every connection closed.
++            if (!closed && !_transactionChild) cleanup.Catch(this.CheckpointOnDispose);
++            cleanup.Catch(() => _handles?.Dispose());
++            // Leased readers may outlive the connection; the slot file closes after the last.
++            cleanup.Catch(_readers.Dispose);
++            // A disposed connection holds no mutex, even for the moment its holder
++            // needs to release it; another connection's final close may try it next.
++            cleanup.Catch(_owner.WaitForRelease);
++            cleanup.Catch(this.DisposeCoordination);
++        }
++
++        internal void ThrowIfClosingFromOperation()
++        {
++            lock (_useLock)
++            {
++                // Leased snapshots are independent and may outlive this facade.
++                if (this.AdmittedDepth() != 0 || this.IsExecutingOwnedCoreOnCurrentThread())
++                    throw new InvalidOperationException("Cannot close a shared connection from inside its executing operation.");
++            }
++        }
++
++        private bool IsForeignReaderCallback()
++        {
++            if (_owner.IsOwnedByCurrentThread) return false;
++            var pin = _pin;
++            if (pin != null && ReferenceEquals(pin.Owner, Thread.CurrentThread)) return false;
++            return this.IsExecutingOwnedCoreOnCurrentThread();
++        }
++
++        private bool IsExecutingOwnedCoreOnCurrentThread()
++        {
++            lock (_useLock)
++                return _engine?.IsExecutingOnCurrentThread == true ||
++                    _mutexSnapshots.Any(snapshot => snapshot.IsExecutingOnCurrentThread);
++        }
++
++        /// <summary>Keep ownership published while draining, without a callback-needed lock.</summary>
++        private bool CloseOwnedCores(bool checkpoint, bool final = false)
++        {
++            LiteEngine core;
++            LiteEngine[] snapshots;
++            lock (_useLock)
++            {
++                core = _engine;
++                snapshots = _mutexSnapshots.ToArray();
++            }
++            // Returned errors follow completed teardown and keep the parent's
++            // best-effort policy. A thrown refusal must prevent native release.
++            core?.Close(checkpoint: checkpoint, final: final);
++            foreach (var snapshot in snapshots) snapshot.Close(checkpoint: false);
++            lock (_useLock)
++            {
++                if (ReferenceEquals(_engine, core)) _engine = null;
++                foreach (var snapshot in snapshots) _mutexSnapshots.Remove(snapshot);
++                _databaseUsers = 0;
++            }
++            return core != null;
++        }
++    }
++}

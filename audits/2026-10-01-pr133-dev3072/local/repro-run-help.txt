@@ -1,0 +1,23 @@
+DESCRIPTION:
+Execute repros against package and source builds.
+
+USAGE:
+    repro-runner run [id] [OPTIONS]
+
+ARGUMENTS:
+    [id]    Identifier of the repro to run
+
+OPTIONS:
+    -h, --help                      Prints help information                     
+        --root <PATH>               Override the LiteDB.ReproRunner root        
+                                    directory                                   
+        --all                       Run every repro in sequence                 
+        --instances <N>             Override the number of instances to launch  
+        --timeout <SECONDS>         Override the timeout applied to each repro  
+        --skipValidation            Allow execution even when manifest          
+                                    validation fails                            
+        --fps <FPS>                 Limit the live UI refresh rate in frames per
+                                    second (default: 2)                         
+        --report <PATH>             Write a machine-readable report to the      
+                                    specified file or '-' for stdout            
+        --report-format <FORMAT>    Report format (currently only 'json')       

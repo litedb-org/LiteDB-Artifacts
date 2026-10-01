@@ -1,0 +1,1023 @@
+﻿2026-10-01T02:58:25.9619810Z Current runner version: '2.337.0'
+2026-10-01T02:58:25.9653560Z ##[group]Runner Image Provisioner
+2026-10-01T02:58:25.9655160Z Hosted Compute Agent
+2026-10-01T02:58:25.9656410Z Version: 20260819.586
+2026-10-01T02:58:25.9657410Z Commit: 3cc4a88dfa507ef76119ad1bb3eccc6378bb2b76
+2026-10-01T02:58:25.9658480Z Build Date: 2026-08-18T23:20:18Z
+2026-10-01T02:58:25.9659460Z Worker ID: {0a617a80-962f-484e-9287-abe5e0ce3781}
+2026-10-01T02:58:25.9660540Z Azure Region: westus
+2026-10-01T02:58:25.9661360Z ##[endgroup]
+2026-10-01T02:58:25.9664370Z ##[group]Operating System
+2026-10-01T02:58:25.9665280Z macOS
+2026-10-01T02:58:25.9666000Z 15.7.9
+2026-10-01T02:58:25.9666740Z 24G830
+2026-10-01T02:58:25.9667480Z ##[endgroup]
+2026-10-01T02:58:25.9668710Z ##[group]Runner Image
+2026-10-01T02:58:25.9670150Z Image: macos-15
+2026-10-01T02:58:25.9671460Z Version: 20260824.0482.1
+2026-10-01T02:58:25.9674310Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260824.0482/images/macos/macos-15-Readme.md
+2026-10-01T02:58:25.9677000Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260824.0482
+2026-10-01T02:58:25.9678880Z ##[endgroup]
+2026-10-01T02:58:25.9684260Z ##[group]GITHUB_TOKEN Permissions
+2026-10-01T02:58:25.9686900Z Actions: write
+2026-10-01T02:58:25.9687960Z ArtifactMetadata: write
+2026-10-01T02:58:25.9688970Z Attestations: write
+2026-10-01T02:58:25.9689790Z Checks: write
+2026-10-01T02:58:25.9690600Z CodeQuality: write
+2026-10-01T02:58:25.9691600Z Contents: write
+2026-10-01T02:58:25.9692470Z CopilotRequests: write
+2026-10-01T02:58:25.9693370Z Deployments: write
+2026-10-01T02:58:25.9694250Z Discussions: write
+2026-10-01T02:58:25.9695050Z Drives: write
+2026-10-01T02:58:25.9695850Z Issues: write
+2026-10-01T02:58:25.9696630Z Metadata: read
+2026-10-01T02:58:25.9697580Z Models: read
+2026-10-01T02:58:25.9698360Z Packages: write
+2026-10-01T02:58:25.9699480Z Pages: write
+2026-10-01T02:58:25.9700350Z PullRequests: write
+2026-10-01T02:58:25.9702080Z RepositoryProjects: write
+2026-10-01T02:58:25.9703470Z SecurityEvents: write
+2026-10-01T02:58:25.9704910Z Statuses: write
+2026-10-01T02:58:25.9706910Z VulnerabilityAlerts: read
+2026-10-01T02:58:25.9708370Z ##[endgroup]
+2026-10-01T02:58:25.9712060Z Secret source: Actions
+2026-10-01T02:58:25.9714110Z Cache mode: write
+2026-10-01T02:58:25.9715660Z Prepare workflow directory
+2026-10-01T02:58:26.0631490Z Prepare all required actions
+2026-10-01T02:58:26.0698880Z Getting action download info
+2026-10-01T02:58:26.3844530Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-01T02:58:27.4252280Z Download action repository 'actions/setup-dotnet@v4' (SHA:67a3573c9a986a3f9c594539f4ab511d57bb3ce9)
+2026-10-01T02:58:28.3518160Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-01T02:58:28.7600150Z Uses: JKamsker/LiteDB/.github/workflows/_reusable-ci.yml@refs/pull/133/merge (ba223d34c92edff9b6b71fef2fdb74afbdca147f)
+2026-10-01T02:58:28.7611460Z ##[group] Inputs
+2026-10-01T02:58:28.7613370Z   tier: full
+2026-10-01T02:58:28.7624790Z   sdk-matrix: [
+  { "display": ".NET 8", "runtimeMajor": 8,  "sdk": "8.0.x",           "framework": "net8.0", "includePrerelease": false, "msbuildProps": "" },
+  { "display": ".NET 9", "runtimeMajor": 9,  "sdk": "9.0.x\n8.0.x",    "framework": "net8.0", "includePrerelease": true,  "msbuildProps": "" },
+  { "display": ".NET 10", "runtimeMajor": 10, "sdk": "10.0.x",          "framework": "net10.0", "includePrerelease": false, "msbuildProps": "" }
+]
+
+2026-10-01T02:58:28.7636640Z ##[endgroup]
+2026-10-01T02:58:28.7639270Z Complete job name: build-and-test / Native admission (macOS Intel - net8.0)
+2026-10-01T02:58:28.8868890Z ##[group]Run actions/checkout@v4
+2026-10-01T02:58:28.8871270Z with:
+2026-10-01T02:58:28.8872800Z   repository: JKamsker/LiteDB
+2026-10-01T02:58:28.8891180Z   token: ***
+2026-10-01T02:58:28.8892730Z   ssh-strict: true
+2026-10-01T02:58:28.8894450Z   ssh-user: git
+2026-10-01T02:58:28.8896260Z   persist-credentials: true
+2026-10-01T02:58:28.8898900Z   clean: true
+2026-10-01T02:58:28.8900630Z   sparse-checkout-cone-mode: true
+2026-10-01T02:58:28.8902580Z   fetch-depth: 1
+2026-10-01T02:58:28.8904310Z   fetch-tags: false
+2026-10-01T02:58:28.8905910Z   show-progress: true
+2026-10-01T02:58:28.8907510Z   lfs: false
+2026-10-01T02:58:28.8908980Z   submodules: false
+2026-10-01T02:58:28.8910600Z   set-safe-directory: true
+2026-10-01T02:58:28.8912460Z   allow-unsafe-pr-checkout: false
+2026-10-01T02:58:28.8915020Z env:
+2026-10-01T02:58:28.8917980Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T02:58:28.8921590Z ##[endgroup]
+2026-10-01T02:58:30.0860290Z Syncing repository: JKamsker/LiteDB
+2026-10-01T02:58:30.0867820Z ##[group]Getting Git version info
+2026-10-01T02:58:30.0872240Z Working directory is '__CI_HOME__/work/LiteDB/LiteDB'
+2026-10-01T02:58:30.0878060Z [command]/usr/local/bin/git version
+2026-10-01T02:58:30.1689060Z git version 2.55.0
+2026-10-01T02:58:30.1746800Z ##[endgroup]
+2026-10-01T02:58:30.1776440Z Copying '__CI_HOME__/.gitconfig' to '__CI_HOME__/work/_temp/995391bc-a287-4fbb-a449-e312c761b758/.gitconfig'
+2026-10-01T02:58:30.1809110Z Temporarily overriding HOME='__CI_HOME__/work/_temp/995391bc-a287-4fbb-a449-e312c761b758' before making global git config changes
+2026-10-01T02:58:30.1823820Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-01T02:58:30.1830950Z [command]/usr/local/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-10-01T02:58:30.2089830Z Deleting the contents of '__CI_HOME__/work/LiteDB/LiteDB'
+2026-10-01T02:58:30.2102770Z ##[group]Initializing the repository
+2026-10-01T02:58:30.2112440Z [command]/usr/local/bin/git init __CI_WORKSPACE__
+2026-10-01T02:58:30.2814990Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-01T02:58:30.2821950Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-01T02:58:30.2833450Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-01T02:58:30.2838810Z hint: call:
+2026-10-01T02:58:30.2841180Z hint:
+2026-10-01T02:58:30.2844300Z hint: 	git config --global init.defaultBranch <name>
+2026-10-01T02:58:30.2848260Z hint:
+2026-10-01T02:58:30.2852270Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-01T02:58:30.2859580Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-01T02:58:30.2866070Z hint:
+2026-10-01T02:58:30.2868480Z hint: 	git branch -m <name>
+2026-10-01T02:58:30.2871430Z hint:
+2026-10-01T02:58:30.2875550Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-01T02:58:30.2882080Z Initialized empty Git repository in __CI_WORKSPACE__/.git/
+2026-10-01T02:58:30.2891650Z [command]/usr/local/bin/git remote add origin https://github.com/JKamsker/LiteDB
+2026-10-01T02:58:30.3148600Z ##[endgroup]
+2026-10-01T02:58:30.3163230Z ##[group]Disabling automatic garbage collection
+2026-10-01T02:58:30.3174120Z [command]/usr/local/bin/git config --local gc.auto 0
+2026-10-01T02:58:30.3445440Z ##[endgroup]
+2026-10-01T02:58:30.3450740Z ##[group]Setting up auth
+2026-10-01T02:58:30.3454990Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-01T02:58:30.3601170Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-01T02:58:31.2158850Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-01T02:58:31.3445160Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-01T02:58:32.6015570Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-01T02:58:32.7379180Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-01T02:58:33.9507150Z [command]/usr/local/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-01T02:58:33.9552250Z ##[endgroup]
+2026-10-01T02:58:33.9796640Z ##[group]Fetching the repository
+2026-10-01T02:58:33.9851820Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ba223d34c92edff9b6b71fef2fdb74afbdca147f:refs/remotes/pull/133/merge
+2026-10-01T02:58:37.2601730Z From https://github.com/JKamsker/LiteDB
+2026-10-01T02:58:37.2630940Z  * [new ref]         ba223d34c92edff9b6b71fef2fdb74afbdca147f -> pull/133/merge
+2026-10-01T02:58:37.3853140Z ##[endgroup]
+2026-10-01T02:58:37.4863440Z ##[group]Determining the checkout info
+2026-10-01T02:58:37.5494500Z ##[endgroup]
+2026-10-01T02:58:37.5759010Z [command]/usr/local/bin/git sparse-checkout disable
+2026-10-01T02:58:37.6182220Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-01T02:58:37.6658830Z ##[group]Checking out the ref
+2026-10-01T02:58:37.7663530Z [command]/usr/local/bin/git checkout --progress --force refs/remotes/pull/133/merge
+2026-10-01T02:58:38.5055520Z Updating files:  72% (1461/2018)
+2026-10-01T02:58:38.5339270Z Updating files:  73% (1474/2018)
+2026-10-01T02:58:38.5601260Z Updating files:  74% (1494/2018)
+2026-10-01T02:58:38.5742350Z Updating files:  75% (1514/2018)
+2026-10-01T02:58:38.5785410Z Updating files:  76% (1534/2018)
+2026-10-01T02:58:38.5855680Z Updating files:  77% (1554/2018)
+2026-10-01T02:58:38.5942130Z Updating files:  78% (1575/2018)
+2026-10-01T02:58:38.6033680Z Updating files:  79% (1595/2018)
+2026-10-01T02:58:38.6118970Z Updating files:  80% (1615/2018)
+2026-10-01T02:58:38.6186790Z Updating files:  81% (1635/2018)
+2026-10-01T02:58:38.6271080Z Updating files:  82% (1655/2018)
+2026-10-01T02:58:38.6386400Z Updating files:  83% (1675/2018)
+2026-10-01T02:58:38.7373430Z Updating files:  84% (1696/2018)
+2026-10-01T02:58:38.7422710Z Updating files:  85% (1716/2018)
+2026-10-01T02:58:38.7560310Z Updating files:  86% (1736/2018)
+2026-10-01T02:58:38.7622950Z Updating files:  87% (1756/2018)
+2026-10-01T02:58:38.7770350Z Updating files:  88% (1776/2018)
+2026-10-01T02:58:38.8733390Z Updating files:  89% (1797/2018)
+2026-10-01T02:58:38.8983290Z Updating files:  90% (1817/2018)
+2026-10-01T02:58:38.9653000Z Updating files:  91% (1837/2018)
+2026-10-01T02:58:38.9709870Z Updating files:  92% (1857/2018)
+2026-10-01T02:58:38.9758860Z Updating files:  93% (1877/2018)
+2026-10-01T02:58:38.9760420Z Updating files:  94% (1897/2018)
+2026-10-01T02:58:38.9761790Z Updating files:  95% (1918/2018)
+2026-10-01T02:58:39.0376500Z Updating files:  96% (1938/2018)
+2026-10-01T02:58:39.0389270Z Updating files:  97% (1958/2018)
+2026-10-01T02:58:39.0432870Z Updating files:  98% (1978/2018)
+2026-10-01T02:58:39.0461450Z Updating files:  99% (1998/2018)
+2026-10-01T02:58:39.0462610Z Updating files: 100% (2018/2018)
+2026-10-01T02:58:39.0468230Z Updating files: 100% (2018/2018), done.
+2026-10-01T02:58:39.0473000Z HEAD is now at ba223d3 Merge 0d7ea1ee63fc1450e3b38624649d7fc7e2d828bc into 5dd942a7367c361fadd600be4ce10aace2768b27
+2026-10-01T02:58:39.0504480Z ##[endgroup]
+2026-10-01T02:58:39.0892380Z [command]/usr/local/bin/git log -1 --format=%H
+2026-10-01T02:58:39.1149130Z ba223d34c92edff9b6b71fef2fdb74afbdca147f
+2026-10-01T02:58:39.1658220Z ##[group]Run actions/setup-dotnet@v4
+2026-10-01T02:58:39.1658790Z with:
+2026-10-01T02:58:39.1659150Z   dotnet-version: 10.0.x
+8.0.x
+
+2026-10-01T02:58:39.1659600Z   cache: false
+2026-10-01T02:58:39.1659950Z env:
+2026-10-01T02:58:39.1660760Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T02:58:39.1661770Z ##[endgroup]
+2026-10-01T02:58:40.1651620Z (node:10661) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T02:58:40.1693990Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T02:58:40.2168920Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+2026-10-01T02:58:42.2240000Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T02:58:43.4214170Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz size is 35596837 bytes.
+2026-10-01T02:58:43.4682510Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz
+2026-10-01T02:58:47.4477730Z dotnet-install: Downloaded file size is 35596837 bytes.
+2026-10-01T02:58:47.4499910Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T02:58:47.5577750Z dotnet-install: Installed version is 10.0.12
+2026-10-01T02:58:47.7005200Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T02:58:47.7876070Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T02:58:47.7942840Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T02:58:47.8116960Z dotnet-install: Installation finished successfully.
+2026-10-01T02:58:47.8158080Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --channel 10.0
+2026-10-01T02:58:48.8387670Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz
+2026-10-01T02:58:51.4644840Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz size is 238641497 bytes.
+2026-10-01T02:58:51.4997830Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-x64.tar.gz
+2026-10-01T02:59:02.3736600Z dotnet-install: Downloaded file size is 238641497 bytes.
+2026-10-01T02:59:02.4740500Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T02:59:03.3042030Z dotnet-install: Installed version is 10.0.401
+2026-10-01T02:59:03.3269750Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T02:59:03.3280410Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T02:59:03.3291910Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T02:59:03.3295270Z dotnet-install: Installation finished successfully.
+2026-10-01T02:59:03.3303770Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+2026-10-01T02:59:03.9858530Z dotnet-install: .NET Core Runtime with version '10.0.12' is already installed.
+2026-10-01T02:59:03.9871660Z [command]__CI_HOME__/work/_actions/actions/setup-dotnet/v4/externals/install-dotnet.sh --skip-non-versioned-files --channel 8.0
+2026-10-01T02:59:04.7181640Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz
+2026-10-01T02:59:07.8546280Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz size is 215008279 bytes.
+2026-10-01T02:59:07.8558910Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-osx-x64.tar.gz
+2026-10-01T02:59:17.0170500Z dotnet-install: Downloaded file size is 215008279 bytes.
+2026-10-01T02:59:17.0171820Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T02:59:17.7280500Z dotnet-install: Installed version is 8.0.425
+2026-10-01T02:59:17.7568810Z dotnet-install: Adding to current process PATH: `__CI_HOME__/.dotnet`. Note: This change will be visible only when sourcing script.
+2026-10-01T02:59:17.7613400Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T02:59:17.7617660Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T02:59:17.7622170Z dotnet-install: Installation finished successfully.
+2026-10-01T02:59:17.7897980Z ##[group]Run dotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net8.0 -p:TestingEnabled=true
+2026-10-01T02:59:17.7899780Z [36;1mdotnet build LiteDB.Tests/LiteDB.Tests.csproj -c Release -f net8.0 -p:TestingEnabled=true[0m
+2026-10-01T02:59:17.7994480Z shell: /bin/bash -e {0}
+2026-10-01T02:59:17.7995020Z env:
+2026-10-01T02:59:17.7995910Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T02:59:17.7997050Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T02:59:17.7997610Z ##[endgroup]
+2026-10-01T02:59:19.4916040Z   Determining projects to restore...
+2026-10-01T02:59:21.4322030Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj]
+2026-10-01T02:59:21.5972460Z   Restored __CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj (in 179 ms).
+2026-10-01T02:59:22.9188740Z   Restored __CI_WORKSPACE__/LiteDB/LiteDB.csproj (in 1.48 sec).
+2026-10-01T02:59:25.5981980Z   Restored __CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj (in 4.19 sec).
+2026-10-01T02:59:27.4578160Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net8.0]
+2026-10-01T02:59:35.0155830Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0183740Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0197290Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0206240Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0218910Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0232010Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0253920Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0264520Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0276930Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0287210Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0298430Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0311410Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0323540Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0337220Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T02:59:35.0978080Z   LiteDB -> __CI_WORKSPACE__/LiteDB/bin/Release/net8.0/LiteDB.dll
+2026-10-01T02:59:36.0442440Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(35,9): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0456210Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(39,9): warning CS0618: 'LiteDatabase.Rollback()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0498420Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(65,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0513110Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(85,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0549040Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMappedHarness.cs(40,13): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0569250Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(34,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.0589150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(36,55): warning CS0618: 'LiteDatabase.Commit()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T02:59:36.1868270Z   SharedMutexHarness -> __CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/bin/Release/net8.0/SharedMutexHarness.dll
+2026-10-01T03:00:02.8128760Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2265_Tests.cs(38,20): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8162010Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(91,58): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8210150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(105,57): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8224180Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/CacheAsync_Tests.cs(86,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8296870Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/TransactionHandleProcess_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8307820Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandle_Tests.cs(146,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8317160Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(56,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8326480Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(57,68): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8336120Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(66,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8345420Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CompactSchemaCacheConcurrency_Tests.cs(96,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8354610Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2848_Tests.cs(87,89): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8363460Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814Admission_Tests.cs(56,78): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8372480Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814_Tests.cs(57,26): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8382620Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(65,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8392320Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(66,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8402070Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2790ReaderLease_Tests.cs(43,37): warning xUnit1030: Test methods should not call ConfigureAwait(false), as it may bypass parallelization limits. Omit ConfigureAwait, or use ConfigureAwait(true) to avoid CA2007. (https://xunit.net/xunit.analyzers/rules/xUnit1030) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8411360Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(48,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8420340Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(53,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8429530Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(54,44): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8439920Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(59,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8450300Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(60,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8461900Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2324_Tests.cs(64,33): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8473250Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(21,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8484880Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8495250Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2112_Tests.cs(32,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8504010Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1192DirectDictionary_Tests.cs(186,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8517380Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(48,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8534980Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(49,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8545610Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(54,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8556380Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(91,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8567150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(92,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8577000Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs(33,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8587970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(81,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8600970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(111,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8612440Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(157,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8622070Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(190,31): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8632340Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleContext_Tests.cs(24,46): warning CA1416: This call site is reachable on all platforms. 'WindowsIdentity.GetCurrent(bool)' is only supported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8641790Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(130,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8652520Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(131,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8662840Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(83,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8672190Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(84,112): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8683270Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(85,62): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8693920Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(250,55): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8704100Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(71,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8713360Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(72,54): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8722350Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(73,49): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8731760Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(93,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8741400Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(117,23): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8751650Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(56,25): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8761050Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(65,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8770000Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectPoolFinalizer_Tests.cs(74,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8779440Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContext_Tests.cs(140,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8790490Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContextLifetime_Tests.cs(151,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8801050Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(161,28): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8810400Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(172,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8819530Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorPlatform_Tests.cs(289,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.8828470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Coordinator_Tests.cs(262,20): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:02.9556030Z   LiteDB.Tests -> __CI_WORKSPACE__/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll
+2026-10-01T03:00:03.0055050Z 
+2026-10-01T03:00:03.0067140Z Build succeeded.
+2026-10-01T03:00:03.0076660Z 
+2026-10-01T03:00:03.0088490Z __CI_WORKSPACE__/LiteDB/LiteDB.csproj : warning NU1510: PackageReference System.ComponentModel.TypeConverter will not be pruned. This package is automatically available and does not need to be referenced explicitly. Remove the PackageReference item. [TargetFramework=net8.0]
+2026-10-01T03:00:03.0106420Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Mapper/BsonMapper.Deserialize.cs(27,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0139160Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/Legacy/AesEncryption.cs(21,23): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0171550Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/Disk/Streams/AesStream.cs(97,27): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' is obsolete: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0181940Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/FileReader/FileReaderV8.cs(23,29): warning CS0649: Field 'FileReaderV8.PageInfo.PageType' is never assigned to, and will always have its default value [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0198660Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(229,37): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'checkpoint', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0206040Z ##[warning]__CI_WORKSPACE__/LiteDB/Engine/LiteEngine.cs(232,42): warning CS1734: XML comment on 'LiteEngine.InvalidDatafileState' has a paramref tag for 'final', but there is no parameter by that name [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0215450Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,42): warning CS1573: Parameter 'engine' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0224670Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,62): warning CS1573: Parameter 'lease' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0233590Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorClient.Snapshots.cs(376,73): warning CS1573: Parameter 'version' has no matching param tag in the XML comment for 'CoordinatorClient.Snapshot.Snapshot(LiteEngine, IDisposable, int, CoordinatorStatus)' (but other parameters do) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0242580Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(115,57): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0260410Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(133,17): warning CA1416: This call site is reachable on all platforms. 'Directory.CreateDirectory(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0272760Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(145,51): warning CA1416: This call site is reachable on all platforms. 'File.SetUnixFileMode(string, UnixFileMode)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0282570Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(138,24): warning CA1416: This call site is reachable on all platforms. 'File.GetUnixFileMode(string)' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0292770Z ##[warning]__CI_WORKSPACE__/LiteDB/Client/Coordinated/CoordinatorStatusPage.cs(170,27): warning CA1416: This call site is reachable on all platforms. 'FileStreamOptions.UnixCreateMode.set' is unsupported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB/LiteDB.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0301930Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(35,9): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0310450Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/CoordinatorHarness.cs(39,9): warning CS0618: 'LiteDatabase.Rollback()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0319100Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(65,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0327700Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/MvccHarness.cs(85,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0336220Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMappedHarness.cs(40,13): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0346460Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(34,17): warning CS0618: 'LiteDatabase.BeginTrans()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0355200Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedStorageHarness.cs(36,55): warning CS0618: 'LiteDatabase.Commit()' is obsolete: 'Use BeginTransaction() and Commit/Rollback on the returned handle. This legacy API is thread-bound and must not cross await.' [__CI_WORKSPACE__/LiteDB.Tests.SharedMutexHarness/SharedMutexHarness.csproj]
+2026-10-01T03:00:03.0362590Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2265_Tests.cs(38,20): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0368880Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(91,58): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0375350Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1829Invocation_Tests.cs(105,57): warning CS1718: Comparison made to same variable; did you mean to compare something else? [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0383890Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/CacheAsync_Tests.cs(86,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0394240Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Internals/TransactionHandleProcess_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0405970Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandle_Tests.cs(146,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0415150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(56,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0424350Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(57,68): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0435450Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedPinCancellation_Tests.cs(66,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0449080Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CompactSchemaCacheConcurrency_Tests.cs(96,18): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0458150Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2848_Tests.cs(87,89): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0468110Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814Admission_Tests.cs(56,78): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0478060Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2814_Tests.cs(57,26): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0489540Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(65,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0499630Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792SnapshotPublication_Tests.cs(66,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0510070Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2790ReaderLease_Tests.cs(43,37): warning xUnit1030: Test methods should not call ConfigureAwait(false), as it may bypass parallelization limits. Omit ConfigureAwait, or use ConfigureAwait(true) to avoid CA2007. (https://xunit.net/xunit.analyzers/rules/xUnit1030) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0519210Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(48,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0527880Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(53,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0539380Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(54,44): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0548470Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(59,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0575870Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2792_Tests.cs(60,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0585290Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2324_Tests.cs(64,33): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0594110Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(21,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0601810Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2243ReferenceSchema_Tests.cs(22,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0609940Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue2112_Tests.cs(32,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0619180Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Issues/Issue1192DirectDictionary_Tests.cs(186,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Empty instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0630300Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(48,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0643160Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(49,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0652710Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(54,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0663610Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(91,34): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0677320Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleSharedAdmission_Tests.cs(92,64): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0687010Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleRawCloseDependency_Tests.cs(33,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0696700Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(81,32): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0706600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(111,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0716190Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(157,41): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0726290Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleMaintenanceProgress_Tests.cs(190,31): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0737180Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleContext_Tests.cs(24,46): warning CA1416: This call site is reachable on all platforms. 'WindowsIdentity.GetCurrent(bool)' is only supported on: 'windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0746600Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(130,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0755410Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(131,57): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0764220Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(83,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0773040Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(84,112): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0781840Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleAdmission_Tests.cs(85,62): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0794500Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleDisposeSafety_Tests.cs(250,55): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0806480Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(71,35): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0815510Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(72,54): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0824390Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(73,49): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0833120Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(93,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0841870Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/SharedDisposalFailure_Tests.cs(117,23): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0850680Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(56,25): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0859450Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionIsolation_Tests.cs(65,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0867530Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectPoolFinalizer_Tests.cs(74,13): warning xUnit2013: Do not use Assert.Equal() to check for collection size. Use Assert.Single instead. (https://xunit.net/xunit.analyzers/rules/xUnit2013) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0876350Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContext_Tests.cs(140,38): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0892020Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/NativeAdmissionDirectContextLifetime_Tests.cs(151,37): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0901130Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(161,28): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0909930Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorSnapshotReads_Tests.cs(172,24): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0918650Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/CoordinatorPlatform_Tests.cs(289,22): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0927250Z ##[warning]__CI_WORKSPACE__/LiteDB.Tests/Engine/Coordinator_Tests.cs(262,20): warning xUnit1031: Test methods should not use blocking task operations, as they can cause deadlocks. Use an async test method and await instead. (https://xunit.net/xunit.analyzers/rules/xUnit1031) [__CI_WORKSPACE__/LiteDB.Tests/LiteDB.Tests.csproj::TargetFramework=net8.0]
+2026-10-01T03:00:03.0931040Z     79 Warning(s)
+2026-10-01T03:00:03.0931390Z     0 Error(s)
+2026-10-01T03:00:03.0931610Z 
+2026-10-01T03:00:03.0931810Z Time Elapsed 00:00:37.37
+2026-10-01T03:00:03.1020600Z ##[group]Run printf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json
+2026-10-01T03:00:03.1022880Z [36;1mprintf '{"sha":"%s","tree":"%s","sdk":"%s"}' "$(git rev-parse HEAD)" "$(git rev-parse 'HEAD^{tree}')" "$(dotnet --version)" > LiteDB.Tests/bin/Release/build-evidence.json[0m
+2026-10-01T03:00:03.1094100Z shell: /bin/bash -e {0}
+2026-10-01T03:00:03.1094540Z env:
+2026-10-01T03:00:03.1095390Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:00:03.1096410Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:00:03.1096890Z ##[endgroup]
+2026-10-01T03:00:03.3017390Z ##[group]Run ./scripts/run-ci-tests.ps1 -RuntimeMajor 8 -Framework "net8.0" -Architecture x64 -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated' -ResultFile 'NativeAdmission.trx' -PartitionFiltered
+2026-10-01T03:00:03.3026310Z [36;1m./scripts/run-ci-tests.ps1 -RuntimeMajor 8 -Framework "net8.0" -Architecture x64 -Filter 'FullyQualifiedName~TransactionHandle|FullyQualifiedName~NativeAdmission|FullyQualifiedName~SharedAdmissionLifetime|FullyQualifiedName~SharedMode|FullyQualifiedName~DirectModeAdmission|FullyQualifiedName~Rebuild|FullyQualifiedName~Issue2979|FullyQualifiedName~SharedCoordinated' -ResultFile 'NativeAdmission.trx' -PartitionFiltered[0m
+2026-10-01T03:00:03.3044100Z shell: /usr/local/bin/pwsh -command ". '{0}'"
+2026-10-01T03:00:03.3044840Z env:
+2026-10-01T03:00:03.3045810Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:00:03.3046920Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:00:03.3047680Z   LITEDB_EVIDENCE_MATRIX: {
+  "framework": "net8.0",
+  "runtimeMajor": 8
+}
+2026-10-01T03:00:03.3048480Z ##[endgroup]
+2026-10-01T03:00:06.2753570Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz
+2026-10-01T03:00:07.4224360Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz size is 30717675 bytes.
+2026-10-01T03:00:07.4228450Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz
+2026-10-01T03:00:08.1518340Z dotnet-install: Downloaded file size is 30717675 bytes.
+2026-10-01T03:00:08.1519440Z dotnet-install: The remote and local file sizes are equal.
+2026-10-01T03:00:08.2003220Z dotnet-install: Installed version is 8.0.31
+2026-10-01T03:00:08.2193050Z dotnet-install: Binaries of dotnet can be found in __CI_HOME__/work/_temp/litedb-runtime-8-x64
+2026-10-01T03:00:08.2194670Z dotnet-install: Note that the script does not resolve dependencies during installation.
+2026-10-01T03:00:08.2197220Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+2026-10-01T03:00:08.2199040Z dotnet-install: Installation finished successfully.
+2026-10-01T03:00:08.2627090Z 
+2026-10-01T03:00:08.2628550Z Host:
+2026-10-01T03:00:08.2629080Z   Version:      8.0.31
+2026-10-01T03:00:08.2629590Z   Architecture: x64
+2026-10-01T03:00:08.2630090Z   Commit:       1219a42122
+2026-10-01T03:00:08.2630620Z   RID:          osx-x64
+2026-10-01T03:00:08.2630900Z 
+2026-10-01T03:00:08.2631160Z .NET SDKs installed:
+2026-10-01T03:00:08.2631680Z   No SDKs were found.
+2026-10-01T03:00:08.2631970Z 
+2026-10-01T03:00:08.2632430Z .NET runtimes installed:
+2026-10-01T03:00:08.2633630Z   Microsoft.NETCore.App 8.0.31 [__CI_HOME__/work/_temp/litedb-runtime-8-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:00:08.2634630Z 
+2026-10-01T03:00:08.2634880Z Other architectures found:
+2026-10-01T03:00:08.2635380Z   None
+2026-10-01T03:00:08.2635630Z 
+2026-10-01T03:00:08.2635870Z Environment variables:
+2026-10-01T03:00:08.2636430Z   DOTNET_ROOT       [__CI_HOME__/.dotnet]
+2026-10-01T03:00:08.2636840Z 
+2026-10-01T03:00:08.2637050Z global.json file:
+2026-10-01T03:00:08.2637510Z   Not found
+2026-10-01T03:00:08.2637740Z 
+2026-10-01T03:00:08.2637960Z Learn more:
+2026-10-01T03:00:08.2638420Z   https://aka.ms/dotnet/info
+2026-10-01T03:00:08.2638800Z 
+2026-10-01T03:00:08.2638970Z Download .NET:
+2026-10-01T03:00:08.2639440Z   https://aka.ms/dotnet/download
+2026-10-01T03:00:14.3422080Z Running native selection partition: handles
+2026-10-01T03:00:14.3617560Z 
+2026-10-01T03:00:14.3619220Z Host:
+2026-10-01T03:00:14.3622080Z   Version:      8.0.31
+2026-10-01T03:00:14.3624050Z   Architecture: x64
+2026-10-01T03:00:14.3625470Z   Commit:       1219a42122
+2026-10-01T03:00:14.3626930Z   RID:          osx-x64
+2026-10-01T03:00:14.3627980Z 
+2026-10-01T03:00:14.3628780Z .NET SDKs installed:
+2026-10-01T03:00:14.3629410Z   No SDKs were found.
+2026-10-01T03:00:14.3629730Z 
+2026-10-01T03:00:14.3631610Z .NET runtimes installed:
+2026-10-01T03:00:14.3633650Z   Microsoft.NETCore.App 8.0.31 [__CI_HOME__/work/_temp/litedb-runtime-8-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:00:14.3635410Z 
+2026-10-01T03:00:14.3636600Z Other architectures found:
+2026-10-01T03:00:14.3638240Z   None
+2026-10-01T03:00:14.3638460Z 
+2026-10-01T03:00:14.3638720Z Environment variables:
+2026-10-01T03:00:14.3639330Z   DOTNET_ROOT       [__CI_HOME__/.dotnet]
+2026-10-01T03:00:14.3639890Z 
+2026-10-01T03:00:14.3640750Z global.json file:
+2026-10-01T03:00:14.3641770Z   Not found
+2026-10-01T03:00:14.3642290Z 
+2026-10-01T03:00:14.3643460Z Learn more:
+2026-10-01T03:00:14.3644540Z   https://aka.ms/dotnet/info
+2026-10-01T03:00:14.3645330Z 
+2026-10-01T03:00:14.3646160Z Download .NET:
+2026-10-01T03:00:14.3647130Z   https://aka.ms/dotnet/download
+2026-10-01T03:00:14.6163290Z VSTest version 18.7.0 (x64)
+2026-10-01T03:00:14.6199480Z 
+2026-10-01T03:00:14.7563710Z Starting test execution, please wait...
+2026-10-01T03:00:14.8162600Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:01:58.8102140Z [xUnit.net 00:01:43.39]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: False) [FAIL]
+2026-10-01T03:01:58.9217410Z [xUnit.net 00:01:43.50]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: False) [FAIL]
+2026-10-01T03:01:58.9843760Z [xUnit.net 00:01:43.56]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: False) [FAIL]
+2026-10-01T03:01:59.1209020Z [xUnit.net 00:01:43.70]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: False) [FAIL]
+2026-10-01T03:01:59.2664460Z [xUnit.net 00:01:43.85]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: True) [FAIL]
+2026-10-01T03:01:59.2737340Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: False) [121 ms]
+2026-10-01T03:01:59.2741480Z   Error Message:
+2026-10-01T03:01:59.2745080Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-e7ad693541dd41fd99e88773cd4ae863/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2751310Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2752490Z   Stack Trace:
+2026-10-01T03:01:59.2757710Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:01:59.2769110Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:01:59.2771580Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:01:59.2774160Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:01:59.2778070Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:01:59.2781720Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:01:59.2784310Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:01:59.2785860Z --- End of stack trace from previous location ---
+2026-10-01T03:01:59.2788140Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:01:59.2791190Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:01:59.2794110Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:01:59.2801160Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:01:59.2808210Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:01:59.2812660Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:01:59.2815690Z    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+2026-10-01T03:01:59.2818260Z    at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+2026-10-01T03:01:59.2835840Z ----- Inner Stack Trace -----
+2026-10-01T03:01:59.2838410Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:01:59.2844070Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:01:59.2849220Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:01:59.2851930Z   Standard Output Messages:
+2026-10-01T03:01:59.2853240Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-e7ad693541dd41fd99e88773cd4ae863/outer.db
+2026-10-01T03:01:59.2854590Z 
+2026-10-01T03:01:59.2854600Z 
+2026-10-01T03:01:59.2856650Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: False) [107 ms]
+2026-10-01T03:01:59.2858690Z   Error Message:
+2026-10-01T03:01:59.2862430Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-2bdfe8a21c554cabba5cbd622f463c68/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2866900Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2867890Z   Stack Trace:
+2026-10-01T03:01:59.2870320Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:01:59.2873630Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:01:59.2876410Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:01:59.2879720Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:01:59.2882720Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:01:59.2885470Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:01:59.2887690Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:01:59.2889130Z --- End of stack trace from previous location ---
+2026-10-01T03:01:59.2890510Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:01:59.2892940Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:01:59.2895810Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:01:59.2899030Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:01:59.2903550Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:01:59.2908960Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:01:59.2913580Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:01:59.2922220Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:01:59.2923770Z ----- Inner Stack Trace -----
+2026-10-01T03:01:59.2927420Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:01:59.2931590Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:01:59.2935640Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:01:59.2938000Z   Standard Output Messages:
+2026-10-01T03:01:59.2939230Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-2bdfe8a21c554cabba5cbd622f463c68/outer.db
+2026-10-01T03:01:59.2940390Z 
+2026-10-01T03:01:59.2940400Z 
+2026-10-01T03:01:59.2942950Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: False) [60 ms]
+2026-10-01T03:01:59.2945990Z   Error Message:
+2026-10-01T03:01:59.2949080Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-c6a2606429094480838b982df152fa9c/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2954200Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.2956100Z   Stack Trace:
+2026-10-01T03:01:59.2959940Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:01:59.2964370Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:01:59.2968550Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:01:59.2971250Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:01:59.2980950Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:01:59.2987130Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:01:59.2990490Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:01:59.2992510Z --- End of stack trace from previous location ---
+2026-10-01T03:01:59.2993970Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:01:59.2997000Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:01:59.3000490Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:01:59.3003860Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:01:59.3008160Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:01:59.3013970Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:01:59.3018150Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:01:59.3020600Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:01:59.3022640Z ----- Inner Stack Trace -----
+2026-10-01T03:01:59.3029570Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:01:59.3035540Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:01:59.3040480Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:01:59.3043900Z   Standard Output Messages:
+2026-10-01T03:01:59.3045590Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-c6a2606429094480838b982df152fa9c/outer.db
+2026-10-01T03:01:59.3047300Z 
+2026-10-01T03:01:59.3047340Z 
+2026-10-01T03:01:59.3049410Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: False) [135 ms]
+2026-10-01T03:01:59.3051910Z   Error Message:
+2026-10-01T03:01:59.3056330Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-83e06100d67e40b7b9453dcc1a2d0a7c/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.3061750Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.3063330Z   Stack Trace:
+2026-10-01T03:01:59.3066800Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:01:59.3071690Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:01:59.3076440Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:01:59.3080230Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:01:59.3085360Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:01:59.3090200Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:01:59.3094240Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:01:59.3096250Z --- End of stack trace from previous location ---
+2026-10-01T03:01:59.3098380Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:01:59.3102160Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:01:59.3107270Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:01:59.3111740Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:01:59.3117590Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:01:59.3122290Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:01:59.3126370Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:01:59.3128610Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:01:59.3132730Z ----- Inner Stack Trace -----
+2026-10-01T03:01:59.3135260Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:01:59.3139010Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:01:59.3142550Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:01:59.3144960Z   Standard Output Messages:
+2026-10-01T03:01:59.3146210Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-83e06100d67e40b7b9453dcc1a2d0a7c/outer.db
+2026-10-01T03:01:59.3147390Z 
+2026-10-01T03:01:59.3147400Z 
+2026-10-01T03:01:59.3149410Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: True) [143 ms]
+2026-10-01T03:01:59.3151270Z   Error Message:
+2026-10-01T03:01:59.3154810Z    Expected error to be <null>, but found LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-5295e99583ad447ebc61c806ce1d09b3/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.3159650Z  ---> System.IO.IOException: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:01:59.3162690Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:01:59.3166640Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:01:59.3170320Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:01:59.3172860Z    --- End of inner exception stack trace ---
+2026-10-01T03:01:59.3175330Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:01:59.3178690Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:01:59.3180960Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:01:59.3183540Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:01:59.3186730Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:01:59.3189380Z    at LiteDB.SharedEngine.<>c__DisplayClass183_0`1.<WriteDatabase>b__0() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 84
+2026-10-01T03:01:59.3191510Z    at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 133
+2026-10-01T03:01:59.3193600Z    at LiteDB.SharedEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 406
+2026-10-01T03:01:59.3195880Z    at LiteDB.SessionEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Transactions/SessionEngine.cs:line 39
+2026-10-01T03:01:59.3198060Z    at LiteDB.LiteCollection`1.Update(T entity) in __CI_WORKSPACE__/LiteDB/Client/Database/Collections/Update.cs:line 21
+2026-10-01T03:01:59.3200660Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.<>c__DisplayClass8_0.<VerifyClose>b__1() in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 128
+2026-10-01T03:01:59.3205240Z    at LiteDB.Tests.Engine.SharedPeerCallbackFixture.<>c__DisplayClass17_0.<RunBounded>b__0() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs:line 100.
+2026-10-01T03:01:59.3207010Z   Stack Trace:
+2026-10-01T03:01:59.3207630Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-10-01T03:01:59.3209840Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-10-01T03:01:59.3211240Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-10-01T03:01:59.3212450Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-10-01T03:01:59.3214150Z    at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeNull(String because, Object[] becauseArgs)
+2026-10-01T03:01:59.3216610Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 157
+2026-10-01T03:01:59.3220420Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:01:59.3223510Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:01:59.3225610Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:01:59.3227000Z   Standard Output Messages:
+2026-10-01T03:01:59.3228200Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-5295e99583ad447ebc61c806ce1d09b3/outer.db
+2026-10-01T03:01:59.3229350Z 
+2026-10-01T03:01:59.3229360Z 
+2026-10-01T03:01:59.3414450Z [xUnit.net 00:01:43.92]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: False) [FAIL]
+2026-10-01T03:01:59.3806790Z [xUnit.net 00:01:43.96]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: False) [FAIL]
+2026-10-01T03:01:59.8265690Z [xUnit.net 00:01:44.41]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: False) [FAIL]
+2026-10-01T03:02:00.7727840Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: False) [70 ms]
+2026-10-01T03:02:00.7730320Z   Error Message:
+2026-10-01T03:02:00.7733750Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-1522aefd209746828f031766ef95fe1f/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7738310Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7739230Z   Stack Trace:
+2026-10-01T03:02:00.7741590Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:00.7745380Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:00.7747560Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:00.7750010Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:00.7753000Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:00.7756000Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:02:00.7758230Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:02:00.7760270Z --- End of stack trace from previous location ---
+2026-10-01T03:02:00.7761660Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:02:00.7764030Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:02:00.7767860Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:02:00.7771000Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:02:00.7774340Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:02:00.7778180Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:00.7781480Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:00.7783610Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:00.7785060Z ----- Inner Stack Trace -----
+2026-10-01T03:02:00.7787510Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:00.7791150Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:00.7795360Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:00.7798660Z   Standard Output Messages:
+2026-10-01T03:02:00.7799880Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-1522aefd209746828f031766ef95fe1f/outer.db
+2026-10-01T03:02:00.7801030Z 
+2026-10-01T03:02:00.7802840Z 
+2026-10-01T03:02:00.7804380Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: False) [37 ms]
+2026-10-01T03:02:00.7806190Z   Error Message:
+2026-10-01T03:02:00.7809580Z    Expected error to be <null>, but found LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-7b76eb770e9c46d3a4bc165762e27a75/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7813790Z  ---> System.IO.IOException: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7816860Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:00.7820820Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:00.7824470Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:00.7826860Z    --- End of inner exception stack trace ---
+2026-10-01T03:02:00.7829210Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:00.7832400Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:00.7834530Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:00.7837570Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:00.7840650Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:00.7843310Z    at LiteDB.SharedEngine.<>c__DisplayClass183_0`1.<WriteDatabase>b__0() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 84
+2026-10-01T03:02:00.7845450Z    at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 133
+2026-10-01T03:02:00.7847550Z    at LiteDB.SharedEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 406
+2026-10-01T03:02:00.7849730Z    at LiteDB.SessionEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Transactions/SessionEngine.cs:line 39
+2026-10-01T03:02:00.7851770Z    at LiteDB.LiteCollection`1.Update(T entity) in __CI_WORKSPACE__/LiteDB/Client/Database/Collections/Update.cs:line 21
+2026-10-01T03:02:00.7855300Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.<>c__DisplayClass8_0.<VerifyClose>b__1() in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 128
+2026-10-01T03:02:00.7858230Z    at LiteDB.Tests.Engine.SharedPeerCallbackFixture.<>c__DisplayClass17_0.<RunBounded>b__0() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs:line 100.
+2026-10-01T03:02:00.7860990Z   Stack Trace:
+2026-10-01T03:02:00.7861730Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-10-01T03:02:00.7862940Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-10-01T03:02:00.7864150Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-10-01T03:02:00.7865440Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-10-01T03:02:00.7867340Z    at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeNull(String because, Object[] becauseArgs)
+2026-10-01T03:02:00.7870180Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 157
+2026-10-01T03:02:00.7874290Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:00.7877490Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:00.7879640Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:00.7882010Z   Standard Output Messages:
+2026-10-01T03:02:00.7883410Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-7b76eb770e9c46d3a4bc165762e27a75/outer.db
+2026-10-01T03:02:00.7884580Z 
+2026-10-01T03:02:00.7884590Z 
+2026-10-01T03:02:00.7886060Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: False) [52 ms]
+2026-10-01T03:02:00.7888050Z   Error Message:
+2026-10-01T03:02:00.7891290Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-d469c6e7b60c47b7b7b7da0d5cf5f532/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7895090Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:00.7896480Z   Stack Trace:
+2026-10-01T03:02:00.7898720Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:00.7902560Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:00.7905320Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:00.7908390Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:00.7912690Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:00.7916110Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:02:00.7918530Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:02:00.7919980Z --- End of stack trace from previous location ---
+2026-10-01T03:02:00.7921360Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:02:00.7924330Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:02:00.7927040Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:02:00.7930110Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:02:00.7933350Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:02:00.7937170Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:00.7940980Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:00.7944450Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:00.7945960Z ----- Inner Stack Trace -----
+2026-10-01T03:02:00.7949000Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:00.7953700Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:00.7958160Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:00.7960790Z   Standard Output Messages:
+2026-10-01T03:02:00.7962060Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-d469c6e7b60c47b7b7b7da0d5cf5f532/outer.db
+2026-10-01T03:02:00.7963240Z 
+2026-10-01T03:02:00.7963250Z 
+2026-10-01T03:02:01.3682510Z [xUnit.net 00:01:45.95]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: False) [FAIL]
+2026-10-01T03:02:01.4261910Z [xUnit.net 00:01:46.00]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: False) [FAIL]
+2026-10-01T03:02:01.5771340Z [xUnit.net 00:01:46.15]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: True) [FAIL]
+2026-10-01T03:02:01.7282360Z [xUnit.net 00:01:46.31]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: False) [FAIL]
+2026-10-01T03:02:02.3070650Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: False) [69 ms]
+2026-10-01T03:02:02.3072640Z   Error Message:
+2026-10-01T03:02:02.3077170Z    Expected error to be <null>, but found LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-c3dacafe60b94851aa1efcf2e90a5ba8/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3081680Z  ---> System.IO.IOException: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3084840Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:02.3090410Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:02.3094180Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:02.3107360Z    --- End of inner exception stack trace ---
+2026-10-01T03:02:02.3109890Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:02.3113400Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:02.3115700Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:02.3118320Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:02.3121470Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:02.3124310Z    at LiteDB.SharedEngine.<>c__DisplayClass183_0`1.<WriteDatabase>b__0() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 84
+2026-10-01T03:02:02.3126900Z    at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 133
+2026-10-01T03:02:02.3129160Z    at LiteDB.SharedEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 406
+2026-10-01T03:02:02.3131480Z    at LiteDB.SessionEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Transactions/SessionEngine.cs:line 39
+2026-10-01T03:02:02.3134230Z    at LiteDB.LiteCollection`1.Update(T entity) in __CI_WORKSPACE__/LiteDB/Client/Database/Collections/Update.cs:line 21
+2026-10-01T03:02:02.3136770Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.<>c__DisplayClass8_0.<VerifyClose>b__1() in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 128
+2026-10-01T03:02:02.3139760Z    at LiteDB.Tests.Engine.SharedPeerCallbackFixture.<>c__DisplayClass17_0.<RunBounded>b__0() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs:line 100.
+2026-10-01T03:02:02.3141430Z   Stack Trace:
+2026-10-01T03:02:02.3142100Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-10-01T03:02:02.3143440Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-10-01T03:02:02.3144690Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-10-01T03:02:02.3146000Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-10-01T03:02:02.3147500Z    at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeNull(String because, Object[] becauseArgs)
+2026-10-01T03:02:02.3150110Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 157
+2026-10-01T03:02:02.3154220Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:02.3157580Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:02.3159820Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:02.3161330Z   Standard Output Messages:
+2026-10-01T03:02:02.3162630Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-c3dacafe60b94851aa1efcf2e90a5ba8/outer.db
+2026-10-01T03:02:02.3163870Z 
+2026-10-01T03:02:02.3163880Z 
+2026-10-01T03:02:02.3165370Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: False) [56 ms]
+2026-10-01T03:02:02.3167200Z   Error Message:
+2026-10-01T03:02:02.3170500Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-2ee487799f6947b6a6325f24347b454c/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3174530Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3175490Z   Stack Trace:
+2026-10-01T03:02:02.3177830Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:02.3181270Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:02.3183570Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:02.3186630Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:02.3189850Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:02.3192780Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:02:02.3195140Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:02:02.3196860Z --- End of stack trace from previous location ---
+2026-10-01T03:02:02.3198300Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:02:02.3200720Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:02:02.3203570Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:02:02.3206840Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:02:02.3210350Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:02:02.3215720Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:02.3219050Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:02.3221310Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:02.3222920Z ----- Inner Stack Trace -----
+2026-10-01T03:02:02.3225490Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:02.3229320Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:02.3232950Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:02.3235430Z   Standard Output Messages:
+2026-10-01T03:02:02.3236710Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-2ee487799f6947b6a6325f24347b454c/outer.db
+2026-10-01T03:02:02.3237910Z 
+2026-10-01T03:02:02.3237920Z 
+2026-10-01T03:02:02.3239420Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: True) [148 ms]
+2026-10-01T03:02:02.3241280Z   Error Message:
+2026-10-01T03:02:02.3245310Z    Expected error to be <null>, but found LiteDB.DatabaseAdmissionException: Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-be876d53d886412296bd2fb8adb0e380/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3249420Z  ---> System.IO.IOException: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3252470Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:02.3256480Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:02.3260110Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:02.3262600Z    --- End of inner exception stack trace ---
+2026-10-01T03:02:02.3265050Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:02.3268390Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:02.3270640Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:02.3273240Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:02.3276360Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:02.3279380Z    at LiteDB.SharedEngine.<>c__DisplayClass183_0`1.<WriteDatabase>b__0() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 84
+2026-10-01T03:02:02.3281620Z    at LiteDB.SharedEngine.Call[T](Func`1 call, Boolean rollback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 133
+2026-10-01T03:02:02.3283800Z    at LiteDB.SharedEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 406
+2026-10-01T03:02:02.3286070Z    at LiteDB.SessionEngine.Update(String collection, IEnumerable`1 docs) in __CI_WORKSPACE__/LiteDB/Client/Transactions/SessionEngine.cs:line 39
+2026-10-01T03:02:02.3288300Z    at LiteDB.LiteCollection`1.Update(T entity) in __CI_WORKSPACE__/LiteDB/Client/Database/Collections/Update.cs:line 21
+2026-10-01T03:02:02.3290820Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.<>c__DisplayClass8_0.<VerifyClose>b__1() in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 128
+2026-10-01T03:02:02.3293780Z    at LiteDB.Tests.Engine.SharedPeerCallbackFixture.<>c__DisplayClass17_0.<RunBounded>b__0() in __CI_WORKSPACE__/LiteDB.Tests/Engine/SharedPeerCallbackFixture.cs:line 100.
+2026-10-01T03:02:02.3295440Z   Stack Trace:
+2026-10-01T03:02:02.3300080Z      at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+2026-10-01T03:02:02.3301430Z    at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+2026-10-01T03:02:02.3302680Z    at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+2026-10-01T03:02:02.3303950Z    at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+2026-10-01T03:02:02.3305330Z    at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeNull(String because, Object[] becauseArgs)
+2026-10-01T03:02:02.3307890Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 157
+2026-10-01T03:02:02.3312130Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:02.3315380Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:02.3317590Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:02.3319040Z   Standard Output Messages:
+2026-10-01T03:02:02.3320300Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-be876d53d886412296bd2fb8adb0e380/outer.db
+2026-10-01T03:02:02.3321510Z 
+2026-10-01T03:02:02.3321520Z 
+2026-10-01T03:02:02.3323010Z   Failed LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: False) [148 ms]
+2026-10-01T03:02:02.3324860Z   Error Message:
+2026-10-01T03:02:02.3328090Z    LiteDB.DatabaseAdmissionException : Cannot safely admit database access to '__CI_HOME__/temporary/T/litedb-peer-cb58e3a519794dd692a8d715f5a66bff/outer.db': could not acquire the OS-native database admission lock. An incompatible connection or unsupported locking environment may prevent access. Cause: Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3332060Z ---- System.IO.IOException : Incompatible Shared mutex identity or Direct read-only participant.
+2026-10-01T03:02:02.3332990Z   Stack Trace:
+2026-10-01T03:02:02.3335290Z      at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 87
+2026-10-01T03:02:02.3338740Z    at LiteDB.Client.Shared.SharedModeGuard.Open(EngineSettings settings) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 28
+2026-10-01T03:02:02.3341000Z    at LiteDB.Client.Shared.SharedModeAdmission.Retain() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeAdmission.cs:line 40
+2026-10-01T03:02:02.3343560Z    at LiteDB.SharedEngine.OpenEngine(Boolean recoveredAbandonedOwner, Boolean final, Boolean writing) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Coordination.cs:line 23
+2026-10-01T03:02:02.3346680Z    at LiteDB.SharedEngine.OpenDatabase(Boolean scoped, Boolean writing, CancellationToken closing, TransactionAdmission admission) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.cs:line 138
+2026-10-01T03:02:02.3349550Z    at LiteDB.SharedEngine.TransactionHolder.Acquire(Boolean& acquired) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 210
+2026-10-01T03:02:02.3352090Z    at LiteDB.SharedEngine.TransactionHolder.Run() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 178
+2026-10-01T03:02:02.3353620Z --- End of stack trace from previous location ---
+2026-10-01T03:02:02.3355380Z    at LiteDB.SharedEngine.TransactionHolder.Release() in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 226
+2026-10-01T03:02:02.3357990Z    at LiteDB.SharedEngine.TransactionHolder.Open(Object policyAnchor) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 154
+2026-10-01T03:02:02.3360810Z    at LiteDB.SharedEngine.OpenTransactionResources(TransactionAdmission admission, Object sessionToken) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedEngine.Transactions.cs:line 109
+2026-10-01T03:02:02.3364330Z    at LiteDB.LiteDatabase.BeginTransaction(TimeSpan sharedAdmissionTimeout, CancellationToken cancellationToken) in __CI_WORKSPACE__/LiteDB/Client/Database/LiteDatabase.Transactions.cs:line 33
+2026-10-01T03:02:02.3367730Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 173
+2026-10-01T03:02:02.3371750Z    at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __CI_WORKSPACE__/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 51
+2026-10-01T03:02:02.3375020Z    at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+2026-10-01T03:02:02.3377230Z    at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+2026-10-01T03:02:02.3378940Z ----- Inner Stack Trace -----
+2026-10-01T03:02:02.3381500Z    at LiteDB.Client.Shared.DatabaseAdmissionRegistry.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Boolean create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/DatabaseAdmissionRegistry.cs:line 62
+2026-10-01T03:02:02.3385300Z    at LiteDB.Client.Shared.SharedCoordinationFile.RetrySharingViolation[T](Func`1 operation) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedCoordinationFile.cs:line 64
+2026-10-01T03:02:02.3388910Z    at LiteDB.Client.Shared.SharedModeGuard.Open(String filename, Boolean shared, SharedMutexNameStrategy strategy, Boolean readOnly, Boolean engine, Nullable`1 create, Boolean allowHostLocalFallback) in __CI_WORKSPACE__/LiteDB/Client/Shared/SharedModeGuard.cs:line 80
+2026-10-01T03:02:02.3391360Z   Standard Output Messages:
+2026-10-01T03:02:02.3392630Z  Failed close-frame fixture retained: __CI_HOME__/temporary/T/litedb-peer-cb58e3a519794dd692a8d715f5a66bff/outer.db
+2026-10-01T03:02:02.3393840Z 
+2026-10-01T03:02:02.3393860Z 
+2026-10-01T03:02:07.3885810Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-handles.trx
+2026-10-01T03:02:07.3891230Z 
+2026-10-01T03:02:07.3933940Z Failed!  - Failed:    12, Passed:   409, Skipped:     0, Total:   421, Duration: 1 m 49 s - LiteDB.Tests.dll (net8.0)
+2026-10-01T03:02:07.4298970Z Running native selection partition: admission
+2026-10-01T03:02:07.4479020Z 
+2026-10-01T03:02:07.4479550Z Host:
+2026-10-01T03:02:07.4479930Z   Version:      8.0.31
+2026-10-01T03:02:07.4480330Z   Architecture: x64
+2026-10-01T03:02:07.4480700Z   Commit:       1219a42122
+2026-10-01T03:02:07.4481090Z   RID:          osx-x64
+2026-10-01T03:02:07.4481390Z 
+2026-10-01T03:02:07.4481570Z .NET SDKs installed:
+2026-10-01T03:02:07.4481950Z   No SDKs were found.
+2026-10-01T03:02:07.4482180Z 
+2026-10-01T03:02:07.4482370Z .NET runtimes installed:
+2026-10-01T03:02:07.4483250Z   Microsoft.NETCore.App 8.0.31 [__CI_HOME__/work/_temp/litedb-runtime-8-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:02:07.4484450Z 
+2026-10-01T03:02:07.4484680Z Other architectures found:
+2026-10-01T03:02:07.4485080Z   None
+2026-10-01T03:02:07.4485250Z 
+2026-10-01T03:02:07.4485440Z Environment variables:
+2026-10-01T03:02:07.4485850Z   DOTNET_ROOT       [__CI_HOME__/.dotnet]
+2026-10-01T03:02:07.4486430Z 
+2026-10-01T03:02:07.4486590Z global.json file:
+2026-10-01T03:02:07.4486940Z   Not found
+2026-10-01T03:02:07.4487130Z 
+2026-10-01T03:02:07.4487260Z Learn more:
+2026-10-01T03:02:07.4487610Z   https://aka.ms/dotnet/info
+2026-10-01T03:02:07.4487910Z 
+2026-10-01T03:02:07.4488050Z Download .NET:
+2026-10-01T03:02:07.4488440Z   https://aka.ms/dotnet/download
+2026-10-01T03:02:07.6631070Z VSTest version 18.7.0 (x64)
+2026-10-01T03:02:07.6640570Z 
+2026-10-01T03:02:07.7732720Z Starting test execution, please wait...
+2026-10-01T03:02:07.8086640Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:03:39.7934990Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-admission.trx
+2026-10-01T03:03:39.7938170Z 
+2026-10-01T03:03:39.7982940Z Passed!  - Failed:     0, Passed:   202, Skipped:     0, Total:   202, Duration: 1 m 29 s - LiteDB.Tests.dll (net8.0)
+2026-10-01T03:03:39.8995680Z Running native selection partition: remaining
+2026-10-01T03:03:39.9150990Z 
+2026-10-01T03:03:39.9151400Z Host:
+2026-10-01T03:03:39.9151740Z   Version:      8.0.31
+2026-10-01T03:03:39.9152290Z   Architecture: x64
+2026-10-01T03:03:39.9152640Z   Commit:       1219a42122
+2026-10-01T03:03:39.9153010Z   RID:          osx-x64
+2026-10-01T03:03:39.9153240Z 
+2026-10-01T03:03:39.9153420Z .NET SDKs installed:
+2026-10-01T03:03:39.9153770Z   No SDKs were found.
+2026-10-01T03:03:39.9154020Z 
+2026-10-01T03:03:39.9154200Z .NET runtimes installed:
+2026-10-01T03:03:39.9155020Z   Microsoft.NETCore.App 8.0.31 [__CI_HOME__/work/_temp/litedb-runtime-8-x64/shared/Microsoft.NETCore.App]
+2026-10-01T03:03:39.9155790Z 
+2026-10-01T03:03:39.9155970Z Other architectures found:
+2026-10-01T03:03:39.9156340Z   None
+2026-10-01T03:03:39.9156520Z 
+2026-10-01T03:03:39.9156690Z Environment variables:
+2026-10-01T03:03:39.9157080Z   DOTNET_ROOT       [__CI_HOME__/.dotnet]
+2026-10-01T03:03:39.9157420Z 
+2026-10-01T03:03:39.9157560Z global.json file:
+2026-10-01T03:03:39.9157880Z   Not found
+2026-10-01T03:03:39.9158050Z 
+2026-10-01T03:03:39.9158170Z Learn more:
+2026-10-01T03:03:39.9158490Z   https://aka.ms/dotnet/info
+2026-10-01T03:03:39.9158760Z 
+2026-10-01T03:03:39.9158900Z Download .NET:
+2026-10-01T03:03:39.9159240Z   https://aka.ms/dotnet/download
+2026-10-01T03:03:40.1257540Z VSTest version 18.7.0 (x64)
+2026-10-01T03:03:40.1266380Z 
+2026-10-01T03:03:40.2390910Z Starting test execution, please wait...
+2026-10-01T03:03:40.2787520Z A total of 1 test files matched the specified pattern.
+2026-10-01T03:04:17.6730130Z [xUnit.net 00:00:36.91]     LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [SKIP]
+2026-10-01T03:04:18.0618310Z   Skipped LiteDB.Tests.Engine.Rebuild_Tests.Rebuild_Change_Culture_Error [1 ms]
+2026-10-01T03:04:29.5316760Z Results File: __CI_WORKSPACE__/LiteDB.Tests/TestResults/NativeAdmission-remaining.trx
+2026-10-01T03:04:29.5319920Z 
+2026-10-01T03:04:29.5360260Z Passed!  - Failed:     0, Passed:   237, Skipped:     1, Total:   238, Duration: 47 s - LiteDB.Tests.dll (net8.0)
+2026-10-01T03:04:29.7383090Z [31;1mException: [0m__CI_WORKSPACE__/scripts/run-ci-tests.ps1:170[0m
+2026-10-01T03:04:29.7384290Z [31;1m[0m[36;1mLine |[0m
+2026-10-01T03:04:29.7385720Z [31;1m[0m[36;1m[36;1m 170 | [0m … ed.Count) { [36;1mthrow "Native test partitions failed: $($failed -join ', [0m …[0m
+2026-10-01T03:04:29.7387360Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-10-01T03:04:29.7388800Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mNative test partitions failed: handles[0m
+2026-10-01T03:04:29.8416470Z ##[error]Process completed with exit code 1.
+2026-10-01T03:04:29.8545380Z ##[group]Run actions/upload-artifact@v4
+2026-10-01T03:04:29.8545940Z with:
+2026-10-01T03:04:29.8546490Z   name: test-results-test-native-macos-intel-0
+2026-10-01T03:04:29.8548030Z   path: LiteDB.Tests/TestResults/*.trx
+LiteDB.Tests/TestResults/evidence-leg.json
+LiteDB.Tests/TestResults/discovered-tests.txt
+LiteDB.Tests/TestResults/native-partitions.json
+
+2026-10-01T03:04:29.8549550Z   if-no-files-found: warn
+2026-10-01T03:04:29.8549950Z   compression-level: 6
+2026-10-01T03:04:29.8550320Z   overwrite: false
+2026-10-01T03:04:29.8550690Z   include-hidden-files: false
+2026-10-01T03:04:29.8551090Z env:
+2026-10-01T03:04:29.8551830Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:04:29.8553200Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:04:29.8553640Z ##[endgroup]
+2026-10-01T03:04:30.1029700Z (node:19653) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:04:30.1031240Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:04:30.1100660Z With the provided path, there will be 6 files uploaded
+2026-10-01T03:04:30.1105920Z Artifact name is valid!
+2026-10-01T03:04:30.1106490Z Root directory input is valid!
+2026-10-01T03:04:30.4550690Z Beginning upload of artifact content to blob storage
+2026-10-01T03:04:30.5163910Z (node:19653) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-01T03:04:30.8373750Z Uploaded bytes 222874
+2026-10-01T03:04:30.8856790Z Finished uploading artifact content to blob storage!
+2026-10-01T03:04:30.8858520Z SHA256 digest of uploaded artifact zip is 864713bc875ece0dbe445a59378abcde92966ac751d8bf3713d45a2fa19fab98
+2026-10-01T03:04:30.8860020Z Finalizing artifact upload
+2026-10-01T03:04:31.1198660Z Artifact test-results-test-native-macos-intel-0.zip successfully finalized. Artifact ID 11138566222
+2026-10-01T03:04:31.1200580Z Artifact test-results-test-native-macos-intel-0 has been successfully uploaded! Final size is 222874 bytes. Artifact ID is 11138566222
+2026-10-01T03:04:31.1211910Z Artifact download URL: https://github.com/JKamsker/LiteDB/actions/runs/36808139096/artifacts/11138566222
+2026-10-01T03:04:31.1468170Z Prepare all required actions
+2026-10-01T03:04:31.1469130Z Getting action download info
+2026-10-01T03:04:31.3755120Z ##[group]Run ./.github/actions/retained-fixtures
+2026-10-01T03:04:31.3755730Z env:
+2026-10-01T03:04:31.3756510Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:04:31.3757500Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:04:31.3758000Z ##[endgroup]
+2026-10-01T03:04:31.3831810Z ##[start-action display=Collect retained fixtures;id=__self.__run]
+2026-10-01T03:04:31.3887480Z ##[group]Run if [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi
+2026-10-01T03:04:31.3889210Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then retained_python=python; else retained_python=python3; fi[0m
+2026-10-01T03:04:31.3890870Z [36;1m"$retained_python" scripts/collect-retained-fixtures.py "$LITEDB_RETAINED_FIXTURES"[0m
+2026-10-01T03:04:31.3973510Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-01T03:04:31.3974080Z env:
+2026-10-01T03:04:31.3974830Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:04:31.3975750Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:04:31.3976320Z ##[endgroup]
+2026-10-01T03:04:31.5325250Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=149]
+2026-10-01T03:04:31.5330150Z ##[start-action display=Upload fixture manifests and copies;id=__self.__actions_upload-artifact]
+2026-10-01T03:04:31.5399920Z ##[group]Run actions/upload-artifact@v4
+2026-10-01T03:04:31.5400510Z with:
+2026-10-01T03:04:31.5401000Z   name: retained-fixtures-test-native-macos-intel-0
+2026-10-01T03:04:31.5401930Z   path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/
+2026-10-01T03:04:31.5402860Z   if-no-files-found: ignore
+2026-10-01T03:04:31.5403350Z   retention-days: 14
+2026-10-01T03:04:31.5403790Z   compression-level: 6
+2026-10-01T03:04:31.5404310Z   overwrite: false
+2026-10-01T03:04:31.5404860Z   include-hidden-files: false
+2026-10-01T03:04:31.5405390Z env:
+2026-10-01T03:04:31.5406210Z   LITEDB_RETAINED_FIXTURES: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures
+2026-10-01T03:04:31.5407240Z   DOTNET_ROOT: __CI_HOME__/.dotnet
+2026-10-01T03:04:31.5408170Z ##[endgroup]
+2026-10-01T03:04:31.7759010Z (node:19673) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-01T03:04:31.7760440Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-01T03:04:31.7763910Z No files were found with the provided path: __CI_WORKSPACE__/LiteDB.Tests/TestResults/retained-fixtures/. No artifacts will be uploaded.
+2026-10-01T03:04:31.7851330Z ##[end-action id=__self.__actions_upload-artifact;outcome=success;conclusion=success;duration_ms=251]
+2026-10-01T03:04:31.8024830Z Post job cleanup.
+2026-10-01T03:04:31.9383000Z [command]/usr/local/bin/git version
+2026-10-01T03:04:31.9474580Z git version 2.55.0
+2026-10-01T03:04:31.9507810Z Copying '__CI_HOME__/.gitconfig' to '__CI_HOME__/work/_temp/a6114861-d3f0-4853-a1ac-75fb87aa4eee/.gitconfig'
+2026-10-01T03:04:31.9522310Z Temporarily overriding HOME='__CI_HOME__/work/_temp/a6114861-d3f0-4853-a1ac-75fb87aa4eee' before making global git config changes
+2026-10-01T03:04:31.9524010Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-01T03:04:31.9529330Z [command]/usr/local/bin/git config --global --add safe.directory __CI_WORKSPACE__
+2026-10-01T03:04:31.9638050Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-01T03:04:31.9735330Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-01T03:04:32.1050290Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-01T03:04:32.1140320Z http.https://github.com/.extraheader
+2026-10-01T03:04:32.1165420Z [command]/usr/local/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-01T03:04:32.1305190Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-01T03:04:32.2946820Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-01T03:04:32.3056870Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-01T03:04:32.4660860Z Cleaning up orphan processes
+2026-10-01T03:04:32.7426170Z Terminate orphan process: pid (12573) (VBCSCompiler)
+2026-10-01T03:04:32.7517770Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-dotnet@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

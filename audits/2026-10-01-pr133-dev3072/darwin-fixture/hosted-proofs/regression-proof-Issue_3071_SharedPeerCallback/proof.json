@@ -1,0 +1,182 @@
+{
+  "GeneratedAt": "2026-10-01T03:34:53.2766476+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3071_SharedPeerCallback",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "PROVEN_BLOCK",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 31.3061578,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:05.5998388\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:05.6900311\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022database directory: __WORKSPACE__/temporary/i3071-3ea25d8f65ea475eb3f43a1280924ac2\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 34 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:06.4807626\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022controls: same-connection and other-database nested writes completed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:11.4920005\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022unanchored-plain: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:16.6151654\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022unanchored-encrypted: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:21.6721291\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022pinned-plain: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:26.6990476\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022pinned-encrypted: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:31.7109002\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022dispose-checkpoint-plain: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=False after 5000 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:36.815551\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022dispose-checkpoint-encrypted: Blocked\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PROVEN_BLOCK: each nested peer write waits for the native mutex its own outer operation retains."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:36.81694\u002B00:00\u0022,\u0022text\u0022:\u0022PROVEN_BLOCK: each nested peer write waits for the native mutex its own outer operation retains.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 2,
+        "ExpectedLogContains": "FIXED_VERIFIED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 2,
+        "DurationSeconds": 0.68108,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:36.8547576\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00226.0.0-prerelease.319\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:36.8908178\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022database directory: __WORKSPACE__/temporary/i3071-052cf83ab7954452b0c5edea71fa7741\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 11 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.1398237\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022controls: same-connection and other-database nested writes completed\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 2 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.15927\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022unanchored-plain: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 4 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.256058\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022unanchored-encrypted: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 6 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.2770358\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022pinned-plain: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 7 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.3551974\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022pinned-encrypted: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 5 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.3747737\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022dispose-checkpoint-plain: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "worker completed=True after 33 ms"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.5001342\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022dispose-checkpoint-encrypted: Refused\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FIXED_VERIFIED: each nested peer write was refused promptly; state and controls verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:35:37.5010273\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED_VERIFIED: each nested peer write was refused promptly; state and controls verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

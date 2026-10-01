@@ -1,0 +1,44 @@
+{
+  "codeCommit": "7f2b2bf166f7f8236f02ca1b5826fca1de656be7",
+  "finalHead": "be60d53a35088e408d8265989ed915cea1983ec1",
+  "difference": "integration report only",
+  "runs": [
+    {
+      "name": "full-audit",
+      "framework": "net8.0",
+      "passed": 316,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "ownership",
+      "framework": "net8.0",
+      "passed": 849,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "full-audit",
+      "framework": "net10.0",
+      "passed": 316,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "ownership",
+      "framework": "net10.0",
+      "passed": 849,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "disjointTotalPerFramework": 1165,
+  "originalFixtureFailures": {
+    "failed": 4,
+    "passed": 97,
+    "cause": "FOR UPDATE cursor and independent ordinary write contested rows before the close callback; cursor moved to sentinel with explicit native-held assertion."
+  },
+  "net462Build": "passed, not CLR4 execution",
+  "mutation": "10/10 tests detect disabled guard",
+  "proof": "actual published319 blocked, source fixed; initial ReproRunner plus separately captured binary run"
+}

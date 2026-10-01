@@ -1,0 +1,1110 @@
+{
+  "GeneratedAt": "2026-10-01T03:22:45.6648257+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "Issue_3067_SharedPinCallbackWrite",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "BUG_REPRODUCED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 12.9464501,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:22:59.8935171\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.569ba13c3b38\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-commit path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/aaa03f8d-a531-4f0e-a0ae-dde18bcc2e29.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-commit encrypted=False exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "START_PIN_NATIVE_WAIT_CONFIRMED parentWaiters\u003E0 occupiedTurnstile nativeExcluded"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_DEPENDENCY_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/aaa03f8d-a531-4f0e-a0ae-dde18bcc2e29.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/aaa03f8d-a531-4f0e-a0ae-dde18bcc2e29.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-rollback path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/beb6cd43-ec82-4709-9054-db5e6247084f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-rollback encrypted=False exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "START_PIN_NATIVE_WAIT_CONFIRMED parentWaiters\u003E0 occupiedTurnstile nativeExcluded"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_DEPENDENCY_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/beb6cd43-ec82-4709-9054-db5e6247084f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/beb6cd43-ec82-4709-9054-db5e6247084f.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=normal-pin path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/cbdef7ee-d662-4e56-8719-05d07b0a00a1.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=normal-pin encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/cbdef7ee-d662-4e56-8719-05d07b0a00a1.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/cbdef7ee-d662-4e56-8719-05d07b0a00a1.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/cbdef7ee-d662-4e56-8719-05d07b0a00a1.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED normal-pin"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/650f46be-d619-4435-8e05-513d541a6c99.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/650f46be-d619-4435-8e05-513d541a6c99.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/650f46be-d619-4435-8e05-513d541a6c99.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/650f46be-d619-4435-8e05-513d541a6c99.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/2bd46756-d1bf-4d30-923e-5d955da460f9.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/2bd46756-d1bf-4d30-923e-5d955da460f9.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/2bd46756-d1bf-4d30-923e-5d955da460f9.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=no-anchor path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/b4444746-b5a6-43dc-a505-a7665fd7d9bb.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=no-anchor encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/b4444746-b5a6-43dc-a505-a7665fd7d9bb.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/b4444746-b5a6-43dc-a505-a7665fd7d9bb.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/b4444746-b5a6-43dc-a505-a7665fd7d9bb.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED no-anchor"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-commit path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/d074b80c-3eb1-46d0-9427-8eaea8c611d3.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-commit encrypted=True exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "START_PIN_NATIVE_WAIT_CONFIRMED parentWaiters\u003E0 occupiedTurnstile nativeExcluded"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_DEPENDENCY_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/d074b80c-3eb1-46d0-9427-8eaea8c611d3.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/d074b80c-3eb1-46d0-9427-8eaea8c611d3.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-rollback path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/9599edf5-998d-4916-9d55-f63ce8622303.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-rollback encrypted=True exit=20"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "START_PIN_NATIVE_WAIT_CONFIRMED parentWaiters\u003E0 occupiedTurnstile nativeExcluded"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_DEPENDENCY_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/9599edf5-998d-4916-9d55-f63ce8622303.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/9599edf5-998d-4916-9d55-f63ce8622303.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=normal-pin path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/c2ba279c-c5f6-4bd7-a931-50293138a929.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=normal-pin encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/c2ba279c-c5f6-4bd7-a931-50293138a929.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/c2ba279c-c5f6-4bd7-a931-50293138a929.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/c2ba279c-c5f6-4bd7-a931-50293138a929.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED normal-pin"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/46aa3fb0-4aff-455e-931f-e66b7728e728.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/46aa3fb0-4aff-455e-931f-e66b7728e728.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/46aa3fb0-4aff-455e-931f-e66b7728e728.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/46aa3fb0-4aff-455e-931f-e66b7728e728.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/eaef9c64-3db5-4495-9ba3-3cec2379544b.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/eaef9c64-3db5-4495-9ba3-3cec2379544b.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/eaef9c64-3db5-4495-9ba3-3cec2379544b.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=no-anchor path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/35b79561-c9d9-4e03-9aa2-2f7bfdf80b92.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=no-anchor encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/35b79561-c9d9-4e03-9aa2-2f7bfdf80b92.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/35b79561-c9d9-4e03-9aa2-2f7bfdf80b92.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-ea5252dc1f58458784315428cae916eb/35b79561-c9d9-4e03-9aa2-2f7bfdf80b92.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED no-anchor"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "BUG_REPRODUCED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:23:12.7618174\u002B00:00\u0022,\u0022text\u0022:\u0022Native dependency cases, independent controls and cold models verified.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 10,
+        "ExpectedLogContains": "VERIFIED_FIXED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 10,
+        "DurationSeconds": 8.346122,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:23:12.8241388\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.569ba13c3b38\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "DATABASE_ROOT __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-commit path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/78146a8b-7be7-459d-a46a-624a4d11562f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-commit encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/78146a8b-7be7-459d-a46a-624a4d11562f.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/78146a8b-7be7-459d-a46a-624a4d11562f.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-rollback path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8b8acdda-49d9-4b56-b271-cb7e22410d09.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-rollback encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8b8acdda-49d9-4b56-b271-cb7e22410d09.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8b8acdda-49d9-4b56-b271-cb7e22410d09.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=normal-pin path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/77893423-1c4b-49cb-a7cf-123bf25633a7.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=normal-pin encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/77893423-1c4b-49cb-a7cf-123bf25633a7.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/77893423-1c4b-49cb-a7cf-123bf25633a7.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/77893423-1c4b-49cb-a7cf-123bf25633a7.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED normal-pin"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/6b8849b5-dc5b-4b5b-8750-b2a663214bcc.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/6b8849b5-dc5b-4b5b-8750-b2a663214bcc.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/6b8849b5-dc5b-4b5b-8750-b2a663214bcc.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/6b8849b5-dc5b-4b5b-8750-b2a663214bcc.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8ffcd28d-474d-47b1-ad58-528e5d58bc82.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8ffcd28d-474d-47b1-ad58-528e5d58bc82.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8ffcd28d-474d-47b1-ad58-528e5d58bc82.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=no-anchor path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/674c67a8-525b-4de8-b113-0fb84c2aac49.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=no-anchor encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/674c67a8-525b-4de8-b113-0fb84c2aac49.db encrypted=False"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=False exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/674c67a8-525b-4de8-b113-0fb84c2aac49.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/674c67a8-525b-4de8-b113-0fb84c2aac49.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED no-anchor"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-commit path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/ee312115-321c-46d9-ba60-636c0d888a16.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-commit encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/ee312115-321c-46d9-ba60-636c0d888a16.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/ee312115-321c-46d9-ba60-636c0d888a16.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--case scenario=write-rollback path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/cdc01b75-9213-4c27-9509-3ad93fefdeed.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--case scenario=write-rollback encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_WRITE_CALLBACK_ENTERED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CALLBACK_NATIVE_EXCLUSION_VERIFIED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/cdc01b75-9213-4c27-9509-3ad93fefdeed.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/cdc01b75-9213-4c27-9509-3ad93fefdeed.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=normal-pin path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/963bd783-c4fe-45bd-9df9-835926aa4c39.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=normal-pin encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/963bd783-c4fe-45bd-9df9-835926aa4c39.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/963bd783-c4fe-45bd-9df9-835926aa4c39.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/963bd783-c4fe-45bd-9df9-835926aa4c39.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED normal-pin"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=other-database path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/56b0c481-5e3d-4d65-a8bb-68cdc3313141.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=other-database encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PIN_OPERATION_POSITIVE_HOLDS_ZERO"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/56b0c481-5e3d-4d65-a8bb-68cdc3313141.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/56b0c481-5e3d-4d65-a8bb-68cdc3313141.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/56b0c481-5e3d-4d65-a8bb-68cdc3313141.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED other-database"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=idle-handoff path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8a8c0c00-7799-4f93-a8e1-b784051aa744.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=idle-handoff encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "LEASED_LOCAL_ANCHOR_CONFIRMED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8a8c0c00-7799-4f93-a8e1-b784051aa744.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/8a8c0c00-7799-4f93-a8e1-b784051aa744.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED idle-handoff"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--control scenario=no-anchor path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/b2443721-6ba7-4b36-a628-14d7d8cc8b81.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--control scenario=no-anchor encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_START mode=--peer scenario= path=__WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/b2443721-6ba7-4b36-a628-14d7d8cc8b81.db encrypted=True"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_RESULT mode=--peer scenario= encrypted=True exit=10"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "PEER_COMMITTED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/b2443721-6ba7-4b36-a628-14d7d8cc8b81.db"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TWO_COLD_INDEXED_MODELS_VERIFIED __WORKSPACE__/temporary/p133-pin-proof-79ea96b630464bc2a89c27613de7952a/b2443721-6ba7-4b36-a628-14d7d8cc8b81.db.other"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CONTROL_VERIFIED no-anchor"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CASE_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "VERIFIED_FIXED"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T03:23:21.1126979\u002B00:00\u0022,\u0022text\u0022:\u0022Native dependency cases, independent controls and cold models verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}

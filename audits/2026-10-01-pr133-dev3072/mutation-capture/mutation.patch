@@ -1,0 +1,17 @@
+diff --git a/LiteDB/Client/Shared/SharedEngine.Calls.cs b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+index 2aa8bb154..1aac7f535 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Calls.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+@@ -181,11 +181,7 @@ namespace LiteDB
+         /// </summary>
+         private void ThrowIfCallerRetainsOwnership()
+         {
+-            if (!SharedCallFrames.RetainedByOther(_mutexName, this)) return;
+-            throw new InvalidOperationException(
+-                "Cannot wait for shared-mode ownership of this database from inside an operation of another " +
+-                "connection to it that holds the ownership on this thread, such as its input sequence or " +
+-                "ReadTransform callback. Use that connection for nested operations, or run them after it returns.");
++            // Test-only mutation: ordinary peer dependency guard disabled.
+         }
+ 
+         private void EndAdmissions(int depth)

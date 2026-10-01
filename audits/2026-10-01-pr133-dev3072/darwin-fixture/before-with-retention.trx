@@ -1,0 +1,534 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="99c94739-cd90-4b68-943f-3f3564802d35" name="@dev-build-server 2026-10-01 03:11:32" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-01T03:11:32.8332326+00:00" queuing="2026-10-01T03:11:32.8332326+00:00" start="2026-10-01T03:11:29.5003642+00:00" finish="2026-10-01T03:11:45.6926196+00:00" />
+  <TestSettings name="default" id="5e0b6798-6e2f-4a8a-b0f7-35bea03a82d6">
+    <Deployment runDeploymentRoot="_dev-build-server_2026-10-01_03_11_32" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="0f27fc1c-37b7-4191-9a16-ba07ee41a4c7" testId="fdaceb71-777d-49ea-476c-9711b10d03d9" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.1553103" startTime="2026-10-01T03:11:41.0054406+00:00" endTime="2026-10-01T03:11:41.0054407+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0f27fc1c-37b7-4191-9a16-ba07ee41a4c7" />
+    <UnitTestResult executionId="c2d2653f-cf04-4214-8f42-a14c7b24f2d3" testId="e52f88bf-647a-bebb-1656-76437496242c" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.0779808" startTime="2026-10-01T03:11:43.9618728+00:00" endTime="2026-10-01T03:11:43.9618729+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2d2653f-cf04-4214-8f42-a14c7b24f2d3">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-a7745d453f5f46bd898753a8e33699d2/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="705d8d8c-fe9f-417b-aab6-847e9dbea334" testId="799b9ce8-9685-0523-7067-0b047eaea640" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.4656719" startTime="2026-10-01T03:11:40.4737096+00:00" endTime="2026-10-01T03:11:40.4737097+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="705d8d8c-fe9f-417b-aab6-847e9dbea334" />
+    <UnitTestResult executionId="1a0fb2d9-d3ee-40a6-80a7-928d9888ccdc" testId="1cfa9a4a-dc62-f291-97b6-6791a5815708" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.1715660" startTime="2026-10-01T03:11:41.1772150+00:00" endTime="2026-10-01T03:11:41.1772151+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1a0fb2d9-d3ee-40a6-80a7-928d9888ccdc" />
+    <UnitTestResult executionId="972f68b8-740c-4499-8fc6-bb20c1ceb7de" testId="954229de-f8e6-c6f7-7c66-c10012b8ae85" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.4750795" startTime="2026-10-01T03:11:44.4371715+00:00" endTime="2026-10-01T03:11:44.4371716+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="972f68b8-740c-4499-8fc6-bb20c1ceb7de" />
+    <UnitTestResult executionId="77cf0d43-d328-4252-bc41-9b6723027249" testId="e1f241f6-2523-5fd0-6ee3-f8cc5895ae9f" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.1769624" startTime="2026-10-01T03:11:40.8499386+00:00" endTime="2026-10-01T03:11:40.8499388+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77cf0d43-d328-4252-bc41-9b6723027249" />
+    <UnitTestResult executionId="289797cb-28fa-4f3e-a9b3-6cb990ce9de6" testId="ade08e42-ba6b-af56-3364-1ff86e51134e" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.1833283" startTime="2026-10-01T03:11:33.2620033+00:00" endTime="2026-10-01T03:11:33.2620034+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="289797cb-28fa-4f3e-a9b3-6cb990ce9de6">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-d02ab14d155d428d9a9cc9868efd5fa9/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="fcb32b3e-b315-4aeb-813c-3b64afee67fe" testId="6af064b3-6c87-4a79-9421-42be53982e4e" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.3810854" startTime="2026-10-01T03:11:32.0744275+00:00" endTime="2026-10-01T03:11:32.0744409+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fcb32b3e-b315-4aeb-813c-3b64afee67fe">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-815d118f36b741c19aeecf1db547ddf6/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="ef38e46a-0435-4f12-96ce-329376151902" testId="67b1ac6b-7d83-a38d-38c7-4f0165c15ba2" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.0880999" startTime="2026-10-01T03:11:34.3521743+00:00" endTime="2026-10-01T03:11:34.3521744+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ef38e46a-0435-4f12-96ce-329376151902">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-9a558e01d4cc4109a5ff7bd3588e2cf4/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5f12a1df-429b-40d9-bbfb-2b2d636770de" testId="7f0955cb-215b-6015-d1a8-40d63227499a" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.1748699" startTime="2026-10-01T03:11:45.6130909+00:00" endTime="2026-10-01T03:11:45.6130911+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5f12a1df-429b-40d9-bbfb-2b2d636770de">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-ad30b2a60daf4e88b8331606c155e330/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="e0dc0b10-ab83-4934-8fc5-5f752b62ce27" testId="01814899-cc01-c09e-a7a7-29b78318806f" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.1988054" startTime="2026-10-01T03:11:40.6727369+00:00" endTime="2026-10-01T03:11:40.6727370+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e0dc0b10-ab83-4934-8fc5-5f752b62ce27" />
+    <UnitTestResult executionId="a1b7be09-1355-4c5b-b90a-eee911432226" testId="1e3705cf-6174-defb-6e9e-d5a1e67868cd" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.5131688" startTime="2026-10-01T03:11:41.6906667+00:00" endTime="2026-10-01T03:11:41.6906684+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a1b7be09-1355-4c5b-b90a-eee911432226" />
+    <UnitTestResult executionId="1f1bfe32-81a7-4c36-90da-3132338003dd" testId="6831f4a7-dc14-6fff-f0fe-9c29fd0272fe" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.5185364" startTime="2026-10-01T03:11:38.4579649+00:00" endTime="2026-10-01T03:11:38.4579650+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f1bfe32-81a7-4c36-90da-3132338003dd" />
+    <UnitTestResult executionId="0b613f05-fcf8-4eca-b062-88de91a0b6f2" testId="e3a8f5b8-2b07-98af-51e5-dc4492cd75dc" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.1913692" startTime="2026-10-01T03:11:42.8829853+00:00" endTime="2026-10-01T03:11:42.8829854+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0b613f05-fcf8-4eca-b062-88de91a0b6f2">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-f7e00d6335b041bcbb8ac0f01417b866/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="143e4fdb-71a7-4bcb-a202-50ebe6a68200" testId="21595d93-41fc-8d2c-c54c-74de7a6867be" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.0832951" startTime="2026-10-01T03:11:36.8618690+00:00" endTime="2026-10-01T03:11:36.8618691+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="143e4fdb-71a7-4bcb-a202-50ebe6a68200">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-8f163d1b360549298bfcc23c4cab6611/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="705126ed-b744-4de4-8325-136e15cad883" testId="b03cce5a-6f4f-b3ee-a224-87834b401dee" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.1948469" startTime="2026-10-01T03:11:35.7775225+00:00" endTime="2026-10-01T03:11:35.7775226+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="705126ed-b744-4de4-8325-136e15cad883" />
+    <UnitTestResult executionId="6456898c-c94f-469e-b8a0-f63706b98d88" testId="44a52912-bdf2-0552-18ec-9fa44398cf2c" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: True)" computerName="dev-build-server" duration="00:00:00.4702478" startTime="2026-10-01T03:11:40.0077882+00:00" endTime="2026-10-01T03:11:40.0077883+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6456898c-c94f-469e-b8a0-f63706b98d88" />
+    <UnitTestResult executionId="f53f36f2-9fa8-46da-bca3-fcdb13d19879" testId="0a055411-19b8-a954-6865-6093871faef4" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.2288561" startTime="2026-10-01T03:11:35.5818530+00:00" endTime="2026-10-01T03:11:35.5818531+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f53f36f2-9fa8-46da-bca3-fcdb13d19879">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-b339be8a85aa4b118bdf814b47be5def/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="12ea5375-1a9d-4728-a555-dc4db5ae3dbf" testId="fb6702fd-c6cc-06dd-758d-a7e35df0d28f" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.0782821" startTime="2026-10-01T03:11:39.5372731+00:00" endTime="2026-10-01T03:11:39.5372732+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="12ea5375-1a9d-4728-a555-dc4db5ae3dbf">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-0a5cf9a415374eaca9bdaecad3cdcdd3/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="846494f9-aa15-4d6d-8d70-98b5d451499d" testId="38f3506c-0bb4-1b94-e2e8-b8ce08e2c72c" testName="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: False)" computerName="dev-build-server" duration="00:00:01.0763699" startTime="2026-10-01T03:11:37.9391703+00:00" endTime="2026-10-01T03:11:37.9391704+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="846494f9-aa15-4d6d-8d70-98b5d451499d">
+      <Output>
+        <StdOut>Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-121a5e0ba82e4d509f9ae01e159146be/outer.db</StdOut>
+        <ErrorInfo>
+          <Message>Expected type to be System.InvalidOperationException, but found System.TimeoutException.</Message>
+          <StackTrace>   at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+   at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+   at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+   at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 170
+   at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase) in __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs:line 53
+   at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="799b9ce8-9685-0523-7067-0b047eaea640">
+      <Execution id="705d8d8c-fe9f-417b-aab6-847e9dbea334" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="954229de-f8e6-c6f7-7c66-c10012b8ae85">
+      <Execution id="972f68b8-740c-4499-8fc6-bb20c1ceb7de" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="ade08e42-ba6b-af56-3364-1ff86e51134e">
+      <Execution id="289797cb-28fa-4f3e-a9b3-6cb990ce9de6" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="21595d93-41fc-8d2c-c54c-74de7a6867be">
+      <Execution id="143e4fdb-71a7-4bcb-a202-50ebe6a68200" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="b03cce5a-6f4f-b3ee-a224-87834b401dee">
+      <Execution id="705126ed-b744-4de4-8325-136e15cad883" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="fb6702fd-c6cc-06dd-758d-a7e35df0d28f">
+      <Execution id="12ea5375-1a9d-4728-a555-dc4db5ae3dbf" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="01814899-cc01-c09e-a7a7-29b78318806f">
+      <Execution id="e0dc0b10-ab83-4934-8fc5-5f752b62ce27" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="1cfa9a4a-dc62-f291-97b6-6791a5815708">
+      <Execution id="1a0fb2d9-d3ee-40a6-80a7-928d9888ccdc" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="67b1ac6b-7d83-a38d-38c7-4f0165c15ba2">
+      <Execution id="ef38e46a-0435-4f12-96ce-329376151902" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="44a52912-bdf2-0552-18ec-9fa44398cf2c">
+      <Execution id="6456898c-c94f-469e-b8a0-f63706b98d88" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="6af064b3-6c87-4a79-9421-42be53982e4e">
+      <Execution id="fcb32b3e-b315-4aeb-813c-3b64afee67fe" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="7f0955cb-215b-6015-d1a8-40d63227499a">
+      <Execution id="5f12a1df-429b-40d9-bbfb-2b2d636770de" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="fdaceb71-777d-49ea-476c-9711b10d03d9">
+      <Execution id="0f27fc1c-37b7-4191-9a16-ba07ee41a4c7" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="e1f241f6-2523-5fd0-6ee3-f8cc5895ae9f">
+      <Execution id="77cf0d43-d328-4252-bc41-9b6723027249" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="e3a8f5b8-2b07-98af-51e5-dc4492cd75dc">
+      <Execution id="0b613f05-fcf8-4eca-b062-88de91a0b6f2" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="6831f4a7-dc14-6fff-f0fe-9c29fd0272fe">
+      <Execution id="1f1bfe32-81a7-4c36-90da-3132338003dd" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="38f3506c-0bb4-1b94-e2e8-b8ce08e2c72c">
+      <Execution id="846494f9-aa15-4d6d-8d70-98b5d451499d" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: True)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="1e3705cf-6174-defb-6e9e-d5a1e67868cd">
+      <Execution id="a1b7be09-1355-4c5b-b90a-eee911432226" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="e52f88bf-647a-bebb-1656-76437496242c">
+      <Execution id="c2d2653f-cf04-4214-8f42-a14c7b24f2d3" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+    <UnitTest name="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: False)" storage="__LOCAL_HOME__/.t3/worktrees/litedb/t3code-0cc13448/artifacts_temp/close-frame-before-final/litedb.tests/bin/release/net8.0/litedb.tests.dll" id="0a055411-19b8-a954-6865-6093871faef4">
+      <Execution id="f53f36f2-9fa8-46da-bca3-fcdb13d19879" />
+      <TestMethod codeBase="__WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/bin/Release/net8.0/LiteDB.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests" name="Peer_handle_from_stream_callback_during_close_refuses_only_same_database" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="fdaceb71-777d-49ea-476c-9711b10d03d9" executionId="0f27fc1c-37b7-4191-9a16-ba07ee41a4c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e52f88bf-647a-bebb-1656-76437496242c" executionId="c2d2653f-cf04-4214-8f42-a14c7b24f2d3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="799b9ce8-9685-0523-7067-0b047eaea640" executionId="705d8d8c-fe9f-417b-aab6-847e9dbea334" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1cfa9a4a-dc62-f291-97b6-6791a5815708" executionId="1a0fb2d9-d3ee-40a6-80a7-928d9888ccdc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="954229de-f8e6-c6f7-7c66-c10012b8ae85" executionId="972f68b8-740c-4499-8fc6-bb20c1ceb7de" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e1f241f6-2523-5fd0-6ee3-f8cc5895ae9f" executionId="77cf0d43-d328-4252-bc41-9b6723027249" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ade08e42-ba6b-af56-3364-1ff86e51134e" executionId="289797cb-28fa-4f3e-a9b3-6cb990ce9de6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6af064b3-6c87-4a79-9421-42be53982e4e" executionId="fcb32b3e-b315-4aeb-813c-3b64afee67fe" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="67b1ac6b-7d83-a38d-38c7-4f0165c15ba2" executionId="ef38e46a-0435-4f12-96ce-329376151902" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7f0955cb-215b-6015-d1a8-40d63227499a" executionId="5f12a1df-429b-40d9-bbfb-2b2d636770de" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01814899-cc01-c09e-a7a7-29b78318806f" executionId="e0dc0b10-ab83-4934-8fc5-5f752b62ce27" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e3705cf-6174-defb-6e9e-d5a1e67868cd" executionId="a1b7be09-1355-4c5b-b90a-eee911432226" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6831f4a7-dc14-6fff-f0fe-9c29fd0272fe" executionId="1f1bfe32-81a7-4c36-90da-3132338003dd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e3a8f5b8-2b07-98af-51e5-dc4492cd75dc" executionId="0b613f05-fcf8-4eca-b062-88de91a0b6f2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="21595d93-41fc-8d2c-c54c-74de7a6867be" executionId="143e4fdb-71a7-4bcb-a202-50ebe6a68200" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b03cce5a-6f4f-b3ee-a224-87834b401dee" executionId="705126ed-b744-4de4-8325-136e15cad883" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="44a52912-bdf2-0552-18ec-9fa44398cf2c" executionId="6456898c-c94f-469e-b8a0-f63706b98d88" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0a055411-19b8-a954-6865-6093871faef4" executionId="f53f36f2-9fa8-46da-bca3-fcdb13d19879" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fb6702fd-c6cc-06dd-758d-a7e35df0d28f" executionId="12ea5375-1a9d-4728-a555-dc4db5ae3dbf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="38f3506c-0bb4-1b94-e2e8-b8ce08e2c72c" executionId="846494f9-aa15-4d6d-8d70-98b5d451499d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="20" executed="20" passed="10" failed="10" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.30)
+[xUnit.net 00:00:00.14]   Discovering: LiteDB.Tests
+[xUnit.net 00:00:00.83]   Discovered:  LiteDB.Tests
+[xUnit.net 00:00:00.84]   Starting:    LiteDB.Tests
+[xUnit.net 00:00:02.25]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:02.25]       Stack Trace:
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.25]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:02.25]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:02.25]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:02.25]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:02.25]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.25]       Output:
+[xUnit.net 00:00:02.25]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-815d118f36b741c19aeecf1db547ddf6/outer.db
+[xUnit.net 00:00:03.44]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:03.44]       Stack Trace:
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:03.44]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:03.44]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:03.44]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:03.44]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:03.44]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.44]       Output:
+[xUnit.net 00:00:03.44]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-d02ab14d155d428d9a9cc9868efd5fa9/outer.db
+[xUnit.net 00:00:04.53]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:04.53]       Stack Trace:
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:04.53]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:04.53]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:04.53]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:04.53]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:04.53]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.53]       Output:
+[xUnit.net 00:00:04.53]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-9a558e01d4cc4109a5ff7bd3588e2cf4/outer.db
+[xUnit.net 00:00:05.76]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:05.76]       Stack Trace:
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:05.76]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:05.76]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:05.76]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:05.76]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:05.76]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.76]       Output:
+[xUnit.net 00:00:05.76]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-b339be8a85aa4b118bdf814b47be5def/outer.db
+[xUnit.net 00:00:07.04]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:07.04]       Stack Trace:
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:07.04]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:07.04]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:07.04]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:07.04]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:07.04]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:07.04]       Output:
+[xUnit.net 00:00:07.04]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-8f163d1b360549298bfcc23c4cab6611/outer.db
+[xUnit.net 00:00:08.12]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:08.12]       Stack Trace:
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:08.12]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:08.12]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:08.12]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:08.12]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:08.12]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:08.12]       Output:
+[xUnit.net 00:00:08.12]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-121a5e0ba82e4d509f9ae01e159146be/outer.db
+[xUnit.net 00:00:09.71]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:09.71]       Stack Trace:
+[xUnit.net 00:00:09.71]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:09.71]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:09.71]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:09.71]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:09.71]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:09.71]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:09.71]       Output:
+[xUnit.net 00:00:09.71]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-0a5cf9a415374eaca9bdaecad3cdcdd3/outer.db
+[xUnit.net 00:00:13.06]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:13.06]       Stack Trace:
+[xUnit.net 00:00:13.06]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:13.06]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:13.06]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:13.06]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:13.06]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:13.06]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:13.06]       Output:
+[xUnit.net 00:00:13.06]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-f7e00d6335b041bcbb8ac0f01417b866/outer.db
+[xUnit.net 00:00:14.14]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:14.14]       Stack Trace:
+[xUnit.net 00:00:14.14]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:14.14]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:14.14]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:14.14]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:14.14]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:14.14]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:14.14]       Output:
+[xUnit.net 00:00:14.14]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-a7745d453f5f46bd898753a8e33699d2/outer.db
+[xUnit.net 00:00:15.79]       Expected type to be System.InvalidOperationException, but found System.TimeoutException.
+[xUnit.net 00:00:15.79]       Stack Trace:
+[xUnit.net 00:00:15.79]            at FluentAssertions.Execution.XUnit2TestFramework.Throw(String message)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Execution.AssertionScope.FailWith(String message)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Types.TypeAssertions.Be(Type expected, String because, Object[] becauseArgs)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType(Type expectedType, String because, Object[] becauseArgs)
+[xUnit.net 00:00:15.79]            at FluentAssertions.Primitives.ReferenceTypeAssertions`2.BeOfType[T](String because, Object[] becauseArgs)
+[xUnit.net 00:00:15.79]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(170,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.VerifyClose(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:15.79]         __WORKSPACE__/artifacts_temp/close-frame-before-final/LiteDB.Tests/Engine/TransactionHandleCloseFrame_Tests.cs(53,0): at LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Close close, Boolean encrypted, Boolean otherDatabase)
+[xUnit.net 00:00:15.79]            at InvokeStub_TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(Object, Span`1)
+[xUnit.net 00:00:15.79]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:15.79]       Output:
+[xUnit.net 00:00:15.79]         Failed close-frame fixture retained: __WORKSPACE__/temporary/litedb-peer-ad30b2a60daf4e88b8331606c155e330/outer.db
+[xUnit.net 00:00:15.80]   Finished:    LiteDB.Tests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:32.0729512+00:00">
+        <Text>[xUnit.net 00:00:02.25]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: True, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:33.2615681+00:00">
+        <Text>[xUnit.net 00:00:03.44]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: True, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:34.3513229+00:00">
+        <Text>[xUnit.net 00:00:04.53]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionWithEngine, encrypted: False, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:35.5816775+00:00">
+        <Text>[xUnit.net 00:00:05.76]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: True, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:36.8615025+00:00">
+        <Text>[xUnit.net 00:00:07.04]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: False, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:37.9388306+00:00">
+        <Text>[xUnit.net 00:00:08.12]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: False, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:39.5369160+00:00">
+        <Text>[xUnit.net 00:00:09.71]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: ConnectionCheckpoint, encrypted: False, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:42.8825995+00:00">
+        <Text>[xUnit.net 00:00:13.06]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: LastLeasedReader, encrypted: True, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:43.9614879+00:00">
+        <Text>[xUnit.net 00:00:14.14]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: PinHolder, encrypted: False, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="dev-build-server" outcome="Error" timestamp="2026-10-01T03:11:45.6126690+00:00">
+        <Text>[xUnit.net 00:00:15.79]     LiteDB.Tests.Engine.TransactionHandleCloseFrame_Tests.Peer_handle_from_stream_callback_during_close_refuses_only_same_database(close: RetainingReader, encrypted: True, otherDatabase: False) [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

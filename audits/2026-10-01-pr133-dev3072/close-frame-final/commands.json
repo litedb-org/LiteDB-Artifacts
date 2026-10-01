@@ -1,0 +1,90 @@
+[
+  {
+    "name": "full-audit-net8.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleInterleaving|FullyQualifiedName~SharedPeer|FullyQualifiedName~TransactionHandleMaintenanceCycle|FullyQualifiedName~TransactionHandleCrossDatabaseCycle",
+      "--logger",
+      "trx;LogFileName=full-audit-net8.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/close-frame-final"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "ownership-net8.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net8.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "(FullyQualifiedName~TransactionHandle|FullyQualifiedName~Shared|FullyQualifiedName~SessionLifetime|FullyQualifiedName~OperationLifetime)&FullyQualifiedName!~Process&FullyQualifiedName!~TransactionHandleInterleaving&FullyQualifiedName!~SharedPeer&FullyQualifiedName!~TransactionHandleMaintenanceCycle&FullyQualifiedName!~TransactionHandleCrossDatabaseCycle",
+      "--logger",
+      "trx;LogFileName=ownership-net8.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/close-frame-final"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "full-audit-net10.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "FullyQualifiedName~TransactionHandleInterleaving|FullyQualifiedName~SharedPeer|FullyQualifiedName~TransactionHandleMaintenanceCycle|FullyQualifiedName~TransactionHandleCrossDatabaseCycle",
+      "--logger",
+      "trx;LogFileName=full-audit-net10.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/close-frame-final"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "ownership-net10.0",
+    "args": [
+      "dotnet",
+      "test",
+      "LiteDB.Tests",
+      "-c",
+      "Release",
+      "-f",
+      "net10.0",
+      "-p:TestingEnabled=true",
+      "--settings",
+      "tests.runsettings",
+      "--filter",
+      "(FullyQualifiedName~TransactionHandle|FullyQualifiedName~Shared|FullyQualifiedName~SessionLifetime|FullyQualifiedName~OperationLifetime)&FullyQualifiedName!~Process&FullyQualifiedName!~TransactionHandleInterleaving&FullyQualifiedName!~SharedPeer&FullyQualifiedName!~TransactionHandleMaintenanceCycle&FullyQualifiedName!~TransactionHandleCrossDatabaseCycle",
+      "--logger",
+      "trx;LogFileName=ownership-net10.0.trx",
+      "--results-directory",
+      "__WORKSPACE__/artifacts_temp/integration/artifacts_temp/dev3072-integration/close-frame-final"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,30 @@
+Discovered repro: Issue_3071_SharedPeerCallback
+BUILD: Starting build for 2 variants across 1 repros
+BUILD: Build completed. Processing 2 results
+BUILD: Build succeeded for Issue_3071_SharedPeerCallback (6.0.0-prerelease.319),
+starting execution
+INF #0 database directory: __WORKSPACE__/temporary/i3071-a5ff5cf303e049a8be4c7f23827acb4b
+INF #0 controls: same-connection and other-database nested writes completed
+INF #0 unanchored-plain: Blocked
+INF #0 unanchored-encrypted: Blocked
+INF #0 pinned-plain: Blocked
+INF #0 pinned-encrypted: Blocked
+INF #0 dispose-checkpoint-plain: Blocked
+INF #0 dispose-checkpoint-encrypted: Blocked
+INF #0 database directory: __WORKSPACE__/temporary/i3071-c79846d5ca7f402c9690f2bae389f51e
+INF #0 controls: same-connection and other-database nested writes completed
+INF #0 unanchored-plain: Refused
+INF #0 unanchored-encrypted: Refused
+INF #0 pinned-plain: Refused
+INF #0 pinned-encrypted: Refused
+INF #0 dispose-checkpoint-plain: Refused
+INF #0 dispose-checkpoint-encrypted: Refused
+Completed execution for Issue_3071_SharedPeerCallback
+
+╭────────────────┬────────────────┬────────────────┬────────────────┬──────────╮
+│ Repro          │ Repro Version  │ Package check  │ Source check   │ Overall  │
+├────────────────┼────────────────┼────────────────┼────────────────┼──────────┤
+│ Issue_3071_Sha │ 6.0.0-prerelea │ ✅ exit 0 (exp │ ✅ exit 2 (exp │ ✅ green │
+│ redPeerCallbac │ se.319         │ repro)         │ no-repro)      │          │
+│ k              │                │                │                │          │
+╰────────────────┴────────────────┴────────────────┴────────────────┴──────────╯
