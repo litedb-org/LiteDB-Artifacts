@@ -1,0 +1,86 @@
+[
+  {
+    "repro": "SharedSelfTeardownRelease",
+    "variant": "package",
+    "build": [
+      "dotnet",
+      "build",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/LiteDB.ReproRunner/Repros/SharedSelfTeardownRelease",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=false",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownRelease-package-final",
+      "-p:RestoreAdditionalProjectSources=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/self-teardown-review/knownbad-feed"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownRelease-package-final/SharedSelfTeardownRelease.dll",
+      "--release-only"
+    ],
+    "exit": 0
+  },
+  {
+    "repro": "SharedSelfTeardownRelease",
+    "variant": "source",
+    "build": [
+      "dotnet",
+      "build",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/LiteDB.ReproRunner/Repros/SharedSelfTeardownRelease",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=true",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownRelease-source-final",
+      "-p:RestoreAdditionalProjectSources=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/self-teardown-review/knownbad-feed"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownRelease-source-final/SharedSelfTeardownRelease.dll",
+      "--release-only"
+    ],
+    "exit": 2
+  },
+  {
+    "repro": "SharedSelfTeardownWait",
+    "variant": "package",
+    "build": [
+      "dotnet",
+      "build",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/LiteDB.ReproRunner/Repros/SharedSelfTeardownWait",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=false",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownWait-package-final",
+      "-p:RestoreAdditionalProjectSources=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/self-teardown-review/knownbad-feed"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownWait-package-final/SharedSelfTeardownWait.dll",
+      "--wait-only"
+    ],
+    "exit": 0
+  },
+  {
+    "repro": "SharedSelfTeardownWait",
+    "variant": "source",
+    "build": [
+      "dotnet",
+      "build",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/LiteDB.ReproRunner/Repros/SharedSelfTeardownWait",
+      "-c",
+      "Release",
+      "-p:TestingEnabled=false",
+      "-p:UseProjectReference=true",
+      "-p:OutputPath=__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownWait-source-final",
+      "-p:RestoreAdditionalProjectSources=__WORKSPACE__/artifacts_temp/integration/artifacts_temp/self-teardown-review/knownbad-feed"
+    ],
+    "run": [
+      "dotnet",
+      "__WORKSPACE__/artifacts_temp/self-teardown-production/artifacts_temp/SharedSelfTeardownWait-source-final/SharedSelfTeardownWait.dll",
+      "--wait-only"
+    ],
+    "exit": 2
+  }
+]

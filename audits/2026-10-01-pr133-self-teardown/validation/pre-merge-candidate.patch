@@ -1,0 +1,178 @@
+diff --git a/LiteDB/Client/Shared/SharedCallFrames.cs b/LiteDB/Client/Shared/SharedCallFrames.cs
+index c3c44fc97..ce8f491d4 100644
+--- a/LiteDB/Client/Shared/SharedCallFrames.cs
++++ b/LiteDB/Client/Shared/SharedCallFrames.cs
+@@ -19,12 +19,14 @@ namespace LiteDB.Client.Shared
+             public readonly string Namespace;
+             public readonly object Connection;
+             public readonly Func<bool> Retains;
++            public readonly bool Teardown;
+ 
+-            public Frame(string ns, object connection, Func<bool> retains)
++            public Frame(string ns, object connection, Func<bool> retains, bool teardown)
+             {
+                 this.Namespace = ns;
+                 this.Connection = connection;
+                 this.Retains = retains;
++                this.Teardown = teardown;
+             }
+         }
+ 
+@@ -47,13 +49,26 @@ namespace LiteDB.Client.Shared
+         /// <paramref name="retains"/> runs on this thread and reports whether the frame keeps
+         /// the native ownership at that moment.
+         /// </summary>
+-        public static Scope Enter(string ns, object connection, Func<bool> retains)
++        public static Scope Enter(string ns, object connection, Func<bool> retains, bool teardown = false)
+         {
+             var frames = _frames ?? (_frames = new List<Frame>());
+-            frames.Add(new Frame(ns, connection, retains));
++            frames.Add(new Frame(ns, connection, retains, teardown));
+             return new Scope(true);
+         }
+ 
++        /// <summary>
++        /// Closing a core is not ordinary same-connection recursion. It may be detached
++        /// from connection state already, but callbacks must not reopen or dispose its owner.
++        /// </summary>
++        public static bool IsTearingDown(object connection)
++        {
++            var frames = _frames;
++            if (frames == null) return false;
++            for (var i = frames.Count - 1; i >= 0; i--)
++                if (frames[i].Teardown && ReferenceEquals(frames[i].Connection, connection)) return true;
++            return false;
++        }
++
+         /// <summary>
+         /// True when a frame of another connection to <paramref name="ns"/> retains its native
+         /// ownership on this thread, so a blocking acquisition by <paramref name="connection"/>
+diff --git a/LiteDB/Client/Shared/SharedEngine.Calls.cs b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+index 8fdfa565e..be41c904e 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Calls.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Calls.cs
+@@ -117,6 +117,7 @@ namespace LiteDB
+                 if (rollback) return default;
+                 throw new ObjectDisposedException(nameof(SharedEngine));
+             }
++            this.ThrowIfTeardownReentry();
+             if (this.IsForeignReaderCallback())
+             {
+                 // A handed-off reader can still be running when its original owner
+diff --git a/LiteDB/Client/Shared/SharedEngine.Coordination.cs b/LiteDB/Client/Shared/SharedEngine.Coordination.cs
+index 6e5195250..b0f8416c8 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Coordination.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Coordination.cs
+@@ -51,7 +51,7 @@ namespace LiteDB
+             {
+                 // Opening is not complete until publication succeeds. Keep failed
+                 // engines out of connection state and preserve the original error.
+-                try { opened?.Close(checkpoint: false); }
++                try { if (opened != null) this.CloseRetainedCore(opened, checkpoint: false); }
+                 catch (Exception) { /* Best effort after a failed open; no checkpoint. */ }
+ #if NET8_0_OR_GREATER
+                 try { if (recovering) _coordination.StructuralEnd(-1); }
+diff --git a/LiteDB/Client/Shared/SharedEngine.Disposal.cs b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+index 6da07b788..623240ae8 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Disposal.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Disposal.cs
+@@ -92,6 +92,7 @@ namespace LiteDB
+ 
+         internal void ThrowIfClosingFromOperation()
+         {
++            this.ThrowIfTeardownReentry();
+             lock (_useLock)
+             {
+                 // Leased snapshots are independent and may outlive this facade.
+@@ -115,6 +116,23 @@ namespace LiteDB
+                     _mutexSnapshots.Any(snapshot => snapshot.IsExecutingOnCurrentThread);
+         }
+ 
++        private void ThrowIfTeardownReentry()
++        {
++            if (SharedCallFrames.IsTearingDown(this))
++                throw new InvalidOperationException("Cannot reenter a shared connection from inside its executing core teardown.");
++        }
++
++        /// <summary>
++        /// The writer owner remains retained until this close actually returns. Public
++        /// callback entry must not treat a core's disposed flag as completed teardown.
++        /// This frame also protects cores detached before their final checkpoint.
++        /// </summary>
++        private System.Collections.Generic.List<Exception> CloseRetainedCore(LiteEngine core, bool checkpoint = true, bool final = false)
++        {
++            using (SharedCallFrames.Enter(_mutexName, this, HolderRetains, teardown: true))
++                return core.Close(checkpoint: checkpoint, final: final);
++        }
++
+         /// <summary>Keep ownership published while draining, without a callback-needed lock.</summary>
+         private bool CloseOwnedCores(bool checkpoint, bool final = false)
+         {
+@@ -127,8 +145,8 @@ namespace LiteDB
+             }
+             // Returned errors follow completed teardown and keep the parent's
+             // best-effort policy. A thrown refusal must prevent native release.
+-            core?.Close(checkpoint: checkpoint, final: final);
+-            foreach (var snapshot in snapshots) snapshot.Close(checkpoint: false);
++            if (core != null) this.CloseRetainedCore(core, checkpoint, final);
++            foreach (var snapshot in snapshots) this.CloseRetainedCore(snapshot, checkpoint: false);
+             lock (_useLock)
+             {
+                 if (ReferenceEquals(_engine, core)) _engine = null;
+diff --git a/LiteDB/Client/Shared/SharedEngine.Query.cs b/LiteDB/Client/Shared/SharedEngine.Query.cs
+index 3c3a6652e..a384ae5f2 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Query.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Query.cs
+@@ -413,7 +413,7 @@ namespace LiteDB
+             }
+             // Close returns cleanup errors only after teardown completes. A thrown
+             // admission refusal must leave both snapshot and native owner published.
+-            var errors = snapshot.Close();
++            var errors = this.CloseRetainedCore(snapshot);
+             lock (_useLock) _mutexSnapshots.Remove(snapshot);
+             closed?.Invoke();
+             LiteEngine.ThrowCleanupErrors(errors);
+diff --git a/LiteDB/Client/Shared/SharedEngine.Readers.cs b/LiteDB/Client/Shared/SharedEngine.Readers.cs
+index 40fdecbc2..68559c4f0 100644
+--- a/LiteDB/Client/Shared/SharedEngine.Readers.cs
++++ b/LiteDB/Client/Shared/SharedEngine.Readers.cs
+@@ -197,7 +197,7 @@ namespace LiteDB
+                 var close = Stopwatch.StartNew();
+                 // The core remains visible until its reader operations have drained.
+                 // Foreign reader callbacks must be able to detect this dependency.
+-                cleanup.Exceptions.AddRange(engine.Close());
++                cleanup.Exceptions.AddRange(this.CloseRetainedCore(engine));
+                 if (ReferenceEquals(_engine, engine)) _engine = null;
+                 _lastPinClose = close.Elapsed;
+             }
+@@ -303,7 +303,7 @@ namespace LiteDB
+             this.OpenEngine(false, final: true, writing: true);
+             var engine = _engine;
+             _engine = null;
+-            engine.Close(final: true);
++            this.CloseRetainedCore(engine, final: true);
+         }
+ 
+         private static bool LogHasContent(string filename)
+diff --git a/LiteDB/Client/Shared/SharedEngine.cs b/LiteDB/Client/Shared/SharedEngine.cs
+index 2e30d7bdd..c3c508d35 100644
+--- a/LiteDB/Client/Shared/SharedEngine.cs
++++ b/LiteDB/Client/Shared/SharedEngine.cs
+@@ -212,7 +212,7 @@ namespace LiteDB
+                     // Keep the core discoverable by callbacks throughout its drain.
+                     // Never hold connection bookkeeping while waiting for a reader.
+                     System.Collections.Generic.List<Exception> errors;
+-                    try { errors = engine.Close(); }
++                    try { errors = this.CloseRetainedCore(engine); }
+                     catch
+                     {
+                         lock (_useLock)
+@@ -346,7 +346,7 @@ namespace LiteDB
+             // The mutex was free since the owner exited, so another process may have
+             // committed or checkpointed. This engine's WAL index and cache can be stale:
+             // release it without the close checkpoint; the next open recovers the WAL.
+-            orphan?.Close(checkpoint: false);
++            if (orphan != null) this.CloseRetainedCore(orphan, checkpoint: false);
+             _handles?.CloseIdle();
+             throw new LiteException(0, "The explicit transaction owner thread exited. Its uncommitted work was discarded; begin a new transaction on one thread.");
+         }

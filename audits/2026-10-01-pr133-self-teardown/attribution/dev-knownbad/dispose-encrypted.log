@@ -1,0 +1,29 @@
+FIXTURE __WORKSPACE__/temporary/litedb-teardown-attribution-6d16a4328dcf4051b5e1124eb3c97e3a
+READER_DISPOSE_START
+CALLBACK_ENTER native_acquirable=False
+DISPOSE_RETURN
+CALLBACK_AFTER native_acquirable=True
+READER_DISPOSE_RETURN callbacks=1 native_acquirable=True
+Unhandled exception. LiteDB.Engine.PageChecksumException: Checksum mismatch in Data file at position 8192.
+   at LiteDB.Engine.PageChecksum.Validate(BufferSlice page, Int64 position) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/PageChecksum.cs:line 34
+   at LiteDB.Engine.DataChecksumPolicy.Validate(BufferSlice page, Int64 position) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/DataChecksumPolicy.cs:line 51
+   at LiteDB.Engine.DiskReader.ReadStream(Stream stream, Int64 position, BufferSlice buffer) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/DiskReader.cs:line 88
+   at LiteDB.Engine.DiskReader.<>c__DisplayClass9_0.<ReadPage>b__0(Int64 pos, BufferSlice buf) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/DiskReader.cs:line 58
+   at LiteDB.Engine.MemoryCache.GetWritablePage(Int64 position, FileOrigin origin, Action`2 factory) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/MemoryCache.Writable.cs:line 51
+   at LiteDB.Engine.DiskReader.ReadPage(Int64 position, Boolean writable, FileOrigin origin) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Disk/DiskReader.cs:line 57
+   at LiteDB.Engine.Snapshot.ReadPage[T](UInt32 pageID, FileOrigin& origin, Int64& position, Int32& walVersion, Boolean useLatestVersion) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Services/SnapShot.cs:line 231
+   at LiteDB.Engine.Snapshot.GetPage[T](UInt32 pageID, FileOrigin& origin, Int64& position, Int32& walVersion, Boolean useLatestVersion) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Services/SnapShot.cs:line 199
+   at LiteDB.Engine.Snapshot..ctor(LockMode mode, String collectionName, HeaderPage header, TransactionPages transPages, LockService locker, WalIndexService walIndex, DiskReader reader, DiskService disk, Boolean addIfNotExists, Action safepoint) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Services/SnapShot.cs:line 91
+   at LiteDB.Engine.TransactionService.<CreateSnapshot>g__create|46_0(<>c__DisplayClass46_0&) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Services/TransactionService.cs:line 85
+   at LiteDB.Engine.TransactionService.CreateSnapshot(LockMode mode, String collection, Boolean addIfNotExists) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Services/TransactionService.cs:line 111
+   at LiteDB.Engine.LiteEngine.<>c__DisplayClass25_0.<Insert>b__0(TransactionService transaction) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Engine/Insert.cs:line 22
+   at LiteDB.Engine.LiteEngine.ExecuteAutoTransaction[T](Func`2 fn, Boolean write) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Engine/Transaction.cs:line 92
+   at LiteDB.Engine.LiteEngine.AutoTransaction[T](Func`2 fn) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Engine/Transaction.cs:line 82
+   at LiteDB.Engine.LiteEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Engine/Engine/Insert.cs:line 20
+   at LiteDB.SharedEngine.<>c__DisplayClass84_0.<Insert>b__0() in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Shared/SharedEngine.cs:line 376
+   at LiteDB.SharedEngine.<>c__DisplayClass127_0`1.<WriteDatabase>b__0() in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 82
+   at LiteDB.SharedEngine.Call[T](Func`1 call) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Shared/SharedEngine.Calls.cs:line 66
+   at LiteDB.SharedEngine.WriteDatabase[T](Func`1 write, Boolean scoped) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Shared/SharedEngine.Readers.cs:line 73
+   at LiteDB.SharedEngine.Insert(String collection, IEnumerable`1 docs, BsonAutoId autoId) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Shared/SharedEngine.cs:line 376
+   at LiteDB.LiteCollection`1.Insert(T entity) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/LiteDB/Client/Database/Collections/Insert.cs:line 19
+   at Program.<Main>$(String[] args) in __WORKSPACE__/artifacts_temp/teardown-attribution-dev-knownbad/artifacts_temp/teardown-repro/Program.cs:line 52

@@ -1,0 +1,5 @@
+The new review is https://github.com/JKamsker/LiteDB/pull/133#pullrequestreview-5375063144 at3abead6dc.
+
+Separate the native-release/core-teardown fix because actual upstream023c andparent49c reproduce it. Merge the independent branch intoPR133 instead of duplicating its patch; keep PR-specific cleanup integration in the merge resolution. Most prior fixes must remain attributed toPR133:20added regression-proof entries are pinned to PR-specific commits because they fix regressions introduced by this lifecycle/handle implementation. Already-upstream#3072/#3075 are ancestry dependencies, not additional feature code.
+
+Performance attribution should compare the corrected upstream baseline, corrected stacked parent, and PR head with identical production settings. Separating a proven pre-existing fix is useful; removing protections required by the feature would misrepresent feature cost. Track broad performance redesign separately; do not merge a known ownership defect merely because throughput is acceptable.

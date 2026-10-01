@@ -1,0 +1,166 @@
+{
+  "GeneratedAt": "2026-10-01T06:15:11.6767656+00:00",
+  "Root": "__CI_WORKSPACE__/LiteDB.ReproRunner",
+  "Repros": [
+    {
+      "Id": "SharedSelfTeardownWait",
+      "State": 1,
+      "Failed": false,
+      "Warned": false,
+      "Package": {
+        "Expected": 0,
+        "ExpectedExitCode": 0,
+        "ExpectedLogContains": "TEARDOWN_DEFECT_VERIFIED",
+        "Actual": 0,
+        "Met": true,
+        "ExitCode": 0,
+        "DurationSeconds": 3.7851744,
+        "UseProjectReference": false,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:21.2892408\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:false,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.3abead6dc2eb\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:21.4982673\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original fixtures and child diagnostics retained at __WORKSPACE__/temporary/self-teardown-c6a1d059d4e8445fb8191f15339647dd\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "control-plain: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "getter-plain: exit=0"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "SELF_WAIT_VERIFIED: callback active; closing core exclusive owner is callback thread; callback thread blocked; foreign native acquisition excluded; both observations agree."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "control-encrypted: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "getter-encrypted: exit=0"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "SELF_WAIT_VERIFIED: callback active; closing core exclusive owner is callback thread; callback thread blocked; foreign native acquisition excluded; both observations agree."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "TEARDOWN_DEFECT_VERIFIED: independent native ownership/dependency witnesses."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:25.0138498\u002B00:00\u0022,\u0022text\u0022:\u0022TEARDOWN_DEFECT_VERIFIED: independent native ownership/dependency witnesses.\u0022,\u0022success\u0022:true}"
+          }
+        ]
+      },
+      "Latest": {
+        "Expected": 1,
+        "ExpectedExitCode": 2,
+        "ExpectedLogContains": "FIXED_VERIFIED",
+        "Actual": 1,
+        "Met": true,
+        "ExitCode": 2,
+        "DurationSeconds": 3.10036,
+        "UseProjectReference": true,
+        "FailureReason": null,
+        "Output": [
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022configuration\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:25.058316\u002B00:00\u0022,\u0022payload\u0022:{\u0022useProjectReference\u0022:true,\u0022liteDBPackageVersion\u0022:\u00220.0.0-knownbad.3abead6dc2eb\u0022}}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022log\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:25.1069913\u002B00:00\u0022,\u0022level\u0022:\u0022Information\u0022,\u0022text\u0022:\u0022Original fixtures and child diagnostics retained at __WORKSPACE__/temporary/self-teardown-ec1b02088dca4634a6716f98e863a12a\u0022}"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "control-plain: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "getter-plain: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "control-encrypted: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "getter-encrypted: exit=2"
+          },
+          {
+            "Stream": "stdout",
+            "Text": "CHILD_FIXED_VERIFIED: callback refused/control allowed; ownership retained; later writer and two cold reopens verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": ""
+          },
+          {
+            "Stream": "stdout",
+            "Text": "FIXED_VERIFIED: exact refusals, retained ownership, positive controls and cold state verified."
+          },
+          {
+            "Stream": "stdout",
+            "Text": "{\u0022type\u0022:\u0022result\u0022,\u0022timestamp\u0022:\u00222026-10-01T06:15:28.1160835\u002B00:00\u0022,\u0022text\u0022:\u0022FIXED_VERIFIED: exact refusals, retained ownership, positive controls and cold state verified.\u0022,\u0022success\u0022:false}"
+          }
+        ]
+      }
+    }
+  ]
+}
