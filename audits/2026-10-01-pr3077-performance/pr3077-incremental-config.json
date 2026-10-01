@@ -1,0 +1,50 @@
+{
+  "versions": {
+    "before": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-dev3075/TransactionHandleBenchmarks.dll",
+      "revision": "023c2b4ba8ffe637c955092ff05289d90eafdfb4"
+    },
+    "after": {
+      "runner": "__WORKSPACE__/artifacts_temp/bench-fixeddev/TransactionHandleBenchmarks.dll",
+      "revision": "fad082daf2283f6844fcef2af379a3e0d5c02d59"
+    }
+  },
+  "groups": [
+    {
+      "name": "pr3077",
+      "versions": [
+        "before",
+        "after"
+      ],
+      "rounds": 4,
+      "warmup": 5,
+      "windows": 5,
+      "cases": [
+        [
+          "shared",
+          "ordinary",
+          "read",
+          1
+        ],
+        [
+          "shared",
+          "legacy",
+          "read",
+          1
+        ],
+        [
+          "shared",
+          "ordinary",
+          "open",
+          1
+        ],
+        [
+          "direct",
+          "ordinary",
+          "read",
+          1
+        ]
+      ]
+    }
+  ]
+}
